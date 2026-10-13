@@ -1,0 +1,7 @@
+Dependencies for Project 'smartcar', Target 'demo': (DO NOT MODIFY !)
+CompilerVersion: 6210000::V6.21::ARMCLANG
+F (.\demo\code\Camera.c)(0x69458C1A)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-IC:/Users/zfn19/AppData/Local/Arm/Packs/NXP/MIMXRT1064_DFP/26.09.00/devices/MIMXRT1064-D__UVISION_VERSION="539" -DCPU_MIMXRT1064DVL6B-o ./objects/camera.o -MD)
+F (.\demo\code\Camera.h)(0x694290DE)()
+F (.\demo\code\Island.c)(0x694609D0)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-IC:/Users/zfn19/AppData/Local/Arm/Packs/NXP/MIMXRT1064_DFP/26.09.00/devices/MIMXRT1064-D__UVISION_VERSION="539" -DCPU_MIMXRT1064DVL6B-o ./objects/island.o -MD)
+F (.\demo\code\Island.h)(0x69428FC0)()
+F (.\demo\code\本文件夹作用.txt)(0x60544DE2)()
