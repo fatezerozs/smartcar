@@ -2,6 +2,17 @@
 #include "zf_common_headfile.h"
 #include "math.h"
 
+// Test mode switches (set one of them to 1 when doing module tests)
+#ifndef TEST_SERVO
+#define TEST_SERVO 0
+#endif
+#ifndef TEST_MOTOR
+#define TEST_MOTOR 1
+#endif
+#ifndef TEST_UART
+#define TEST_UART 0
+#endif
+
 // *************************** 例程硬件连接说明 ***************************
 /*
 
@@ -248,22 +259,7 @@ void Init()
 
     tft180_set_dir(TFT180_CROSSWISE);                                           // 需要先横屏 不然显示不下
     tft180_init();
-
-    // mt9v03x摄像头初始化
-    while (1)
-    {
-        if (mt9v03x_init())
-            tft180_show_string(0, 16, "mt9v03x reinit.");
-        else
-            break;
-        system_delay_ms(1000);
-    }
-    tft180_show_string(0, 16, "init success.");
-
-    // 编码器初始化
-    encoder_quad_init(ENCODER_1, ENCODER_1_A, ENCODER_1_B); // 初始化编码器模块与引脚 正交解码编码器模式
-    encoder_quad_init(ENCODER_2, ENCODER_2_A, ENCODER_2_B); // 初始化编码器模块与引脚 正交解码编码器模式
-
+	
     // 电机初始化
     pwm_init(MOTOR1_PWM, 17000, 0); // PWM 通道初始化频率 17KHz 占空比初始为 0
     gpio_init(MOTOR1_DIR, GPO, GPIO_HIGH, GPO_PUSH_PULL); // GPIO 初始化为输出 默认上拉输出高
@@ -273,11 +269,34 @@ void Init()
     // 舵机
     pwm_init(SERVO_MOTOR_PWM, SERVO_MOTOR_FREQ, 0);
 
+
+    // mt9v03x摄像头初始化
+#if !(TEST_SERVO || TEST_MOTOR || TEST_UART)
+    while (1)
+    {
+        if (mt9v03x_init())
+            tft180_show_string(0, 16, "mt9v03x reinit.");
+        else
+            break;
+        system_delay_ms(1000);
+    }
+    tft180_show_string(0, 16, "init success.");
+#else
+    tft180_show_string(0, 16, "test mode: skip cam");
+#endif
+
+    // 编码器/PID/PIT 只在整车模式启用，避免单模块测试被中断控制覆盖
+#if !(TEST_SERVO || TEST_MOTOR || TEST_UART)
+    // 编码器初始化
+    encoder_quad_init(ENCODER_1, ENCODER_1_A, ENCODER_1_B); // 初始化编码器模块与引脚 正交解码编码器模式
+    encoder_quad_init(ENCODER_2, ENCODER_2_A, ENCODER_2_B); // 初始化编码器模块与引脚 正交解码编码器模式
+
     // PID初始化
     My_Pid_Init();
 
     // 定时器0初始化，10ms可调
     pit_ms_init(PIT_CH0, 10);
+#endif
 }
 
 static uint32_t system_start_time = 0;      // 系统启动时间戳
@@ -291,16 +310,95 @@ int main(void)
 
     Init();
     interrupt_global_enable(0);
-	
-		// 新增：初始化计时器并记录启动时间
+
+    // 新增：初始化计时器并记录启动时间
     timer_init(GPT_TIM_1, TIMER_MS); // 使用毫秒模式
     timer_start(GPT_TIM_1);
     system_start_time = timer_get(GPT_TIM_1);
     timer_initialized = 1;
-		uint32_t start_time = timer_get(GPT_TIM_1);
-		uint32_t end_time;
-	  uint8_t last_state;
-		uint8_t now_state;
+    uint32_t start_time = timer_get(GPT_TIM_1);
+    uint32_t end_time;
+    uint8_t last_state;
+    uint8_t now_state;
+
+#if TEST_UART
+    // UART 测试：持续打印，观察上位机是否能收到
+    uint32_t cnt = 0;
+    while (1)
+    {
+        printf("[TEST_UART] hello %lu\r\n", (unsigned long)cnt++);
+        system_delay_ms(500);
+    }
+#endif
+
+#if TEST_SERVO
+    // 舵机测试：中-左-右 循环，便于观察角度和抖动
+    while (1)
+    {
+        // 中位
+        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY( (SERVO_MOTOR_L_MAX + SERVO_MOTOR_R_MAX) / 2 ));
+        printf("[TEST_SERVO] middle\r\n");
+        system_delay_ms(1000);
+
+        // 左极限
+        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(SERVO_MOTOR_L_MAX));
+        printf("[TEST_SERVO] left max\r\n");
+        system_delay_ms(1000);
+
+        // 右极限
+        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(SERVO_MOTOR_R_MAX));
+        printf("[TEST_SERVO] right max\r\n");
+        system_delay_ms(1000);
+    }
+#endif
+
+#if TEST_MOTOR
+    // 电机开环测试：持续循环，先单轮再双轮，便于定位是左轮/右轮/方向脚问题
+    const uint8_t motor1_reverse_level = (MOTOR1_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
+    const uint8_t motor2_reverse_level = (MOTOR2_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
+    const uint32_t duty_mid = PWM_DUTY_MAX / 2;
+
+    while (1)
+    {
+        // 左轮正转
+        gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
+        pwm_set_duty(MOTOR1_PWM, duty_mid);
+        pwm_set_duty(MOTOR2_PWM, 0);
+        printf("[TEST_MOTOR] M1 forward\r\n");
+        system_delay_ms(2000);
+
+        // 右轮正转
+        pwm_set_duty(MOTOR1_PWM, 0);
+        gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
+        pwm_set_duty(MOTOR2_PWM, duty_mid);
+        printf("[TEST_MOTOR] M2 forward\r\n");
+        system_delay_ms(2000);
+
+
+        // 双轮正转
+        gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
+        gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
+        pwm_set_duty(MOTOR1_PWM, duty_mid);
+        pwm_set_duty(MOTOR2_PWM, duty_mid);
+        printf("[TEST_MOTOR] M1+M2 forward\r\n");
+        system_delay_ms(2000);
+
+        // 双轮反转
+        gpio_set_level(MOTOR1_DIR, motor1_reverse_level);
+        gpio_set_level(MOTOR2_DIR, motor2_reverse_level);
+        pwm_set_duty(MOTOR1_PWM, duty_mid);
+        pwm_set_duty(MOTOR2_PWM, duty_mid);
+        printf("[TEST_MOTOR] M1+M2 reverse\r\n");
+        system_delay_ms(2000);
+
+        // 停止
+        pwm_set_duty(MOTOR1_PWM, 0);
+        pwm_set_duty(MOTOR2_PWM, 0);
+        printf("[TEST_MOTOR] stop\r\n");
+        system_delay_ms(1000);
+    }
+#endif
+
 	
     while (1)
     {
