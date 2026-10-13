@@ -22,8 +22,9 @@
 // 左电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
 #define MOTOR1_FORWARD_DIR_LEVEL (GPIO_HIGH)
 // 右轮电机
-#define MOTOR2_PWM (PWM2_MODULE1_CHA_C8)
-#define MOTOR2_DIR (C9)
+// 经过排障，右轮在该板卡上更稳定的映射为 PWM=C9、DIR=C8
+#define MOTOR2_PWM (PWM2_MODULE1_CHB_C9)
+#define MOTOR2_DIR (C8)
 // 右电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
 #define MOTOR2_FORWARD_DIR_LEVEL (GPIO_HIGH)
 

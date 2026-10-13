@@ -7,10 +7,10 @@
 #define TEST_SERVO 0
 #endif
 #ifndef TEST_MOTOR
-#define TEST_MOTOR 1
+#define TEST_MOTOR 0
 #endif
 #ifndef TEST_UART
-#define TEST_UART 0
+#define TEST_UART  0
 #endif
 
 // *************************** 例程硬件连接说明 ***************************
@@ -353,26 +353,29 @@ int main(void)
 #endif
 
 #if TEST_MOTOR
-    // 电机开环测试：持续循环，先单轮再双轮，便于定位是左轮/右轮/方向脚问题
+    // 电机开环测试：执行 3 轮后自动停止
     const uint8_t motor1_reverse_level = (MOTOR1_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
     const uint8_t motor2_reverse_level = (MOTOR2_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
     const uint32_t duty_mid = PWM_DUTY_MAX / 2;
+    const uint8_t test_rounds = 3;
 
-    while (1)
+    for (uint8_t round = 0; round < test_rounds; ++round)
     {
+        printf("[TEST_MOTOR] round %d/%d\r\n", (int)(round + 1), (int)test_rounds);
+
         // 左轮正转
         gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
         pwm_set_duty(MOTOR1_PWM, duty_mid);
         pwm_set_duty(MOTOR2_PWM, 0);
         printf("[TEST_MOTOR] M1 forward\r\n");
-        system_delay_ms(2000);
+        system_delay_ms(1500);
 
         // 右轮正转
         pwm_set_duty(MOTOR1_PWM, 0);
         gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
         pwm_set_duty(MOTOR2_PWM, duty_mid);
         printf("[TEST_MOTOR] M2 forward\r\n");
-        system_delay_ms(2000);
+        system_delay_ms(1500);
 
 
         // 双轮正转
@@ -381,7 +384,7 @@ int main(void)
         pwm_set_duty(MOTOR1_PWM, duty_mid);
         pwm_set_duty(MOTOR2_PWM, duty_mid);
         printf("[TEST_MOTOR] M1+M2 forward\r\n");
-        system_delay_ms(2000);
+        system_delay_ms(1500);
 
         // 双轮反转
         gpio_set_level(MOTOR1_DIR, motor1_reverse_level);
@@ -389,7 +392,7 @@ int main(void)
         pwm_set_duty(MOTOR1_PWM, duty_mid);
         pwm_set_duty(MOTOR2_PWM, duty_mid);
         printf("[TEST_MOTOR] M1+M2 reverse\r\n");
-        system_delay_ms(2000);
+        system_delay_ms(1500);
 
         // 停止
         pwm_set_duty(MOTOR1_PWM, 0);
@@ -397,6 +400,14 @@ int main(void)
         printf("[TEST_MOTOR] stop\r\n");
         system_delay_ms(1000);
     }
+
+    // 测试结束后保持安全停止
+    pwm_set_duty(MOTOR1_PWM, 0);
+    pwm_set_duty(MOTOR2_PWM, 0);
+    gpio_set_level(MOTOR1_DIR, GPIO_LOW);
+    gpio_set_level(MOTOR2_DIR, GPIO_LOW);
+    printf("[TEST_MOTOR] finished\r\n");
+    while (1) { system_delay_ms(1000); }
 #endif
 
 	
