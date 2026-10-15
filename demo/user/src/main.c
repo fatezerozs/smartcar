@@ -7,10 +7,14 @@
 #define TEST_SERVO 0
 #endif
 #ifndef TEST_MOTOR
-#define TEST_MOTOR 0
+#define TEST_MOTOR 1
 #endif
 #ifndef TEST_UART
 #define TEST_UART  0
+#endif
+
+#if ((TEST_SERVO + TEST_MOTOR + TEST_UART) > 1)
+#error "Only one test mode can be enabled at a time."
 #endif
 
 // *************************** 例程硬件连接说明 ***************************
@@ -19,7 +23,7 @@
             连接好电机、主板、驱动板、摄像头、编码器
             (请确保全部正确连接后在使用此例程，所有外设均会使用)
 */
-// *************************** 例程测试说明 ***************************
+// *************************** 例程测试说明 ***************************K
 /*
             本例程包含功能：
             1.初始化摄像头并采集图像进行大津法二值化
@@ -332,22 +336,57 @@ int main(void)
 #endif
 
 #if TEST_SERVO
-    // 舵机测试：中-左-右 循环，便于观察角度和抖动
+    // 舵机单独调试：强制关闭电机，避免其他模块干扰
+    pwm_set_duty(MOTOR1_PWM, 0);
+    pwm_set_duty(MOTOR2_PWM, 0);
+    gpio_set_level(MOTOR1_DIR, GPIO_LOW);
+    gpio_set_level(MOTOR2_DIR, GPIO_LOW);
+
+    const float servo_center = (SERVO_MOTOR_L_MAX + SERVO_MOTOR_R_MAX) / 2.0f;
+    const float servo_left = SERVO_MOTOR_L_MAX;
+    const float servo_right = SERVO_MOTOR_R_MAX;
+
     while (1)
     {
-        // 中位
-        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY( (SERVO_MOTOR_L_MAX + SERVO_MOTOR_R_MAX) / 2 ));
-        printf("[TEST_SERVO] middle\r\n");
-        system_delay_ms(1000);
+        // 回中
+        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(servo_center));
+        printf("[TEST_SERVO] center %.1f\r\n", servo_center);
+        system_delay_ms(1200);
 
-        // 左极限
-        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(SERVO_MOTOR_L_MAX));
-        printf("[TEST_SERVO] left max\r\n");
-        system_delay_ms(1000);
+        // 小步扫到左侧极限，便于观察抖动和卡顿点
+        for (float p = servo_center; p <= servo_left; p += 1.0f)
+        {
+            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(p));
+            system_delay_ms(40);
+        }
+        printf("[TEST_SERVO] left %.1f\r\n", servo_left);
+        system_delay_ms(800);
 
-        // 右极限
-        pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(SERVO_MOTOR_R_MAX));
-        printf("[TEST_SERVO] right max\r\n");
+        // 回中
+        for (float p = servo_left; p >= servo_center; p -= 1.0f)
+        {
+            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(p));
+            system_delay_ms(40);
+        }
+        printf("[TEST_SERVO] center %.1f\r\n", servo_center);
+        system_delay_ms(800);
+
+        // 小步扫到右侧极限
+        for (float p = servo_center; p >= servo_right; p -= 1.0f)
+        {
+            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(p));
+            system_delay_ms(40);
+        }
+        printf("[TEST_SERVO] right %.1f\r\n", servo_right);
+        system_delay_ms(800);
+
+        // 回中，完成一轮
+        for (float p = servo_right; p <= servo_center; p += 1.0f)
+        {
+            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(p));
+            system_delay_ms(40);
+        }
+        printf("[TEST_SERVO] cycle done\r\n");
         system_delay_ms(1000);
     }
 #endif
@@ -356,8 +395,9 @@ int main(void)
     // 电机开环测试：执行 3 轮后自动停止
     const uint8_t motor1_reverse_level = (MOTOR1_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
     const uint8_t motor2_reverse_level = (MOTOR2_FORWARD_DIR_LEVEL == GPIO_HIGH) ? GPIO_LOW : GPIO_HIGH;
-    const uint32_t duty_mid = PWM_DUTY_MAX / 2;
-    const uint8_t test_rounds = 3;
+    const uint32_t duty_mid = PWM_DUTY_MAX / 5;
+	  const uint32_t duty_slow = PWM_DUTY_MAX / 10;
+    const uint8_t test_rounds = 20;
 
     for (uint8_t round = 0; round < test_rounds; ++round)
     {
@@ -381,16 +421,16 @@ int main(void)
         // 双轮正转
         gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
         gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
-        pwm_set_duty(MOTOR1_PWM, duty_mid);
-        pwm_set_duty(MOTOR2_PWM, duty_mid);
+        pwm_set_duty(MOTOR1_PWM, duty_slow);
+        pwm_set_duty(MOTOR2_PWM, duty_slow);
         printf("[TEST_MOTOR] M1+M2 forward\r\n");
         system_delay_ms(1500);
 
         // 双轮反转
         gpio_set_level(MOTOR1_DIR, motor1_reverse_level);
         gpio_set_level(MOTOR2_DIR, motor2_reverse_level);
-        pwm_set_duty(MOTOR1_PWM, duty_mid);
-        pwm_set_duty(MOTOR2_PWM, duty_mid);
+        pwm_set_duty(MOTOR1_PWM, duty_slow);
+        pwm_set_duty(MOTOR2_PWM, duty_slow);
         printf("[TEST_MOTOR] M1+M2 reverse\r\n");
         system_delay_ms(1500);
 

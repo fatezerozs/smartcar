@@ -16,16 +16,17 @@
 
 // 电机参数设置
 // !!! 请确保dir和pwm脚不要弄反了，否则电机会疯转 !!!
-// 左轮电机
+// 当前样机实际接线：M1 对应右轮，M2 对应左轮
+// 这里保留现有实际映射，不做软件重排；若需要调整前后方向，只改 FORWARD_DIR_LEVEL
+// 右轮电机（当前实际接线：PWM=C8，DIR=C9）
 #define MOTOR1_PWM (PWM2_MODULE0_CHA_C6)
 #define MOTOR1_DIR (C7)
-// 左电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
+// 右轮电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
 #define MOTOR1_FORWARD_DIR_LEVEL (GPIO_HIGH)
-// 右轮电机
-// 经过排障，右轮在该板卡上更稳定的映射为 PWM=C9、DIR=C8
-#define MOTOR2_PWM (PWM2_MODULE1_CHB_C9)
-#define MOTOR2_DIR (C8)
-// 右电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
+// 左轮电机（当前实际接线：PWM=C6，DIR=C7）
+#define MOTOR2_PWM (PWM2_MODULE1_CHA_C8)
+#define MOTOR2_DIR (C9)
+// 左轮电机前进需要的DIR脚的电平 (GPIO_HIGH or GPIO_LOW) 请自行测试
 #define MOTOR2_FORWARD_DIR_LEVEL (GPIO_HIGH)
 
 
