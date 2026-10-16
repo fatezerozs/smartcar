@@ -1,19 +1,23 @@
 #include "main.h" // 所有引脚信息更改在main.h里改宏
 #include "zf_common_headfile.h"
 #include "math.h"
+#include "vision_debug.h"
 
 // Test mode switches (set one of them to 1 when doing module tests)
 #ifndef TEST_SERVO
 #define TEST_SERVO 0
 #endif
 #ifndef TEST_MOTOR
-#define TEST_MOTOR 1
+#define TEST_MOTOR 0
 #endif
 #ifndef TEST_UART
 #define TEST_UART  0
 #endif
+#ifndef TEST_VISION
+#define TEST_VISION 1
+#endif
 
-#if ((TEST_SERVO + TEST_MOTOR + TEST_UART) > 1)
+#if ((TEST_SERVO + TEST_MOTOR + TEST_UART + TEST_VISION) > 1)
 #error "Only one test mode can be enabled at a time."
 #endif
 
@@ -261,8 +265,10 @@ void Init()
     // 初始化flash, 储存参数. 一个扇区有8页, 一页可以储存4096字节, 一个参数占4个字节, 因此一页最多只能存64个参数
     flash_init();
 
+#if !TEST_VISION
     tft180_set_dir(TFT180_CROSSWISE);                                           // 需要先横屏 不然显示不下
     tft180_init();
+#endif
 	
     // 电机初始化
     pwm_init(MOTOR1_PWM, 17000, 0); // PWM 通道初始化频率 17KHz 占空比初始为 0
@@ -273,24 +279,42 @@ void Init()
     // 舵机
     pwm_init(SERVO_MOTOR_PWM, SERVO_MOTOR_FREQ, 0);
 
+#if TEST_VISION
+    // 视觉单测绝不驱动电机或舵机；编码器/PID/PIT 也不启动。
+    pwm_set_duty(MOTOR1_PWM, 0);
+    pwm_set_duty(MOTOR2_PWM, 0);
+    pwm_set_duty(SERVO_MOTOR_PWM, 0);
+    gpio_set_level(MOTOR1_DIR, GPIO_LOW);
+    gpio_set_level(MOTOR2_DIR, GPIO_LOW);
+#endif
 
     // mt9v03x摄像头初始化
-#if !(TEST_SERVO || TEST_MOTOR || TEST_UART)
+#if TEST_VISION || !(TEST_SERVO || TEST_MOTOR || TEST_UART)
     while (1)
     {
         if (mt9v03x_init())
+        {
+#if TEST_VISION
+            printf("[VISION] camera init failed; retrying\r\n");
+#else
             tft180_show_string(0, 16, "mt9v03x reinit.");
+#endif
+        }
         else
             break;
         system_delay_ms(1000);
     }
+#if TEST_VISION
+    printf("[VISION] camera init OK\r\n");
+#else
     tft180_show_string(0, 16, "init success.");
+#endif
 #else
     tft180_show_string(0, 16, "test mode: skip cam");
 #endif
 
     // 编码器/PID/PIT 只在整车模式启用，避免单模块测试被中断控制覆盖
-#if !(TEST_SERVO || TEST_MOTOR || TEST_UART)
+#if !(TEST_SERVO || TEST_MOTOR || TEST_UART || TEST_VISION)
     // 编码器初始化
     encoder_quad_init(ENCODER_1, ENCODER_1_A, ENCODER_1_B); // 初始化编码器模块与引脚 正交解码编码器模式
     encoder_quad_init(ENCODER_2, ENCODER_2_A, ENCODER_2_B); // 初始化编码器模块与引脚 正交解码编码器模式
@@ -324,6 +348,11 @@ int main(void)
     uint32_t end_time;
     uint8_t last_state;
     uint8_t now_state;
+
+#if TEST_VISION
+    vision_debug_run();
+    while (1) { } // Do not fall through into the full-car control path.
+#endif
 
 #if TEST_UART
     // UART 测试：持续打印，观察上位机是否能收到
