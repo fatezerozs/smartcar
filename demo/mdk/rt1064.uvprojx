@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>MIMXRT1064DVL6B</Device>
           <Vendor>NXP</Vendor>
-          <PackID>NXP.MIMXRT1064_DFP.26.09.00</PackID>
+          <PackID>NXP.MIMXRT1064_DFP.19.0.0</PackID>
           <PackURL>https://mcuxpresso.nxp.com/cmsis_pack/repo/</PackURL>
           <Cpu>IRAM(0x20000000,0x020000) IRAM2(0x00000000,0x020000) IROM(0x70000000,0x400000) IROM2(0x00200000,0x020000) XRAM(0x20280000,0x040000) XRAM2(0x20200000,0x080000) CPUTYPE("Cortex-M7") FPU3(DFPU) CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -439,6 +439,31 @@
         <Group>
           <GroupName>code</GroupName>
           <Files>
+            <File><FileName>vision_profile.h</FileName><FileType>5</FileType><FilePath>..\code\vision_profile.h</FilePath></File>
+            <File><FileName>vision_control.c</FileName><FileType>1</FileType><FilePath>..\code\vision_control.c</FilePath></File>
+            <File><FileName>vision_control.h</FileName><FileType>5</FileType><FilePath>..\code\vision_control.h</FilePath></File>
+            <File><FileName>vision_drive.c</FileName><FileType>1</FileType><FilePath>..\code\vision_drive.c</FilePath></File>
+            <File><FileName>vision_drive.h</FileName><FileType>5</FileType><FilePath>..\code\vision_drive.h</FilePath></File>
+            <File>
+              <FileName>vision_midterm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_midterm.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_midterm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\vision_midterm.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_debug.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\vision_debug.h</FilePath>
+            </File>
             <File>
               <FileName>Camera.c</FileName>
               <FileType>1</FileType>

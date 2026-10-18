@@ -1,0 +1,29 @@
+# Generated firmware/host build products; preserve all original source/docs.
+**/Objects/
+**/Listings/
+.build/
+tests/vision/output/
+*.o
+*.obj
+*.d
+*.dep
+*.axf
+*.elf
+*.hex
+*.map
+*.pdb
+*.ilk
+*.exp
+*.uvoptx
+*.uvguix.*
+*.build_log.htm
+.vscode/
+.vs/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+# IAR session state (projects/linker scripts themselves remain tracked).
+**/settings/*.dnx
+**/settings/*.cspy.bat
+**/settings/*_nor_sdram_zf_dtcm.jlink

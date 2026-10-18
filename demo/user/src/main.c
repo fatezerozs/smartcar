@@ -3,7 +3,8 @@
 #include "math.h"
 #include "vision_debug.h"
 
-// Test mode switches (set one of them to 1 when doing module tests)
+// 单模块测试开关：同一时间只打开一个。当前 TEST_VISION=1 为静态视觉调试。
+// 不依赖屏幕/编码器；电机和舵机输出保持 0。详细操作见 code/VISION_README.md。
 #ifndef TEST_SERVO
 #define TEST_SERVO 0
 #endif
@@ -350,6 +351,8 @@ int main(void)
     uint8_t now_state;
 
 #if TEST_VISION
+    // 中期检查仅需直道/弯道：采集、识别和上位机输出统一放在 code 中。
+    // 此函数不返回，原整车循环（含环岛/十字/斑马线）在此模式下不执行。
     vision_debug_run();
     while (1) { } // Do not fall through into the full-car control path.
 #endif

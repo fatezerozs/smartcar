@@ -36,6 +36,7 @@
 #include "zf_common_headfile.h"
 #include "isr.h"
 #include "main.h"
+#include "vision_drive.h"
 #include "math.h"
 
 int16 encoder_data_1 = 0;
@@ -130,6 +131,9 @@ void PIT_IRQHandler(void)
     if(pit_flag_get(PIT_CH1))
     {
         pit_flag_clear(PIT_CH1);
+#if VISION_DRIVE_ENABLE
+        vision_drive_safety_tick(); // Independent output lease, no encoder/PID use.
+#endif
     }
     
     if(pit_flag_get(PIT_CH2))
