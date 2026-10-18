@@ -10,12 +10,13 @@ foreach ($file in $files) {
     if (-not $resolved.StartsWith($projectRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw ('Source escapes project: ' + $file.FilePath) }
     if (-not (Test-Path -LiteralPath $resolved -PathType Leaf)) { throw ('Missing project input: ' + $file.FilePath) }
 }
-foreach ($name in @('vision_midterm.c','vision_midterm.h','vision_debug.c','vision_debug.h','vision_control.c','vision_control.h','vision_drive.c','vision_drive.h','vision_profile.h')) {
+foreach ($name in @('track_bayes.c','track_bayes.h','midterm_open_loop.c','midterm_open_loop.h','vision_midterm.c','vision_midterm.h','vision_debug.c','vision_debug.h','vision_control.c','vision_control.h','vision_drive.c','vision_drive.h','vision_profile.h')) {
     if (@($files | Where-Object FileName -eq $name).Count -ne 1) { throw ('Bad file reference: ' + $name) }
 }
 $main = Get-Content -Raw -LiteralPath (Join-Path $projectRoot 'demo\user\src\main.c')
-foreach ($entry in @{ TEST_VISION='1'; TEST_SERVO='0'; TEST_MOTOR='0'; TEST_UART='0' }.GetEnumerator()) {
-    if ($main -notmatch ('(?m)^#define\s+' + $entry.Key + '\s+' + $entry.Value + '\s*$')) { throw ('Wrong mode: ' + $entry.Key) }
+if ($main -notmatch 'vision_debug_run\(\)' -or $main -match 'Island_Detect\(|zebra_handle\(|encoder_quad_init\(') { throw 'Old runtime entry detected' }
+foreach ($name in @('Camera.c','Island.c','pid.c','img_process.c')) {
+    if (@($files | Where-Object FileName -eq $name).Count) { throw ('Legacy algorithm is still built: ' + $name) }
 }
 if ($main -match 'DIAG_UART_ONLY|\[UART_DIAG\]') { throw 'Temporary diagnostic firmware must not be delivered' }
 $profile = Get-Content -Raw -LiteralPath (Join-Path $projectRoot 'demo\code\vision_profile.h')

@@ -2,21 +2,23 @@
 
 ## 版本和使用入口
 
-本次整理基于远端 `vision-debug` 的 `30196f23c07e45a6aecdd385638d53ec33591436`，加入桌面现有视觉、安全控制和离线验证成果。提交号以 Git 历史为准。队友 `main` 不合并、不覆盖，桌面原 ZIP 副本保持原样。
+当前重构基于本仓库 `vision-debug` 的 `eb5ed00`；此前交付基线为 `30196f23c07e45a6aecdd385638d53ec33591436`。提交号以 Git 历史为准，不将工作区修改冒称已推送。队友 `main` 不合并、不覆盖，桌面原 ZIP 副本保持原样。
 
 今后以本 Git 检出目录或本次完整源码压缩包为当前交付版本；桌面旧副本不会自动同步。完整解压压缩包后再打开工程，不要只拷贝一个 C 文件或在压缩包内直接运行。
 
 | 位置 | 用途 |
 | --- | --- |
 | `demo/mdk/rt1064.uvprojx` | 当前唯一检查过的新功能 Keil 工程，目标 nor_sdram_zf_dtcm |
-| `demo/user/src/main.c` | 入口及互斥测试模式；当前 TEST_VISION=1 |
-| `demo/user/src/isr.c` | 原中断逻辑保留，仅加条件启用的 PIT1 安全钩子 |
+| `demo/user/src/main.c` | 单一安全入口，不含旧整车定时调度或 TEST_VISION 回落分支 |
+| `demo/user/src/isr.c` | 保留中断入口，移除 PIT0 速度环输出，保留 PIT1 安全钩子 |
+| `demo/code/track_bayes.c/.h` | 完整赛道隐状态、后验和拒识；默认未训练，仅观测 |
+| `demo/code/midterm_open_loop.c/.h` | 独立的中期电机开环 PWM 降额、限幅和上升斜率 |
 | `demo/code/vision_midterm.c/.h` | 图像预处理、边界、中线、覆盖和历史 |
 | `demo/code/vision_debug.c/.h` | 帧复制、串口命令、V2 预览，调用控制扩展 |
 | `demo/code/vision_profile.h` | 归一化几何、标定轴、控制参数与默认输出安全锁 |
 | `demo/code/vision_control.c/.h` | 不依赖板端 IO 的视觉闭环转向及故障状态机 |
 | `demo/code/vision_drive.c/.h` | 校验配置、映射原 IO、原子输出、PIT1 安全租约 |
-| `demo/code/Camera.*、Island.*`、原 img_process/PID | 原实现保留，未被本次整体重写 |
+| `demo/code/Camera.*、Island.*`、原 img_process/PID | 原文件保留供对照，当前 MDK 不编译这些旧 C 文件 |
 | `libraries/` | 上游设备驱动、SDK、CMSIS 等，原样保留 |
 | `tests/vision/` | 合成 C 回归、模拟硬件、预处理参考实现 |
 | `tools/` | 相对路径的工程、主机环境、ARM 编译、Keil 重建脚本 |
@@ -26,7 +28,7 @@
 
 ## 安全默认值与范围
 
-屏幕、编码器故障条件下，当前默认只采集和识别，不启动原速度 PID/PIT0。主程序保留原整车代码供对照，不以关闭 TEST_VISION 的方式绕过保护。
+当前默认只采集和识别。原主程序整车时序逻辑已移除，可从 Git 历史对照；PIT0 仅清标志，不读取编码器或写 PWM。两条新路径见 [BAYES_REFACTOR](BAYES_REFACTOR.md)。
 
 相机闭环的是横向转向：实测中线相对标定参考轴的误差除以实测半路宽，结合近远差和按实际帧间隔计算的滤波 PD。电机只有开环占空比限幅和变化率限制，**没有实际速度反馈**。
 

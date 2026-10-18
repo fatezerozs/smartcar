@@ -11,6 +11,7 @@ static int range(float x, float low, float high) { return finite_value(x) && x >
 void vc_default_config(vc_config_t *c)
 {
     memset(c, 0, sizeof(*c));
+    mol_default_config(&c->motor);
     c->near_y = VISION_AXIS_NEAR_Y; c->far_y = VISION_AXIS_FAR_Y;
     c->axis_near_x = VISION_AXIS_NEAR_X; c->axis_far_x = VISION_AXIS_FAR_X;
     c->band_half_height = VISION_CONTROL_BAND_HALF_HEIGHT;
@@ -32,7 +33,7 @@ void vc_default_config(vc_config_t *c)
 
 static int configuration_valid(const vc_config_t *c)
 {
-    return range(c->near_y, 0, 1) && range(c->far_y, 0, 1) &&
+    return mol_config_valid(&c->motor) && range(c->near_y, 0, 1) && range(c->far_y, 0, 1) &&
         c->near_y > c->far_y && range(c->band_half_height, 0.01f, 0.15f) &&
         c->near_y - c->far_y > 2 * c->band_half_height &&
         c->near_y + c->band_half_height <= (float)VISION_ROI_BOTTOM / (VISION_HEIGHT - 1) &&
@@ -180,7 +181,7 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     c->output.heading = heading;
     if (c->stable_frames < 255) ++c->stable_frames;
     if (c->output.state == VC_RUNNING) {
-        float target, target_duty, difficulty, derivative;
+        float target, target_duty, derivative;
         /* Same-millisecond/reordered timestamps are not valid control timing. */
         if (dt <= 0 || dt >= c->config.frame_timeout_ms * 0.001f) { vc_trip(c, VC_FAULT_FRAME); return; }
         derivative = (near_error - c->previous_lateral) / dt;
@@ -190,14 +191,12 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         target = clamp(target, -1, 1);
         c->output.steering += clamp(target - c->output.steering,
                                    -c->config.steer_rate * dt, c->config.steer_rate * dt);
-        difficulty = absolute(near_error) + absolute(heading) + absolute(c->output.steering);
-        target_duty = c->config.cruise_duty / (1 + difficulty);
-        target_duty *= r->confidence * 0.01f;
-        if (!have_far) target_duty *= 0.5f;
-        target_duty = clamp(target_duty, 0, c->config.duty_cap);
-        /* Deceleration/fault stopping is immediate; acceleration is limited. */
-        if (target_duty > c->output.duty)
-            target_duty = c->output.duty + clamp(target_duty - c->output.duty, 0, c->config.duty_rise_per_s * dt);
+        if (!mol_step(&c->config.motor, near_error, heading, c->output.steering,
+                      r->confidence * .01f, have_far, c->config.cruise_duty,
+                      c->config.duty_cap, c->config.duty_rise_per_s,
+                      c->output.duty, dt, &target_duty)) {
+            vc_trip(c, VC_FAULT_NUMERIC); return;
+        }
         c->output.duty = target_duty;
     } else c->output.duty = c->output.steering = 0;
     c->previous_lateral = near_error;

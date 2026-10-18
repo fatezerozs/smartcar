@@ -16,7 +16,7 @@ foreach ($definition in ([string]$controls.Define).Split(',')) { $flags += '-D' 
 foreach ($include in ([string]$controls.IncludePath).Split(';')) { if ($include.Trim()) { $flags += '-I' + $include.Trim() } }
 Push-Location $mdkRoot
 try {
-    foreach ($unit in @('vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
+    foreach ($unit in @('track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
         & $compiler @flags '-c' ('..\code\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM compile failed: ' + $unit) }
         Write-Output ('PASS ARM default: ' + $unit)
@@ -28,6 +28,10 @@ try {
     foreach ($unit in @('main', 'isr')) {
         & $compiler @flags '-c' ('..\user\src\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM user unit failed: ' + $unit) }
+    }
+    foreach ($source in @('..\code\vision_debug.c', '..\user\src\main.c')) {
+        & $compiler @flags '-DVISION_WIRELESS_UART_ENABLE=1' '-DVISION_DRIVE_ENABLE=1' '-c' $source '-o' (Join-Path $outputRoot ((Split-Path $source -Leaf) + '-wireless.o'))
+        if ($LASTEXITCODE -ne 0) { throw ('ARM wireless branch failed: ' + $source) }
     }
     & $compiler @flags '-DVISION_DRIVE_ENABLE=1' '-c' '..\user\src\isr.c' '-o' (Join-Path $outputRoot 'isr-enabled.o')
     if ($LASTEXITCODE -ne 0) { throw 'ARM enabled ISR failed' }

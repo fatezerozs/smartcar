@@ -13,6 +13,7 @@ cmd /c tests\vision\run_equivalence.cmd
 cmd /c "tests\vision\run_equivalence.cmd asan"
 & .\tools\verify_project.ps1
 & .\tools\check_arm.ps1
+python tests/vision/test_fit_model.py
 # 完整重建；需要本机 Keil 和设备包，不下载固件：
 & .\tools\build_keil.ps1
 ```
@@ -24,9 +25,11 @@ run_tests 默认使用 `/O2 /W4 /WX`，asan 使用 `/Od /Zi /fsanitize=address /
 | 文件 | 检查范围 |
 | --- | --- |
 | test_vision.c | 合成直道、偏移、弯道、遮挡、曝光/阴影、歧义、补线过期、随机图、边界连续性和预览像素 |
-| test_debug.c + stubs/main.h | 实际调试循环的文字/图像命令、复制竞争、超时、计时回绕、V2 实际字节与负载 |
+| test_debug.c + stubs/main.h | 静态 USB、模拟确认配置 USB/无线三种分支；模式切换/停止优先、复制竞争、超时、计时回绕、V2 字节与负载 |
 | test_control.c | 归一化误差、PD/输出变化率、人工解锁、各类锁存故障、随机帧序列 |
 | test_drive.c | 默认关闭、启用但未确认、模拟已确认配置三种分支，PWM 写入与中断安全时序 |
+| test_bayes.c | 概率归一化、异常/倒序/重复数据、对称性、安装轴平移及开环 PWM |
+| test_fit_model.py | 拟合输入的缺类、缺测、非法数值、时序和录制边界 |
 | test_equivalence.c + reference/vision_reference.c | 当前预处理对历史快照的阈值、二值像素和灰度/二值预览等价 |
 
 reference 是本项目此前性能优化前的实现快照，仅用于主机等价对照，不加入 MCU 工程。跟踪和叠线已有有意行为修正，**不在等价承诺中**。默认运行器中的示例硬件宏只用于模拟，绝不作为实际标定值。

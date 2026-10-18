@@ -2,6 +2,7 @@
 #define VISION_CONTROL_H
 #include <stdint.h>
 #include "vision_midterm.h"
+#include "midterm_open_loop.h"
 
 typedef enum { VC_DISARMED = 0, VC_RUNNING, VC_FAULT } vc_state_t;
 enum {
@@ -10,6 +11,7 @@ enum {
     VC_FAULT_OFFSET = 32U, VC_FAULT_RUNTIME = 64U, VC_FAULT_EXTERNAL = 128U
 };
 typedef struct {
+    mol_config_t motor; /* 可单独标定的中期 PWM 降额模型，不含编码器反馈。 */
     float near_y, far_y, band_half_height, axis_near_x, axis_far_x;
     float kp, kd, heading_gain, derivative_filter_s;
     float steer_rate, duty_rise_per_s, duty_cap, cruise_duty, max_lateral;

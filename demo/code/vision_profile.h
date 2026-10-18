@@ -21,6 +21,37 @@
 #define VISION_EDGE_STEP_FRACTION 0.032f
 #define VISION_CENTER_STEP_FRACTION 0.0745f
 #define VISION_MAX_ROW_GAPS 4
+/* 跟踪观测参数：集中配置，不是赛道位置或环岛步骤。默认值保持既有
+ * 回归行为；覆盖分数是行覆盖，不得称作贝叶斯后验或正确率。 */
+#define VISION_MIN_CONTRAST 18
+#define VISION_ROW_THRESHOLD_DEADBAND 8
+#define VISION_MAX_INFER_AGE 5
+#define VISION_GRAY_PERCENTILE_DENOMINATOR 50U
+#define VISION_TRACK_DISTANCE_WEIGHT 4.0f
+#define VISION_TRACK_WIDTH_WEIGHT 0.25f
+#define VISION_TRACK_INFER_PENALTY_FRACTION (20.0f / 188.0f)
+#define VISION_TRACK_NEAR_WEIGHT 3.0f
+#define VISION_TRACK_MIDDLE_WEIGHT 2.0f
+#define VISION_TRACK_FAR_WEIGHT 1.0f
+#define VISION_TRACK_INFER_WEIGHT 0.5f
+#define VISION_TRACK_MIN_NEAR_PERMILLE 50
+#define VISION_TRACK_MIN_TOTAL_PERMILLE 100
+#define VISION_TRACK_MIN_BEND_PERMILLE 34
+#define VISION_TRACK_MIN_COVERAGE 25
+#define VISION_TRACK_HISTORY_WEIGHT 0.6f
+/* 使用 tools/fit_track_model.py 的标注数据模型时显式启用；不是安全解锁。 */
+#ifndef VISION_BAYES_FITTED_MODEL
+#define VISION_BAYES_FITTED_MODEL 0
+#endif
+/* 板级时序/载波属于硬件参数，不是赛道定时动作。 */
+#define VISION_MOTOR_PWM_HZ 17000U
+#define VISION_POWER_SETTLE_MS 300U
+#define VISION_CAMERA_RETRY_MS 1000U
+/* 0=现有 debug UART1；1=原库 UART8 无线模块，单一控制源，不混合心跳。
+ * 启用前核实原库 D16/D17/RTS D26 接线；不修改 SDK 的 RX 中断机制。 */
+#ifndef VISION_WIRELESS_UART_ENABLE
+#define VISION_WIRELESS_UART_ENABLE 0
+#endif
 
 /* Axis in normalized image coordinates (x right, y down). On a confirmed
  * centered STRAIGHT, measure lane-center x at these near/far y locations.
@@ -71,6 +102,11 @@
 #define VISION_CONTROL_D_FILTER_S 0.10f
 #define VISION_CONTROL_STEER_RATE 2.0f
 #define VISION_CONTROL_DUTY_RISE_PER_S 0.10f
+/* 中期电机开环降额项；没有编码器时不可标称为速度控制。 */
+#define VISION_DUTY_LATERAL_WEIGHT 1.0f
+#define VISION_DUTY_HEADING_WEIGHT 1.0f
+#define VISION_DUTY_STEERING_WEIGHT 1.0f
+#define VISION_DUTY_MISSING_FAR_SCALE 0.5f
 #define VISION_CONTROL_FRAME_TIMEOUT_MS 100U
 #define VISION_CONTROL_COMMAND_TIMEOUT_MS 500U
 #define VISION_CONTROL_MAX_RUN_MS 5000U

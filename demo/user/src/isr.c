@@ -60,69 +60,8 @@ void PIT_IRQHandler(void)
 {
     if (pit_flag_get(PIT_CH0))
     {
-        // 获取编码器读数
-        encoder_data_1 = -encoder_get_count(ENCODER_1); // 获取编码器计数
-        encoder_clear_count(ENCODER_1);                // 清空编码器计数
-        encoder_data_2 = +encoder_get_count(ENCODER_2);
-        encoder_clear_count(ENCODER_2);
-
-        // 编码器值即为速度值
-        speed_pid_l.real = encoder_data_1;
-        speed_pid_r.real = encoder_data_2;
-
-        // 差速：阿克曼几何法————内外轮速度比 = 内外轮转弯半径比
-        // 将舵机角度转换为转向角度（弧度）
-        // 假设theta=95°时前轮直指，theta=0°左转最大，theta=180°右转最大
-        float steering_angle_deg = theta - 95.0f;  // 转换为-90°到+90°
-        float steering_angle_rad = steering_angle_deg * 3.14159f / 180.0f;
-        
-        // 计算转弯半径
-        if (fabsf(steering_angle_rad) < 0.01f) {
-            // 直行情况
-            speed_pid_l.target = speed_TARGET;
-            speed_pid_r.target = speed_TARGET;
-        }
-				else
-				{
-            // 转弯情况
-            float turn_radius = WHEELBASE / tanf(steering_angle_rad);
-            
-            // 限制最小转弯半径
-            if (fabsf(turn_radius) < MIN_TURNING_RADIUS) {
-                turn_radius = (turn_radius > 0) ? MIN_TURNING_RADIUS : -MIN_TURNING_RADIUS;
-            }
-            
-            // 计算内外轮速度比（阿克曼转向原理）
-            if (steering_angle_rad > 0) {
-                // 右转：左轮（外轮）速度快，右轮（内轮）速度慢
-                float radius_outer = turn_radius + TRACK_WIDTH/2;  // 外轮转弯半径
-                float radius_inner = turn_radius - TRACK_WIDTH/2;  // 内轮转弯半径
-                
-                speed_pid_l.target = speed_TARGET * radius_outer / fabsf(turn_radius);
-                speed_pid_r.target = speed_TARGET * radius_inner / fabsf(turn_radius);
-            }
-						else
-						{
-                // 左转：右轮（外轮）速度快，左轮（内轮）速度慢
-                float radius_outer = fabsf(turn_radius) + TRACK_WIDTH/2;
-                float radius_inner = fabsf(turn_radius) - TRACK_WIDTH/2;
-                
-                speed_pid_l.target = speed_TARGET * radius_inner / fabsf(turn_radius);
-                speed_pid_r.target = speed_TARGET * radius_outer / fabsf(turn_radius);
-            }
-        }
-				
-				
-        // PID更新 
-			  speed_pid_l.pwm = PidLocCtrl(&speed_pid_l, speed_pid_l.target - speed_pid_l.real, 1.f);
-        speed_pid_r.pwm = PidLocCtrl(&speed_pid_r, speed_pid_r.target - speed_pid_r.real, 1.f);
-			
-			  // 只考虑一个方向转动
-        pwm_set_duty(MOTOR1_PWM, MAX(speed_pid_l.pwm, 0));
-        gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
-			
-        pwm_set_duty(MOTOR2_PWM, MAX(speed_pid_r.pwm, 0));
-        gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
+        /* 保留预设 PIT0 中断入口和清标志，但禁用故障编码器速度环。
+         * 所有运动输出只由 vision_drive 写入，避免中断覆盖停车结果。 */
 				
 				
         pit_flag_clear(PIT_CH0);

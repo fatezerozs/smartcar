@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "vision_midterm.h"
 #include "vision_debug.h"
+#include "vision_drive.h"
 
 /* Actual vision_debug.c runs unchanged. Only MCU time, camera delivery,
  * interrupts and UART transport are simulated; this is not a hardware test. */
@@ -23,9 +24,12 @@ static size_t log_length;
 static uint8_t wire_header[12];
 static int wire_phase;
 static const char *case_name;
+static uint32_t pwm[3];
+static int moved;
+static unsigned usb_reads, wireless_reads, usb_sends, wireless_sends;
 
 enum { TEXT, IMAGE, PAUSE_RESUME, RESET, STOP_CAMERA, NO_CAMERA, CLOCK_WRAP, COPY_RACE, COPY_ABA, NULL_BUFFER, IMAGE_GAP,
-       TEXT_BURST, MODE_BURST, RESET_BURST, REPEAT_IMAGE };
+       TEXT_BURST, MODE_BURST, RESET_BURST, REPEAT_IMAGE, FULL_MODE, RETURN_MIDTERM, STOP_BATCH, DRIVE_IMAGE };
 
 static void check(int ok, const char *what)
 {
@@ -41,6 +45,15 @@ static void fill_camera(int id, int shift)
             camera[id][y][x] = (uint8_t)(x >= center - width / 2 && x <= center + width / 2 ? 210 : 30);
     }
 }
+void pwm_set_duty(int channel, uint32_t duty)
+{
+    check(channel >= 0 && channel < 3 && duty <= 10000, "bounded output");
+    if (channel >= 0 && channel < 3) pwm[channel] = duty;
+    if (channel == 0 && duty) moved = 1;
+}
+void gpio_set_level(int pin, int value) { (void)pin; check(value == 1, "forward polarity only"); }
+void pit_ms_init(int channel, uint32_t period) { check(channel == 1 && period == 10, "PIT1 preserved"); }
+void interrupt_set_priority(int irq, uint8_t priority) { check(irq == 7 && priority == 0, "safety priority preserved"); }
 uint32_t timer_get(int index) { (void)index; return ticks_base + elapsed; }
 uint32_t __get_PRIMASK(void) { return irq_mask; }
 void __disable_irq(void) { irq_mask = 1; }
@@ -54,10 +67,13 @@ void __DMB(void)
         mt9v03x_finish_flag = 1;
     }
 }
-uint32_t debug_read_ring_buffer(uint8_t *data, uint32_t capacity)
+static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
 {
     char command = 0;
     elapsed += 10;
+#if VISION_DRIVE_ENABLE
+    vision_drive_safety_tick();
+#endif
     if (elapsed >= finish_at) longjmp(stop_loop, 1);
     if (current_case != NO_CAMERA && elapsed < feed_until) {
         if (current_case == NULL_BUFFER) mt9v03x_image = NULL;
@@ -68,6 +84,13 @@ uint32_t debug_read_ring_buffer(uint8_t *data, uint32_t capacity)
         }
         mt9v03x_finish_flag = 1;
     }
+    if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 100) command = 'f';
+    if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 200) command = 'a';
+    if (current_case == RETURN_MIDTERM && elapsed == 300) command = 'm';
+    if (current_case == RETURN_MIDTERM && elapsed == 400) command = 'a';
+    if (current_case == STOP_BATCH && elapsed == 200 && capacity >= 2) { memcpy(data,"sa",2); return 2; }
+    if (current_case == DRIVE_IMAGE && elapsed == 200) command = 'a';
+    if (current_case == DRIVE_IMAGE && elapsed == 400) command = 'g';
     if ((current_case == TEXT_BURST && elapsed == 100) ||
         (current_case == MODE_BURST && elapsed == 100) ||
         (current_case == RESET_BURST && elapsed == 500)) {
@@ -96,6 +119,10 @@ uint32_t debug_read_ring_buffer(uint8_t *data, uint32_t capacity)
     }
     return 0;
 }
+uint32_t debug_read_ring_buffer(uint8_t *data, uint32_t capacity)
+{ ++usb_reads; return mock_receive(data, capacity); }
+uint32_t wireless_uart_read_buffer(uint8_t *data, uint32_t capacity)
+{ ++wireless_reads; return mock_receive(data, capacity); }
 int vision_test_printf(const char *format, ...)
 {
     va_list args;
@@ -108,7 +135,7 @@ int vision_test_printf(const char *format, ...)
     else check(0, "mock text buffer capacity");
     return n;
 }
-uint32_t debug_send_buffer(const uint8_t *pixels, uint32_t length)
+static uint32_t mock_image(const uint8_t *pixels, uint32_t length)
 {
     /* Test the actual UART bytes, not a mock detector API call. Header bytes
      * independently derived from the pinned official V2 RT1064 config. */
@@ -143,7 +170,23 @@ uint32_t debug_send_buffer(const uint8_t *pixels, uint32_t length)
         if (packet) { fwrite(wire_header, 1, sizeof(wire_header), packet); fwrite(pixels, 1, length, packet); fclose(packet); }
     }
     ++packets;
+#if VISION_DRIVE_ENABLE
+    check(pwm[0] == 0 && pwm[1] == 0 && pwm[2] == 0, "image transmission is disarmed");
+#endif
     elapsed += 490; /* 94*60 bytes at 115200, 8N1; test blocking output timing. */
+    return 0;
+}
+uint32_t debug_send_buffer(const uint8_t *pixels, uint32_t length)
+{ ++usb_sends; return mock_image(pixels,length); }
+uint32_t wireless_uart_send_buffer(const uint8_t *data, uint32_t length)
+{
+    ++wireless_sends;
+    if (wire_phase || (length == 12 && data[0] == 0xAA)) return mock_image(data,length);
+    if (expected_mode != 't') ++text_during_image;
+    check(log_length + length < sizeof(text_log), "wireless text buffer capacity");
+    if (log_length + length < sizeof(text_log)) {
+        memcpy(text_log + log_length,data,length); log_length += length; text_log[log_length]=0;
+    }
     return 0;
 }
 static void scenario(int which, const char *name, uint32_t duration)
@@ -154,6 +197,8 @@ static void scenario(int which, const char *name, uint32_t duration)
     if (which == RESET || which == STOP_CAMERA || which == RESET_BURST) feed_until = 400;
     irq_mask = which == CLOCK_WRAP ? 1 : 0;
     barriers = 0; packets = text_during_image = wire_phase = 0; log_length = 0;
+    memset(pwm,0,sizeof(pwm)); moved=0;
+    usb_reads=wireless_reads=usb_sends=wireless_sends=0;
     memset(text_log, 0, sizeof(text_log));
     expected_mode = 't'; mt9v03x_finish_flag = 0; mt9v03x_image = NULL;
     if (setjmp(stop_loop) == 0) vision_debug_run();
@@ -162,6 +207,11 @@ static void scenario(int which, const char *name, uint32_t duration)
     check(wire_phase == 0, "each V2 header has a complete payload");
     check(strstr(text_log, "[VISION2]") != NULL, "firmware build marker");
     check(strstr(text_log, "SeekFree V2") != NULL, "explicit V2 wire-protocol marker");
+#if VISION_WIRELESS_UART_ENABLE
+    check(wireless_reads>0 && wireless_sends>0 && usb_reads==0 && usb_sends==0, "wireless owns all runtime IO");
+#else
+    check(usb_reads>0 && wireless_reads==0 && wireless_sends==0, "USB runtime does not mix wireless commands");
+#endif
     if (which == TEXT || which == CLOCK_WRAP || which == PAUSE_RESUME)
         check(strstr(text_log, "valid=1 state=TRACK") != NULL, "working camera text result");
     if (which == IMAGE) {
@@ -194,6 +244,16 @@ static void scenario(int which, const char *name, uint32_t duration)
         check(strstr(text_log, "history cleared") == NULL, "no reset acknowledgement in final image mode");
     }
     if (which == REPEAT_IMAGE) check(packets == 2, "repeated image command cannot bypass output throttle");
+    if (which == FULL_MODE) {
+        check(strstr(text_log,"mode=FULL_OBSERVER") != NULL, "full observer selected");
+        check(!moved, "full observer cannot arm midterm motor");
+    }
+    if (which == STOP_BATCH) check(!moved, "stop dominates later arm in same batch");
+#if VISION_DRIVE_ENABLE
+    if (which == RETURN_MIDTERM || which == DRIVE_IMAGE) check(moved, "midterm can arm with synthetic calibration");
+#else
+    check(!moved, "default firmware never moves");
+#endif
     printf("%-22s packets=%d elapsed=%lu: complete\n", name, packets, (unsigned long)elapsed);
 }
 int main(void)
@@ -213,6 +273,10 @@ int main(void)
     scenario(MODE_BURST, "mixed mode burst", 2300);
     scenario(RESET_BURST, "reset command burst", 1300);
     scenario(REPEAT_IMAGE, "repeat image command", 2300);
+    scenario(FULL_MODE, "full observer no drive", 1300);
+    scenario(RETURN_MIDTERM, "return midterm then arm", 650);
+    scenario(STOP_BATCH, "stop wins over arm", 650);
+    scenario(DRIVE_IMAGE, "image disarms drive", 1300);
     printf("ADAPTER RESULT: %d checks, %d failures (mock MCU/transport, no hardware claim)\n", checks, failures);
     return failures ? 1 : 0;
 }

@@ -72,8 +72,8 @@ void vision_drive_init(uint32_t now)
     hardware_ready = (uint8_t)profile_ready();
     initialized = 1;
     zero_outputs();
-    /* main Init() already initializes PWM at zero. PIT0 encoder/PID remains
-     * disabled in TEST_VISION. Reserve PIT1 for a 10ms independent lease guard. */
+    /* board_init 已将 PWM 初始化为零，PIT0 已无编码器/PID 输出路径。
+     * 保留 PIT1 为独立 10ms 安全租约；不得挪作阻塞 UART/视觉计算。 */
     pit_ms_init(PIT_CH1, VISION_CONTROL_SAFETY_TICK_MS);
     interrupt_set_priority(PIT_IRQn, 0);
 #endif

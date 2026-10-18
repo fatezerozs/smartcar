@@ -2,6 +2,29 @@
 #include "vision_midterm.h"
 #include "vision_debug.h"
 #include "vision_drive.h"
+#include "track_bayes.h"
+#if VISION_WIRELESS_UART_ENABLE
+#include <stdarg.h>
+#include <stdio.h>
+/* 无线模式仍走原 UART8 RX 中断/FIFO。整帧、文字、命令统一选同一链路，
+ * 不把 USB 和无线命令拼接，避免一个链路的心跳维持另一个链路的运行。 */
+static int vision_wireless_printf(const char *format, ...)
+{
+    char text[384]; int n; va_list args;
+    va_start(args, format);
+    n = vsnprintf(text, sizeof(text), format, args);
+    va_end(args);
+    if (n > 0) {
+        uint32_t length = (uint32_t)n < sizeof(text) ? (uint32_t)n : sizeof(text) - 1U;
+        (void)wireless_uart_send_buffer((const uint8_t *)text, length);
+    }
+    return n;
+}
+#undef printf
+#define printf vision_wireless_printf
+#define debug_read_ring_buffer wireless_uart_read_buffer
+#define debug_send_buffer wireless_uart_send_buffer
+#endif
 
 #if MT9V03X_W != VISION_WIDTH || MT9V03X_H != VISION_HEIGHT
 #error "Vision module dimensions must match the MT9V03X camera configuration."
@@ -18,6 +41,9 @@
 static uint8_t gray_frame[VISION_HEIGHT][VISION_WIDTH];
 static uint8_t preview[PREVIEW_H][PREVIEW_W];
 static vision_result_t result;
+static tb_filter_t track;
+static tb_model_t track_model;
+static tb_observation_t track_observation;
 
 static int coord(uint8_t value) { return value == VISION_INVALID_X ? -1 : value; }
 
@@ -33,6 +59,7 @@ static const uint8_t *camera_buffer(void)
 static void invalidate_result(void)
 {
     memset(&result, 0, sizeof(result));
+    memset(&track_observation, 0, sizeof(track_observation));
     memset(result.left, VISION_INVALID_X, sizeof(result.left));
     memset(result.right, VISION_INVALID_X, sizeof(result.right));
     memset(result.center, VISION_INVALID_X, sizeof(result.center));
@@ -49,8 +76,14 @@ static void help(void)
 #else
     printf("\r\n[VISION2] MIDTERM: straights/bends, actuators OFF\r\n");
 #endif
+#if VISION_WIRELESS_UART_ENABLE
+    printf("[VISION2] UART8 wireless %lu 8N1; send ASCII, HEX/auto-send OFF\r\n", (unsigned long)WIRELESS_UART_BUAD_RATE);
+#else
     printf("[VISION2] UART %lu 8N1; send ASCII, HEX/auto-send OFF\r\n", (unsigned long)DEBUG_UART_BAUDRATE);
+#endif
     printf("[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help\r\n");
+    printf("[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset\r\n");
+    printf("[BAYES] default model UNTRAINED; posterior is not measured accuracy\r\n");
     printf("[VISION2] image: SeekFree V2, GRAY 94x60, header=12 bytes; no mixed text\r\n");
     printf("[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control\r\n");
 }
@@ -82,12 +115,15 @@ static void send_preview(char mode)
 void vision_debug_run(void)
 {
     char mode = 't';
+    uint8_t midterm_mode = 1; /* 完整赛道先做概率观测，不能用中期控制强行过环岛。 */
     uint8_t fresh = 0, timeout_reset = 0;
     uint32_t frames = 0, last_text = 0, last_image = 0;
     uint32_t now = timer_get(GPT_TIM_1), last_frame = now, fps_start = now;
     uint32_t fps_frames = 0, fps_x10 = 0, dropped_copies = 0;
     uint32_t process_ms = 0, history_resets = 0;
     vision_midterm_reset();
+    tb_default_model(&track_model);
+    (void)tb_init(&track, &track_model);
     invalidate_result();
 #if VISION_DRIVE_ENABLE
     vision_drive_init(now);
@@ -97,16 +133,30 @@ void vision_debug_run(void)
         uint8_t commands[16];
         uint8_t help_requested = 0, reset_requested = 0;
         uint32_t n = debug_read_ring_buffer(commands, sizeof(commands));
+#if VISION_DRIVE_ENABLE
+        uint8_t batch_stop = 0;
+        /* 同一接收批次里停止优先，不能被后面的 a 覆盖。 */
+        for (uint32_t i = 0; i < n; ++i) {
+            char c = (char)commands[i];
+            if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
+            if (c == 's' || c == 'g' || c == 'b' || c == 'o' || c == 'p' ||
+                c == 'r' || c == 'f' || c == 'm') batch_stop = 1;
+        }
+        if (batch_stop) vision_drive_stop();
+#endif
         for (uint32_t i = 0; i < n; ++i) {
             char c = (char)commands[i];
             if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
 #if VISION_DRIVE_ENABLE
             if (c == 's' || c == 'c' || c == 'a' || c == 'h') {
-                (void)vision_drive_command(c, timer_get(GPT_TIM_1), mode == 't');
+                (void)vision_drive_command(c, timer_get(GPT_TIM_1), mode == 't' && midterm_mode && !batch_stop);
             }
             if (c == 'g' || c == 'b' || c == 'o' || c == 'p' || c == 'r') vision_drive_stop();
 #endif
-            if (c == 't' || c == 'g' || c == 'b' || c == 'o' || c == 'p') {
+            if (c == 'f' || c == 'm') {
+                midterm_mode = (uint8_t)(c == 'm');
+                reset_requested = 1; help_requested = 1;
+            } else if (c == 't' || c == 'g' || c == 'b' || c == 'o' || c == 'p') {
                 if (c != mode) {
                     if (c == 't') help_requested = 1;
                     mode = c;
@@ -121,6 +171,7 @@ void vision_debug_run(void)
          * Repeating t while already in text mode does not flood the UART. */
         if (reset_requested) {
             vision_midterm_reset();
+            tb_reset(&track);
             invalidate_result();
             fresh = 0;
         }
@@ -129,6 +180,7 @@ void vision_debug_run(void)
             if (reset_requested) printf("[VISION2] tracking history cleared\r\n");
         }
         now = timer_get(GPT_TIM_1);
+        tb_poll(&track, now);
 #if VISION_DRIVE_ENABLE
         vision_drive_poll(now);
 #endif
@@ -155,6 +207,10 @@ void vision_debug_run(void)
                     ++history_resets;
                 }
                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
+                if (track.configured) {
+                    tb_extract(&track.model, &image_two_value[0][0], &result, &track_observation);
+                    (void)tb_update(&track, &track_observation, frames + 1U, process_start);
+                }
                 process_ms = (uint32_t)(timer_get(GPT_TIM_1) - process_start);
                 memcpy(Left_Line, result.left, sizeof(Left_Line));
                 memcpy(Right_Line, result.right, sizeof(Right_Line));
@@ -162,7 +218,7 @@ void vision_debug_run(void)
                 ++frames;
                 last_frame = process_start;
 #if VISION_DRIVE_ENABLE
-                vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
+                if (midterm_mode) vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
 #endif
                 fresh = 1;
                 timeout_reset = 0;
@@ -176,6 +232,7 @@ void vision_debug_run(void)
         }
         if ((uint32_t)(now - last_frame) >= 2000U && !timeout_reset) {
             vision_midterm_reset();
+            tb_reset(&track);
             invalidate_result();
             fresh = 0;
             timeout_reset = 1;
@@ -192,6 +249,17 @@ void vision_debug_run(void)
             } else if (frames == 0) {
                 printf("[VISION2] waiting for first camera frame\r\n");
             } else {
+                printf("[BAYES] mode=%s state=%s candidate=%s p=%.3f margin=%.3f entropy=%.3f accepted=%u trained=%u\r\n",
+                       midterm_mode ? "MIDTERM" : "FULL_OBSERVER", tb_state_name(track.result.state),
+                       tb_state_name(track.result.candidate), (double)track.result.probability,
+                       (double)track.result.margin, (double)track.result.entropy,
+                       track.result.accepted, track.result.trained);
+                printf("[FEATURE] n=%lu ms=%lu mask=%lu quality=%.3f heading=%.4f curvature=%.4f open_left=%.4f open_right=%.4f split=%.4f stripes=%.4f\r\n",
+                       (unsigned long)frames, (unsigned long)last_frame,
+                       (unsigned long)track_observation.mask, (double)track_observation.quality,
+                       (double)track_observation.x[TB_HEADING], (double)track_observation.x[TB_CURVATURE],
+                       (double)track_observation.x[TB_OPEN_LEFT], (double)track_observation.x[TB_OPEN_RIGHT],
+                       (double)track_observation.x[TB_SPLIT], (double)track_observation.x[TB_STRIPES]);
                 printf("[VISION2] n=%lu fps=%lu.%lu valid=%u state=%s q=%u thr=%u contrast=%u white=%u\r\n",
                        (unsigned long)frames, (unsigned long)(fps_x10 / 10), (unsigned long)(fps_x10 % 10),
                        result.valid, vision_midterm_status_name(result.status), result.confidence,

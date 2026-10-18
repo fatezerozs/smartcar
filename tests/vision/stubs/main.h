@@ -7,6 +7,9 @@
 #define MT9V03X_H 120
 #define DEBUG_UART_USE_INTERRUPT 1
 #define DEBUG_UART_BAUDRATE 115200
+#define WIRELESS_UART_BUAD_RATE 115200
+uint32_t wireless_uart_read_buffer(uint8_t *data, uint32_t capacity);
+uint32_t wireless_uart_send_buffer(const uint8_t *data, uint32_t length);
 #define GPT_TIM_1 1
 #define MOTOR1_PWM 0
 #define MOTOR2_PWM 1

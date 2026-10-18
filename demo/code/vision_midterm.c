@@ -60,7 +60,8 @@ static uint8_t otsu(const uint32_t *hist, uint32_t count)
 static void gray_range(const uint32_t *hist, uint32_t count, uint8_t *low, uint8_t *high)
 {
     uint32_t acc = 0;
-    const uint32_t low_count = count / 50, high_count = count * 49 / 50;
+    const uint32_t low_count = count / VISION_GRAY_PERCENTILE_DENOMINATOR,
+        high_count = count * (VISION_GRAY_PERCENTILE_DENOMINATOR - 1) / VISION_GRAY_PERCENTILE_DENOMINATOR;
     int x, low_found = 0;
     /* At least three dark pixels in a 188-pixel row: keep two 2-pixel edges
      * while ignoring isolated extreme pixels. */
@@ -199,8 +200,8 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
                 if (vabs((float)(l - last_left)) > edge_step_limit ||
                     vabs((float)(r - last_right)) > edge_step_limit) continue;
             }
-            score = 4.0f * vabs(center - prediction) - 0.25f * (r - l + 1);
-            if (flags != 3) score += 20;
+            score = VISION_TRACK_DISTANCE_WEIGHT * vabs(center - prediction) - VISION_TRACK_WIDTH_WEIGHT * (r - l + 1);
+            if (flags != 3) score += VISION_TRACK_INFER_PENALTY_FRACTION * VISION_WIDTH;
             if (score < best_score) {
                 best_score = score; best_center = center;
                 best_l = l; best_r = r; best_flags = flags;
@@ -233,8 +234,9 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
         } else ++out->inferred_rows;
         if (y >= VISION_NEAR_TOP) ++near_rows;
         if (y >= VISION_ERROR_TOP && y <= VISION_ERROR_BOTTOM) {
-            float weight = y >= VISION_NEAR_TOP ? 3.0f : (y >= VISION_MIDDLE_TOP ? 2.0f : 1.0f);
-            if (best_flags != 3) weight *= 0.5f;
+            float weight = y >= VISION_NEAR_TOP ? VISION_TRACK_NEAR_WEIGHT :
+                (y >= VISION_MIDDLE_TOP ? VISION_TRACK_MIDDLE_WEIGHT : VISION_TRACK_FAR_WEIGHT);
+            if (best_flags != 3) weight *= VISION_TRACK_INFER_WEIGHT;
             error_sum += weight * (best_center - (VISION_WIDTH - 1) * 0.5f);
             weights += weight;
         }
@@ -247,8 +249,9 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
     /* q 是有效行覆盖评分，不是识别正确率；单边推测只记半分。 */
     out->confidence = (uint8_t)((2U * out->measured_rows + out->inferred_rows) * 100U /
                                 (2U * (VISION_ROI_BOTTOM - VISION_ROI_TOP + 1)));
-    out->valid = near_rows >= 6 && out->measured_rows + out->inferred_rows >= 12 &&
-                 weights > 0 && out->confidence >= 25;
+    out->valid = near_rows >= VISION_HEIGHT * VISION_TRACK_MIN_NEAR_PERMILLE / 1000 &&
+                 out->measured_rows + out->inferred_rows >= VISION_HEIGHT * VISION_TRACK_MIN_TOTAL_PERMILLE / 1000 &&
+                 weights > 0 && out->confidence >= VISION_TRACK_MIN_COVERAGE;
     out->status = out->valid ? VISION_TRACK : VISION_NO_LANE;
     if (out->valid) {
         /* Commit measured widths only after the whole frame passes validation.
@@ -261,8 +264,10 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
             }
         }
         out->raw_error_px = error_sum / weights;
-        out->error_px = previous_valid ? 0.6f * previous_error + 0.4f * out->raw_error_px : out->raw_error_px;
-        if (near_n >= 4 && far_n >= 4) {
+        out->error_px = previous_valid ? VISION_TRACK_HISTORY_WEIGHT * previous_error +
+            (1.0f - VISION_TRACK_HISTORY_WEIGHT) * out->raw_error_px : out->raw_error_px;
+        if (near_n >= VISION_HEIGHT * VISION_TRACK_MIN_BEND_PERMILLE / 1000 &&
+            far_n >= VISION_HEIGHT * VISION_TRACK_MIN_BEND_PERMILLE / 1000) {
             out->bend_px = far_sum / far_n - near_sum / near_n;
             out->bend_valid = 1;
         }
