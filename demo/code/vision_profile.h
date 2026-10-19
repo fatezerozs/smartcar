@@ -67,7 +67,7 @@
  * servo endpoints. Do not copy a guessed sign or average of old servo angles.
  * Build overrides are allowed for HOST TESTS, not an implicit drive profile. */
 #ifndef VISION_DRIVE_ENABLE
-#define VISION_DRIVE_ENABLE 0
+#define VISION_DRIVE_ENABLE 1
 #endif
 #ifndef VISION_DRIVE_PROFILE_CONFIRMED
 #define VISION_DRIVE_PROFILE_CONFIRMED 0
@@ -93,6 +93,10 @@
 #ifndef VISION_MOTOR_CRUISE_DUTY
 #define VISION_MOTOR_CRUISE_DUTY 0.0f
 #endif
+/* Independent attenuation only; neutral defaults preserve equal commands.
+ * These are not measured speed ratios and do not enable the drive profile. */
+#define VISION_MOTOR1_SCALE 1.0f
+#define VISION_MOTOR2_SCALE 1.0f
 
 /* Starting controller settings only, NOT track-tuned or a safe-speed claim.
  * Duty is open loop; with failed encoders there is no measured-speed loop. */
@@ -115,5 +119,46 @@
 #define VISION_CONTROL_MIN_BAND_ROWS 3U
 #define VISION_CONTROL_MAX_LATERAL 1.25f
 #define VISION_CONTROL_SAFETY_TICK_MS 10U
+/* 无有效保存记录时，硬件/相机确认与 PWM 都为零。FIELD_4 可以在
+ * 完整记录恢复后按 C12 开关延时本地启动；调参/保存本身不会发车。 */
+#define VISION_FIELD_LINE_CAPACITY 96U
+#define VISION_FIELD_TIMEOUT_MS 1000U
+#define VISION_FIELD_BUILD "MIDTERM_FIELD_4"
+/* Explicit user-selected boot behavior. A complete CRC-checked saved vehicle
+ * profile is still required; blank flash/default zero duty cannot start.
+ * Delay is relative to MCU timer startup, NOT sensed motor-board power. */
+#define VISION_AUTO_START_ENABLE 1U
+#define VISION_AUTO_START_DELAY_MS 2000U
+#define VISION_START_SWITCH_ACTIVE_LEVEL 0U /* C12 -> GND enables; open stops. */
+#ifndef VISION_START_SWITCH_ENABLE
+#define VISION_START_SWITCH_ENABLE 1U /* HOST TEST fixtures may omit GPIO only. */
+#endif
+#define VISION_START_SWITCH_DEBOUNCE_MS 30U
+#define VISION_START_SWITCH_REARM_MS 300U
+#ifndef VISION_MOTOR_DIRECTION_CONFIRMED
+#define VISION_MOTOR_DIRECTION_CONFIRMED 0
+#endif
+/* Bench motor experiment bounds, not route speed or encoder substitutes.
+ * Start <=3%, then at most +1% per request; never exceed 10% / 500ms.
+ * PWM is not measured speed/current. Operator must observe a lifted wheel.
+ * Quiet time does not prove mechanical stop: confirm it before polarity edits. */
+#define VISION_MOTOR_PROBE_INITIAL_PERMILLE 30U
+#define VISION_MOTOR_PROBE_STEP_PERMILLE 10U
+#define VISION_MOTOR_PROBE_MAX_PERMILLE 100U
+#define VISION_MOTOR_PROBE_MIN_MS 100U
+#define VISION_MOTOR_PROBE_MAX_MS 500U
+#define VISION_MOTOR_PROBE_COAST_MS 2000U
+
+/* Bench-only servo probing. These are electrical experiment bounds, NOT
+ * measured mechanical center/endpoints or a driving profile. First pulse is
+ * nominal 1.5ms (the existing main.h maps 90 degrees to this pulse); subsequent
+ * requests move at most 50us. Operator must lift wheels and observe binding.
+ * No automatic sweep, no encoder dependency, no motor PWM during probing. */
+#define VISION_SERVO_PROBE_INITIAL_US 1500U
+#define VISION_SERVO_PROBE_STEP_US 50U
+#define VISION_SERVO_PROBE_MIN_US 500U
+#define VISION_SERVO_PROBE_MAX_US 2500U
+#define VISION_SERVO_PROBE_MIN_MS 100U
+#define VISION_SERVO_PROBE_MAX_MS 1000U
 
 #endif

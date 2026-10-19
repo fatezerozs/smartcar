@@ -227,7 +227,10 @@ int tb_update(tb_filter_t *f, const tb_observation_t *o, uint32_t sequence, uint
     f->result.candidate = (tb_state_t)best;
     f->result.probability = f->result.posterior[best];
     f->result.margin = f->result.probability - second;
-    f->result.accepted = (uint8_t)(best != TB_UNKNOWN && f->result.probability >= f->model.min_posterior &&
+    /* 专家初值在普通室内物体上也可能得到很尖锐的后验。未训练模型只
+     * 显示 candidate/p，不对外确认元素；不能把数值尖锐误当场景已验证。
+     * 中期转向由独立实测车道控制，不依赖该未训练语义标签。 */
+    f->result.accepted = (uint8_t)(f->model.trained && best != TB_UNKNOWN && f->result.probability >= f->model.min_posterior &&
         f->result.margin >= f->model.min_margin && f->result.entropy <= f->model.max_entropy &&
         distance[best] <= f->model.max_distance);
     f->result.state = f->result.accepted ? (tb_state_t)best : TB_UNKNOWN;

@@ -122,6 +122,21 @@ int main(void)
     save_pgm("synthetic_straight_gray.pgm", gray);
     save_pgm("synthetic_straight_binary.pgm", guarded.binary);
     preview_test("preview_straight.pgm");
+    /* Field-inspired exposure fixture, NOT a reconstruction of a full camera
+     * frame: upper scene is dark, near floor is bright gray, and a small dark
+     * object outside the lane distorts each row's percentile range. A mapped
+     * global threshold can merge floor with white track and lose both edges. */
+    vision_midterm_reset();
+    for(y=0;y<VISION_HEIGHT;++y) {
+        int width=40+y*3/4, left=94-width/2, right=94+width/2;
+        for(x=0;x<VISION_WIDTH;++x)
+            gray[y*VISION_WIDTH+x]=(uint8_t)(x>=left&&x<=right ? 245 : (y>=72&&x>=6 ? 180 : 30));
+    }
+    run();summary("bright floor object");
+    check(result.valid && result.confidence>=40 && absf(result.raw_error_px)<2,
+          "bright gray floor and remote dark object must not erase a real white lane");
+    check(result.row_flags[90]==3 && result.left[90]>20 && result.right[90]<170,
+          "local illumination uses the track boundary, not the remote dark object");
     /* White floor both inside and outside two thin black boundary lines. */
     vision_midterm_reset();
     memset(gray, 210, sizeof(gray));

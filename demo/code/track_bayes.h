@@ -32,7 +32,7 @@ typedef struct {
 typedef struct {
     float posterior[TB_STATES], probability, margin, entropy;
     tb_state_t candidate, state; /* candidate 是最大项；state 通过拒识门限后才有效。 */
-    uint8_t accepted, trained;
+    uint8_t accepted, trained; /* 未训练只保留候选，accepted 必为 0。 */
 } tb_result_t;
 typedef struct {
     tb_model_t model; /* 按值持有配置，调用者可释放传入配置。 */

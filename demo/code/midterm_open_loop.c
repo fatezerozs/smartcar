@@ -39,3 +39,17 @@ int mol_step(const mol_config_t *c, float lateral, float heading, float steering
     *duty = target;
     return 1;
 }
+
+int mol_split(float base, float cap, float scale1, float scale2,
+              float *motor1, float *motor2)
+{
+    /* Fail closed before evaluating any floating-point product. In particular,
+     * never convert NaN/Inf into an unsigned hardware PWM register value. */
+    if (motor1) *motor1 = 0;
+    if (motor2) *motor2 = 0;
+    if (!motor1 || !motor2 || motor1 == motor2 || !range(cap,0,1) ||
+        !range(base,0,cap) || !range(scale1,0,1) || !range(scale2,0,1)) return 0;
+    *motor1 = base * scale1;
+    *motor2 = base * scale2;
+    return 1;
+}

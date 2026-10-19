@@ -71,6 +71,7 @@ void PIT_IRQHandler(void)
     {
         pit_flag_clear(PIT_CH1);
 #if VISION_DRIVE_ENABLE
+        vision_drive_switch_sample(gpio_get_level(VISION_START_SWITCH_PIN)==VISION_START_SWITCH_ACTIVE_LEVEL);
         vision_drive_safety_tick(); // Independent output lease, no encoder/PID use.
 #endif
     }

@@ -16,7 +16,7 @@ foreach ($definition in ([string]$controls.Define).Split(',')) { $flags += '-D' 
 foreach ($include in ([string]$controls.IncludePath).Split(';')) { if ($include.Trim()) { $flags += '-I' + $include.Trim() } }
 Push-Location $mdkRoot
 try {
-    foreach ($unit in @('track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
+    foreach ($unit in @('vision_storage', 'vision_storage_board', 'vision_field', 'track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
         & $compiler @flags '-c' ('..\code\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM compile failed: ' + $unit) }
         Write-Output ('PASS ARM default: ' + $unit)

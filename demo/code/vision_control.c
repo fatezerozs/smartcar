@@ -31,8 +31,9 @@ void vc_default_config(vc_config_t *c)
     c->calibration_confirmed = VISION_CAMERA_CALIBRATED;
 }
 
-static int configuration_valid(const vc_config_t *c)
+int vc_config_valid(const vc_config_t *c)
 {
+    if (!c) return 0;
     return mol_config_valid(&c->motor) && range(c->near_y, 0, 1) && range(c->far_y, 0, 1) &&
         c->near_y > c->far_y && range(c->band_half_height, 0.01f, 0.15f) &&
         c->near_y - c->far_y > 2 * c->band_half_height &&
@@ -52,6 +53,7 @@ static int configuration_valid(const vc_config_t *c)
 
 void vc_trip(vc_controller_t *c, uint32_t reason)
 {
+    c->local_run = 0;
     c->output.state = VC_FAULT;
     c->output.faults |= reason;
     c->output.duty = c->output.steering = 0;
@@ -64,16 +66,24 @@ void vc_init(vc_controller_t *c, const vc_config_t *config)
     vc_config_t saved = *config; /* Also safe when clearing with &c->config. */
     memset(c, 0, sizeof(*c));
     c->config = saved;
-    c->configured = (uint8_t)configuration_valid(&saved);
+    c->configured = (uint8_t)vc_config_valid(&saved);
     if (!c->configured) vc_trip(c, VC_FAULT_CONFIG);
 }
 
 void vc_stop(vc_controller_t *c)
 {
+    c->local_run = 0;
     if (c->output.state != VC_FAULT) c->output.state = VC_DISARMED;
     c->output.duty = c->output.steering = 0;
     c->stable_frames = 0;
     c->derivative = 0;
+}
+
+int vc_reconfigure(vc_controller_t *c, const vc_config_t *config)
+{
+    if (c->output.state != VC_DISARMED || !config || !vc_config_valid(config)) return 0;
+    vc_init(c, config);
+    return 1;
 }
 
 void vc_clear_fault(vc_controller_t *c)
@@ -84,9 +94,10 @@ void vc_clear_fault(vc_controller_t *c)
 
 void vc_poll(vc_controller_t *c, uint32_t now)
 {
+    int remote=!c->local_run;
     if (c->output.state != VC_RUNNING) return;
     if ((uint32_t)(now - c->last_frame_ms) >= c->config.frame_timeout_ms) vc_trip(c, VC_FAULT_FRAME);
-    if ((uint32_t)(now - c->last_command_ms) >= c->config.command_timeout_ms) vc_trip(c, VC_FAULT_COMMAND);
+    if (remote && (uint32_t)(now - c->last_command_ms) >= c->config.command_timeout_ms) vc_trip(c, VC_FAULT_COMMAND);
     if ((uint32_t)(now - c->armed_ms) >= c->config.max_run_ms) vc_trip(c, VC_FAULT_RUNTIME);
 }
 
@@ -98,9 +109,17 @@ int vc_arm(vc_controller_t *c, uint32_t now, int hardware_confirmed)
         c->stable_frames < c->config.arm_frames ||
         (uint32_t)(now - c->last_frame_ms) >= c->config.frame_timeout_ms) return 0;
     c->output.state = VC_RUNNING;
+    c->local_run = 0;
     c->last_command_ms = c->armed_ms = now;
     c->output.duty = c->output.steering = 0;
     c->derivative = 0;
+    return 1;
+}
+
+int vc_arm_local(vc_controller_t *c, uint32_t now, int hardware_confirmed)
+{
+    if (!vc_arm(c, now, hardware_confirmed)) return 0;
+    c->local_run = 1;
     return 1;
 }
 
@@ -111,9 +130,9 @@ void vc_heartbeat(vc_controller_t *c, uint32_t now)
     if (c->output.state == VC_RUNNING) c->last_command_ms = now;
 }
 
-static int band_error(const vision_result_t *r, const vc_config_t *c, float band_y, float *error)
+static int band_error(const vision_result_t *r, const vc_config_t *c, float band_y, float *error, float *center_x)
 {
-    float sum = 0;
+    float sum = 0, center_sum = 0;
     int n = 0, y;
     for (y = VISION_ROI_TOP; y <= VISION_ROI_BOTTOM; ++y) {
         float yf = (float)y / (VISION_HEIGHT - 1), axis, half_width, center;
@@ -126,10 +145,12 @@ static int band_error(const vision_result_t *r, const vc_config_t *c, float band
                (yf - c->far_y) / (c->near_y - c->far_y);
         half_width = (r->right[y] - r->left[y] + 1) * 0.5f;
         sum += (center - axis * (VISION_WIDTH - 1)) / half_width;
+        center_sum += center / (VISION_WIDTH - 1);
         ++n;
     }
     if (n < c->min_band_rows) return 0;
     *error = sum / n;
+    *center_x = center_sum / n;
     return finite_value(*error);
 }
 
@@ -160,9 +181,10 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     c->last_frame_ms = frame_ms;
     c->output.observation_valid = c->output.far_valid = 0;
     c->output.lateral = c->output.heading = 0;
+    c->output.near_center_x = c->output.far_center_x = 0;
     if ((uint32_t)(now - frame_ms) >= c->config.frame_timeout_ms || !r->valid ||
         r->status != VISION_TRACK || r->confidence > 100 || r->confidence < c->config.min_coverage ||
-        !band_error(r, &c->config, c->config.near_y, &near_error)) {
+        !band_error(r, &c->config, c->config.near_y, &near_error, &c->output.near_center_x)) {
         c->stable_frames = 0;
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_VISION);
         return;
@@ -172,7 +194,7 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_OFFSET);
         return;
     }
-    have_far = band_error(r, &c->config, c->config.far_y, &far_error);
+    have_far = band_error(r, &c->config, c->config.far_y, &far_error, &c->output.far_center_x);
     if (have_far) heading = far_error - near_error;
     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
     c->output.observation_valid = 1;

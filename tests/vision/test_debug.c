@@ -8,6 +8,7 @@
 #include "vision_midterm.h"
 #include "vision_debug.h"
 #include "vision_drive.h"
+#include "vision_storage.h"
 
 /* Actual vision_debug.c runs unchanged. Only MCU time, camera delivery,
  * interrupts and UART transport are simulated; this is not a hardware test. */
@@ -25,11 +26,22 @@ static uint8_t wire_header[12];
 static int wire_phase;
 static const char *case_name;
 static uint32_t pwm[3];
-static int moved;
+static int moved, servo_moved;
 static unsigned usb_reads, wireless_reads, usb_sends, wireless_sends;
 
 enum { TEXT, IMAGE, PAUSE_RESUME, RESET, STOP_CAMERA, NO_CAMERA, CLOCK_WRAP, COPY_RACE, COPY_ABA, NULL_BUFFER, IMAGE_GAP,
-       TEXT_BURST, MODE_BURST, RESET_BURST, REPEAT_IMAGE, FULL_MODE, RETURN_MIDTERM, STOP_BATCH, DRIVE_IMAGE };
+       TEXT_BURST, MODE_BURST, RESET_BURST, REPEAT_IMAGE, FULL_MODE, RETURN_MIDTERM, STOP_BATCH, DRIVE_IMAGE,
+       FIELD_FRAGMENT, FIELD_SMUGGLE, FIELD_STOP_RUNNING,
+       PROBE_TEXT, PROBE_IMAGE, PROBE_PREFIX_STOP, PROBE_SUFFIX_STOP, PROBE_IN_IMAGE,
+       WHEEL_TEXT, WHEEL_IMAGE, WHEEL_PREFIX_STOP, WHEEL_SUFFIX_STOP, WHEEL_IN_IMAGE,
+       AUTO_RUN, AUTO_CANCEL, AUTO_IMAGE, AUTO_OPEN, AUTO_INVALID };
+#if VISION_DRIVE_ENABLE
+static uint32_t saved_words[2][VS_RECORD_WORDS];
+static int store_read(unsigned slot,uint32_t *out,unsigned n)
+{if(slot>1 || n!=VS_RECORD_WORDS)return 0;memcpy(out,saved_words[slot],n*sizeof(*out));return 1;}
+static int store_write(unsigned slot,const uint32_t *in,unsigned n)
+{if(slot>1 || n!=VS_RECORD_WORDS)return 0;memcpy(saved_words[slot],in,n*sizeof(*in));return 1;}
+#endif
 
 static void check(int ok, const char *what)
 {
@@ -50,6 +62,7 @@ void pwm_set_duty(int channel, uint32_t duty)
     check(channel >= 0 && channel < 3 && duty <= 10000, "bounded output");
     if (channel >= 0 && channel < 3) pwm[channel] = duty;
     if (channel == 0 && duty) moved = 1;
+    if (channel == 2 && duty) servo_moved = 1;
 }
 void gpio_set_level(int pin, int value) { (void)pin; check(value == 1, "forward polarity only"); }
 void pit_ms_init(int channel, uint32_t period) { check(channel == 1 && period == 10, "PIT1 preserved"); }
@@ -72,14 +85,37 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
     char command = 0;
     elapsed += 10;
 #if VISION_DRIVE_ENABLE
+    if(current_case>=AUTO_RUN)vision_drive_switch_sample(current_case!=AUTO_OPEN || elapsed<2300);
     vision_drive_safety_tick();
 #endif
     if (elapsed >= finish_at) longjmp(stop_loop, 1);
+#if VISION_DRIVE_ENABLE
+    if (current_case>=PROBE_TEXT && current_case<=WHEEL_IN_IMAGE && elapsed==100) {
+        vd_profile_t cfg;vision_drive_get_profile(&cfg);
+        cfg.control.cruise_duty=cfg.control.duty_cap=0;
+        check(vision_drive_configure(&cfg),"bench profile keeps motor cap zero");
+    }
+    if (current_case>=PROBE_TEXT && current_case<=WHEEL_IN_IMAGE) {
+        int wheel=current_case>=WHEEL_TEXT;
+        int variant=current_case-(wheel?WHEEL_TEXT:PROBE_TEXT);
+        uint32_t start=variant==4?650U:200U;
+        if(elapsed>=start&&elapsed<start+40){
+            const char *line=wheel ? (variant==2?"!@wheel 1 30 1 300\n":variant==3?"@wheel 1 30 1 300\ns":"@wheel 1 30 1 300\n") :
+                (variant==2?"!@probe 1500 700\n":variant==3?"@probe 1500 700\ns":"@probe 1500 700\n");
+            uint32_t chunk=variant==3?12U:16U;
+            uint32_t offset=(elapsed-start)/10*chunk,length=(uint32_t)strlen(line);
+            if(offset<length){length-=offset;if(length>chunk)length=chunk;if(length>capacity)length=capacity;memcpy(data,line+offset,length);return length;}
+        }
+        if(variant==4&&elapsed==150)command='g';
+        if(variant==1&&elapsed==400)command='g';
+    }
+#endif
     if (current_case != NO_CAMERA && elapsed < feed_until) {
         if (current_case == NULL_BUFFER) mt9v03x_image = NULL;
         else {
             int id = (elapsed / 10) % 2;
-            fill_camera(id, current_case == IMAGE_GAP && elapsed > 200 ? 70 : 0);
+            fill_camera(id, (current_case == IMAGE_GAP && elapsed > 200) ||
+                        (current_case==AUTO_INVALID && elapsed<2200) ? 70 : 0);
             mt9v03x_image = camera[id];
         }
         mt9v03x_finish_flag = 1;
@@ -91,6 +127,16 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
     if (current_case == STOP_BATCH && elapsed == 200 && capacity >= 2) { memcpy(data,"sa",2); return 2; }
     if (current_case == DRIVE_IMAGE && elapsed == 200) command = 'a';
     if (current_case == DRIVE_IMAGE && elapsed == 400) command = 'g';
+    if (current_case == FIELD_STOP_RUNNING && elapsed == 200) command = 'a';
+    if ((current_case == FIELD_FRAGMENT || current_case == FIELD_SMUGGLE || current_case == FIELD_STOP_RUNNING) &&
+        elapsed >= 400 && elapsed < 420) {
+        const char *line = current_case == FIELD_SMUGGLE ? "@gain 0.7 0.02 0.2 a\n" : "@gain 0.7 0.02 0.2\n";
+        uint32_t offset=(elapsed-400)/10*16, length=(uint32_t)strlen(line);
+        if (offset<length) {
+            length-=offset;if(length>capacity)length=capacity;
+            memcpy(data,line+offset,length);return length;
+        }
+    }
     if ((current_case == TEXT_BURST && elapsed == 100) ||
         (current_case == MODE_BURST && elapsed == 100) ||
         (current_case == RESET_BURST && elapsed == 500)) {
@@ -111,6 +157,8 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
     if (current_case == RESET && elapsed == 500) command = 'r';
     if (current_case == IMAGE_GAP && elapsed >= 1700 && expected_mode != 't') command = 't';
     if (current_case == REPEAT_IMAGE) command = 'G';
+    if (current_case==AUTO_CANCEL && elapsed==1500)command='s';
+    if (current_case==AUTO_IMAGE && elapsed==1000)command='g';
     if (command && capacity) {
         char lower = command >= 'A' && command <= 'Z' ? (char)(command - 'A' + 'a') : command;
         if (lower == 't' || lower == 'g' || lower == 'b' || lower == 'o' || lower == 'p') expected_mode = lower;
@@ -197,10 +245,20 @@ static void scenario(int which, const char *name, uint32_t duration)
     if (which == RESET || which == STOP_CAMERA || which == RESET_BURST) feed_until = 400;
     irq_mask = which == CLOCK_WRAP ? 1 : 0;
     barriers = 0; packets = text_during_image = wire_phase = 0; log_length = 0;
-    memset(pwm,0,sizeof(pwm)); moved=0;
+    memset(pwm,0,sizeof(pwm)); moved=0;servo_moved=0;
     usb_reads=wireless_reads=usb_sends=wireless_sends=0;
     memset(text_log, 0, sizeof(text_log));
     expected_mode = 't'; mt9v03x_finish_flag = 0; mt9v03x_image = NULL;
+#if VISION_DRIVE_ENABLE
+    vs_init(NULL);
+    if(which>=AUTO_RUN) {
+        vd_profile_t p;const vs_io_t io={store_read,store_write};
+        memset(saved_words,255,sizeof(saved_words));vs_init(&io);
+        vision_drive_init(0);vision_drive_get_profile(&p);
+        p.autostart_enabled=1;p.startup_delay_ms=2000;
+        check(vs_save(&p),"seed complete synthetic boot profile");
+    }
+#endif
     if (setjmp(stop_loop) == 0) vision_debug_run();
     check(irq_mask == (which == CLOCK_WRAP ? 1U : 0U), "interrupt mask restored");
     check(text_during_image == 0, "no text in image/pause mode");
@@ -251,6 +309,30 @@ static void scenario(int which, const char *name, uint32_t duration)
     if (which == STOP_BATCH) check(!moved, "stop dominates later arm in same batch");
 #if VISION_DRIVE_ENABLE
     if (which == RETURN_MIDTERM || which == DRIVE_IMAGE) check(moved, "midterm can arm with synthetic calibration");
+    if (which == FIELD_FRAGMENT || which == FIELD_STOP_RUNNING) {
+        vd_profile_t cfg; vision_drive_get_profile(&cfg);
+        check(strstr(text_log,"[FIELD] OK;")!=NULL,"fragmented field command acknowledged");
+        check(cfg.control.kp==0.7f,"fragmented field command commits requested gain");
+        check(vision_drive_output()->state==VC_DISARMED,"field command leaves disarmed");
+    }
+    if (which == FIELD_SMUGGLE) {
+        check(strstr(text_log,"[FIELD] REJECT")!=NULL,"trailing arm rejected");
+        check(!moved,"parameter contents cannot arm motor");
+    }
+    if (which == FIELD_STOP_RUNNING) check(moved && pwm[0]==0,"field start stops running car");
+    if (which>=PROBE_TEXT && which<=WHEEL_IN_IMAGE) {
+        int wheel=which>=WHEEL_TEXT,variant=which-(wheel?WHEEL_TEXT:PROBE_TEXT);
+        check(pwm[0]==0&&pwm[1]==0&&pwm[2]==0,"bounded bench finishes fully disabled");
+        if(variant==0||variant==1)check(wheel?(moved&&!servo_moved):(!moved&&servo_moved),"bench actuates only explicitly requested output");
+        else check(!moved&&!servo_moved,"STOP or image context rejects whole bench line");
+    }
+    if(which>=AUTO_RUN) {
+        if(which==AUTO_RUN) {
+            check(moved&&vision_drive_is_local(),"restored profile starts after 2s without remote heartbeats");
+            check(strstr(text_log,"[RUN]")==NULL,"local run does not depend on blocking telemetry");
+        } else if(which==AUTO_OPEN)check(moved&&pwm[0]==0&&pwm[1]==0&&pwm[2]==0,"physical opening stops restored local run");
+        else check(!moved,"STOP/image/invalid boot cannot launch later");
+    }
 #else
     check(!moved, "default firmware never moves");
 #endif
@@ -277,6 +359,26 @@ int main(void)
     scenario(RETURN_MIDTERM, "return midterm then arm", 650);
     scenario(STOP_BATCH, "stop wins over arm", 650);
     scenario(DRIVE_IMAGE, "image disarms drive", 1300);
+#if VISION_DRIVE_ENABLE
+    scenario(FIELD_FRAGMENT,"fragmented field gain",800);
+    scenario(FIELD_SMUGGLE,"field trailing arm",800);
+    scenario(FIELD_STOP_RUNNING,"field stops running",800);
+    scenario(PROBE_TEXT,"probe bounded text",1200);
+    scenario(PROBE_IMAGE,"image cancels probe",1300);
+    scenario(PROBE_PREFIX_STOP,"STOP before probe",1200);
+    scenario(PROBE_SUFFIX_STOP,"STOP after probe",1200);
+    scenario(PROBE_IN_IMAGE,"no probe in image",1300);
+    scenario(WHEEL_TEXT,"wheel bounded text",1200);
+    scenario(WHEEL_IMAGE,"image cancels wheel",1300);
+    scenario(WHEEL_PREFIX_STOP,"STOP before wheel",1200);
+    scenario(WHEEL_SUFFIX_STOP,"STOP after wheel",1200);
+    scenario(WHEEL_IN_IMAGE,"no wheel in image",1300);
+    scenario(AUTO_RUN,"saved C12 startup",3000);
+    scenario(AUTO_CANCEL,"STOP cancels countdown",3000);
+    scenario(AUTO_IMAGE,"image cancels countdown",3000);
+    scenario(AUTO_OPEN,"C12 stops local run",3000);
+    scenario(AUTO_INVALID,"invalid boot no retry",3000);
+#endif
     printf("ADAPTER RESULT: %d checks, %d failures (mock MCU/transport, no hardware claim)\n", checks, failures);
     return failures ? 1 : 0;
 }

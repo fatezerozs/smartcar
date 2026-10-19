@@ -22,6 +22,7 @@ typedef struct {
     vc_state_t state;
     uint32_t faults;
     float lateral, heading, steering, duty;
+    float near_center_x, far_center_x; /* 双边实测中点 / (W-1)，供居中直道标定。 */
     uint8_t observation_valid, far_valid;
 } vc_output_t;
 typedef struct {
@@ -30,14 +31,22 @@ typedef struct {
     uint32_t last_frame_ms, last_sequence, last_command_ms, armed_ms;
     float previous_lateral, derivative;
     uint8_t configured, have_frame, stable_frames;
+    uint8_t local_run; /* Volatile authority: never serialized as configuration. */
 } vc_controller_t;
 
 void vc_default_config(vc_config_t *config);
+int vc_config_valid(const vc_config_t *config);
+/* 仅 DISARMED 可换配置，验证失败不覆盖；成功清除旧帧和导数历史。
+ * 故障必须单独清除，改参数不能复活故障。 */
+int vc_reconfigure(vc_controller_t *control, const vc_config_t *config);
 void vc_init(vc_controller_t *control, const vc_config_t *config);
 void vc_observe(vc_controller_t *control, const vision_result_t *result,
                 uint32_t sequence, uint32_t frame_ms, uint32_t now_ms);
 void vc_poll(vc_controller_t *control, uint32_t now_ms);
 int vc_arm(vc_controller_t *control, uint32_t now_ms, int hardware_confirmed);
+/* Boot-only local authority removes ONLY the remote heartbeat requirement.
+ * Camera, numeric, lateral and total-run leases remain exactly the same. */
+int vc_arm_local(vc_controller_t *control, uint32_t now_ms, int hardware_confirmed);
 void vc_heartbeat(vc_controller_t *control, uint32_t now_ms);
 void vc_stop(vc_controller_t *control);
 void vc_trip(vc_controller_t *control, uint32_t reason);

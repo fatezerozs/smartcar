@@ -18,4 +18,11 @@ int mol_config_valid(const mol_config_t *config);
 int mol_step(const mol_config_t *config, float lateral, float heading,
              float steering, float quality, int far_valid, float cruise,
              float cap, float rise_per_s, float previous, float dt_s, float *duty);
+/* 两路开环配平：base 是上面已限幅/限加速的公共占空比，scale 仅允许
+ * [0,1] 衰减，不通过放大一侧绕过 cap。没有轮速反馈，不会自行学习。
+ * 输出地址必须非空且不同；非法输入将两个可用输出清零，调用者停车。
+ * 停车后才能改 scale，故固定 scale 不会放大公共 PWM 的上升斜率。
+ * 该接口不补偿电池变化/负载变化，不代表左右轮转速相等。 */
+int mol_split(float base, float cap, float scale1, float scale2,
+              float *motor1, float *motor2);
 #endif

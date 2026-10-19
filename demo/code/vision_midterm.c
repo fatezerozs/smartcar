@@ -108,17 +108,15 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
             for (x = 0; x < VISION_WIDTH; ++x) ++hist[gray[y * VISION_WIDTH + x]];
             gray_range(hist, VISION_WIDTH, &low, &high);
             if (high - low >= VISION_MIN_CONTRAST) {
-                int offset = (int)out->threshold - out->gray_low;
-                if (offset < 1) offset = 1;
-                if (offset >= out->contrast) offset = out->contrast - 1;
-                /* 按行灰度范围映射整图大津阈值。横向阴影不会把整条
-                 * 白色通道压成黑色；行对比度不足时不做局部推测。 */
-                int mapped = low + offset * (high - low) / out->contrast;
-                /* 不追随小幅统计噪声，只有明显亮度变化才启用行修正。 */
-                if (vabs((float)mapped - out->threshold) >= VISION_ROW_THRESHOLD_DEADBAND) {
-                    threshold = (uint8_t)mapped;
-                    ++out->adaptive_rows;
-                }
+                /* 当前行自己估计明暗两类，而不是把整图阈值按极值拉伸。
+                 * 场地中亮灰地板和白赛道旁可能有少量很暗的物体，极值
+                 * 拉伸会被暗物体拉低，将亮灰地板并进赛道、吞掉真实边界。
+                 * Otsu 利用行内各灰度的实际占比，不预设地板亮度、边界
+                 * 像素位置或赛道宽度。全图与行内对比度仍须通过检查；
+                 * 后续双边实测、连续性及覆盖门槛保持不变。
+                 * hist 已由该行建立，复用它，不新增逐像素邻域遍历。 */
+                threshold = otsu(hist, VISION_WIDTH);
+                if (threshold != out->threshold) ++out->adaptive_rows;
             }
         }
         out->row_threshold[y] = threshold;

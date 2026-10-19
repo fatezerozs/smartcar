@@ -30,6 +30,11 @@ static void model_tests(void)
     float left, right; unsigned i, j;
     tb_default_model(&model); CHECK(tb_init(&filter,&model)); CHECK(!filter.result.trained);
     for (i=1;i<=100;++i) { CHECK(tb_update(&filter,&o,i,i*20)); probability(); }
+    CHECK(filter.result.candidate == TB_STRAIGHT);
+    CHECK(filter.result.state == TB_UNKNOWN && !filter.result.accepted);
+    /* 已拟合参数路径用测试专用标志覆盖；不冒称默认模型实地训练过。 */
+    model.trained=1; CHECK(tb_init(&filter,&model));
+    for(i=1;i<=100;++i)CHECK(tb_update(&filter,&o,i,i*20));
     CHECK(filter.result.state == TB_STRAIGHT);
     left = filter.result.probability;
     CHECK(!tb_update(&filter,&o,100,2000)); CHECK(filter.result.probability == left);
@@ -54,6 +59,16 @@ static void model_tests(void)
         tb_reset(&filter); memcpy(o.x,model.mean[j],sizeof(o.x));
         for (i=1;i<=80;++i) { CHECK(tb_update(&filter,&o,i,i*20)); probability(); }
         CHECK(filter.result.candidate == (tb_state_t)j);
+    }
+    /* 复现现场：无几何 mask=60，单侧全开、多个亮区。未训练即使 p 很高
+     * 也不能在室内场景上确认十字。这个回归与逐飞抓取的现场特征一致。 */
+    {
+        tb_model_t untrained=model; tb_filter_t observer;
+        tb_observation_t indoor={{0,0,.414f,1,.241f,.055f},.706f,60U};
+        untrained.trained=0;CHECK(tb_init(&observer,&untrained));
+        for(i=1;i<=100;++i)CHECK(tb_update(&observer,&indoor,i,i*20));
+        CHECK(observer.result.state==TB_UNKNOWN && !observer.result.accepted);
+        CHECK(observer.result.candidate==TB_CROSS);
     }
     o.quality=0; CHECK(tb_update(&filter,&o,81,1620)); CHECK(!filter.result.accepted); probability();
     CHECK(!tb_update(&filter,&o,81,1620));
@@ -111,10 +126,27 @@ static void motor_tests(void)
     CHECK(!mol_step(&c,0,0,0,1,1,.2f,.3f,.1f,0,0,&duty));
     CHECK(mol_step(&c,1,.2f,.1f,1,1,.2f,.3f,.1f,.2f,.02f,&a));
     CHECK(mol_step(&c,-1,-.2f,-.1f,1,1,.2f,.3f,.1f,.2f,.02f,&b)); CHECK(a==b);
+    /* Independent open-loop attenuation cannot increase the requested duty,
+     * bypass its cap, produce motion from zero, or accept nonfinite inputs. */
+    CHECK(mol_split(.2f,.3f,1,.8f,&a,&b));
+    CHECK(a==.2f && fabsf(b-.16f)<.000001f);
+    CHECK(mol_split(0,0,1,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(mol_split(.2f,.3f,0,1,&a,&b)); CHECK(a==0 && b==.2f);
+    CHECK(!mol_split(.4f,.3f,1,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(NAN,.3f,1,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(.2f,INFINITY,1,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(.2f,.3f,1.01f,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(.2f,.3f,1,-.01f,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(.2f,.3f,NAN,1,&a,&b)); CHECK(a==0 && b==0);
+    CHECK(!mol_split(.2f,.3f,1,1,NULL,&b)); CHECK(b==0);
+    CHECK(!mol_split(.2f,.3f,1,1,&a,NULL)); CHECK(a==0);
+    CHECK(!mol_split(.2f,.3f,1,1,&a,&a)); CHECK(a==0);
     for(i=0;i<3000;++i) {
         float q=(float)(rand()%101)/100;
         CHECK(mol_step(&c,(float)(rand()%100)/30,0,0,q,i%2,.2f,.3f,.1f,.1f,.02f,&duty));
         CHECK(duty>=0 && duty<=.102001f);
+        CHECK(mol_split(duty,.3f,(float)(rand()%101)/100,(float)(rand()%101)/100,&a,&b));
+        CHECK(a>=0 && a<=duty && b>=0 && b<=duty);
     }
 }
 int main(void)

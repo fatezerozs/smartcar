@@ -1,5 +1,7 @@
 # 贝叶斯赛道估计与中期开环驱动
 
+2026-10-19 更新：已增加停车串口调参，控制器默认编入但上电未标定、保持停车；现场步骤和当前参数入口以 [MIDTERM_FIELD](MIDTERM_FIELD.md) 为准。本文保留 2026-10-18 模型设计背景。
+
 日期：2026-10-18。基线提交：`eb5ed00`。本文描述当前工作区重构，不代表已经提交/推送或实车验收完成。
 
 ## 两条路径及边界
@@ -43,7 +45,7 @@ posterior(j) ∝ prediction(j)*likelihood(x|j)^(quality*min(dt/evidence_s,1))
 
 - candidate 是最大后验候选；state 只有拒识检查通过才有效，否则 UNKNOWN。
 - p 是候选后验，不是实测正确率；margin 是第一、第二候选概率差。
-- entropy 是归一化熵。accepted 同时要求最大后验、概率差、熵及平均马氏距离合格。
+- entropy 是归一化熵。accepted 同时要求 trained=1、最大后验、概率差、熵及平均马氏距离合格。默认未训练模型即使后验很高也只输出 candidate，state=UNKNOWN、accepted=0；中期视觉控制不依赖该语义标签。
 - trained=0 是专家初值；trained=1 只代表应用了标注拟合参数，仍不等于现场验证通过。
 - 原 VISION2 的 q 是行覆盖分数，不能与贝叶斯后验混为一谈。
 

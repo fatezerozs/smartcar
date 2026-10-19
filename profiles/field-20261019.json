@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "purpose": "Observed hardware settings for this car, not a universal track model",
+  "servo": {
+    "center_us": 1550,
+    "min_us": 1500,
+    "max_us": 1600,
+    "right_sign": -1,
+    "evidence": "Operator: 1500 right, 1525 towards left, 1550 straight, 1600 left; lifted short pulses",
+    "scope": "Conservative observed window, not mechanical hard stops or dynamic steering validation"
+  },
+  "camera": {
+    "near_y": 0.78,
+    "far_y": 0.68,
+    "half_height": 0.025,
+    "axis_confirmed": false,
+    "note": "Recapture centered straight after lowering car; do not restore an old axis as calibrated"
+  },
+  "motor": {
+    "direction_confirmed": false,
+    "cruise_duty": 0,
+    "duty_cap": 0,
+    "note": "No powered motor test yet; forward polarity and starting duty unknown"
+  }
+}

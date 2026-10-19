@@ -58,6 +58,18 @@ int main(void) {
           "two-point calibration compensates offset and reference-axis yaw");
     road(0, -0.3f, 80); frame();
     check(control.output.heading < -0.20f, "calibration does not automatically zero a real bend");
+    /* A pitched camera may put the old far band at the horizon. Select bands
+     * within the actual road instead of reusing background as a far center. */
+    setup(); cfg.near_y=.86f; cfg.far_y=.68f; vc_init(&control,&cfg);
+    road(0,0,80);
+    for(i=VISION_ROI_TOP;i<(int)(.58f*(VISION_HEIGHT-1));++i)observation.row_flags[i]=0;
+    frame();
+    check(control.output.observation_valid && control.output.far_valid && absf(control.output.heading)<.04f,
+          "configured lower bands use real road despite unavailable horizon geometry");
+    for(i=VISION_ROI_TOP;i<VISION_HEIGHT;++i)if((float)i/(VISION_HEIGHT-1)<.74f)observation.row_flags[i]=0;
+    frame();
+    check(control.output.observation_valid && !control.output.far_valid && control.output.heading==0,
+          "configured far band still rejects genuinely missing geometry");
     setup(); road(0, 0, 80); frame();
     check(!vc_arm(&control, now, 1), "one good frame does not arm");
     vc_observe(&control, &observation, ++seq, now, now);

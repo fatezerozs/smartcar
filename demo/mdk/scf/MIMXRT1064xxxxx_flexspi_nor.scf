@@ -63,7 +63,9 @@
 #define m_interrupts_size              0x00000400
 
 #define m_text_start                   0x70002400
-#define m_text_size                    0x003FDC00
+/* Keep 0x703FE000..0x703FFFFF out of ALL load images, including RAM code
+ * initializers. These two independent 4KiB pages hold vehicle profiles. */
+#define m_text_size                    0x003FBC00
 
 
 ;SDRAM IVT_TABLE
@@ -124,13 +126,12 @@ LR_m_text m_flash_config_start m_text_start+m_text_size-m_flash_config_start {  
   }
 
 
-  ; 在FALSH中的中断向量表
+  /* Flash interrupt-vector table. */
   VECTOR_ROM m_interrupts_start FIXED m_interrupts_size { ; load address = execution address
   * (.isr_vector,+FIRST)
   }
   
-  ; * (InRoot$$Sections)是__main中从加载域复制代码到执行域的程序scatter_copy，
-  ; 启动时运行的startup_mimxrt1064t和system_mimxrt1064中的代码要存放在FLASH中
+  /* Root scatter-copy/startup routines execute from flash. */
   ER_m_text m_text_start FIXED m_text_size { ; load address = execution address
 	* (InRoot$$Sections)
 	startup_mimxrt1064.o(+RO)
@@ -138,12 +139,12 @@ LR_m_text m_flash_config_start m_text_start+m_text_size-m_flash_config_start {  
 	
   } 
 
-  ;	EMPTY表示这段空间留空，防止其它应用占用或编译提示warning
+  /* EMPTY reserves the RAM vector region. */
   VECTOR_RAM m_ram_interrupts_start EMPTY m_ram_interrupts_size { ;execution address
 
   }
 
-  ;存放主体程序的SDRAM空间，由__main函数从FLASH中加载
+  /* Application code executes from SDRAM, copied from flash by __main. */
   ER_m_ram_text m_ram_text_start m_ram_text_size { ;execution address
     .ANY (+RO)
 	* (SDRAM_CACHE.init)

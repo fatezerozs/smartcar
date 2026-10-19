@@ -1,4 +1,5 @@
 #include "zf_common_headfile.h"
+#define VISION_START_SWITCH_PIN C12 /* External switch to GND; NOT MODE/RST. */
 #include "img_process.h"
 #include "Camera.h"
 #include "Island.h" 
