@@ -1,3 +1,4 @@
+#include "app_mode.h"
 #include "vision_drive.h"
 #include "vision_field.h"
 #include <stdio.h>
@@ -24,7 +25,7 @@ int main(void)
     vd_profile_t before,after;
     vision_result_t invalid;
     memset(&invalid,0,sizeof(invalid));
-    vision_drive_init(0);vf_init(&parser);vision_drive_get_profile(&before);
+    vision_drive_init(0); app_mode_init(0,1,0); app_mode_sample(0,1,30); (void)app_mode_take_change();vf_init(&parser);vision_drive_get_profile(&before);
     parser.probe_permitted=1; /* Simulate explicit text-mode permission. */
     CHECK(!vision_drive_servo_probe(1550,500,clock_ms)); /* First action must be nominal anchor. */
     command("@probe 1500 700 a\n");CHECK(strstr(response,"REJECT")!=NULL&&pwm[2]==0);
@@ -56,7 +57,7 @@ int main(void)
     CHECK(after.control.calibration_confirmed==before.control.calibration_confirmed);
     after.control.duty_cap=.2f;after.control.cruise_duty=.1f;
     CHECK(vision_drive_configure(&after));CHECK(!vision_drive_servo_probe(1500,500,clock_ms));
-    vision_drive_init(clock_ms);clock_ms=UINT32_MAX-300;
+    vision_drive_init(clock_ms); app_mode_init(0,1,0); app_mode_sample(0,1,30); (void)app_mode_take_change();clock_ms=UINT32_MAX-300;
     CHECK(vision_drive_servo_probe(1500,500,clock_ms));
     clock_ms+=499;vision_drive_safety_tick();CHECK(pwm[2]==750);
     clock_ms+=1;vision_drive_safety_tick();CHECK(pwm[2]==0);

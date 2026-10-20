@@ -23,6 +23,9 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+demo/mdk/link_mvp.uvprojx
+demo/mdk/motor_threshold.uvprojx
+demo/mdk/motion_diag.uvprojx
 # IAR session state (projects/linker scripts themselves remain tracked).
 **/settings/*.dnx
 **/settings/*.cspy.bat

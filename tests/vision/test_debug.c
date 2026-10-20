@@ -1,4 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include "app_mode.h"
+#include "app_mode.h"
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
@@ -34,7 +37,7 @@ enum { TEXT, IMAGE, PAUSE_RESUME, RESET, STOP_CAMERA, NO_CAMERA, CLOCK_WRAP, COP
        FIELD_FRAGMENT, FIELD_SMUGGLE, FIELD_STOP_RUNNING,
        PROBE_TEXT, PROBE_IMAGE, PROBE_PREFIX_STOP, PROBE_SUFFIX_STOP, PROBE_IN_IMAGE,
        WHEEL_TEXT, WHEEL_IMAGE, WHEEL_PREFIX_STOP, WHEEL_SUFFIX_STOP, WHEEL_IN_IMAGE,
-       AUTO_RUN, AUTO_CANCEL, AUTO_IMAGE, AUTO_OPEN, AUTO_INVALID };
+       AUTO_RUN, AUTO_CANCEL, AUTO_IMAGE, AUTO_OPEN, AUTO_INVALID, DIP_OBSERVE, DIP_STOP, DIP_PARTIAL };
 #if VISION_DRIVE_ENABLE
 static uint32_t saved_words[2][VS_RECORD_WORDS];
 static int store_read(unsigned slot,uint32_t *out,unsigned n)
@@ -80,10 +83,20 @@ void __DMB(void)
         mt9v03x_finish_flag = 1;
     }
 }
+void board_diagnostics_report(void) {}
+int board_camera_poll(int requested,uint32_t at) { (void)at;return requested; }
 static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
 {
     char command = 0;
     elapsed += 10;
+    {
+        int servo=current_case>=PROBE_TEXT && current_case<=PROBE_IN_IMAGE;
+        int wheel=current_case>=WHEEL_TEXT && current_case<=WHEEL_IN_IMAGE;
+        int observe=current_case==DIP_OBSERVE ||
+            (current_case==DIP_STOP && elapsed>=300) ||
+            (current_case==DIP_PARTIAL && elapsed>=150 && elapsed<210);
+        app_mode_sample(observe||wheel?1:0,observe||servo?1:0,ticks_base+elapsed);
+    }
 #if VISION_DRIVE_ENABLE
     if(current_case>=AUTO_RUN)vision_drive_switch_sample(current_case!=AUTO_OPEN || elapsed<2300);
     vision_drive_safety_tick();
@@ -125,6 +138,13 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
     if (current_case == RETURN_MIDTERM && elapsed == 300) command = 'm';
     if (current_case == RETURN_MIDTERM && elapsed == 400) command = 'a';
     if (current_case == STOP_BATCH && elapsed == 200 && capacity >= 2) { memcpy(data,"sa",2); return 2; }
+    if (current_case==DIP_PARTIAL && elapsed==100) {
+        const char *fragment="@gain 0.7 ";memcpy(data,fragment,strlen(fragment));return (uint32_t)strlen(fragment);
+    }
+    if (current_case==DIP_PARTIAL && elapsed==250) {
+        const char *fragment="0.02 0.2 a\n";memcpy(data,fragment,strlen(fragment));return (uint32_t)strlen(fragment);
+    }
+    if ((current_case==DIP_OBSERVE || current_case==DIP_STOP) && elapsed==200)command='a';
     if (current_case == DRIVE_IMAGE && elapsed == 200) command = 'a';
     if (current_case == DRIVE_IMAGE && elapsed == 400) command = 'g';
     if (current_case == FIELD_STOP_RUNNING && elapsed == 200) command = 'a';
@@ -251,14 +271,19 @@ static void scenario(int which, const char *name, uint32_t duration)
     expected_mode = 't'; mt9v03x_finish_flag = 0; mt9v03x_image = NULL;
 #if VISION_DRIVE_ENABLE
     vs_init(NULL);
-    if(which>=AUTO_RUN) {
+    if(which>=AUTO_RUN && which<=AUTO_INVALID) {
         vd_profile_t p;const vs_io_t io={store_read,store_write};
         memset(saved_words,255,sizeof(saved_words));vs_init(&io);
-        vision_drive_init(0);vision_drive_get_profile(&p);
+        vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();vision_drive_get_profile(&p);
         p.autostart_enabled=1;p.startup_delay_ms=2000;
         check(vs_save(&p),"seed complete synthetic boot profile");
     }
 #endif
+    app_mode_init(current_case>=WHEEL_TEXT && current_case<=WHEEL_IN_IMAGE?1:0,
+                  current_case>=PROBE_TEXT && current_case<=PROBE_IN_IMAGE?1:0,ticks_base-40U);
+    app_mode_sample(current_case>=WHEEL_TEXT && current_case<=WHEEL_IN_IMAGE?1:0,
+                    current_case>=PROBE_TEXT && current_case<=PROBE_IN_IMAGE?1:0,ticks_base);
+    (void)app_mode_take_change();
     if (setjmp(stop_loop) == 0) vision_debug_run();
     check(irq_mask == (which == CLOCK_WRAP ? 1U : 0U), "interrupt mask restored");
     check(text_during_image == 0, "no text in image/pause mode");
@@ -326,15 +351,21 @@ static void scenario(int which, const char *name, uint32_t duration)
         if(variant==0||variant==1)check(wheel?(moved&&!servo_moved):(!moved&&servo_moved),"bench actuates only explicitly requested output");
         else check(!moved&&!servo_moved,"STOP or image context rejects whole bench line");
     }
-    if(which>=AUTO_RUN) {
+    if(which>=AUTO_RUN && which<=AUTO_INVALID) {
         if(which==AUTO_RUN) {
-            check(moved&&vision_drive_is_local(),"restored profile starts after 2s without remote heartbeats");
+            check(!moved&&!vision_drive_is_local(),"restored profile never auto-arms after physical-key rollback");
             check(strstr(text_log,"[RUN]")==NULL,"local run does not depend on blocking telemetry");
-        } else if(which==AUTO_OPEN)check(moved&&pwm[0]==0&&pwm[1]==0&&pwm[2]==0,"physical opening stops restored local run");
+        } else if(which==AUTO_OPEN)check(!moved&&pwm[0]==0&&pwm[1]==0&&pwm[2]==0,"physical samples cannot start restored profile");
         else check(!moved,"STOP/image/invalid boot cannot launch later");
     }
 #else
     check(!moved, "default firmware never moves");
+#endif
+#if VISION_DRIVE_ENABLE
+    if(which==DIP_OBSERVE || which==DIP_PARTIAL) {
+        check(!moved&&!servo_moved,"selector/fragment cannot authorize motion");
+    }
+    if(which==DIP_STOP)check(moved&&!pwm[0]&&!pwm[1]&&!pwm[2]&&vision_drive_output()->state==VC_DISARMED,"raw DIP change stops runtime and cancels run");
 #endif
     printf("%-22s packets=%d elapsed=%lu: complete\n", name, packets, (unsigned long)elapsed);
 }
@@ -373,11 +404,14 @@ int main(void)
     scenario(WHEEL_PREFIX_STOP,"STOP before wheel",1200);
     scenario(WHEEL_SUFFIX_STOP,"STOP after wheel",1200);
     scenario(WHEEL_IN_IMAGE,"no wheel in image",1300);
-    scenario(AUTO_RUN,"saved C12 startup",3000);
+    scenario(AUTO_RUN,"saved profile stays stopped",3000);
     scenario(AUTO_CANCEL,"STOP cancels countdown",3000);
     scenario(AUTO_IMAGE,"image cancels countdown",3000);
-    scenario(AUTO_OPEN,"C12 stops local run",3000);
+    scenario(AUTO_OPEN,"physical samples do not arm",3000);
     scenario(AUTO_INVALID,"invalid boot no retry",3000);
+    scenario(DIP_OBSERVE,"DIP observer rejects arm",800);
+    scenario(DIP_STOP,"DIP stops running",800);
+    scenario(DIP_PARTIAL,"DIP cancels partial line",800);
 #endif
     printf("ADAPTER RESULT: %d checks, %d failures (mock MCU/transport, no hardware claim)\n", checks, failures);
     return failures ? 1 : 0;

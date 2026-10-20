@@ -36,8 +36,10 @@
 #include "zf_common_headfile.h"
 #include "isr.h"
 #include "main.h"
+#include "board_io.h"
 #include "vision_drive.h"
 #include "math.h"
+#include "app_link.h"
 
 int16 encoder_data_1 = 0;
 int16 encoder_data_2 = 0;
@@ -71,7 +73,7 @@ void PIT_IRQHandler(void)
     {
         pit_flag_clear(PIT_CH1);
 #if VISION_DRIVE_ENABLE
-        vision_drive_switch_sample(gpio_get_level(VISION_START_SWITCH_PIN)==VISION_START_SWITCH_ACTIVE_LEVEL);
+        board_mode_sample();
         vision_drive_safety_tick(); // Independent output lease, no encoder/PID use.
 #endif
     }
@@ -91,6 +93,9 @@ void PIT_IRQHandler(void)
 
 void LPUART1_IRQHandler(void)
 {
+#if VISION_DUAL_UART_ENABLE
+    app_link_board_irq(APP_LINK_USB);
+#else
     if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART1))
     {
         // 接收中断
@@ -101,6 +106,7 @@ void LPUART1_IRQHandler(void)
     }
         
     LPUART_ClearStatusFlags(LPUART1, kLPUART_RxOverrunFlag);    // 不允许删除
+#endif
 }
 
 void LPUART2_IRQHandler(void)
@@ -167,6 +173,9 @@ void LPUART6_IRQHandler(void)
 
 void LPUART8_IRQHandler(void)
 {
+#if VISION_DUAL_UART_ENABLE
+    app_link_board_irq(APP_LINK_RADIO);
+#else
     if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART8))
     {
         // 接收中断
@@ -178,6 +187,7 @@ void LPUART8_IRQHandler(void)
     }
         
     LPUART_ClearStatusFlags(LPUART8, kLPUART_RxOverrunFlag);    // 不允许删除
+#endif
 }
 
 

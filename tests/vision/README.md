@@ -1,5 +1,28 @@
 # 可复现的主机验证
 
+## 当前无线与外设基线
+
+实机范围见 [BASELINE_20261020](../../docs/BASELINE_20261020.md)。主机测试仍使用模拟IO。
+在仓库根目录分别执行；普通/ASAN或同目录构建需顺序运行：
+
+```powershell
+cmd /c tests\vision\run_link_tests.cmd
+cmd /c "tests\vision\run_link_tests.cmd asan"
+cmd /c tests\vision\run_motion_tests.cmd
+cmd /c "tests\vision\run_motion_tests.cmd optimized diag"
+cmd /c "tests\vision\run_motion_tests.cmd asan diag"
+cmd /c tests\vision\run_motor_threshold_tests.cmd
+```
+
+双串口测试包括实际应用主循环、归属隔离、外来心跳不能续租、跨端STOP与RTS忙时公平服务。
+运动诊断测试核对真实解析/驱动/PIT函数、150/100‰映射、左右舵角、人工确认换向、停止优先、
+失联/切档撤输出、保持期间不重复写PWM、斜坡不重写舵机，以及停止后同值重新启动。
+首次/上限150‰只存在于显式MOTION_DIAG构建，默认正式版本限制不变。
+
+当前四键用例及实现已移除，保留蜂鸣器/拨码回归；主循环新增验证“恢复配置不自动启动”。test_startup 中历史开关核心兼容测试使用显式 `VISION_START_SWITCH_ENABLE=1`，正式固件为 0 且无实体按键 ISR 接入。见 [当前状态](../../docs/WIRELESS_CONTROL_ASSESSMENT.md)。
+
+2026-10-20：四种功能模式改由 C26/C27 拨码选择；新增 test_board_mode 的 GPIO、相机重试、权限与消抖检查，USB/无线集成增加切档停机和分段命令检查。编译宏矩阵保留用于裁剪、链路和模拟标定，不是实车功能档位。见 [架构与拨码](../../docs/ARCHITECTURE_MODES.md)。
+
 FIELD_4 新增 test_startup：C12 两秒启动、原始断开撤输出、无抖动重启、无效到期不补启动、保留远程心跳/本地视觉及总时限、CRC 双槽/写断电/单比特破坏/序号回绕。USB/无线适配新增真实主循环恢复配置后启动、STOP/图传取消、开关停止及无效后不重试场景。旧子系统夹具通过 HOST TEST 编译参数关闭物理开关门槛；test_startup 和部署目标保持开关启用。板级 Flash 适配仅 ARM/完整链接检查，尚未实机写入。
 
 这些测试在电脑上编译 C 源码，模拟相机、计时器、串口和 PWM，不连接小车、不烧录、不输出真实 PWM。合成通过不是实车安全或路线验收。

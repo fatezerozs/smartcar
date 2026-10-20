@@ -1,3 +1,4 @@
+#include "app_mode.h"
 #include "vision_field.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ static void frame(unsigned sequence)
 int main(void)
 {
     vd_profile_t cfg,saved;int y;unsigned i;
-    vf_init(&parser);vision_drive_init(0);
+    vf_init(&parser);vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();
     memset(&lane,0,sizeof(lane));lane.valid=1;lane.status=VISION_TRACK;lane.confidence=90;
     for(y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y){lane.left[y]=64;lane.right[y]=123;lane.center[y]=94;lane.row_flags[y]=3;}
     CHECK(!vision_drive_ready());
@@ -109,7 +110,7 @@ int main(void)
     CHECK(!vision_drive_configure(&cfg));
     command("@gain 0.5 0.02 0.2\n");CHECK(strstr(response,"OK")!=NULL);
     CHECK(irq_mask==0);
-    vision_drive_init(clock_ms);CHECK(!vision_drive_ready());
+    vision_drive_init(clock_ms); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();CHECK(!vision_drive_ready());
     vision_drive_get_profile(&cfg);CHECK(!cfg.control.calibration_confirmed&&cfg.control.cruise_duty==0);
     CHECK(cfg.motor1_scale==1 && cfg.motor2_scale==1 && !cfg.motor_direction_confirmed);
     printf("FIELD PASS: %u checks; no physical IO\n",checks);return 0;

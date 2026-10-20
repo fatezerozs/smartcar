@@ -1,3 +1,4 @@
+#include "app_mode.h"
 #include "vision_drive.h"
 #include "vision_field.h"
 #include <stdio.h>
@@ -21,7 +22,7 @@ static void command(const char *s){for(;*s;++s){int n=vf_feed(&parser,(uint8_t)*
 int main(void)
 {
     vd_profile_t cfg;vd_probe_info_t info;vision_result_t lane;int i;
-    vision_drive_init(0);vf_init(&parser);parser.probe_permitted=1;
+    vision_drive_init(0); app_mode_init(1,0,0); app_mode_sample(1,0,30); (void)app_mode_take_change();vf_init(&parser);parser.probe_permitted=1;
     CHECK(!vision_drive_motor_probe(0,10,1,300,0));
     CHECK(!vision_drive_motor_probe(1,40,1,300,0));
     command("@wheel 1 30 1 300\r\n");CHECK(strstr(reply,"OK")!=NULL);
@@ -52,13 +53,14 @@ int main(void)
     for(i=VISION_ROI_TOP;i<=VISION_ROI_BOTTOM;++i){lane.left[i]=64;lane.right[i]=123;lane.center[i]=94;lane.row_flags[i]=3;}
     for(i=2;i<=7;++i){clock_ms+=20;vision_drive_observe(&lane,(uint32_t)i,clock_ms,clock_ms);}
     CHECK(!vision_drive_command('a',clock_ms,1)); /* Fresh vision cannot bypass motor coast. */
+    app_mode_init(0,0,clock_ms-30U); app_mode_sample(0,0,clock_ms); (void)app_mode_take_change();
     clock_ms=9400;
     for(i=8;i<=13;++i){clock_ms+=20;vision_drive_observe(&lane,(uint32_t)i,clock_ms,clock_ms);}
     CHECK(vision_drive_command('a',clock_ms,1));
     clock_ms+=20;vision_drive_observe(&lane,14,clock_ms,clock_ms);CHECK(last_level==0);
     vision_drive_stop();vision_drive_get_profile(&cfg);CHECK(cfg.motor_direction_confirmed&&cfg.motor2_forward_level==0);
     command("@status\n");CHECK(strstr(reply,"[MOTOR] confirmed=1 dir=1/0")!=NULL&&strstr(reply,"[BENCH]")!=NULL);
-    vision_drive_init(clock_ms);clock_ms=UINT32_MAX-200;
+    vision_drive_init(clock_ms); app_mode_init(1,0,0); app_mode_sample(1,0,30); (void)app_mode_take_change();clock_ms=UINT32_MAX-200;
     CHECK(vision_drive_motor_probe(1,10,1,300,clock_ms));
     clock_ms+=300;vision_drive_safety_tick();CHECK(pwm[0]==0);
     vision_drive_get_profile(&cfg);CHECK(!cfg.motor_direction_confirmed);

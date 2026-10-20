@@ -10,6 +10,23 @@
 #define WIRELESS_UART_BUAD_RATE 115200
 uint32_t wireless_uart_read_buffer(uint8_t *data, uint32_t capacity);
 uint32_t wireless_uart_send_buffer(const uint8_t *data, uint32_t length);
+#define B11 43
+#define C12 76
+#define C13 77
+#define C14 78
+#define C15 79
+typedef int gpio_pin_enum;
+#define C26 90
+#define C27 91
+#define GPO 1
+#define GPI 0
+#define GPIO_LOW 0
+#define GPIO_HIGH 1
+#define GPO_PUSH_PULL 1
+#define GPI_PULL_UP 2
+int mt9v03x_init(void);
+void gpio_init(int pin,int direction,int level,int mode);
+int gpio_get_level(int pin);
 #define GPT_TIM_1 1
 #define MOTOR1_PWM 0
 #define MOTOR2_PWM 1

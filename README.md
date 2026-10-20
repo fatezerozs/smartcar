@@ -1,20 +1,30 @@
 # Smartcar：视觉识别与安全控制交付版
 
-交付日期：2026-10-18；维护分支：`vision-debug`。保留队友原 `main` 分支和原有 Camera、Island、PID、SDK 源码。当前仅验证下述 MDK 入口，不是根目录的历史工程。
+> **2026-10-20 实车测试基线：MOTION_DIAG_2。** 无线双串口、两轮/舵机点动、直线、停车确认后倒退、左右短圆弧和 `!` 动态停止已由操作者验证。先读 [基线与复现入口](docs/BASELINE_20261020.md) 和 [运动诊断操作](docs/MOTION_DIAG.md)。正式固件默认限制与独立诊断固件不同，不能混用下载产物。
 
-**FIELD_4 在恢复有效已保存配置后，C12 开启可延时 2 秒自动起步。烧录、调试前先断开 C12。** 没有有效保存记录时仍使用零 PWM 的未配置默认值，不会凭空得到可跑参数。电机开环、摄像头闭环转向，保留安全租约；首次配置与接线见 [C12 启动说明](docs/C12_STARTUP.md)。
+> 当前四键控制已回退，C12 不再参与启停；已确认有效的 B11 修正保留。上电保持停止，拨码仍选档。无线接管能力与边界见 [回退及无线评估](docs/WIRELESS_CONTROL_ASSESSMENT.md)。
+
+当前维护分支：`main`（已同步 vision-debug）。本轮按功能拆分运行调度与驱动模块，并接入 C26/C27 两位拨码。原有 Camera、Island、PID、SDK 源码保留。
+
+**UART_CONTROL_BASE_V1：上电和恢复配置后保持停止，四键不参与控制。** 使用当前串口控制端显式启停，标定、图像有效性、指令心跳和故障门槛仍保留。
+
+新固件的两位拨码全 OFF 为纯观测；其余档位为舵机点动、电机点动和整车控制。点动档不依赖摄像头。详见 [架构与拨码操作](docs/ARCHITECTURE_MODES.md) 和 [B11 蜂鸣器排查](docs/BUZZER_DIAGNOSIS.md)。最新诊断固件已由用户烧录并完成上述实车测试，离线检查与实测边界见 [验证记录](docs/VERIFICATION.md)。
 
 ## 打开哪个工程
 
-完整解压或克隆本项目，用 Keil 打开 **[demo/mdk/rt1064.uvprojx](demo/mdk/rt1064.uvprojx)**，选择 `nor_sdram_zf_dtcm`。项目记录的编译器是 ARMCLANG 6.21，芯片 MIMXRT1064DVL6B，设备包 NXP.MIMXRT1064_DFP 19.0.0。需要自行安装 Keil/编译器和相应设备支持；它们不包含在源码包中。
+完整解压或克隆本项目，正式入口为 **[demo/mdk/rt1064.uvprojx](demo/mdk/rt1064.uvprojx)**，目标 `nor_sdram_zf_dtcm`。复现实车基线需先按 [构建说明](docs/BASELINE_20261020.md) 生成独立 `motion_diag.uvprojx`。项目记录的编译器是 ARMCLANG 6.21，芯片 MIMXRT1064DVL6B，当前设备包 NXP.MIMXRT1064_DFP 26.09.00。Keil、编译器和设备包不包含在源码库中。
 
 在 Keil 中选择 Project → Rebuild all target files，检查 Build Output。只有成功生成新目标后才考虑原有已确认的下载流程；本次整理未烧录或驱动车辆。最新构建结果见[验证记录](docs/VERIFICATION.md)。
 
 ## 从这里阅读
 
+- [本次实车成果、外设接线、证据和复现](docs/BASELINE_20261020.md)
+- [已验证运动诊断版：配置、直线、往复、圆弧和动态停车](docs/MOTION_DIAG.md)
+- [最小运动测试设计及原正式版本限制](docs/MINIMAL_MOTION.md)
+- [双串口：最小回显验证、无线接管与中断调整](docs/DUAL_UART.md)
 - [队友接手：本次有效成果、获取方式、验证边界及修改入口](docs/TEAM_HANDOFF_20261020.md)
-- [最新 FIELD_4：C12 开关、两秒启动及参数掉电保存](docs/C12_STARTUP.md)
-- [当前 FIELD_3：无编码器开环 PWM、两路配平与现场反馈调参](docs/OPEN_LOOP_FIELD_3.md)
+- [历史 FIELD_4：C12 启动设计，当前已停用](docs/C12_STARTUP.md)
+- [历史 FIELD_3：无编码器开环 PWM与两路配平](docs/OPEN_LOOP_FIELD_3.md)
 - [完整项目说明、目录和维护方法](docs/PROJECT_GUIDE.md)
 - [中期现场版、停车调参与串口读取工具](docs/MIDTERM_FIELD.md)
 - [贝叶斯隐状态、置信算法、训练接口与中期开环 PWM](docs/BAYES_REFACTOR.md)
@@ -25,7 +35,7 @@
 
 ## 当前能力与限制
 
-摄像头采集 → 自适应二值化 → 亮色通道边界/中线 → 有效性与历史检查 → 串口诊断、94×60 V2 预览。控制器采用可标定参考轴、按实测路宽归一化的视觉转向闭环和限幅开环电机占空比；FIELD_4 可恢复配置并使用 C12 本地启动，无有效记录则锁定输出。
+摄像头采集 → 自适应二值化 → 亮色通道边界/中线 → 有效性与历史检查 → 串口诊断、94×60 V2 预览。视觉驾驶保留参考轴、图像和人工解锁门槛；独立运动诊断不依赖道路识别。上电、恢复配置或切档都不自动发车，C12和四键不再参与启停；只有显式命令才请求动作。
 
 参考场景是白色通道、较暗外侧。中期控制用于直道和左右弯道；完整赛道模型估计十字、斑马线及环岛阶段等状态，但默认未训练，完整模式不驱动车辆，尚不是环岛/十字自主导航。没有写死路线坐标、转弯时间或圈数，也没有编码器速度闭环。合成回归通过不等于实车路线验收。
 

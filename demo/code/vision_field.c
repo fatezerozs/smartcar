@@ -31,6 +31,30 @@ static int execute(vf_parser_t *p, uint32_t now, char *response)
 {
     vd_profile_t cfg; float v[4]; int ok = 0;
     vision_drive_get_profile(&cfg);
+    if (!strcmp(p->line,"motion_status")) {
+        vd_motion_info_t m;vision_drive_motion_get(&m);
+        snprintf(response,VF_RESPONSE_CAPACITY,"[MOTION] seq=%lu kind=%u phase=%u reason=%u requested=%u actual=%u servo_us=%u duration_ms=%lu; query stops motion\r\n",
+            (unsigned long)m.sequence,m.kind,m.phase,m.reason,m.requested_permille,m.actual_permille,m.servo_us,(unsigned long)m.duration_ms);
+        return 2;
+    }
+    if (!strncmp(p->line,"motion ",7)) {
+        unsigned kind=0,count=2;const char *args="";uint16_t pulse=cfg.servo_center_us;
+        if(!strncmp(p->line,"motion line ",12)){kind=VD_MOTION_LINE;args=p->line+12;}
+        else if(!strncmp(p->line,"motion shuttle ",15)){kind=VD_MOTION_SHUTTLE;args=p->line+15;}
+        else if(!strncmp(p->line,"motion circle ",14)){kind=VD_MOTION_CIRCLE;args=p->line+14;count=3;}
+        ok=p->probe_line_permitted && kind && numbers(args,v,count) &&
+            range(v[0],1,VISION_MOTION_MAX_PERMILLE) && v[0]==(uint16_t)v[0] &&
+            range(v[1],VISION_MOTION_MIN_MS,VISION_MOTION_MAX_MS) && v[1]==(uint16_t)v[1];
+        if(ok && count==3) {
+            ok=range(v[2],500,2500) && v[2]==(uint16_t)v[2];
+            if(ok)pulse=(uint16_t)v[2];
+        }
+        ok=ok && vision_drive_motion_start(kind,(uint16_t)v[0],(uint16_t)v[1],pulse,now);
+        if(ok)snprintf(response,VF_RESPONSE_CAPACITY,"[MOTION] STARTED kind=%u requested=%u duration_ms=%u servo_us=%u; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast\r\n",
+            kind,(unsigned)v[0],(unsigned)v[1],pulse);
+        else snprintf(response,VF_RESPONSE_CAPACITY,"[MOTION] REJECT format/mode/profile/coast/STOP; requires confirmed servo+motor direction, cruise=0, positive cap\r\n");
+        return 2;
+    }
     if (!strcmp(p->line,"save")) {
         vs_info_t saved;
         ok=vision_drive_can_store() && vs_save(&cfg);

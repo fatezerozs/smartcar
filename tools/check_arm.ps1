@@ -16,7 +16,7 @@ foreach ($definition in ([string]$controls.Define).Split(',')) { $flags += '-D' 
 foreach ($include in ([string]$controls.IncludePath).Split(';')) { if ($include.Trim()) { $flags += '-I' + $include.Trim() } }
 Push-Location $mdkRoot
 try {
-    foreach ($unit in @('vision_storage', 'vision_storage_board', 'vision_field', 'track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
+    foreach ($unit in @('vision_motion','app_link','app_link_board','board_camera','app_transport','vision_frame','vision_telemetry','app_runtime','app_mode','board_io','vision_actuator','vision_guard','vision_probe','vision_startup','vision_vehicle_profile','vision_storage', 'vision_storage_board', 'vision_field', 'track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
         & $compiler @flags '-c' ('..\code\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM compile failed: ' + $unit) }
         Write-Output ('PASS ARM default: ' + $unit)
@@ -29,7 +29,7 @@ try {
         & $compiler @flags '-c' ('..\user\src\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM user unit failed: ' + $unit) }
     }
-    foreach ($source in @('..\code\vision_debug.c', '..\user\src\main.c')) {
+    foreach ($source in @('..\code\app_transport.c','..\code\vision_telemetry.c','..\code\app_runtime.c', '..\code\vision_debug.c', '..\user\src\main.c')) {
         & $compiler @flags '-DVISION_WIRELESS_UART_ENABLE=1' '-DVISION_DRIVE_ENABLE=1' '-c' $source '-o' (Join-Path $outputRoot ((Split-Path $source -Leaf) + '-wireless.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM wireless branch failed: ' + $source) }
     }

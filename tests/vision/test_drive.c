@@ -1,3 +1,4 @@
+#include "app_mode.h"
 #include "vision_drive.h"
 #include <stdio.h>
 #include <string.h>
@@ -19,7 +20,7 @@ int main(void) {
     int y;
     memset(&r, 0, sizeof(r)); r.valid = 1; r.status = VISION_TRACK; r.confidence = 90;
     for (y = VISION_ROI_TOP; y <= VISION_ROI_BOTTOM; ++y) { r.left[y] = 64; r.right[y] = 143; r.center[y] = 104; r.row_flags[y] = 3; }
-    vision_drive_init(0);
+    vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();
     for (y = 1; y <= 5; ++y) frame((uint32_t)y);
     check(pwm[0] == 0 && pwm[1] == 0, "no PWM before explicit arm");
 #if VISION_DRIVE_ENABLE && VISION_DRIVE_PROFILE_CONFIRMED && VISION_CAMERA_CALIBRATED

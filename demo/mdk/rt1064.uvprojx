@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>MIMXRT1064DVL6B</Device>
           <Vendor>NXP</Vendor>
-          <PackID>NXP.MIMXRT1064_DFP.19.0.0</PackID>
+          <PackID>NXP.MIMXRT1064_DFP.26.09.00</PackID>
           <PackURL>https://mcuxpresso.nxp.com/cmsis_pack/repo/</PackURL>
           <Cpu>IRAM(0x20000000,0x020000) IRAM2(0x00000000,0x020000) IROM(0x70000000,0x400000) IROM2(0x00200000,0x020000) XRAM(0x20280000,0x040000) XRAM2(0x20200000,0x080000) CPUTYPE("Cortex-M7") FPU3(DFPU) CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -475,9 +475,144 @@
               <FilePath>..\code\vision_control.h</FilePath>
             </File>
             <File>
+              <FileName>vision_motion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_motion.c</FilePath>
+            </File>
+            <File>
               <FileName>vision_drive.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\code\vision_drive.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_runtime.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\app_runtime.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_link.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\app_link.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_link.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\app_link.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_link_board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\app_link_board.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_transport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\app_transport.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_transport.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\app_transport.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_frame.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_frame.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_frame.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\vision_frame.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_telemetry.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_telemetry.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_telemetry.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\vision_telemetry.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\app_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\board_io.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_diagnostics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\board_diagnostics.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_diagnostics.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\board_diagnostics.h</FilePath>
+            </File>
+            <File>
+              <FileName>board_io_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\board_io_hw.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_camera.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\board_camera.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_camera.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\board_camera.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_actuator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_actuator.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_guard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_guard.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_probe.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_probe.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_startup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_startup.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_vehicle_profile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\vision_vehicle_profile.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_runtime.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\app_runtime.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_mode.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\app_mode.h</FilePath>
+            </File>
+            <File>
+              <FileName>board_io.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\board_io.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_drive_internal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\vision_drive_internal.h</FilePath>
             </File>
             <File>
               <FileName>vision_drive.h</FileName>

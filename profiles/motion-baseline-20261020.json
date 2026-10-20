@@ -1,0 +1,15 @@
+{
+  "format": "motion-baseline-evidence-v1",
+  "date": "2026-10-20",
+  "firmware": "MOTION_DIAG_2",
+  "auto_apply": false,
+  "evidence": "Operator observations plus parsed host command/state logs; no measured wheel speed or PWM waveform",
+  "motor1": {"wheel": "right", "pwm_pin": "C6", "dir_pin": "C7", "forward_level": 1, "observed_working_permille": 150},
+  "motor2": {"wheel": "left", "pwm_pin": "C8", "dir_pin": "C9", "forward_level": 1, "observed_working_permille": 100},
+  "servo": {"pwm_pin": "C30", "frequency_hz": 50, "center_us": 1550, "min_us": 1500, "max_us": 1600, "right_sign": 1, "scope": "Observed conservative window, not mechanical hard stops"},
+  "motion": {"request_permille": 150, "duration_ms_per_leg": 2500, "motor1_scale": 1.0, "motor2_scale": 0.667, "cruise_duty": 0.0, "duty_cap": 0.15, "rise_per_s": 0.1, "heartbeat_interval_ms": 100, "heartbeat_timeout_ms": 500, "coast_min_ms": 2000, "reverse_requires_operator_confirmation": true},
+  "wireless": {"uart": 8, "mcu_tx": "D16", "mcu_rx": "D17", "rts": "D26", "cmd": "D27", "baud": 115200, "format": "8N1", "supply_v": 5.0, "logic_v": 3.3},
+  "passed_by_operator": ["dual_uart_echo_and_ownership", "wheel_forward_direction", "servo_center_and_left_right", "line_and_timed_stop", "explicit_stop", "shuttle_with_R_confirmation", "left_and_right_short_arcs"],
+  "not_verified": ["minimum_starting_threshold", "wheel_speed_balance", "full_circle", "return_to_origin", "measured_stopping_distance", "physical_radio_disconnect_stop", "autonomous_lane_following", "flash_save_and_power_cycle_restore"],
+  "tested_local_axf_sha256": "F9AC18F61A43EB8C0775DBFC19C61C43542CA769D57D3B0C6EAEDDB033191649"
+}

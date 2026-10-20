@@ -47,10 +47,17 @@
 #define VISION_MOTOR_PWM_HZ 17000U
 #define VISION_POWER_SETTLE_MS 300U
 #define VISION_CAMERA_RETRY_MS 1000U
-/* 0=现有 debug UART1；1=原库 UART8 无线模块，单一控制源，不混合心跳。
- * 启用前核实原库 D16/D17/RTS D26 接线；不修改 SDK 的 RX 中断机制。 */
+/* Legacy single-port routing only: 0=UART1, 1=UART8. Dual mode below
+ * replaces UART1/UART8 RX callbacks with independent application rings. */
 #ifndef VISION_WIRELESS_UART_ENABLE
 #define VISION_WIRELESS_UART_ENABLE 0
+#endif
+/* Legacy single-port builds remain available for regression testing. */
+#ifndef VISION_DUAL_UART_ENABLE
+#define VISION_DUAL_UART_ENABLE 1
+#endif
+#ifndef VISION_LINK_MVP
+#define VISION_LINK_MVP 0
 #endif
 
 /* Axis in normalized image coordinates (x right, y down). On a confirmed
@@ -123,7 +130,22 @@
  * 完整记录恢复后按 C12 开关延时本地启动；调参/保存本身不会发车。 */
 #define VISION_FIELD_LINE_CAPACITY 96U
 #define VISION_FIELD_TIMEOUT_MS 1000U
+#ifndef VISION_MOTOR_THRESHOLD_DIAG
+#define VISION_MOTOR_THRESHOLD_DIAG 0
+#endif
+#ifndef VISION_MOTION_DIAG
+#define VISION_MOTION_DIAG 0
+#endif
+#if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
+#error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+#endif
+#if VISION_MOTION_DIAG
+#define VISION_FIELD_BUILD "MOTION_DIAG_2"
+#elif VISION_MOTOR_THRESHOLD_DIAG
+#define VISION_FIELD_BUILD "MOTOR_THRESHOLD_DIAG_1"
+#else
 #define VISION_FIELD_BUILD "MIDTERM_FIELD_4"
+#endif
 /* Explicit user-selected boot behavior. A complete CRC-checked saved vehicle
  * profile is still required; blank flash/default zero duty cannot start.
  * Delay is relative to MCU timer startup, NOT sensed motor-board power. */
@@ -131,7 +153,7 @@
 #define VISION_AUTO_START_DELAY_MS 2000U
 #define VISION_START_SWITCH_ACTIVE_LEVEL 0U /* C12 -> GND enables; open stops. */
 #ifndef VISION_START_SWITCH_ENABLE
-#define VISION_START_SWITCH_ENABLE 1U /* HOST TEST fixtures may omit GPIO only. */
+#define VISION_START_SWITCH_ENABLE 0U /* Physical key control removed; UART arm remains explicit. */
 #endif
 #define VISION_START_SWITCH_DEBOUNCE_MS 30U
 #define VISION_START_SWITCH_REARM_MS 300U
@@ -142,12 +164,37 @@
  * Start <=3%, then at most +1% per request; never exceed 10% / 500ms.
  * PWM is not measured speed/current. Operator must observe a lifted wheel.
  * Quiet time does not prove mechanical stop: confirm it before polarity edits. */
+#if VISION_MOTOR_THRESHOLD_DIAG
+/* Explicit separate build: compare with the working 20% / 1500ms bench test.
+ * Manual one-wheel requests only; no sweep and no automatic repetition. */
+#define VISION_MOTOR_PROBE_INITIAL_PERMILLE 100U
+#define VISION_MOTOR_PROBE_MAX_PERMILLE 200U
+#define VISION_MOTOR_PROBE_MAX_MS 1500U
+#else
 #define VISION_MOTOR_PROBE_INITIAL_PERMILLE 30U
-#define VISION_MOTOR_PROBE_STEP_PERMILLE 10U
 #define VISION_MOTOR_PROBE_MAX_PERMILLE 100U
-#define VISION_MOTOR_PROBE_MIN_MS 100U
 #define VISION_MOTOR_PROBE_MAX_MS 500U
+#endif
+#define VISION_MOTOR_PROBE_STEP_PERMILLE 10U
+#define VISION_MOTOR_PROBE_MIN_MS 100U
 #define VISION_MOTOR_PROBE_COAST_MS 2000U
+/* Explicit fixed-steering tests. PWM is not speed, time is not distance. */
+#if VISION_MOTION_DIAG
+/* User-observed working points: M1/right=150, M2/left=100 permille.
+ * Scaling and hardware confirmation still require explicit RAM commands. */
+#define VISION_MOTION_MAX_PERMILLE 150U
+#define VISION_MOTION_INITIAL_PERMILLE 150U
+#else
+#define VISION_MOTION_MAX_PERMILLE 100U
+#define VISION_MOTION_INITIAL_PERMILLE VISION_MOTOR_PROBE_INITIAL_PERMILLE
+#endif
+#define VISION_MOTION_MIN_MS 100U
+#define VISION_MOTION_MAX_MS 3000U
+#define VISION_MOTION_SETTLE_MS 200U
+#define VISION_MOTION_COAST_MS 2000U
+#define VISION_MOTION_REVERSE_WAIT_MS 8000U
+#define VISION_MOTION_RISE_PERMILLE_S 100U
+#define VISION_MOTION_STEER_DELTA_US 50U
 
 /* Bench-only servo probing. These are electrical experiment bounds, NOT
  * measured mechanical center/endpoints or a driving profile. First pulse is

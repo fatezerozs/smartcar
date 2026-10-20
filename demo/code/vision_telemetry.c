@@ -1,0 +1,99 @@
+#include "main.h"
+#include "vision_drive.h"
+#include "vision_field.h"
+#include "vision_telemetry.h"
+#include "app_transport.h"
+#include "board_diagnostics.h"
+static uint8_t preview[VISION_PREVIEW_WIDTH*VISION_PREVIEW_HEIGHT];
+void vision_telemetry_preview(char mode,const uint8_t *gray,const uint8_t *binary,const vision_result_t *result)
+{
+    uint8_t header[12]={0xAA,0,0x02,0x02,VISION_PREVIEW_WIDTH,0,VISION_PREVIEW_HEIGHT,0,0x01,0,0,0};
+    uint8_t checksum=0;unsigned i;
+    vision_preview_mode_t kind=mode=='b'?VISION_PREVIEW_BINARY:mode=='o'?VISION_PREVIEW_OVERLAY:VISION_PREVIEW_GRAY;
+    vision_midterm_preview(gray,binary,result,preview,kind);
+    for(i=0;i<sizeof(header);++i)checksum=(uint8_t)(checksum+header[i]);
+    header[1]=checksum;
+    app_transport_frame(header,sizeof(header),preview,sizeof(preview));
+}
+
+static int coord(uint8_t value) {return value==VISION_INVALID_X?-1:value;}
+void vision_telemetry_help(void)
+{
+#if VISION_MOTION_DIAG
+    app_console_printf("[MOTION_DIAG] max 150 permille; manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP\r\n");
+#endif
+#if VISION_MOTOR_THRESHOLD_DIAG
+    app_console_printf("[THRESHOLD_DIAG] manual single-wheel bench; first <=100, step <=10, max 200 permille / 1500ms; local autostart disabled; !=STOP\r\n");
+#endif
+#if VISION_DRIVE_ENABLE
+    app_console_printf("[MOTION] @motion line/shuttle permille ms; @motion circle permille ms pulse_us; requires hardware calibration, cruise=0; h heartbeat, !=STOP, v=confirm reverse while stopped\r\n");
+    app_console_printf("\r\n[VISION2] MIDTERM: camera steering / open-loop motor; UART arm/stop; physical keys removed; boot is stopped\r\n");
+    app_console_printf("[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/pause/reset disarms\r\n");
+    app_console_printf("[FIELD] build=%s; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 level2, @duration ms; newline; !=STOP\r\n",VISION_FIELD_BUILD);
+    app_console_printf("[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM is NOT measured speed\r\n");
+    app_console_printf("[STARTUP] @startup enabled delay_ms; @save, @load; physical keys removed; boot does not auto-arm; remote a requires h heartbeat\r\n");
+    app_console_printf("[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first %uus then <=%uus step; STOP/timeout off\r\n",
+        (unsigned)VISION_SERVO_PROBE_INITIAL_US,(unsigned)VISION_SERVO_PROBE_STEP_US);
+    app_console_printf("[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=%u permille / %ums; NOT forward confirmation\r\n",
+        (unsigned)VISION_MOTOR_PROBE_MAX_PERMILLE,(unsigned)VISION_MOTOR_PROBE_MAX_MS);
+#else
+    app_console_printf("\r\n[VISION2] MIDTERM: straights/bends, actuators OFF\r\n");
+#endif
+#if VISION_DUAL_UART_ENABLE
+    app_console_printf("[LINK] dual UART1/UART8 115200 8N1; x=claim this port while stopped; !=STOP on either port\r\n");
+#elif VISION_WIRELESS_UART_ENABLE
+    app_console_printf("[VISION2] UART8 wireless %lu 8N1; send ASCII, HEX/auto-send OFF\r\n", (unsigned long)WIRELESS_UART_BUAD_RATE);
+#else
+    app_console_printf("[VISION2] UART %lu 8N1; send ASCII, HEX/auto-send OFF\r\n", (unsigned long)DEBUG_UART_BAUDRATE);
+#endif
+    app_console_printf("[MODE] C26/C27 ON=ground: 00 OBSERVE, 10 SERVO, 01 MOTOR, 11 DRIVE; change=STOP; keys removed; a/h/s via UART\r\n");
+    app_console_printf("[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help\r\n");
+    app_console_printf("[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset\r\n");
+    app_console_printf("[BAYES] default model UNTRAINED; posterior is not measured accuracy\r\n");
+    app_console_printf("[VISION2] image: SeekFree V2, GRAY 94x60, header=12 bytes; no mixed text\r\n");
+    app_console_printf("[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control\r\n");
+}
+
+
+void vision_telemetry_report(const vision_report_t *d)
+{
+    board_diagnostics_report();
+#if VISION_DRIVE_ENABLE
+            const vc_output_t *drive = vision_drive_output();
+            app_console_printf("[DRIVE] ready=%d state=%u faults=%lu near=%.3f heading=%.3f steer=%.3f duty=%.3f far_ok=%u\r\n",
+                   vision_drive_ready(), (unsigned)drive->state, (unsigned long)drive->faults, (double)drive->lateral,
+                   (double)drive->heading, (double)drive->steering, (double)drive->duty, drive->far_valid);
+            app_console_printf("[CAL] valid=%u far_ok=%u near_x=%.5f far_x=%.5f; confirm centered STRAIGHT before @camera\r\n",
+                   drive->observation_valid, drive->far_valid, (double)drive->near_center_x, (double)drive->far_center_x);
+#endif
+            if (d->timeout_reset) {
+                app_console_printf("[VISION2] NO_FRAME n=%lu camera stream stopped\r\n", (unsigned long)d->frames);
+            } else if (d->frames == 0) {
+                app_console_printf("[VISION2] waiting for first camera frame\r\n");
+            } else {
+                app_console_printf("[BAYES] mode=%s state=%s candidate=%s p=%.3f margin=%.3f entropy=%.3f accepted=%u trained=%u\r\n",
+                       d->midterm_mode ? "MIDTERM" : "FULL_OBSERVER", tb_state_name(d->track->result.state),
+                       tb_state_name(d->track->result.candidate), (double)d->track->result.probability,
+                       (double)d->track->result.margin, (double)d->track->result.entropy,
+                       d->track->result.accepted, d->track->result.trained);
+                app_console_printf("[FEATURE] n=%lu ms=%lu mask=%lu quality=%.3f heading=%.4f curvature=%.4f open_left=%.4f open_right=%.4f split=%.4f stripes=%.4f\r\n",
+                       (unsigned long)d->frames, (unsigned long)d->last_frame,
+                       (unsigned long)d->observation->mask, (double)d->observation->quality,
+                       (double)d->observation->x[TB_HEADING], (double)d->observation->x[TB_CURVATURE],
+                       (double)d->observation->x[TB_OPEN_LEFT], (double)d->observation->x[TB_OPEN_RIGHT],
+                       (double)d->observation->x[TB_SPLIT], (double)d->observation->x[TB_STRIPES]);
+                app_console_printf("[VISION2] n=%lu fps=%lu.%lu valid=%u state=%s q=%u thr=%u contrast=%u white=%u\r\n",
+                       (unsigned long)d->frames, (unsigned long)(d->fps_x10 / 10), (unsigned long)(d->fps_x10 % 10),
+                       d->lane->valid, vision_midterm_status_name(d->lane->status), d->lane->confidence,
+                       d->lane->threshold, d->lane->contrast, d->lane->white_percent);
+                app_console_printf("[VISION2] both=%u inferred=%u err=%.1f raw=%.1f bend=%.1f bend_ok=%u row90 L/M/R=%d/%d/%d drop=%lu\r\n",
+                       d->lane->measured_rows, d->lane->inferred_rows, (double)d->lane->error_px,
+                       (double)d->lane->raw_error_px, (double)d->lane->bend_px, d->lane->bend_valid,
+                       coord(d->lane->left[90]), coord(d->lane->center[90]), coord(d->lane->right[90]),
+                       (unsigned long)d->dropped_copies);
+                app_console_printf("[VISION2] age_ms=%lu proc_ms=%lu history_reset=%lu row90_thr=%u local_rows=%u ambiguous=%u\r\n",
+                       (unsigned long)(uint32_t)(d->now - d->last_frame), (unsigned long)d->process_ms,
+                       (unsigned long)d->history_resets, d->lane->row_threshold[90], d->lane->adaptive_rows,
+                       d->lane->ambiguous_rows);
+            }
+}

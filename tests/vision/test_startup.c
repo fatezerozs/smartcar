@@ -1,3 +1,4 @@
+#include "app_mode.h"
 #include "vision_storage.h"
 #include "vision_field.h"
 #include <stdio.h>
@@ -62,7 +63,7 @@ static void crc_update(uint32_t *w){w[VS_RECORD_WORDS-1]=record_crc(w);}
 static void storage_tests(void)
 {
     vd_profile_t p,q;vs_info_t info;unsigned i,b;uint32_t pristine[VS_RECORD_WORDS];
-    clock_ms=0;vision_drive_init(0);blank();vision_drive_get_profile(&p);q=p;
+    clock_ms=0;vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();blank();vision_drive_get_profile(&p);q=p;
     CHECK(!vs_load(&q));vs_get_info(&info);CHECK(info.error==VS_EMPTY);
     CHECK(q.servo_center_us==0);CHECK(!vs_save(&p)&&writes==0);
     ready_profile(&p);CHECK(vs_save(&p));CHECK(writes==1);
@@ -110,7 +111,7 @@ static void tick(int closed,int frames)
 static void ticks(unsigned count,int closed,int frames){unsigned i;for(i=0;i<count;++i)tick(closed,frames);}
 static void boot(uint32_t time,int closed)
 {
-    vd_profile_t p;clock_ms=time;sequence=0;vision_drive_init(time);storage_init();
+    vd_profile_t p;clock_ms=time;sequence=0;vision_drive_init(time); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();storage_init();
     CHECK(vs_load(&p));CHECK(vision_drive_configure(&p));
     vision_drive_set_local_allowed(1);
     vision_drive_schedule_boot(time,time);vision_drive_switch_sample(closed);
@@ -118,7 +119,7 @@ static void boot(uint32_t time,int closed)
 static void auto_tests(void)
 {
     vd_profile_t p;vd_auto_info_t state;uint32_t start;
-    clock_ms=0;vision_drive_init(0);blank();ready_profile(&p);CHECK(vs_save(&p));initialize_lane();
+    clock_ms=0;vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();blank();ready_profile(&p);CHECK(vs_save(&p));initialize_lane();
     /* Master input is fail-closed even before the very first PIT sample. */
     CHECK(vision_drive_configure(&p));
     CHECK(!vision_drive_servo_probe(1500,300,clock_ms));
@@ -158,13 +159,13 @@ static void auto_tests(void)
     CHECK(vision_drive_command('a',clock_ms,1));tick(1,1);ticks(60,1,1);
     CHECK(vision_drive_output()->faults&VC_FAULT_COMMAND);
     /* A valid RAM profile alone is not a restored boot permission. */
-    clock_ms=0;vision_drive_init(0);ready_profile(&p);CHECK(vision_drive_configure(&p));
+    clock_ms=0;vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();ready_profile(&p);CHECK(vision_drive_configure(&p));
     ticks(250,1,1);CHECK(vision_drive_output()->state==VC_DISARMED);
 }
 static void protocol_tests(void)
 {
     vf_parser_t parser;char response[VF_RESPONSE_CAPACITY];const char *s;vs_info_t info;
-    clock_ms=0;vision_drive_init(0);blank();vf_init(&parser);
+    clock_ms=0;vision_drive_init(0); app_mode_init(0,0,0); app_mode_sample(0,0,30); (void)app_mode_take_change();blank();vf_init(&parser);
     s="@save\r\n";while(*s)vf_feed(&parser,(uint8_t)*s++,clock_ms,response);
     CHECK(strstr(response,"REJECT")!=NULL&&writes==0);
     s="@startup 1 2000\n";while(*s)vf_feed(&parser,(uint8_t)*s++,clock_ms,response);

@@ -31,7 +31,7 @@ int vision_drive_profile_ready(const vd_profile_t *profile);
  * One attempt per boot/C12 enable edge; rejected deadlines never retry until
  * an explicit new OFF>=300ms/ON cycle. MODE/RST are not application keys. */
 void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now_ms);
-/* Raw C12 master-enable sampled by PIT1. Opening cuts PWM immediately;
+/* Logical C12 toggle enable sampled by PIT1. OFF cuts PWM immediately;
  * foreground handles debounce/countdown. No floating point/UART in ISR. */
 void vision_drive_switch_sample(int closed);
 /* Foreground mode gate: only midterm TEXT mode may schedule local motion.
@@ -72,4 +72,21 @@ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now_m
 int vision_drive_motor_probe(uint8_t channel, uint16_t duty_permille, uint8_t level,
                              uint16_t hold_ms, uint32_t now_ms);
 void vision_drive_get_probe(vd_probe_info_t *info);
+/* Explicit open-loop motion experiment; never scheduled at boot. */
+typedef enum { VD_MOTION_LINE=1, VD_MOTION_SHUTTLE, VD_MOTION_CIRCLE } vd_motion_kind_t;
+typedef enum { VD_MOTION_IDLE=0, VD_MOTION_SETTLE, VD_MOTION_FORWARD,
+               VD_MOTION_WAIT_REVERSE, VD_MOTION_REVERSE_SETTLE, VD_MOTION_REVERSE } vd_motion_phase_t;
+typedef enum { VD_MOTION_NONE=0, VD_MOTION_DONE, VD_MOTION_STOP,
+               VD_MOTION_HEARTBEAT, VD_MOTION_MODE, VD_MOTION_FAULT,
+               VD_MOTION_WAIT_TIMEOUT } vd_motion_reason_t;
+typedef struct {
+    uint32_t sequence, phase_ms, heartbeat_ms, duration_ms, stopped_ms;
+    uint16_t requested_permille, actual_permille, servo_us;
+    uint8_t kind, phase, reason;
+} vd_motion_info_t;
+int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration_ms,
+                              uint16_t servo_us,uint32_t now_ms);
+int vision_drive_motion_reverse(uint32_t now_ms,int allowed);
+void vision_drive_motion_get(vd_motion_info_t *info);
+int vision_drive_motion_active(void);
 #endif
