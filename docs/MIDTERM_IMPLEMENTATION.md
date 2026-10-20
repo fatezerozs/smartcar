@@ -6,9 +6,11 @@ ENCODER_SPEED_DIAG_5已由用户确认直线、主动停止、失联停止、人
 成功速度配置为@encoder_sign -1 1、@speed_cfg 40 1 0.05（实际Ki=0.046875）、@balance 1 1、
 @motor 0 0.15 0.1；电机前进DIR=1/1，舵机中位1550、范围1500～1600µs。
 最新实测1525右转、1575左转；旧文档中相反标注作废。视觉控制sign仍须架空核对，不由固定脉宽测试替代。
-这些记录可用于训练版人工恢复和后续核对，不自动填写midterm_profile.h确认位，不把本次运动诊断验收等同于自主循迹验收。
+这些记录作为源速度配置和训练版人工恢复依据，不把运动诊断验收等同于自主循迹验收。
 
-本轮根据用户最新实测，将编码器3左轮、4右轮及落地速度环视为已成功基础；旧ENCODER_SPEED文档中的待复测不是最新实车状态。本轮只进行了源码修改、模拟测试和构建，没有打开COM、烧录、修改实车Flash或发出车辆动作。
+编码器3左轮、4右轮及落地速度环为已成功基础；旧ENCODER_SPEED文档中的待复测不是最新状态。
+2026-10-20晚经用户授权已通过COM10完成静态相机标定和偏差方向检查，未由助手烧录、驱动车辆或修改实车Flash。
+静态结果与原始日志索引见[MIDTERM_STAGE1](MIDTERM_STAGE1.md)，相机标定仅RAM，实际舵机纠偏及动态循迹仍待验证。
 
 ## 已实现的边界
 
@@ -23,17 +25,18 @@ ENCODER_SPEED_DIAG_5已由用户确认直线、主动停止、失联停止、人
 
 ## 当前仍然锁定的项目
 
-配置入口为demo/code/midterm_profile.h。MIDTERM_SPEED_CONFIRMED和MIDTERM_VISUAL_REVIEWED默认0；不是下载即可跑。当前尚未完成近远参考轴标定和视觉到舵机纠偏方向检查，因此保持锁定符合实际进度。
+配置入口为demo/code/midterm_profile.h。逐步实施第一阶段已将实测符号-1/+1、40/1/0.05和MIDTERM_SPEED_CONFIRMED=1写入源配置。
+MIDTERM_VISUAL_REVIEWED仍为0；静态相机轴和平移/航向偏差符号已核对，实体舵机视觉纠偏方向尚未核对，自主版仍不会发车。训练版仍需串口配置/启用速度环。
 
 用户指定demo/mdk/encoder_speed.uvprojx用于核对。已检查：它只定义VISION_ENCODER_ENABLE、VISION_MOTION_DIAG、VISION_MOTOR_THRESHOLD_DIAG等编译入口，引用共同源码；工程XML没有保存UART RAM中的max_ticks/Kp/Ki。vision_drive_init重置速度状态，原Flash车辆配置也不序列化速度配置。因此不能声称旧速度参数已从该工程自动恢复，更不能把历史试验20/1/0.05直接标成成功值。
 
-在训练版停车，按ENCODER_SPEED.md方法读回当前成功配置。核对真实符号、max_ticks、Q8增益、PWM cap及车辆配置，再填写：
+源速度参数已按本次成功实测填写；安装变化后必须重新核对。训练版停车仍应读回实际RAM配置：
 
 - MIDTERM_ENCODER_LEFT_SIGN、MIDTERM_ENCODER_RIGHT_SIGN
 - MIDTERM_SPEED_MAX_TICKS、MIDTERM_SPEED_KP、MIDTERM_SPEED_KI
 - MIDTERM_SPEED_CONFIRMED=1
 
-这些是速度配置，不是相机/车辆配置。车辆cap/cruise、舵机中位/窗口、方向、配比1/1、相机轴及运行上限仍需通过训练版配置并明确@save，或在经过审核的源配置中提供。当前正式默认值仍为零，不放宽确认位。配置CRC恢复失败时保持阻止。速度配置修改后须重建，不在本轮变更现有Flash记录格式。
+这些是速度配置，不是相机/车辆配置。车辆cap/cruise、舵机中位/窗口、方向、配比1/1、相机轴及运行上限仍需通过训练版配置并明确@save，或在经过审核的源配置中提供。车辆正式默认值仍为零，视觉确认位仍为0。配置CRC恢复失败时保持阻止。速度配置修改后须重建，不变更现有Flash记录格式。
 
 MIDTERM_VISUAL_REVIEWED只有静态相机轴标定和架空最终纠偏方向两项完成后才能设1。编译/主机模拟通过不代表这些实车检查通过。
 

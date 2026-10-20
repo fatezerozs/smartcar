@@ -9,22 +9,22 @@
 #define VISION_MIDTERM_AUTONOMOUS 0
 #endif
 #ifndef MIDTERM_SPEED_CONFIRMED
-#define MIDTERM_SPEED_CONFIRMED 0
+#define MIDTERM_SPEED_CONFIRMED 1
 #endif
 #ifndef MIDTERM_ENCODER_LEFT_SIGN
-#define MIDTERM_ENCODER_LEFT_SIGN 0
+#define MIDTERM_ENCODER_LEFT_SIGN -1
 #endif
 #ifndef MIDTERM_ENCODER_RIGHT_SIGN
-#define MIDTERM_ENCODER_RIGHT_SIGN 0
+#define MIDTERM_ENCODER_RIGHT_SIGN 1
 #endif
 #ifndef MIDTERM_SPEED_MAX_TICKS
-#define MIDTERM_SPEED_MAX_TICKS 0U
+#define MIDTERM_SPEED_MAX_TICKS 40U
 #endif
 #ifndef MIDTERM_SPEED_KP
-#define MIDTERM_SPEED_KP 0.0f
+#define MIDTERM_SPEED_KP 1.0f
 #endif
 #ifndef MIDTERM_SPEED_KI
-#define MIDTERM_SPEED_KI 0.0f
+#define MIDTERM_SPEED_KI 0.05f
 #endif
 /* A second explicit review gate: static camera-axis calibration AND the
  * raised-wheel visual steering-direction check must both have passed. */

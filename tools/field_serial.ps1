@@ -13,6 +13,7 @@ param(
     [switch]$ListPorts
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'field_protocol.ps1')
 $taskPorts = @([System.IO.Ports.SerialPort]::GetPortNames())
 if ($ListPorts) { $taskPorts; exit 0 }
 if (-not $Port) {
@@ -24,14 +25,9 @@ if ($RunSeconds -gt 0 -and -not $TrackReady) {
 }
 # Only framed configuration/query commands are accepted here; standalone a/h
 # cannot be smuggled through a parameter string. Firmware validates full ranges.
-$taskNumber = '[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?'
 foreach ($taskCommand in $Command) {
-    $taskValid = $taskCommand -in @('@status','@save','@load')
+    $taskValid = Test-FieldCommand $taskCommand
     if($taskCommand -eq '@save' -and -not $SaveForAutostart){throw 'Persistent save requires -SaveForAutostart: saved settings may launch next boot when C12 is enabled.'}
-    foreach ($taskSpec in @(@('startup',2),@('gain',3),@('motor',3),@('balance',2),@('camera',2),@('bands',3),@('servo',4),@('duration',1),@('probe',2),@('wheel',4),@('motor_dir',2))) {
-        $taskPattern = '^@' + $taskSpec[0] + '(?: ' + $taskNumber + '){' + $taskSpec[1] + '}$'
-        if ($taskCommand -cmatch $taskPattern) { $taskValid = $true }
-    }
     if (-not $taskValid -or $taskCommand.Length -gt 94) { throw ('Invalid field command: ' + $taskCommand) }
     if ($taskCommand.StartsWith('@probe ') -and (-not $ServoReady -or $Command.Count -ne 1 -or $RunSeconds)) {
         throw 'Servo motion requires explicit -ServoReady, exactly one probe command, and no motor run.'
@@ -80,14 +76,22 @@ try {
         # ! cancels an incomplete previous @ line; ordinary s inside that line
         # would be consumed as payload. CRLF supplies a redundant terminator,
         # not a duplicate action: the parser consumes only the first newline.
-        $taskSerial.Write("!s?t`r`n")
+        $taskSerial.Write("!s`r`n")
+        Receive-FieldSlice 300
+        $taskOffset=$taskTranscript.Length
+        $taskSerial.Write("x`r`n")
+        Receive-FieldSlice 1000
+        if($taskTranscript.ToString().Substring($taskOffset) -notmatch '\[LINK\] port=(usb|radio) owner=\1\b') {
+            throw 'Current port ownership not confirmed; configuration and motion were NOT sent.'
+        }
+        $taskSerial.Write("?t`r`n")
         Receive-FieldSlice 1000
     }
     if ($Command.Count -or $RunSeconds) {
-        if ($taskTranscript.ToString() -notmatch '\[FIELD\] build=MIDTERM_FIELD_[1234];') {
+        if ($taskTranscript.ToString() -notmatch ('\[FIELD\] build='+$fieldVersionPattern+';')) {
             throw 'New firmware marker absent; framed configuration and motion were NOT sent.'
         }
-        if ($RequireMotorGate -and $taskTranscript.ToString() -notmatch '\[FIELD\] build=MIDTERM_FIELD_[234];') {
+        if ($RequireMotorGate -and $taskTranscript.ToString() -notmatch '\[WHEEL\] @wheel channel permille level hold_ms') {
             throw 'Independent motor confirmation requires FIELD_2 or later; parameters and motion were NOT sent.'
         }
         foreach ($taskCommand in $Command) {
@@ -119,21 +123,19 @@ try {
             # Operator confirmation is mandatory; no automatic multi-step sweep.
             if ($taskProbe -or $taskWheel) { Receive-FieldSlice 1150 } else { Receive-FieldSlice 1000 }
             $taskReply = $taskTranscript.ToString().Substring($taskOffset)
-            if ($taskCommand -eq '@status') {
-                if ($taskReply -notmatch '\[FIELD\] version=MIDTERM_FIELD_[1234] ') { throw 'Missing status reply; configuration session stopped.' }
-            } elseif ($taskReply -notmatch '\[FIELD\] OK;' -or $taskReply -match '\[FIELD\] REJECT') {
+            if (-not (Test-FieldReply $taskCommand $taskReply)) {
                 throw ('Missing/rejected configuration acknowledgement: ' + $taskCommand)
             }
         }
         $taskOffset = $taskTranscript.Length
         $taskSerial.Write("@status`r`n")
         Receive-FieldSlice 1000
-        if ($taskTranscript.ToString().Substring($taskOffset) -notmatch '\[FIELD\] version=MIDTERM_FIELD_[1234] ') {
+        if (-not (Test-FieldReply '@status' $taskTranscript.ToString().Substring($taskOffset))) {
             throw 'Missing final status readback; no further motion is sent.'
         }
     }
     if ($RunSeconds -gt 0) {
-        $taskStatuses = [regex]::Matches($taskTranscript.ToString(),'\[FIELD\] version=MIDTERM_FIELD_[1234] [^\r\n]*')
+        $taskStatuses = [regex]::Matches($taskTranscript.ToString(),('\[FIELD\] version='+$fieldVersionPattern+' [^\r\n]*'))
         if ($taskStatuses.Count -eq 0) { throw 'No configuration readback; refusing arm.' }
         $taskStatus = $taskStatuses[$taskStatuses.Count-1].Value
         if ($taskStatus -notmatch '\bready=1\b') { throw 'Calibration/PWM profile is not ready; refusing arm.' }

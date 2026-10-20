@@ -14,7 +14,18 @@ $taskPayload=$null
 try {
     $taskSerial.Open()
     # Image entry must be preceded by STOP. No arm/heartbeat is ever transmitted.
-    $taskSerial.Write('st')
+    $taskSerial.Write("!`r`n")
+    Start-Sleep -Milliseconds 250
+    $taskSerial.DiscardInBuffer()
+    $taskSerial.Write("x`r`n")
+    $taskClaimText='';$taskClaimWatch=[Diagnostics.Stopwatch]::StartNew()
+    while($taskClaimWatch.ElapsedMilliseconds -lt 2000) {
+        $taskClaimText+=$taskSerial.ReadExisting()
+        if($taskClaimText -match '\[LINK\] port=(usb|radio) owner=\1\b'){break}
+        Start-Sleep -Milliseconds 10
+    }
+    if($taskClaimText -notmatch '\[LINK\] port=(usb|radio) owner=\1\b'){throw 'Image capture port ownership not confirmed; no image mode requested.'}
+    $taskSerial.Write("t`r`n")
     Start-Sleep -Milliseconds 250
     $taskSerial.DiscardInBuffer()
     $taskSerial.Write($Mode)
