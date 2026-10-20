@@ -26,7 +26,11 @@ Thumbs.db
 demo/mdk/link_mvp.uvprojx
 demo/mdk/motor_threshold.uvprojx
 demo/mdk/motion_diag.uvprojx
+demo/mdk/encoder_speed.uvprojx
 # IAR session state (projects/linker scripts themselves remain tracked).
 **/settings/*.dnx
 **/settings/*.cspy.bat
 **/settings/*_nor_sdram_zf_dtcm.jlink
+
+demo/mdk/midterm_train.uvprojx
+demo/mdk/midterm_auto.uvprojx

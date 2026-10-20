@@ -1,0 +1,19 @@
+#ifndef ENCODER_BOARD_STUB_H
+#define ENCODER_BOARD_STUB_H
+#include <stdint.h>
+#define QTIMER2_ENCODER1 4
+#define QTIMER2_ENCODER2 5
+#define QTIMER2_ENCODER1_CH1_C3 8
+#define QTIMER2_ENCODER1_CH2_C4 8
+#define QTIMER2_ENCODER2_CH1_C5 10
+#define QTIMER2_ENCODER2_CH2_C25 10
+#define ENCODER_3 QTIMER2_ENCODER1
+#define ENCODER_3_A QTIMER2_ENCODER1_CH1_C3
+#define ENCODER_3_B QTIMER2_ENCODER1_CH2_C4
+#define ENCODER_4 QTIMER2_ENCODER2
+#define ENCODER_4_A QTIMER2_ENCODER2_CH1_C5
+#define ENCODER_4_B QTIMER2_ENCODER2_CH2_C25
+void encoder_quad_init(int n,int a,int b);
+int16_t encoder_get_count(int n);
+void encoder_clear_count(int n);
+#endif

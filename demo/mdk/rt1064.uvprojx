@@ -479,6 +479,12 @@
               <FileType>1</FileType>
               <FilePath>..\code\vision_motion.c</FilePath>
             </File>
+            <File><FileName>wheel_speed.c</FileName><FileType>1</FileType><FilePath>..\code\wheel_speed.c</FilePath></File>
+            <File><FileName>wheel_speed.h</FileName><FileType>5</FileType><FilePath>..\code\wheel_speed.h</FilePath></File>
+            <File><FileName>vision_speed.c</FileName><FileType>1</FileType><FilePath>..\code\vision_speed.c</FilePath></File>
+            <File><FileName>vision_speed.h</FileName><FileType>5</FileType><FilePath>..\code\vision_speed.h</FilePath></File>
+            <File><FileName>board_encoder.c</FileName><FileType>1</FileType><FilePath>..\code\board_encoder.c</FilePath></File>
+            <File><FileName>board_encoder.h</FileName><FileType>5</FileType><FilePath>..\code\board_encoder.h</FilePath></File>
             <File>
               <FileName>vision_drive.c</FileName>
               <FileType>1</FileType>
@@ -583,6 +589,21 @@
               <FileName>vision_probe.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\code\vision_probe.c</FilePath>
+            </File>
+            <File>
+              <FileName>midterm_boot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\midterm_boot.c</FilePath>
+            </File>
+            <File>
+              <FileName>midterm_boot.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\midterm_boot.h</FilePath>
+            </File>
+            <File>
+              <FileName>midterm_profile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\midterm_profile.h</FilePath>
             </File>
             <File>
               <FileName>vision_startup.c</FileName>

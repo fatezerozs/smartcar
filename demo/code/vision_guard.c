@@ -3,6 +3,9 @@
 void vision_drive_safety_tick(void)
 {
 #if VISION_DRIVE_ENABLE
+#if VISION_ENCODER_ENABLE
+    vd_speed_sample_tick(timer_get(GPT_TIM_1));
+#endif
     vd_motion_tick(timer_get(GPT_TIM_1));
     if (vd.initialized && ((vd.guard_running && !app_mode_allows(APP_MODE_DRIVE)) ||
         (vd.probe_active==1 && !app_mode_allows(APP_MODE_SERVO)) ||

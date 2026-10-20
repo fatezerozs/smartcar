@@ -4,6 +4,19 @@
 #include "vision_telemetry.h"
 #include "app_transport.h"
 #include "board_diagnostics.h"
+#include "vision_speed.h"
+void vision_telemetry_speed(void)
+{
+#if VISION_ENCODER_ENABLE
+    vd_speed_info_t s;vision_drive_speed_get(&s);
+    app_console_printf("[SPEED] ms=%lu sample=%lu enabled=%u raw3_L=%d raw4_R=%d target_R/L=%d/%d measured_R/L=%d/%d pwm_R/L=%u/%u faults=%lu; counts/10ms\r\n",
+        (unsigned long)timer_get(GPT_TIM_1),(unsigned long)s.samples,s.enabled,s.raw3,s.raw4,s.target_right,s.target_left,s.measured_right,s.measured_left,
+        s.pwm_right,s.pwm_left,(unsigned long)s.faults);
+    if(s.faults)app_console_printf("[SPEED_FAULT] detail=%s control_age_ms=%lu sample_age_ms=%lu interval_ms=%lu\r\n",
+        vision_drive_speed_fault_name(s.fault_detail),(unsigned long)s.fault_control_age_ms,
+        (unsigned long)s.fault_sample_age_ms,(unsigned long)s.fault_interval_ms);
+#endif
+}
 static uint8_t preview[VISION_PREVIEW_WIDTH*VISION_PREVIEW_HEIGHT];
 void vision_telemetry_preview(char mode,const uint8_t *gray,const uint8_t *binary,const vision_result_t *result)
 {
@@ -19,6 +32,9 @@ void vision_telemetry_preview(char mode,const uint8_t *gray,const uint8_t *binar
 static int coord(uint8_t value) {return value==VISION_INVALID_X?-1:value;}
 void vision_telemetry_help(void)
 {
+#if VISION_ENCODER_ENABLE
+    app_console_printf("[ENCODER_SPEED] encoder3 LEFT C3/C4, encoder4 RIGHT C5/C25; vendor PULSE_DIR counting; @encoder_status; @encoder_hw; @encoder_sign s3 s4; @speed_cfg max_ticks kp ki; @speed_mode 0/1; PI OFF by default\r\n");
+#endif
 #if VISION_MOTION_DIAG
     app_console_printf("[MOTION_DIAG] max 150 permille; manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP\r\n");
 #endif
@@ -58,6 +74,7 @@ void vision_telemetry_help(void)
 void vision_telemetry_report(const vision_report_t *d)
 {
     board_diagnostics_report();
+    vision_telemetry_speed();
 #if VISION_DRIVE_ENABLE
             const vc_output_t *drive = vision_drive_output();
             app_console_printf("[DRIVE] ready=%d state=%u faults=%lu near=%.3f heading=%.3f steer=%.3f duty=%.3f far_ok=%u\r\n",

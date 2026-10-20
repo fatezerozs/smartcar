@@ -10,6 +10,7 @@
 #include "app_transport.h"
 #include "vision_frame.h"
 #include "vision_telemetry.h"
+#include "midterm_boot.h"
 
 #if MT9V03X_W != VISION_WIDTH || MT9V03X_H != VISION_HEIGHT
 #error "Vision module dimensions must match the MT9V03X camera configuration."
@@ -23,6 +24,7 @@
 #define PREVIEW_W VISION_PREVIEW_WIDTH
 #define PREVIEW_H VISION_PREVIEW_HEIGHT
 #define HISTORY_GAP_MS 250U
+static int training_enabled(void){return !VISION_MIDTERM_AUTONOMOUS;}
 static uint8_t gray_frame[VISION_HEIGHT][VISION_WIDTH];
 static vision_result_t result;
 static tb_filter_t track;
@@ -80,7 +82,11 @@ void app_runtime_run(void)
     }
     vf_init(&field_parser);
 #endif
+#if VISION_MIDTERM_AUTONOMOUS
+    midterm_boot_init(0U,timer_get(GPT_TIM_1));
+#else
     vision_telemetry_help();
+#endif
     while (1) {
         int selector_changed=app_mode_take_change();
         if (selector_changed) {
@@ -105,7 +111,14 @@ void app_runtime_run(void)
         app_transport_begin(0);
 #endif
         uint32_t n = app_transport_read(commands, sizeof(commands));
-        if(app_transport_changed()) {
+#if VISION_MIDTERM_AUTONOMOUS
+        /* Optional traffic may cancel, never arm or configure. No traffic is required. */
+        if(n || app_transport_activity() || app_transport_stopped()) {
+            midterm_boot_cancel(timer_get(GPT_TIM_1));vision_drive_stop();
+        }
+        n=0;
+#endif
+        if(training_enabled() && app_transport_changed()) {
             mode='t';midterm_mode=1;help_requested=1;reset_requested=1;
 #if VISION_DRIVE_ENABLE
             vf_init(&field_parser);
@@ -193,7 +206,7 @@ void app_runtime_run(void)
             invalidate_result();
             fresh = 0;
         }
-        if (mode == 't') {
+        if (training_enabled() && mode == 't') {
 #if VISION_DRIVE_ENABLE
             if (field_response[0]) app_console_printf("%s", field_response);
 #endif
@@ -201,6 +214,7 @@ void app_runtime_run(void)
             if (reset_requested) app_console_printf("[VISION2] tracking history cleared\r\n");
         }
         now = timer_get(GPT_TIM_1);
+#if !VISION_MIDTERM_AUTONOMOUS
         app_transport_summary(now,frames,
 #if VISION_DRIVE_ENABLE
             (unsigned)vision_drive_output()->state,(unsigned)vision_drive_output()->faults,
@@ -215,10 +229,14 @@ void app_runtime_run(void)
 #endif
             );
         app_transport_poll();
+#endif
         tb_poll(&track, now);
 #if VISION_DRIVE_ENABLE
         vision_drive_set_local_allowed(app_mode_allows(APP_MODE_DRIVE) && mode=='t' && midterm_mode && !field_parser.active && !app_transport_stopped() && !vision_drive_motion_active());
         vision_drive_poll(now);
+#if VISION_MIDTERM_AUTONOMOUS
+        midterm_boot_poll(now);
+#endif
 #endif
         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {
             if (!vision_frame_copy(&gray_frame[0][0])) {
@@ -263,29 +281,31 @@ void app_runtime_run(void)
 #if VISION_DRIVE_ENABLE
         {
             vd_motion_info_t m;vision_drive_motion_get(&m);
-            if(mode=='t' && m.sequence && (reported_motion_phase!=m.phase || reported_motion_reason!=m.reason ||
+            if(training_enabled() && mode=='t' && m.sequence && (reported_motion_phase!=m.phase || reported_motion_reason!=m.reason ||
                 (m.phase && (uint32_t)(now-last_motion_text)>=100U))) {
                 app_console_printf("[MOTION] seq=%lu kind=%u phase=%u reason=%u requested=%u actual=%u servo_us=%u ms=%lu\r\n",
                     (unsigned long)m.sequence,m.kind,m.phase,m.reason,m.requested_permille,m.actual_permille,m.servo_us,(unsigned long)now);
                 reported_motion_phase=m.phase;reported_motion_reason=m.reason;last_motion_text=now;
+                vision_telemetry_speed();
             }
             if(m.phase)last_text=now; /* No multi-line vision report during a motion experiment. */
         }
         /* 行驶时限量输出一行，避免原多行浮点诊断阻塞 UART，挤占 100ms
          * 相机租约。停下后恢复完整视觉/标定诊断，不降低安全中断频率。 */
         if (mode == 't' && vision_drive_output()->state == VC_RUNNING) {
-            if (!vision_drive_is_local() && (uint32_t)(now - last_run_text) >= 50U) {
+            if (training_enabled() && !vision_drive_is_local() && (uint32_t)(now - last_run_text) >= 100U) {
                 const vc_output_t *run = vision_drive_output();
                 app_console_printf("[RUN] n=%lu ms=%lu e=%.3f h=%.3f u=%.3f pwm=%.3f q=%u age=%lu\r\n",
                        (unsigned long)frames,(unsigned long)now,(double)run->lateral,
                        (double)run->heading,(double)run->steering,(double)run->duty,
                        result.confidence,(unsigned long)(uint32_t)(now-last_frame));
+                vision_telemetry_speed();
                 last_run_text = now;
             }
             last_text = now;
         }
 #endif
-        if (mode == 't' && (uint32_t)(now - last_text) >= 500U) {
+        if (training_enabled() && mode == 't' && (uint32_t)(now - last_text) >= 500U) {
             vision_report_t report;
             report.lane=&result;report.track=&track;report.observation=&track_observation;
             report.timeout_reset=timeout_reset;report.frames=frames;report.midterm_mode=midterm_mode;

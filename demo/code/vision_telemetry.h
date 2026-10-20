@@ -1,5 +1,6 @@
 #ifndef VISION_TELEMETRY_H
 #define VISION_TELEMETRY_H
+void vision_telemetry_speed(void);
 #include "vision_midterm.h"
 #include "track_bayes.h"
 typedef struct {

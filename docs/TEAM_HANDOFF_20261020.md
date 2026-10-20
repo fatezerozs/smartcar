@@ -1,5 +1,13 @@
 # 当前交接：2026-10-20 无线串口与外设基线
 
+最新成果：ENCODER_SPEED_DIAG_5已完成用户直线、主动STOP、失联停车、往复倒退和左右短圆弧验收。
+速度配置40/1/0.05（实际Ki=0.046875），sign3=-1/sign4=+1，闭环balance=1/1，cap0.15、rise0.1。
+最新实测舵机1525右/1575左、中位1550，旧左右标注作废；视觉sign仍未验收。
+同步提交MIDTERM_TRAIN_1/MIDTERM_AUTO_1代码，确认位默认0，尚未验证自主全赛道运行。
+本段更新优先于下方历史交接状态，详见ENCODER_SPEED.md及MIDTERM_IMPLEMENTATION.md。
+
+新增速度环尚未纳入此前实车验收：编码器3左/4右，实测前进符号-1/+1；DIAG_2恢复库默认计数方式后可采样。DIAG_3修正预置后首次非零速度请求误触发控制超时，新增故障子原因和时间快照，5283项主机检查与ASAN通过；待用户烧录复测，见 [ENCODER_SPEED](ENCODER_SPEED.md)。原MOTION_DIAG_2提交仍是已验收开环基线。
+
 维护分支main，实车版本MOTION_DIAG_2。用户已确认双串口、两轮/舵机点动、落地直线、限时及!停止、按R确认倒退和左右短圆弧正常。
 获取仓库后先读 [BASELINE_20261020](BASELINE_20261020.md)，再按 [MOTION_DIAG](MOTION_DIAG.md) 生成独立工程。
 不要使用根目录旧工程或Example产物代替新工程；生成AXF和个人Keil下载器设置不入库。

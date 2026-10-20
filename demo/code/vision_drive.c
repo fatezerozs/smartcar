@@ -1,4 +1,5 @@
 #include "vision_drive_internal.h"
+#include "midterm_boot.h"
 
 /* Lifecycle and command facade; IO, guard, startup, probing and profile
  * validation live in their own implementation units. */
@@ -38,6 +39,9 @@ void vision_drive_init(uint32_t now)
     vd.guard_max_run_ms = cfg.max_run_ms;
     vd.hardware_ready = (uint8_t)vision_drive_profile_ready(&vd.profile);
     vd.initialized = 1;
+#if VISION_ENCODER_ENABLE
+    vd_speed_init(now);
+#endif
     vd_output_zero();
     /* board_init 已将 PWM 初始化为零，PIT0 已无编码器/PID 输出路径。
      * 保留 PIT1 为独立 10ms 安全租约；不得挪作阻塞 UART/视觉计算。 */
@@ -60,7 +64,11 @@ void vision_drive_poll(uint32_t now)
     if (vd.guard_faults) vc_trip(&vd.control, vd.guard_faults);
     vc_poll(&vd.control, now);
     vd_startup_poll_deadline(now);
-    if (vd.control.output.state != VC_RUNNING && vd.guard_running) vd_output_apply();
+    if ((vd.control.output.state != VC_RUNNING && vd.guard_running)
+#if VISION_ENCODER_ENABLE
+        || vd.control.output.state==VC_RUNNING /* Consume encoder samples between camera frames. */
+#endif
+       ) vd_output_apply();
 #else
     (void)now;
 #endif
@@ -79,6 +87,9 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t 
 
 void vision_drive_stop(void)
 {
+#if VISION_MIDTERM_AUTONOMOUS
+    midterm_boot_cancel(timer_get(GPT_TIM_1));
+#endif
     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
     vc_stop(&vd.control);
 #if VISION_DRIVE_ENABLE
@@ -94,6 +105,9 @@ void vision_drive_stop(void)
 
 void vision_drive_trip(uint32_t reason)
 {
+#if VISION_MIDTERM_AUTONOMOUS
+    midterm_boot_cancel(timer_get(GPT_TIM_1));
+#endif
     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
     vc_trip(&vd.control, reason | VC_FAULT_EXTERNAL);
 #if VISION_DRIVE_ENABLE
@@ -110,6 +124,9 @@ int vision_drive_command(char command, uint32_t now, int text_mode)
 {
 #if VISION_DRIVE_ENABLE
     vision_drive_poll(now);
+#if VISION_MIDTERM_AUTONOMOUS
+    if(command!='s')return 0; /* No remote arm/clear/replay in acceptance firmware. */
+#endif
     if (command == 's') { vision_drive_stop(); return 1; }
     if (command == 'h') {
         uint32_t mask=__get_PRIMASK();__disable_irq();

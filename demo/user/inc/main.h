@@ -14,6 +14,14 @@
 #define ENCODER_2_A (QTIMER1_ENCODER2_CH1_C2)
 #define ENCODER_2_B (QTIMER1_ENCODER2_CH2_C24)
 
+// 本次已恢复接口：3号左轮、4号右轮；不与C6/C8电机PWM复用
+#define ENCODER_3 (QTIMER2_ENCODER1)
+#define ENCODER_3_A (QTIMER2_ENCODER1_CH1_C3)
+#define ENCODER_3_B (QTIMER2_ENCODER1_CH2_C4)
+#define ENCODER_4 (QTIMER2_ENCODER2)
+#define ENCODER_4_A (QTIMER2_ENCODER2_CH1_C5)
+#define ENCODER_4_B (QTIMER2_ENCODER2_CH2_C25)
+
 // 电机参数设置
 // !!! 请确保dir和pwm脚不要弄反了，否则电机会疯转 !!!
 // 当前样机实际接线：M1 对应右轮，M2 对应左轮

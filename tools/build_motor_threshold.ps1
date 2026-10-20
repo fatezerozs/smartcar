@@ -1,11 +1,11 @@
 param([string]$UV4='E:\ElecTronic\Keil\UV4\UV4.exe',
-      [ValidateSet('threshold','motion')][string]$Variant='threshold')
+      [ValidateSet('threshold','motion','speed')][string]$Variant='threshold')
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path $PSScriptRoot -Parent
 $taskMdk=Join-Path $taskRoot 'demo\mdk'
-$taskBuildName=if($Variant -eq 'motion'){'motion-diag'}else{'motor-threshold'}
-$taskProjectName=if($Variant -eq 'motion'){'motion_diag.uvprojx'}else{'motor_threshold.uvprojx'}
-$taskExtraDefine=if($Variant -eq 'motion'){'VISION_MOTION_DIAG=1,'}else{''}
+$taskBuildName=if($Variant -eq 'speed'){'encoder-speed'}elseif($Variant -eq 'motion'){'motion-diag'}else{'motor-threshold'}
+$taskProjectName=if($Variant -eq 'speed'){'encoder_speed.uvprojx'}elseif($Variant -eq 'motion'){'motion_diag.uvprojx'}else{'motor_threshold.uvprojx'}
+$taskExtraDefine=if($Variant -eq 'speed'){'VISION_ENCODER_ENABLE=1,VISION_MOTION_DIAG=1,'}elseif($Variant -eq 'motion'){'VISION_MOTION_DIAG=1,'}else{''}
 $taskOutput=Join-Path $taskRoot ('.build\'+$taskBuildName)
 New-Item -ItemType Directory -Force -Path (Join-Path $taskOutput 'Objects'),(Join-Path $taskOutput 'Listings'),(Join-Path $taskOutput 'tmp') | Out-Null
 if(-not(Test-Path -LiteralPath $UV4)){throw 'UV4 executable not found; supply -UV4.'}
@@ -14,7 +14,7 @@ $taskSource=Get-Content -LiteralPath (Join-Path $taskMdk 'rt1064.uvprojx') -Raw
 $taskTarget=@($taskXml.Project.Targets.Target | Where-Object TargetName -eq 'nor_sdram_zf_dtcm')
 if($taskTarget.Count -ne 1){throw 'Expected one target.'}
 $taskDefines=[string]$taskTarget[0].TargetOption.TargetArmAds.Cads.VariousControls.Define
-if($taskDefines -match 'VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_LINK_MVP'){throw 'Source target must be the normal firmware, without diagnostic/MVP overrides.'}
+if($taskDefines -match 'VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_ENCODER_ENABLE|VISION_LINK_MVP'){throw 'Source target must be the normal firmware, without diagnostic/MVP overrides.'}
 # Preserve Keil project serialization and relative source paths.
 $taskSource=$taskSource.Replace('<Define>'+$taskDefines+'</Define>','<Define>'+$taskExtraDefine+'VISION_MOTOR_THRESHOLD_DIAG=1,'+$taskDefines+'</Define>')
 $taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')

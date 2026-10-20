@@ -3,7 +3,7 @@ param(
     [string]$Port,
     [ValidateSet('usb','radio')][string]$Role='radio',
     [ValidateRange(1,150)][int]$DutyPermille=30,
-    [ValidateRange(100,3000)][int]$DurationMs=500,
+    [ValidateRange(100,6000)][int]$DurationMs=500,
     [ValidateRange(0,2500)][int]$ServoUs=0,
     [ValidateRange(0,10000)][int]$StopAfterMs=0,
     [ValidateRange(0,10000)][int]$DropHeartbeatAfterMs=0,
@@ -11,6 +11,7 @@ param(
     [switch]$Execute
 )
 $ErrorActionPreference='Stop'
+if($DurationMs -gt 3000 -and $Mode -ne 'line'){throw 'Only line mode supports more than 3000ms; requires ENCODER_SPEED_DIAG_4 firmware.'}
 if(($StopAfterMs -or $ExternalStop) -and $DropHeartbeatAfterMs){throw 'Choose STOP or heartbeat-drop, not both.'}
 if($Mode -ne 'shuttle' -and $StopAfterMs -and $StopAfterMs -ge $DurationMs+200){throw 'STOP must occur before the timed leg ends (duration + 200ms steering settle).'}
 if($Mode -ne 'shuttle' -and $DropHeartbeatAfterMs -and $DropHeartbeatAfterMs+500 -ge $DurationMs+200){throw 'Heartbeat expiry must precede the timed leg end; increase DurationMs.'}
@@ -59,6 +60,10 @@ try {
         Start-Sleep -Milliseconds 10
     }
     if($taskClaimText -notmatch ('\[LINK\] port='+$Role+' owner='+$Role)){throw 'Control claim not confirmed. Motion was not requested.'}
+    # Motion telemetry requires text mode; a previous image session may persist.
+    Send-MotionText "t`r`n"
+    $taskTextDrain=[Diagnostics.Stopwatch]::StartNew()
+    while($taskTextDrain.ElapsedMilliseconds -lt 400){$null=Read-MotionText;Start-Sleep -Milliseconds 10}
     $taskWatch.Restart()
     Send-MotionText ($taskCommand+"`r`n") # Exactly once; never auto-retry a motion command.
     $taskLimit=if($Mode -eq 'shuttle'){2*$DurationMs+12000}else{$DurationMs+2000}

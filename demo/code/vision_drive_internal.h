@@ -6,6 +6,7 @@
 #include "main.h"
 #include "vision_drive.h"
 #include "app_mode.h"
+#include "vision_speed.h"
 typedef struct {
     vc_controller_t control;
     vd_profile_t profile;

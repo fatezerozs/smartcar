@@ -2,6 +2,8 @@
 
 ## 当前无线与外设基线
 
+新增编码器速度环：`run_speed_tests.cmd`及`run_speed_tests.cmd asan`验证生产PI/采样/保护与板级引脚模式；当前正式默认未启用，独立速度诊断见 [ENCODER_SPEED](../../docs/ENCODER_SPEED.md)。
+
 实机范围见 [BASELINE_20261020](../../docs/BASELINE_20261020.md)。主机测试仍使用模拟IO。
 在仓库根目录分别执行；普通/ASAN或同目录构建需顺序运行：
 
@@ -66,3 +68,6 @@ reference 是本项目此前性能优化前的实现快照，不加入 MCU 工�
 2026-10-19 新增亮灰地板、白通道和少量远侧暗物体的曝光回归：旧极值映射阈值复现 NO_LANE/q=0，新行内阈值为 TRACK/q=100。它是人工构造的故障机制，不是复原的现场完整原始帧。预览回放保留分辨率限制，不能由回放覆盖分数推断板端实时覆盖。
 
 断言总数包含逐像素、坐标及状态检查，不等同于独立场景数。实际记录见 [VERIFICATION](../../docs/VERIFICATION.md)。
+## 中期训练与自主入口
+
+新增 `run_midterm_tests.cmd` 及 `run_midterm_tests.cmd asan`：生产启动/控制/速度/输出模块测试3秒边界、缺少速度/视觉确认、无远程心跳、STOP、图像和编码器超时、运行上限、不重启和计时回绕；另链接真实 app_runtime、视觉算法和双串口，验证无线持续忙、启动前后停止及相机断流。所有参数为测试专用合成值，不写入部署配置。实车顺序见 `docs/MIDTERM_IMPLEMENTATION.md`。

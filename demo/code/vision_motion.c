@@ -64,6 +64,12 @@ void vd_motion_output(void)
         uint32_t values[3]={duty*vd.motion_scale1/1000U*PWM_DUTY_MAX/1000U,
             duty*vd.motion_scale2/1000U*PWM_DUTY_MAX/1000U,
             (uint32_t)vd.motion.servo_us*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U};
+#if VISION_ENCODER_ENABLE
+        uint16_t right,left;
+        if(!vd_speed_output((uint16_t)(duty*vd.motion_scale1/1000U),(uint16_t)(duty*vd.motion_scale2/1000U),reverse,
+            (uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left))return;
+        values[0]=(uint32_t)right*PWM_DUTY_MAX/1000U;values[1]=(uint32_t)left*PWM_DUTY_MAX/1000U;
+#endif
         const int channels[3]={MOTOR1_PWM,MOTOR2_PWM,SERVO_MOTOR_PWM};
         for(unsigned i=0;i<3;++i) {
             uint8_t bit=(uint8_t)(1U<<i);
@@ -107,7 +113,7 @@ int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration,
        vd.profile.control.duty_cap<=0 || kind<VD_MOTION_LINE || kind>VD_MOTION_CIRCLE ||
        !permille || permille>VISION_MOTION_MAX_PERMILLE ||
        permille>(uint32_t)(vd.profile.control.duty_cap*1000.0f+0.001f) ||
-       duration<VISION_MOTION_MIN_MS || duration>VISION_MOTION_MAX_MS ||
+       duration<VISION_MOTION_MIN_MS || duration>(kind==VD_MOTION_LINE?VISION_MOTION_LINE_MAX_MS:VISION_MOTION_MAX_MS) ||
        pulse<vd.profile.servo_min_us || pulse>vd.profile.servo_max_us ||
        (kind!=VD_MOTION_CIRCLE && pulse!=vd.profile.servo_center_us) ||
        (kind==VD_MOTION_CIRCLE && (!delta || delta>VISION_MOTION_STEER_DELTA_US)) ||

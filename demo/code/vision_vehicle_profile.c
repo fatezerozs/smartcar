@@ -52,6 +52,9 @@ int vision_drive_configure(const vd_profile_t *candidate)
     vd.probe_active = 0; vd.guard_running = 0; vd_output_zero();
     if (!vc_reconfigure(&vd.control, &candidate->control)) { __set_PRIMASK(mask); return 0; }
     vd.profile = *candidate;
+#if VISION_ENCODER_ENABLE
+    (void)vision_drive_speed_enable(0); /* Reconfiguration requires explicit re-enable. */
+#endif
     vd.guard_max_run_ms = candidate->control.max_run_ms;
     vd.hardware_ready = (uint8_t)vision_drive_profile_ready(&vd.profile);
     __DMB(); __set_PRIMASK(mask);

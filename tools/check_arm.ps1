@@ -16,6 +16,18 @@ foreach ($definition in ([string]$controls.Define).Split(',')) { $flags += '-D' 
 foreach ($include in ([string]$controls.IncludePath).Split(';')) { if ($include.Trim()) { $flags += '-I' + $include.Trim() } }
 Push-Location $mdkRoot
 try {
+    foreach ($unit in @('midterm_boot','app_mode','app_runtime','vision_drive','vision_actuator')) {
+        & $compiler @flags '-DVISION_ENCODER_ENABLE=1' '-DVISION_MIDTERM_AUTONOMOUS=1' '-c' ('..\code\'+$unit+'.c') '-o' (Join-Path $outputRoot ($unit+'-auto.o'))
+        if ($LASTEXITCODE -ne 0) { throw ('ARM autonomous branch failed: '+$unit) }
+    }
+    foreach ($unit in @('wheel_speed','vision_speed','board_encoder')) {
+        & $compiler @flags '-c' ('..\code\'+$unit+'.c') '-o' (Join-Path $outputRoot ($unit+'.o'))
+        if ($LASTEXITCODE -ne 0) { throw ('ARM speed module failed: '+$unit) }
+    }
+    foreach ($unit in @('vision_speed','vision_motion','vision_drive','vision_actuator','vision_guard','vision_vehicle_profile','vision_field','vision_telemetry','app_runtime')) {
+        & $compiler @flags '-DVISION_ENCODER_ENABLE=1' '-DVISION_MOTION_DIAG=1' '-DVISION_MOTOR_THRESHOLD_DIAG=1' '-c' ('..\code\'+$unit+'.c') '-o' (Join-Path $outputRoot ($unit+'-speed.o'))
+        if ($LASTEXITCODE -ne 0) { throw ('ARM closed-loop branch failed: '+$unit) }
+    }
     foreach ($unit in @('vision_motion','app_link','app_link_board','board_camera','app_transport','vision_frame','vision_telemetry','app_runtime','app_mode','board_io','vision_actuator','vision_guard','vision_probe','vision_startup','vision_vehicle_profile','vision_storage', 'vision_storage_board', 'vision_field', 'track_bayes', 'midterm_open_loop', 'vision_midterm', 'vision_debug', 'vision_control', 'vision_drive')) {
         & $compiler @flags '-c' ('..\code\' + $unit + '.c') '-o' (Join-Path $outputRoot ($unit + '.o'))
         if ($LASTEXITCODE -ne 0) { throw ('ARM compile failed: ' + $unit) }

@@ -1,5 +1,7 @@
 #include "vision_field.h"
 #include "vision_storage.h"
+#include "vision_speed.h"
+#include "board_encoder.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,6 +33,43 @@ static int execute(vf_parser_t *p, uint32_t now, char *response)
 {
     vd_profile_t cfg; float v[4]; int ok = 0;
     vision_drive_get_profile(&cfg);
+#if VISION_ENCODER_ENABLE
+    if(!strcmp(p->line,"encoder_hw")) {
+        board_encoder_diag_t d;board_encoder_capture(&d);
+        snprintf(response,VF_RESPONSE_CAPACITY,
+            "[ENC_HW] ctrl3=%04X ctrl4=%04X CM3=%u CM4=%u GPR6=%08lX qtmr2_xbar=%u daisy=%u/%u/%u/%u input3_A/B=%u/%u input4_A/B=%u/%u; read-only, expected CM=5 daisy=1/1/1/1 xbar=0\r\n",
+            (unsigned)d.ctrl3,(unsigned)d.ctrl4,(unsigned)(d.ctrl3>>13)&7U,(unsigned)(d.ctrl4>>13)&7U,
+            (unsigned long)d.gpr6,(unsigned)(d.gpr6>>4)&15U,d.daisy[0],d.daisy[1],d.daisy[2],d.daisy[3],
+            d.inputs&1U,(d.inputs>>1)&1U,(d.inputs>>2)&1U,(d.inputs>>3)&1U);
+        return 2;
+    }
+    if(!strcmp(p->line,"encoder_status")||!strcmp(p->line,"speed_status")) {
+        vd_speed_info_t s;vision_drive_speed_get(&s);
+        snprintf(response,VF_RESPONSE_CAPACITY,
+            "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=%d raw4=%d total3=%ld total4=%ld samples=%lu sample_ms=%lu sign3=%d sign4=%d confirmed=%u\r\n[SPEED] enabled=%u max_ticks=%u kp=%.4f ki=%.4f target_R/L=%d/%d measured_R/L=%d/%d pwm_R/L=%u/%u faults=%lu; units=counts/10ms; query stops\r\n",
+            s.raw3,s.raw4,(long)s.total3,(long)s.total4,(unsigned long)s.samples,(unsigned long)s.sample_ms,
+            s.sign3,s.sign4,s.signs_confirmed,s.enabled,s.max_ticks,(double)s.kp_q8/256.0,(double)s.ki_q8/256.0,
+            s.target_right,s.target_left,s.measured_right,s.measured_left,s.pwm_right,s.pwm_left,(unsigned long)s.faults);
+        {size_t used=strlen(response);snprintf(response+used,VF_RESPONSE_CAPACITY-used,
+            "[SPEED_FAULT] detail=%s control_age_ms=%lu sample_age_ms=%lu interval_ms=%lu\r\n",
+            vision_drive_speed_fault_name(s.fault_detail),(unsigned long)s.fault_control_age_ms,
+            (unsigned long)s.fault_sample_age_ms,(unsigned long)s.fault_interval_ms);}
+        return 2;
+    }
+    if(!strncmp(p->line,"encoder_sign ",13)||!strncmp(p->line,"speed_cfg ",10)||!strncmp(p->line,"speed_mode ",11)) {
+        if(!strncmp(p->line,"encoder_sign ",13)) {
+            ok=numbers(p->line+13,v,2)&&(v[0]==1||v[0]==-1)&&(v[1]==1||v[1]==-1)&&
+                vision_drive_encoder_signs((int)v[0],(int)v[1]);
+        } else if(!strncmp(p->line,"speed_cfg ",10)) {
+            ok=numbers(p->line+10,v,3)&&range(v[0],1,1000)&&v[0]==(uint16_t)v[0]&&
+                vision_drive_speed_config((unsigned)v[0],v[1],v[2]);
+        } else {
+            ok=numbers(p->line+11,v,1)&&(v[0]==0||v[0]==1)&&vision_drive_speed_enable((int)v[0]);
+        }
+        snprintf(response,VF_RESPONSE_CAPACITY,"[SPEED] %s; stopped; RAM only; enable requires encoder signs, PI config, balance=1/1, 0<cap<=0.15; @encoder_status readback\r\n",ok?"OK":"REJECT");
+        return 2;
+    }
+#endif
     if (!strcmp(p->line,"motion_status")) {
         vd_motion_info_t m;vision_drive_motion_get(&m);
         snprintf(response,VF_RESPONSE_CAPACITY,"[MOTION] seq=%lu kind=%u phase=%u reason=%u requested=%u actual=%u servo_us=%u duration_ms=%lu; query stops motion\r\n",
@@ -44,7 +83,7 @@ static int execute(vf_parser_t *p, uint32_t now, char *response)
         else if(!strncmp(p->line,"motion circle ",14)){kind=VD_MOTION_CIRCLE;args=p->line+14;count=3;}
         ok=p->probe_line_permitted && kind && numbers(args,v,count) &&
             range(v[0],1,VISION_MOTION_MAX_PERMILLE) && v[0]==(uint16_t)v[0] &&
-            range(v[1],VISION_MOTION_MIN_MS,VISION_MOTION_MAX_MS) && v[1]==(uint16_t)v[1];
+            range(v[1],VISION_MOTION_MIN_MS,(float)(kind==VD_MOTION_LINE?VISION_MOTION_LINE_MAX_MS:VISION_MOTION_MAX_MS)) && v[1]==(uint16_t)v[1];
         if(ok && count==3) {
             ok=range(v[2],500,2500) && v[2]==(uint16_t)v[2];
             if(ok)pulse=(uint16_t)v[2];

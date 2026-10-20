@@ -8,7 +8,8 @@ typedef enum { VC_DISARMED = 0, VC_RUNNING, VC_FAULT } vc_state_t;
 enum {
     VC_FAULT_CONFIG = 1U, VC_FAULT_VISION = 2U, VC_FAULT_FRAME = 4U,
     VC_FAULT_COMMAND = 8U, VC_FAULT_NUMERIC = 16U,
-    VC_FAULT_OFFSET = 32U, VC_FAULT_RUNTIME = 64U, VC_FAULT_EXTERNAL = 128U
+    VC_FAULT_OFFSET = 32U, VC_FAULT_RUNTIME = 64U, VC_FAULT_EXTERNAL = 128U,
+    VC_FAULT_ENCODER = 256U
 };
 typedef struct {
     mol_config_t motor; /* 可单独标定的中期 PWM 降额模型，不含编码器反馈。 */

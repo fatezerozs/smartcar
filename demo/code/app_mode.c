@@ -1,4 +1,5 @@
 #include "app_mode.h"
+#include "vision_profile.h"
 static volatile uint8_t raw_mode, selected_mode, settled;
 static volatile uint32_t changed_ms, revision;
 static uint32_t consumed;
@@ -17,10 +18,28 @@ void app_mode_sample(int a,int b,uint32_t now)
         selected_mode=raw_mode;settled=1;++revision;
     }
 }
-app_mode_t app_mode_current(void) {return (app_mode_t)selected_mode;}
+app_mode_t app_mode_current(void) {
+#if VISION_MIDTERM_AUTONOMOUS
+return APP_MODE_DRIVE;
+#else
+return (app_mode_t)selected_mode;
+#endif
+}
 int app_mode_allows(app_mode_t wanted)
-{return settled && selected_mode==(uint8_t)wanted;}
-int app_mode_take_change(void) {uint32_t event=revision;if(event==consumed)return 0;consumed=event;return 1;}
+{
+#if VISION_MIDTERM_AUTONOMOUS
+    return wanted==APP_MODE_DRIVE; /* Dedicated acceptance target; no physical selector dependency. */
+#else
+    return settled && selected_mode==(uint8_t)wanted;
+#endif
+}
+int app_mode_take_change(void) {
+#if VISION_MIDTERM_AUTONOMOUS
+    consumed=revision;return 0;
+#else
+    uint32_t event=revision;if(event==consumed)return 0;consumed=event;return 1;
+#endif
+}
 const char *app_mode_name(app_mode_t mode)
 {
     static const char *const names[]={"OBSERVE","SERVO","MOTOR","DRIVE"};
