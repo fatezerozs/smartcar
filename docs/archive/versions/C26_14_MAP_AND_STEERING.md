@@ -37,7 +37,7 @@ C26_13的巡航配置、内侧轮减速、大偏离前进降额、120秒运行�
 - Keil全量构建0错误0警告；日志 `.build/c26-14-keil.txt`。C26测试日志 `.build/switch-c26-14-asan.txt`。
 - 被动采集进程继续接收；是否仍运行可查 `.build/field/continuous-capture.json` 中的进程和截止时间（原接收时长1800秒）。停车后保持主板供电即可自动导出，可将车移出跑道。
 
-Keil打开 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+Keil打开 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
 下载输出 `.build/midterm-switch/Objects/rt1064.axf`。
 本版固定备份 `.build/releases/MIDTERM_C26_14/rt1064.axf`。
 旧版固定备份保留。烧录时C26 OFF，放好后ON启动。

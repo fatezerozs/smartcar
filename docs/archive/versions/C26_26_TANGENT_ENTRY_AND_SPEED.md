@@ -44,7 +44,7 @@
 
 ## 现场验证入口
 
-使用 `demo/mdk/midterm_switch.uvprojx`、目标 `nor_sdram_zf_dtcm`，确认版本 `MIDTERM_C26_26`。烧录前C26 OFF；ON且连续五帧有效道路后启动，上电已ON也可能启动。构建不等于已烧录。
+使用 `demo/mdk/competition/midterm_switch.uvprojx`、目标 `nor_sdram_zf_dtcm`，确认版本 `MIDTERM_C26_26`。烧录前C26 OFF；ON且连续五帧有效道路后启动，上电已ON也可能启动。构建不等于已烧录。
 
 先在同一短直道和左右弯比较实际反馈与目标、目标切换后的超调、出界与停车；再以同样接近方向验证右侧相切圆环。观察：
 

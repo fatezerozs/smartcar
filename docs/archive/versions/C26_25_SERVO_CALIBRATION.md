@@ -14,7 +14,7 @@
 
 ## 固件更新
 
-版本为 `MIDTERM_C26_25`，工程仍为 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+版本为 `MIDTERM_C26_25`，工程仍为 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
 
 端点数值与C24相同。这次将其从“等待测量的默认窗口”确认为操作者实测标定，并使用明确的右端、中位、左端及方向常量配置；没有扩大已确认的机械范围。启动帮助信息新增：
 

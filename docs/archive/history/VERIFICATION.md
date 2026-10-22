@@ -188,7 +188,7 @@ DIAG_5同步串口时长校验，新增完整vf_feed命令入口回归：直线6
 
 ## 完整 Keil 重建成功
 
-对当前 demo/mdk/rt1064.uvprojx 的 nor_sdram_zf_dtcm 执行全量 Rebuild，无下载参数。沙箱内 ArmLink 无法启动；经许可在正常本机进程环境中重建成功，最后一次结果：
+对当前 demo/mdk/base/rt1064.uvprojx 的 nor_sdram_zf_dtcm 执行全量 Rebuild，无下载参数。沙箱内 ArmLink 无法启动；经许可在正常本机进程环境中重建成功，最后一次结果：
 
 ```text
 Program Size: Code=44620 RO-data=7432 RW-data=188 ZI-data=110928

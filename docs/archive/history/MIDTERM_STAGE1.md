@@ -59,7 +59,7 @@ MIDTERM_VISUAL_REVIEWED仍0，不能把偏差符号检查当作实体纠偏、�
 
 ## 下一次现场操作
 
-1. 下载demo/mdk/midterm_train.uvprojx生成的.build/midterm-train/Objects/rt1064.axf，复位确认MIDTERM_TRAIN_1。
+1. 下载demo/mdk/training/midterm_train.uvprojx生成的.build/midterm-train/Objects/rt1064.axf，复位确认MIDTERM_TRAIN_1。
 2. 车辆停在真实直道，车身居中且朝向与赛道平行；保持DRIVE档，仅采集图像，不发a/h，不保存配置。
 3. 关闭串口助手，在仓库根目录逐条执行：
 

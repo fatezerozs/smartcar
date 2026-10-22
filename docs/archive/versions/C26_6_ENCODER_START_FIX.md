@@ -30,4 +30,4 @@ LAST_STOP seq=7 ms=356157 run_ms=61 reason=2 faults=256 speed_detail=8。
 - 完整app_runtime模拟与转向链路7323项普通/ASAN通过，前馈非零/零目标停车/抗饱和覆盖。
 - 原速度6781项及板级编码器模拟通过；原自主6973/917/917与完整循环通过。
 - Keil0错误0警告，Code69832、RO12516、RW212、ZI134172，版本MIDTERM_C26_6。
-- 工程demo/mdk/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf，由用户手动烧录，助手未烧录。尚未证明该候选实车能完成弯道/A到B，不能将模拟结果当作现场验收。
+- 工程demo/mdk/competition/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf，由用户手动烧录，助手未烧录。尚未证明该候选实车能完成弯道/A到B，不能将模拟结果当作现场验收。

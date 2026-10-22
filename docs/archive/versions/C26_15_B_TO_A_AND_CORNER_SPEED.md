@@ -48,7 +48,7 @@
 - 全部普通主机测试通过；协议 31 项、工程引用 379 项、日志解析 3 项通过。
 - Keil 全量构建 0 错误 0 警告，Code 73784 / RO 12876 / RW 212 / ZI 183440。日志 `.build/c26-15-keil.txt`。
 
-Keil 工程：`demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+Keil 工程：`demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
 下载输出：`.build/midterm-switch/Objects/rt1064.axf`。
 固定备份：`.build/releases/MIDTERM_C26_15/rt1064.axf`，C26_14 及更早版本保留。
 用户手动烧录，烧录时 C26 OFF；B 端按底部长直道朝图左发车，放好后 ON；抵达 A 后 OFF。正常运行自动记录，停车后保持主板供电可继续导出；无需额外静态采集。

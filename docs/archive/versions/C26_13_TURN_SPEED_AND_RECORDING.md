@@ -46,7 +46,7 @@ RAM会被复位/断电清除；停车后主板继续供电即可自动回传，�
 - 完整Keil构建0错误0警告：`.build/c26-13-keil.txt`。RAM在原工程SDRAM区域增加固定记录缓冲，未修改链接分区或Flash参数页。
 - 以上是软件与模拟硬件验证，尚未证明C26_13实车已完成半程或A→B，不要求用户重复一串静态/架空采集试验。
 
-Keil工程：`demo/mdk/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
+Keil工程：`demo/mdk/competition/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
 本版固定固件：`.build/releases/MIDTERM_C26_13/rt1064.axf`。
 正常下载输出：`.build/midterm-switch/Objects/rt1064.axf`。
 旧版本固定副本保留。

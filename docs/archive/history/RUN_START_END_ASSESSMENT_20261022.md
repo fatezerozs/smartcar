@@ -18,7 +18,7 @@
 
 因此，若“行驶开始/结束”指软件运行授权与撤销，项目已有基础能力；若指实际起转、停稳或完成赛程，能力尚不完整。
 
-构建配置也影响结论：普通 `demo/mdk/rt1064.uvprojx` 没有启用 `VISION_ROUTE_SWITCH` / `VISION_ENCODER_ENABLE` 的工程定义，头文件默认二者为 0。当前 `demo/mdk/midterm_switch.uvprojx` 显式启用这两项；以下 C26 日志能力以此配置为前提。
+构建配置也影响结论：普通 `demo/mdk/base/rt1064.uvprojx` 没有启用 `VISION_ROUTE_SWITCH` / `VISION_ENCODER_ENABLE` 的工程定义，头文件默认二者为 0。当前 `demo/mdk/competition/midterm_switch.uvprojx` 显式启用这两项；以下 C26 日志能力以此配置为前提。
 
 ## 2. 代码证据与现有日志边界
 

@@ -2,7 +2,7 @@ param([string]$UV4='E:\ElecTronic\Keil\UV4\UV4.exe',
       [ValidateSet('threshold','motion','speed')][string]$Variant='threshold')
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path $PSScriptRoot -Parent
-$taskMdk=Join-Path $taskRoot 'demo\mdk'
+$taskMdk=Join-Path $taskRoot 'demo\mdk\base'
 $taskBuildName=if($Variant -eq 'speed'){'encoder-speed'}elseif($Variant -eq 'motion'){'motion-diag'}else{'motor-threshold'}
 $taskProjectName=if($Variant -eq 'speed'){'encoder_speed.uvprojx'}elseif($Variant -eq 'motion'){'motion_diag.uvprojx'}else{'motor_threshold.uvprojx'}
 $taskExtraDefine=if($Variant -eq 'speed'){'VISION_ENCODER_ENABLE=1,VISION_MOTION_DIAG=1,'}elseif($Variant -eq 'motion'){'VISION_MOTION_DIAG=1,'}else{''}
@@ -17,16 +17,18 @@ $taskDefines=[string]$taskTarget[0].TargetOption.TargetArmAds.Cads.VariousContro
 if($taskDefines -match 'VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_ENCODER_ENABLE|VISION_LINK_MVP'){throw 'Source target must be the normal firmware, without diagnostic/MVP overrides.'}
 # Preserve Keil project serialization and relative source paths.
 $taskSource=$taskSource.Replace('<Define>'+$taskDefines+'</Define>','<Define>'+$taskExtraDefine+'VISION_MOTOR_THRESHOLD_DIAG=1,'+$taskDefines+'</Define>')
-$taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')
-$taskSource=$taskSource.Replace('<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>','<ListingPath>..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>')
-$taskProject=Join-Path $taskMdk $taskProjectName
+$taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')
+$taskSource=$taskSource.Replace('<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>','<ListingPath>..\..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>')
+$taskProjectDir=Join-Path (Split-Path $taskMdk -Parent) 'diagnostics'
+New-Item -ItemType Directory -Force -Path $taskProjectDir | Out-Null
+$taskProject=Join-Path $taskProjectDir $taskProjectName
 # Windows PowerShell's Set-Content -Encoding utf8 adds a BOM rejected by UV4.
 [IO.File]::WriteAllText($taskProject,$taskSource,[Text.UTF8Encoding]::new($false))
 $taskLog=Join-Path $taskOutput ('build-'+(Get-Date -Format 'yyyyMMdd-HHmmss-fff')+'.log')
 $taskStart=[Diagnostics.ProcessStartInfo]::new()
 $taskStart.FileName=$UV4
 $taskStart.Arguments='-r "'+$taskProject+'" -t "nor_sdram_zf_dtcm" -j0 -o "'+$taskLog+'"'
-$taskStart.WorkingDirectory=$taskMdk
+$taskStart.WorkingDirectory=$taskProjectDir
 $taskStart.UseShellExecute=$false
 $taskStart.CreateNoWindow=$true
 $taskStart.WindowStyle=[Diagnostics.ProcessWindowStyle]::Hidden

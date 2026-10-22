@@ -16,7 +16,7 @@
 
 | 位置 | 用途 |
 | --- | --- |
-| `demo/mdk/rt1064.uvprojx` | 当前唯一检查过的新功能 Keil 工程，目标 nor_sdram_zf_dtcm |
+| `demo/mdk/base/rt1064.uvprojx` | 当前唯一检查过的新功能 Keil 工程，目标 nor_sdram_zf_dtcm |
 | `demo/user/src/main.c` | 单一安全入口，不含旧整车定时调度或 TEST_VISION 回落分支 |
 | `demo/user/src/isr.c` | 保留中断入口，移除 PIT0 速度环输出，保留 PIT1 安全钩子 |
 | `demo/code/track_bayes.c/.h` | 完整赛道隐状态、后验和拒识；默认未训练，仅观测 |

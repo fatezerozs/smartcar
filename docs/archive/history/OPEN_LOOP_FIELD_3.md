@@ -26,7 +26,7 @@ scale 默认 1/1，只允许 0～1；不提高一侧来绕过总 PWM 上限。�
 
 ## 工程位置与模块
 
-仍使用本项目 `demo/mdk/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`，输出 `demo/mdk/Objects/rt1064.axf`。
+仍使用本项目 `demo/mdk/base/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`，输出 `demo/mdk/Objects/rt1064.axf`。
 
 - `demo/code/midterm_open_loop.c/.h`：公共 PWM 调度、限加速、降额和独立衰减纯函数。
 - `demo/code/vision_control.c/.h`：摄像头转向与异常状态。

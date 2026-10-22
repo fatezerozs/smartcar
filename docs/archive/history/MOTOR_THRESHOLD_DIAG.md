@@ -14,7 +14,7 @@
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_motor_threshold.ps1
 ```
 
-生成的工程为 `demo/mdk/motor_threshold.uvprojx`，产物为
+生成的工程为 `demo/mdk/diagnostics/motor_threshold.uvprojx`，产物为
 `.build/motor-threshold/Objects/rt1064.axf`。构建脚本没有下载参数。
 正式 `rt1064.uvprojx` 不增加诊断宏，其输出目录不变。
 

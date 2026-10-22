@@ -29,7 +29,7 @@
 
 ## 交付
 
-工程 demo/mdk/midterm_switch.uvprojx；固件 .build/midterm-switch/Objects/rt1064.axf；目标nor_sdram_zf_dtcm，使用CMSIS-DAP。
+工程 demo/mdk/competition/midterm_switch.uvprojx；固件 .build/midterm-switch/Objects/rt1064.axf；目标nor_sdram_zf_dtcm，使用CMSIS-DAP。
 由用户手动烧录，助手未烧录、未发启动命令，当前实车仍是旧版。编译为MIDTERM_C26_3，0错误0警告，Code68872、RO12376、RW212、ZI133804。
 
 ## 验证
@@ -57,7 +57,7 @@
 
 原自主6973/917/917及完整循环回归、379工程引用和协议检查通过。Keil全量0错误0警告，Code69160、RO12468、RW212、ZI133804。
 
-本次产物仍为 .build/midterm-switch/Objects/rt1064.axf，工程 demo/mdk/midterm_switch.uvprojx，串口版本必须MIDTERM_C26_4。助手未烧录、未驱动车辆、未向GitHub写入；用户手动烧录。C26 OFF烧录/搬车，ON看到稳定跑道即启动。
+本次产物仍为 .build/midterm-switch/Objects/rt1064.axf，工程 demo/mdk/competition/midterm_switch.uvprojx，串口版本必须MIDTERM_C26_4。助手未烧录、未驱动车辆、未向GitHub写入；用户手动烧录。C26 OFF烧录/搬车，ON看到稳定跑道即启动。
 
 # 最新：MIDTERM_C26_5
 
@@ -76,11 +76,11 @@
 
 # 2026-10-21 最新更新：MIDTERM_C26_9
 
-用户视频确认C26_8已有显著进步。C26_9在此基础上每侧增加10us舵量、近处中线冲突时减弱预瞄并加快舵量回收，速度配置保持。Keil仍打开 `demo/mdk/midterm_switch.uvprojx`。详细改动和验证见 [C26_9_STEER_CENTERING.md](../versions/C26_9_STEER_CENTERING.md)。以下版本按历史记录理解。
+用户视频确认C26_8已有显著进步。C26_9在此基础上每侧增加10us舵量、近处中线冲突时减弱预瞄并加快舵量回收，速度配置保持。Keil仍打开 `demo/mdk/competition/midterm_switch.uvprojx`。详细改动和验证见 [C26_9_STEER_CENTERING.md](../versions/C26_9_STEER_CENTERING.md)。以下版本按历史记录理解。
 
 # 2026-10-21 最新更新：MIDTERM_C26_10
 
-已直接核对最新版中期文档原图，A→B不经环岛/十字。C26_10完善连续反向弯预瞄、缺口后重新接边和成熟宽度模型稳定性，保留C26_9舵量、当前速度及启停方式。Keil仍打开 `demo/mdk/midterm_switch.uvprojx`。详细依据、改动及验证见 [C26_10_MIDTERM_MAP.md](../versions/C26_10_MIDTERM_MAP.md)。旧版本条目为历史记录。
+已直接核对最新版中期文档原图，A→B不经环岛/十字。C26_10完善连续反向弯预瞄、缺口后重新接边和成熟宽度模型稳定性，保留C26_9舵量、当前速度及启停方式。Keil仍打开 `demo/mdk/competition/midterm_switch.uvprojx`。详细依据、改动及验证见 [C26_10_MIDTERM_MAP.md](../versions/C26_10_MIDTERM_MAP.md)。旧版本条目为历史记录。
 
 # 2026-10-22 最新更新：MIDTERM_C26_11
 

@@ -26,5 +26,5 @@
 - 普通/ASAN：C26电平启动31701项、完整app_runtime/视觉/双串口模拟、转向链路6046项通过。转向新增左右出画面单侧边界长时跟踪、光照损失零输出与恢复、无几何模型时拒绝虚构中线等案例。
 - 原全部主机套件通过；原自主6973/917/917与完整运行循环通过。所有均是合成/模拟，不是实车A到B通过。
 - Keil构建0错误0警告，Code69512、RO12468、RW212、ZI134164；版本MIDTERM_C26_5。
-- 工程demo/mdk/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf。该路径已更新，由用户手动烧录；助手本轮未打开串口、未驱动车辆。
+- 工程demo/mdk/competition/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf。该路径已更新，由用户手动烧录；助手本轮未打开串口、未驱动车辆。
 - 仍需视频与TURN/SPEED/LAST_STOP确认实体转向、入弯和实际速度。如果模型尚未由可见双边建立、两边都无有效证据、模型与可见白区矛盾、横向偏差超限或编码器故障，不能承诺车辆一定继续前进。

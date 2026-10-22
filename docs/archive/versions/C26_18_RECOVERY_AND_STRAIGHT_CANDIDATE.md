@@ -28,6 +28,6 @@ C26 + AddressSanitizer 通过，转向路径 227058 项检查；新增真实单�
 
 Keil 0错误0警告，Code78008 / RO12912 / RW212 / ZI183452。日志 `.build/c26-18-keil.txt`、`.build/switch-c26-18-asan.txt`、`.build/host-c26-18.txt`。
 
-当前工程 `demo/mdk/midterm_switch.uvprojx`、目标 `nor_sdram_zf_dtcm`，工作输出已是 C26_18；候选固定备份 `.build/releases/MIDTERM_C26_18_PENDING_RING/rt1064.axf`。C26_17 备份保留。尚未交付为“环岛已完成”版本，也未确认实车故障已消除。
+当前工程 `demo/mdk/competition/midterm_switch.uvprojx`、目标 `nor_sdram_zf_dtcm`，工作输出已是 C26_18；候选固定备份 `.build/releases/MIDTERM_C26_18_PENDING_RING/rt1064.axf`。C26_17 备份保留。尚未交付为“环岛已完成”版本，也未确认实车故障已消除。
 
 被动接收已续开，当前进程/截止时间见 `.build/field/continuous-capture.json`；没有发车或遥控开跑。

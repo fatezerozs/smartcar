@@ -53,7 +53,7 @@
 
 ## 用户手动烧录
 
-Keil 工程：`<项目根>\demo\mdk\midterm_switch.uvprojx`。
+Keil 工程：`<项目根>\demo\mdk\competition\midterm_switch.uvprojx`。
 目标：`nor_sdram_zf_dtcm`。
 固定固件：`.build/releases/MIDTERM_C26_16/rt1064.axf`。
 工作输出：`.build/midterm-switch/Objects/rt1064.axf`。

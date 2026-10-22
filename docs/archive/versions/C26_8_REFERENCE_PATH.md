@@ -43,5 +43,5 @@
 - 这是软件及模拟硬件验证，尚未完成 C26_8 实车弯道验证，不宣称已经通过 A->B。
 
 烧录文件固定副本：`.build/releases/MIDTERM_C26_8/rt1064.axf`。
-工程：`demo/mdk/midterm_switch.uvprojx`。
+工程：`demo/mdk/competition/midterm_switch.uvprojx`。
 用户自行烧录，烧录前 C26 OFF；放好、供电后 C26 ON启动。

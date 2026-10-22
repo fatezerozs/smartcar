@@ -31,7 +31,7 @@ C21 的问题是降速叠加：舵量超过 0.8 会退出快档，而满舵内�
 
 ## 验证与使用
 
-版本 `MIDTERM_C26_22`，使用 `demo/mdk/midterm_switch.uvprojx`，构建命令 `tools/build_midterm.ps1 -Variant switch`。C26 OFF 停止，ON 连续五帧有效赛道后启动；上电已 ON 也可能启动，无三秒倒计时。本轮只生成固件，不烧录或启动。
+版本 `MIDTERM_C26_22`，使用 `demo/mdk/competition/midterm_switch.uvprojx`，构建命令 `tools/build_midterm.ps1 -Variant switch`。C26 OFF 停止，ON 连续五帧有效赛道后启动；上电已 ON 也可能启动，无三秒倒计时。本轮只生成固件，不烧录或启动。
 
 新增测试包括：左右镜像满舵弯的舵机端点/轮速方向/65%内轮目标；加载模拟下反复一计数目标波动仍保留 PI 驱动力；四行入口不断行但不得发车、不得刷新完整有效时间、不得无限保持；过渡到完整出口；出口边缘闪烁；黑色断带与全白拒绝。测试使用真实视觉/控制/速度环代码和模拟硬件，不是实车动力学证明。
 

@@ -22,7 +22,7 @@
 - Keil编译0错误0警告，日志 `.build/c26-9-keil.txt`。
 - 软件验证不代表C26_9已完成实车验证。未自动烧录或驱动实车，也未修改GitHub。
 
-Keil应打开：`demo/mdk/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
+Keil应打开：`demo/mdk/competition/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
 编译下载输出：`.build/midterm-switch/Objects/rt1064.axf`。
 本版固定副本：`.build/releases/MIDTERM_C26_9/rt1064.axf`。
 C26_8固定副本保留，可回退。

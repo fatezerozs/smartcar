@@ -45,7 +45,7 @@ git clone --branch vision-debug https://github.com/fatezerozs/smartcar.git
 cd smartcar
 ```
 
-Keil 打开 `demo/mdk/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。ARMCLANG 6.21，NXP.MIMXRT1064_DFP 19.0.0。所有源码引用相对工程目录，不需要原作者的绝对路径。原 Camera/Island/PID 源文件保留，但不再由当前 MDK 目标运行。
+Keil 打开 `demo/mdk/base/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。ARMCLANG 6.21，NXP.MIMXRT1064_DFP 19.0.0。所有源码引用相对工程目录，不需要原作者的绝对路径。原 Camera/Island/PID 源文件保留，但不再由当前 MDK 目标运行。
 
 提交只包含源代码、工程、离线测试、工具和说明。`.build/` 现场串口日志、相机图片、Objects/Listings、个人 Keil 会话和下载器选项不上传；每位队友本机重新编译并选择自己的下载器。不要仅拷贝一个 main.c。
 

@@ -6,7 +6,7 @@
 
 # main 架构与拨码模式
 
-本页描述当前main架构。正式入口为`demo/mdk/rt1064.uvprojx`，根目录和IAR工程为历史保留。独立MOTION_DIAG_2已完成无线及基础运动实测；版本差异和证据见 [当前基线](BASELINE_20261020.md)。
+本页描述当前main架构。正式入口为`demo/mdk/base/rt1064.uvprojx`，根目录和IAR工程为历史保留。独立MOTION_DIAG_2已完成无线及基础运动实测；版本差异和证据见 [当前基线](BASELINE_20261020.md)。
 
 ## 模块职责
 

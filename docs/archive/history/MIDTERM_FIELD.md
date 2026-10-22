@@ -18,7 +18,7 @@
 
 ## 打开和烧录
 
-继续使用 demo/mdk/rt1064.uvprojx，目标 nor_sdram_zf_dtcm。当前在原目录新增 vision_field.c/.h，无需搬移源码。用户已在 Keil 修改的下载设置和工程格式保留。编译和串口工作不要求下载器在线；实际烧录时再连接 CMSIS-DAP。
+继续使用 demo/mdk/base/rt1064.uvprojx，目标 nor_sdram_zf_dtcm。当前在原目录新增 vision_field.c/.h，无需搬移源码。用户已在 Keil 修改的下载设置和工程格式保留。编译和串口工作不要求下载器在线；实际烧录时再连接 CMSIS-DAP。
 
 与之前版本不同，VISION_DRIVE_ENABLE 默认改为 1，控制器和 PIT1 已编入。**上电仍 DISARMED，舵机脉宽、电机占空比、硬件确认与相机确认均保持未配置值；没有人工解锁不会运动。** 这使静态串口能输出 CAL/DRIVE 并能停车调参，不需每调一个数重新烧录。
 

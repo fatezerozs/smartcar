@@ -15,7 +15,7 @@
 
 ## 操作与构建
 
-使用 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`；或执行 `tools/build_midterm.ps1 -Variant switch`。输出为 `.build/midterm-switch/Objects/rt1064.axf`。
+使用 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`；或执行 `tools/build_midterm.ps1 -Variant switch`。输出为 `.build/midterm-switch/Objects/rt1064.axf`。
 
 C26 OFF 停止电机和舵机输出；ON 且连续五帧有效赛道后开始，C27 忽略。上电已 ON 也会启动，此版本没有三秒倒计时。视觉重获可自动恢复，显式 STOP 后需 OFF→ON；正常循迹没有总时长限制。运行不依赖串口或串口心跳。训练时可被动记录无线日志。
 

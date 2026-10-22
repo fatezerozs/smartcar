@@ -51,7 +51,7 @@ PIT1每10ms读取16位自由运行计数器，模差求有符号增量，不在�
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_motor_threshold.ps1 -Variant speed
 ```
 
-生成demo/mdk/encoder_speed.uvprojx，产物为.build/encoder-speed/Objects/rt1064.axf。
+生成demo/mdk/diagnostics/encoder_speed.uvprojx，产物为.build/encoder-speed/Objects/rt1064.axf。
 该命令只编译，不打开COM、不下载；安装位置不同时传-UV4。
 人工下载后确认版本ENCODER_SPEED_DIAG_5，避免误用motion-diag或Example产物。
 

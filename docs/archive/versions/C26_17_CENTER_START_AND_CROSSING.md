@@ -49,7 +49,7 @@ C26_16 要求成对出口边界及 12 行双边证据，不能覆盖本次真实
 
 ## 使用与交付
 
-Keil：`<项目根>\demo\mdk\midterm_switch.uvprojx`。
+Keil：`<项目根>\demo\mdk\competition\midterm_switch.uvprojx`。
 目标：`nor_sdram_zf_dtcm`。
 固定固件：`.build/releases/MIDTERM_C26_17/rt1064.axf`，C26_16 备份保留。
 工作输出：`.build/midterm-switch/Objects/rt1064.axf`。

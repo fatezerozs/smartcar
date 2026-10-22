@@ -45,7 +45,7 @@ C26_10固件中没有按地图固定“先右后左”的运行序列；旧测�
 
 上述为软件与模拟硬件验证，尚未完成C26_11实车路线验证。
 
-Keil工程：`demo/mdk/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
+Keil工程：`demo/mdk/competition/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
 固定固件备份：`.build/releases/MIDTERM_C26_11/rt1064.axf`。
 正常下载输出：`.build/midterm-switch/Objects/rt1064.axf`。
 旧版本固定备份保留。

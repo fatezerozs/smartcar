@@ -22,6 +22,6 @@ LAST_STOP seq=4 ms=17526 run_ms=80 reason=2 faults=32 speed_detail=0 raw3_L=0 ra
 
 普通/ASAN：C26 32705项、完整运行循环、转向8400项通过，新增左右大偏差（超过旧1.25阈值）仍持续运行并达到受限方向、驱动目标与PWM不再停留在3/14、角度/速度上限不越界及停车快照测试。全部是模拟，未实车跑弯。
 
-工程demo/mdk/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf，版本MIDTERM_C26_7。助手不自动烧录，不向GitHub写入。由用户C26 OFF、驱动关闭时手动烧录；下次保留无线运行日志与主控供电，以判断控制量是否达到窗口、车轮是否实际响应和真实路线效果。
+工程demo/mdk/competition/midterm_switch.uvprojx，固件.build/midterm-switch/Objects/rt1064.axf，版本MIDTERM_C26_7。助手不自动烧录，不向GitHub写入。由用户C26 OFF、驱动关闭时手动烧录；下次保留无线运行日志与主控供电，以判断控制量是否达到窗口、车轮是否实际响应和真实路线效果。
 
 最终验证：Keil全量0错误0警告，Code69944、RO12572、RW212、ZI134236。普通与ASAN C26/转向与完整运行循环通过；原全部主机套件通过（含控制8893项、视觉636029项等）；原自主6973/917/917及完整循环通过。用户随后明确指出应尝试转弯而非因偏差急停，本版在可靠边线仍存在时低速受限转向并继续观察，符合此意图；完全无可靠视觉仍暂停驱动。尚未实车烧录验证。

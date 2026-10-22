@@ -13,7 +13,7 @@ M2为左轮、DIR=1向前，100‰/1500ms可转动。舵机约1550µs回中，15
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_motor_threshold.ps1 -Variant motion
 ```
 
-独立工程：`demo/mdk/motion_diag.uvprojx`。
+独立工程：`demo/mdk/diagnostics/motion_diag.uvprojx`。
 只下载 `.build/motion-diag/Objects/rt1064.axf`，不要选择Example的产物或原Objects。
 复位后必须看到 `build=MOTION_DIAG_2`；下载日志的Load路径须与上面一致。
 本脚本仅构建，不下载、不打开COM、不启动电机。

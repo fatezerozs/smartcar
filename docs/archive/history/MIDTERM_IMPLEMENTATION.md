@@ -30,7 +30,7 @@ ENCODER_SPEED_DIAG_5已由用户确认直线、主动停止、失联停止、人
 配置入口为demo/code/midterm_profile.h。逐步实施第一阶段已将实测符号-1/+1、40/1/0.05和MIDTERM_SPEED_CONFIRMED=1写入源配置。
 MIDTERM_VISUAL_REVIEWED仍为0；静态相机轴和平移/航向偏差符号已核对，实体舵机视觉纠偏方向尚未核对，自主版仍不会发车。训练版仍需串口配置/启用速度环。
 
-用户指定demo/mdk/encoder_speed.uvprojx用于核对。已检查：它只定义VISION_ENCODER_ENABLE、VISION_MOTION_DIAG、VISION_MOTOR_THRESHOLD_DIAG等编译入口，引用共同源码；工程XML没有保存UART RAM中的max_ticks/Kp/Ki。vision_drive_init重置速度状态，原Flash车辆配置也不序列化速度配置。因此不能声称旧速度参数已从该工程自动恢复，更不能把历史试验20/1/0.05直接标成成功值。
+用户指定demo/mdk/diagnostics/encoder_speed.uvprojx用于核对。已检查：它只定义VISION_ENCODER_ENABLE、VISION_MOTION_DIAG、VISION_MOTOR_THRESHOLD_DIAG等编译入口，引用共同源码；工程XML没有保存UART RAM中的max_ticks/Kp/Ki。vision_drive_init重置速度状态，原Flash车辆配置也不序列化速度配置。因此不能声称旧速度参数已从该工程自动恢复，更不能把历史试验20/1/0.05直接标成成功值。
 
 源速度参数已按本次成功实测填写；安装变化后必须重新核对。训练版停车仍应读回实际RAM配置：
 
@@ -53,8 +53,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_midterm.ps1 -Var
 
 | 版本 | 工程 | 产物 | 行为 |
 | --- | --- | --- | --- |
-| 训练 | demo/mdk/midterm_train.uvprojx | .build/midterm-train/Objects/rt1064.axf | 编码器3/4启用，速度环仍需显式配置使能；无线训练，原拨码与心跳门槛 |
-| 自主 | demo/mdk/midterm_auto.uvprojx | .build/midterm-auto/Objects/rt1064.axf | 3秒启动；无需拨码或无线；未完成上述配置时阻止 |
+| 训练 | demo/mdk/training/midterm_train.uvprojx | .build/midterm-train/Objects/rt1064.axf | 编码器3/4启用，速度环仍需显式配置使能；无线训练，原拨码与心跳门槛 |
+| 自主 | demo/mdk/training/midterm_auto.uvprojx | .build/midterm-auto/Objects/rt1064.axf | 3秒启动；无需拨码或无线；未完成上述配置时阻止 |
 
 训练版不是放宽上限的运动诊断版，旧@motion 150实验不能直接套用。先确认当前cap、训练命令门槛和版本。默认运行上限仍为5秒；完整路线训练后按实际耗时设置并保存合适上限，未凭空写入整条路线耗时。
 

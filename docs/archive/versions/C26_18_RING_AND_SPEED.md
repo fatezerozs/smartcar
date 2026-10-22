@@ -27,7 +27,7 @@ ENTER/FOLLOW 中，宽汇合口按当前岛侧实测边界和学习半宽定位�
 
 车载 TRACE 和停车遥测新增 `ring`、`ring_side`、`ring_rows`。状态 0/1/2/3/4 分别为 IDLE/ENTER/FOLLOW/EXIT/COOLDOWN；side=-1 为左岛，rows 为当前岛侧边界支持行。车载最近 1024 项记录停车后自动无线导出，电脑端只被动接收。
 
-Keil 工程 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`；固件 `.build/midterm-switch/Objects/rt1064.axf`。原 C26_17 与先前未交付的 C26_18_PENDING_RING 候选备份保留。最终构建校验及测试结果见 `.build/releases/MIDTERM_C26_18/release.json`。
+Keil 工程 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`；固件 `.build/midterm-switch/Objects/rt1064.axf`。原 C26_17 与先前未交付的 C26_18_PENDING_RING 候选备份保留。最终构建校验及测试结果见 `.build/releases/MIDTERM_C26_18/release.json`。
 
 Keil 全量编译 0错误0警告，Code81224 / RO12980 / RW212 / ZI196472。最终 AXF SHA256 为 `5DFF5E13DCDBF63E175359582E7B57C45743EF70279DFD59EFDA3D61E99955F5`。C26 ASAN 生命周期297347项、转向路径227567项、独立环岛220项和完整应用循环通过；普通主机套件、协议34项、379工程引用及3项日志解析测试通过。日志分别见 `.build/switch-c26-18-ring-final-asan.txt`、`.build/c26-18-ring-keil.txt`、`.build/host-c26-18-final.txt`。
 

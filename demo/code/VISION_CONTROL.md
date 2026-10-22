@@ -7,7 +7,7 @@
 ## 对照范围与当前状态
 
 下表的原路径对照来自本机保留的队友副本 `smartcar-main/smartcar-main`；本次交付另以远端 vision-debug 的 30196f2 为 Git 基线，见根目录 docs/archive/history/CHANGELOG.md。
-当前完整项目以本 Git 检出目录/交付源码包为准，工程为 `demo/mdk/rt1064.uvprojx`。桌面旧 ZIP 副本不会自动同步。
+当前完整项目以本 Git 检出目录/交付源码包为准，工程为 `demo/mdk/base/rt1064.uvprojx`。桌面旧 ZIP 副本不会自动同步。
 队友副本没有改动；原 Camera.c、Island.c、img_process.c、PID 保留，不把它们删除或整体改写。
 
 **FIELD_4：无有效保存记录时使用零 PWM 默认值；恢复有效配置后，C12 开启可在两秒后本地启动，调试/烧录先断开 C12。** 配置保存与启动条件见 [C12_STARTUP](../../docs/archive/history/C12_STARTUP.md)。TEST_VISION 已退出入口；完整赛道仍只观测。

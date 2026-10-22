@@ -2,7 +2,7 @@
 
 # 视觉静态调试与逐飞助手 V2
 
-当前说明：2026-10-19。工程入口 `demo/mdk/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。不启动屏幕、故障编码器、原速度 PID/PIT0。现场版已编入控制器，上电未标定、PWM 配置为零且停车；新增串口调参见 [MIDTERM_FIELD](../../docs/archive/history/MIDTERM_FIELD.md)。
+当前说明：2026-10-19。工程入口 `demo/mdk/base/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。不启动屏幕、故障编码器、原速度 PID/PIT0。现场版已编入控制器，上电未标定、PWM 配置为零且停车；新增串口调参见 [MIDTERM_FIELD](../../docs/archive/history/MIDTERM_FIELD.md)。
 
 ## 识别路径
 

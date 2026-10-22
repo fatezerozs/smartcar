@@ -3,7 +3,7 @@
 # C29：相切入环、连续速度证据与贝叶斯入口提示
 
 日期：2026-10-22。基于本地 `main` 的 C28，版本 `MIDTERM_C26_29`。
-工程：`demo/mdk/midterm_switch.uvprojx`；目标：`nor_sdram_zf_dtcm`。
+工程：`demo/mdk/competition/midterm_switch.uvprojx`；目标：`nor_sdram_zf_dtcm`。
 本次仅修改、主机测试和构建，没有连接串口、烧录或驱动车辆。
 
 ## 对应图示要求

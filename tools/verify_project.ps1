@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
-$mdkRoot = Join-Path $projectRoot 'demo\mdk'
+$mdkRoot = Join-Path $projectRoot 'demo\mdk\base'
 [xml]$xml = Get-Content -Raw -LiteralPath (Join-Path $mdkRoot 'rt1064.uvprojx')
 $targets = @($xml.Project.Targets.Target | Where-Object TargetName -eq 'nor_sdram_zf_dtcm')
 if ($targets.Count -ne 1) { throw 'Missing/duplicate MDK target' }
@@ -35,7 +35,7 @@ if ($defines -match '\bTEST_(VISION|SERVO|MOTOR|UART)|\bVISION_(DRIVE|CAMERA|SER
 $isr = Get-Content -Raw -LiteralPath (Join-Path $projectRoot 'demo\user\src\isr.c')
 if ($isr -notmatch '(?s)PIT_CH1.*?#if VISION_DRIVE_ENABLE\s+board_mode_sample\(\);\s+vision_drive_safety_tick\(\)') { throw 'Missing gated PIT1 safety hook' }
 Write-Output ('PASS: ' + $files.Count + ' MDK references exist; correct entry; outputs locked; PIT1 safety hook present.')
-$scatter=Get-Content -Raw -LiteralPath (Join-Path $mdkRoot 'scf\MIMXRT1064xxxxx_flexspi_nor.scf')
+$scatter=Get-Content -Raw -LiteralPath (Join-Path $mdkRoot '..\scf\MIMXRT1064xxxxx_flexspi_nor.scf')
 if($scatter -notmatch '(?m)^#define\s+m_text_size\s+0x003FBC00\s*$'){throw 'Persistent slots not reserved by the load region'}
 if($profile -notmatch '(?m)^#define VISION_START_SWITCH_ENABLE 0U\b'){throw 'Physical key gate must remain disabled after rollback'}
 if($main -match 'board_controls' -or $isr -match 'board_io_enabled|VISION_START_SWITCH_PIN'){throw 'Physical key control still connected'}

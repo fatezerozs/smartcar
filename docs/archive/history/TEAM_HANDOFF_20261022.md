@@ -6,7 +6,7 @@
 
 ## 使用与复现
 
-使用 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。也可运行 `tools/build_midterm.ps1 -Variant switch -UV4 <本机UV4.exe路径>` 重新生成并全量编译。源工程和 SDK 一并在仓库中，Keil/设备包需本机已有。
+使用 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。也可运行 `tools/build_midterm.ps1 -Variant switch -UV4 <本机UV4.exe路径>` 重新生成并全量编译。源工程和 SDK 一并在仓库中，Keil/设备包需本机已有。
 
 用户手动烧录。C26 OFF 撤电机/舵机输出、清环岛状态；C26 ON 在硬件准备好且连续五帧有效赛道后自动开始，C27 忽略。正常行驶无总时限，可 A→B→右侧赛道→A 连续跑；视觉重获后可自动恢复。故障、断帧及显式 STOP 的原有处理仍在。
 

@@ -13,7 +13,9 @@
 
 ## 当前运行入口
 
-Keil 打开 [midterm_switch.uvprojx](demo/mdk/midterm_switch.uvprojx)，目标 `nor_sdram_zf_dtcm`。
+工程已按用途分目录，见 [Keil 工程目录](demo/mdk/README.md)。旧路径 `demo/mdk/midterm_switch.uvprojx` 已迁移。
+
+Keil 打开 [midterm_switch.uvprojx](demo/mdk/competition/midterm_switch.uvprojx)，目标 `nor_sdram_zf_dtcm`。
 在仓库根目录执行：
 
 ```powershell

@@ -2,7 +2,7 @@
 
 当前源码为 **MIDTERM_C26_31**。当前能力/待办见 [演进档案](../docs/PROJECT_EVOLUTION.md)，本次变更见 [2026-10-23 提交说明](../docs/changes/2026-10-23_C31.md)。
 
-工程入口为 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+工程入口为 `demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
 C31 仍采用 C26 启停，上电识别赛道若干秒后启动尚未实现。
 发布副本有明确版本；重新编译当前源码不能冒称复现旧版本。
 

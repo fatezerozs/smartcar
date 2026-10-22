@@ -3,6 +3,10 @@
 更新日期：2026-10-23。当前工作版本：`MIDTERM_C26_31`。维护分支：`main`。
 
 本文是项目现状和技术决策的持续维护入口，不代替每次提交的详细说明。
+
+2026-10-23 工程整理：Keil 入口按 competition / base / training / diagnostics 分组，
+构建产物集中到 `.build/`；删除废弃根目录工程和旧临时产物。见 [工程目录](../demo/mdk/README.md)。
+此次仅调整工程路径与构建工具，控制算法和实车验收状态不变；历史发布哈希仍对应整理前快照。
 文末保留每次 push 的简略索引；具体差异、实验和版本证据放在对应提交记录中。
 
 ## 1. 成品目标与优先顺序
@@ -185,7 +189,7 @@ R1–R3 先补齐同一运行链路的证据并推进；R4 是确定的产品交
 C31 [发布清单](../releases/MIDTERM_C26_31/release.json) 与 [固件](../releases/MIDTERM_C26_31/rt1064.axf)，
 SHA256 `76520E229057A63FE539A7D045DF1F9CD87D523B45A8FA62A3808AFCDE7F3CA7`。
 具体检查见 [本次提交说明](changes/2026-10-23_C31.md)。
-工程入口 `demo/mdk/midterm_switch.uvprojx`；原始数据按会话本地保留，结构化证据在 `evidence/`，
+工程入口 `demo/mdk/competition/midterm_switch.uvprojx`；原始数据按会话本地保留，结构化证据在 `evidence/`，
 选定夹具在 `tests/vision/fixtures/`。
 
 新数据尽量关联版本/哈希、安装/光照、电池静态及负载条件、板端时间/帧号、目标/反馈/PWM、

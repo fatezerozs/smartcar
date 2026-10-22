@@ -3,8 +3,8 @@ $ErrorActionPreference='Stop'
 if(-not $StoppedAndReady){throw 'Flashing requires explicit confirmation that outputs are stopped and vehicle is secured.'}
 if(-not $C12Open){throw 'Open the C12 master switch and pass -C12Open before flashing: a restored profile may launch after reset.'}
 $taskRoot=Split-Path $PSScriptRoot -Parent
-$taskProject=Join-Path $taskRoot 'demo\mdk\rt1064.uvprojx'
-$taskAxf=Join-Path $taskRoot 'demo\mdk\Objects\rt1064.axf'
+$taskProject=Join-Path $taskRoot 'demo\mdk\base\rt1064.uvprojx'
+$taskAxf=Join-Path $taskRoot '.build\keil\Objects\rt1064.axf'
 $taskBuildLog=Join-Path $taskRoot '.build\keil\build.log'
 if(-not (Test-Path -LiteralPath $UV4) -or -not (Test-Path -LiteralPath $taskAxf)){throw 'Keil executable or firmware is absent.'}
 if(-not (Test-Path -LiteralPath $taskBuildLog) -or

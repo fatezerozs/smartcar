@@ -4,7 +4,7 @@
 
 ## 本次实车证据与边界
 
-用户烧录 `demo/mdk/midterm_switch.uvprojx` 后反馈速度异常慢，并提供
+用户烧录 `demo/mdk/competition/midterm_switch.uvprojx` 后反馈速度异常慢，并提供
 `C:/download_temp/VID_20261022_194353.mp4`。视频约 41.633 秒，30 fps，
 1249 帧；已查看每 2 秒原始画面组成的联系图。视频说明存在低速行驶，
 没有完整赛道覆盖或 UART 时钟同步证据，不能据此计算整圈成绩。
@@ -66,7 +66,7 @@ LAST_STOP 的 `ms=62188 run_ms=55077 speed_detail=9` 为左轮反向计数保护
 协议 46 项、TRACE 分析 3 项通过。Keil：0 错误、0 警告，
 Code=86152、RO=13376、RW=212、ZI=196596。
 
-1. C26 置 OFF，再重新编译并烧录 `demo/mdk/midterm_switch.uvprojx`，或使用发布副本 AXF；本次未代烧录。
+1. C26 置 OFF，再重新编译并烧录 `demo/mdk/competition/midterm_switch.uvprojx`，或使用发布副本 AXF；本次未代烧录。
 2. 充满电并记录静态总电压及单体电压，保持摄像头安装和赛道一致。
 3. 分别测试清晰直线、左右弯、真实十字路口、右侧相切圆环。每次关闭 C26 应立即停机。
 4. 用 `tools/listen_wireless_raw.ps1` 被动采集，停止其他占用 COM10 的软件。

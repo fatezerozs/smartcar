@@ -29,7 +29,7 @@
 
 ## 使用位置
 
-Keil打开 `demo/mdk/midterm_switch.uvprojx`，选择 `nor_sdram_zf_dtcm`。
+Keil打开 `demo/mdk/competition/midterm_switch.uvprojx`，选择 `nor_sdram_zf_dtcm`。
 下载输出 `.build/midterm-switch/Objects/rt1064.axf`。
 本版固定备份 `.build/releases/MIDTERM_C26_10/rt1064.axf`。
 旧C26_8/9固定备份保留。

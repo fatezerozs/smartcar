@@ -2,7 +2,7 @@
 
 # C26_21：提速、十字方向延续与环岛跟随
 
-本版针对 C20 实车反馈的“行驶慢、十字选择差、右侧相切圆环易跳过”修改。当前版本串 `MIDTERM_C26_21`，仍使用 `demo/mdk/midterm_switch.uvprojx`。C26 OFF 停止、ON 连续五帧有效赛道启动；上电已 ON 也可能启动，无三秒倒计时。
+本版针对 C20 实车反馈的“行驶慢、十字选择差、右侧相切圆环易跳过”修改。当前版本串 `MIDTERM_C26_21`，仍使用 `demo/mdk/competition/midterm_switch.uvprojx`。C26 OFF 停止、ON 连续五帧有效赛道启动；上电已 ON 也可能启动，无三秒倒计时。
 
 ## 行驶原则及实现范围
 

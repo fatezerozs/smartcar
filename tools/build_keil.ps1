@@ -1,7 +1,7 @@
 param([string]$UV4 = 'C:\Keil_v5\UV4\UV4.exe')
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
-$projectFile = Join-Path $projectRoot 'demo\mdk\rt1064.uvprojx'
+$projectFile = Join-Path $projectRoot 'demo\mdk\base\rt1064.uvprojx'
 $outputRoot = Join-Path $projectRoot '.build\keil'
 $compilerTemp = Join-Path $outputRoot 'tmp'
 New-Item -ItemType Directory -Path $compilerTemp -Force | Out-Null

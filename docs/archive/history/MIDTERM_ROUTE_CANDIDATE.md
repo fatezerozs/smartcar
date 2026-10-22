@@ -7,7 +7,7 @@
 ## 产物与使用
 
 - 构建：tools/build_midterm.ps1 -Variant route -UV4 C:/Keil_v5/UV4/UV4.exe
-- 工程：demo/mdk/midterm_route.uvprojx，目标 nor_sdram_zf_dtcm。
+- 工程：demo/mdk/training/midterm_route.uvprojx，目标 nor_sdram_zf_dtcm。
 - 固件：.build/midterm-route/Objects/rt1064.axf。
 - 串口版本：MIDTERM_ROUTE_TRAIN_1。
 - 由用户手动烧录，驱动电源关闭、主板供电；助手本次未烧录、未启动车辆，未向GitHub写入。

@@ -3,7 +3,7 @@
 # C30：基于实拍修复相切圆环入口漏检
 
 日期：2026-10-22。基于恢复后的 C29，版本 `MIDTERM_C26_30`。
-工程：`demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+工程：`demo/mdk/competition/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
 
 C29 的连续轮速支持、入口白色余量引导、受训练/新鲜度约束的贝叶斯提示和同步诊断全部保留。
 本次新增的生产算法改动仅在 `vision_reference_route.h` 的侧边截断内岛验证中；另更新版本号。

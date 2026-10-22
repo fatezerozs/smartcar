@@ -32,7 +32,7 @@
 - Keil全量编译0错误0警告：`.build/c26-12-keil.txt`。
 - 软件/模拟验证不能代替实车连续弯路线验证，尚未宣称C26_12已完成A→B。
 
-Keil工程：`demo/mdk/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
+Keil工程：`demo/mdk/competition/midterm_switch.uvprojx`，目标`nor_sdram_zf_dtcm`。
 下载输出：`.build/midterm-switch/Objects/rt1064.axf`。
 本版固定副本：`.build/releases/MIDTERM_C26_12/rt1064.axf`。
 旧版本固定副本保留。烧录时C26 OFF，放好后ON启动。

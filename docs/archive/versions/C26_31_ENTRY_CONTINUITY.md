@@ -76,6 +76,6 @@ FOLLOW 阶段依赖当前道路/内边界，不再要求重新看到完整暗岛
 
 ## 产物与边界
 
-候选 `releases/MIDTERM_C26_31/rt1064.axf`，工程仍为 `demo/mdk/midterm_switch.uvprojx`。
+候选 `releases/MIDTERM_C26_31/rt1064.axf`，工程仍为 `demo/mdk/competition/midterm_switch.uvprojx`。
 旧 C29、C30 发布副本保留。本次只做代码检查、主机回归与编译，没有连接串口、烧录或驱动车辆。
 实际相切入环、出环与整圈仍需车端复测，不能由固定姿态投影或静态缩略图宣称完成。
