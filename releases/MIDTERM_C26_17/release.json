@@ -1,0 +1,11 @@
+{
+  "version": "MIDTERM_C26_17",
+  "sha256": "9B322B74292FFFD323168FD6F7677AFC6872FA6DB81D6F83227A2147564A7672",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "build_log": ".build/c26-17-keil.txt",
+  "description": "Preserved old binary; C17 device identity was later confirmed by real UART logs. Current source compiles C19.",
+  "assistant_flashed": false,
+  "device_version_later_confirmed_in_uart": true,
+  "device_binary_hash_verified": false
+}

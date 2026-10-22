@@ -106,6 +106,7 @@ int main(void) {
     check(control.output.state == VC_FAULT && (control.output.faults & VC_FAULT_COMMAND), "command lease expires despite fresh camera frames");
     vc_heartbeat(&control, now);
     check(control.output.state == VC_FAULT, "late heartbeat cannot revive a fault");
+    setup(); cfg.max_run_ms=0; check(!vc_config_valid(&cfg), "non-C26 duration must remain bounded");
     setup(); cfg.max_run_ms = 200; vc_init(&control, &cfg); road(0, 0, 80);
     for (i = 0; i < cfg.arm_frames; ++i) frame(); check(vc_arm(&control, now, 1), "short-run arm");
     for (i = 0; i < 11; ++i) { vc_heartbeat(&control, now); frame(); }

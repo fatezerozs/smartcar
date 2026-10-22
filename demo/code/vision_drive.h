@@ -37,6 +37,30 @@ void vision_drive_switch_sample(int closed);
 /* Foreground mode gate: only midterm TEXT mode may schedule local motion.
  * Image/pause/full-observer/config parsing must not queue a later launch. */
 void vision_drive_set_local_allowed(int allowed);
+#if VISION_ROUTE_SWITCH
+void vd_route_switch_mode_stop(void);
+typedef struct {
+    uint32_t sequence,ms,run_ms,faults;
+    int16_t raw3,raw4,target_right,target_left;
+    uint16_t pwm_right,pwm_left,previous_servo_us;
+    float previous_lateral,previous_heading,previous_steering;
+    uint8_t reason,speed_detail;
+} vd_last_stop_t;
+void vision_drive_last_stop(vd_last_stop_t *out);
+#define VD_TRACE_CAPACITY 1024U
+typedef struct {
+    uint32_t ms,frame,faults;
+    int16_t lateral,heading,steer,duty,raw3,raw4,target_right,target_left;
+    uint16_t pwm_right,pwm_left,servo_us,width;
+    uint8_t valid,coverage,row_flags,center,measured,inferred,state,source,obs_flags,junction,anchors;
+    uint8_t ring,ring_rows;
+    int8_t ring_side;
+} vd_trace_sample_t;
+typedef struct {uint32_t run,revision;uint16_t count;uint8_t active,frozen;} vd_trace_info_t;
+void vision_drive_trace_info(vd_trace_info_t *out);
+int vision_drive_trace_read(unsigned index,vd_trace_sample_t *out);
+uint16_t vision_drive_servo_command_us(void);
+#endif
 void vision_drive_get_auto(vd_auto_info_t *info);
 int vision_drive_is_local(void);
 int vision_drive_can_store(void);

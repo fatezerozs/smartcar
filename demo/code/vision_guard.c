@@ -21,7 +21,7 @@ void vision_drive_safety_tick(void)
         uint32_t now = timer_get(GPT_TIM_1), faults = 0;
         if ((uint32_t)(now - vd.guard_frame_ms) >= VISION_CONTROL_FRAME_TIMEOUT_MS) faults |= VC_FAULT_FRAME;
         if (!vd.guard_local && (uint32_t)(now - vd.guard_command_ms) >= VISION_CONTROL_COMMAND_TIMEOUT_MS) faults |= VC_FAULT_COMMAND;
-        if ((uint32_t)(now - vd.guard_armed_ms) >= vd.guard_max_run_ms) faults |= VC_FAULT_RUNTIME;
+        if (vd.guard_max_run_ms && (uint32_t)(now - vd.guard_armed_ms) >= vd.guard_max_run_ms) faults |= VC_FAULT_RUNTIME;
         if (faults) {
             vd.guard_faults |= faults;
             vd.guard_running = 0;

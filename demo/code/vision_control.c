@@ -46,7 +46,8 @@ int vc_config_valid(const vc_config_t *c)
         range(c->cruise_duty, 0, c->duty_cap) && range(c->max_lateral, 0.1f, 3) &&
         c->frame_timeout_ms >= 20 && c->frame_timeout_ms <= 500 &&
         c->command_timeout_ms >= 20 && c->command_timeout_ms <= 2000 &&
-        c->max_run_ms >= c->frame_timeout_ms && c->max_run_ms <= 60000 &&
+        ((VISION_ROUTE_SWITCH && !c->max_run_ms) ||
+         (c->max_run_ms >= c->frame_timeout_ms && c->max_run_ms <= (VISION_ROUTE_SWITCH?120000U:60000U))) &&
         c->arm_frames >= 2 && c->min_coverage >= 1 && c->min_coverage <= 100 &&
         c->min_band_rows >= 1 && c->min_band_rows <= 20 && c->calibration_confirmed <= 1;
 }
@@ -57,6 +58,8 @@ void vc_trip(vc_controller_t *c, uint32_t reason)
     c->output.state = VC_FAULT;
     c->output.faults |= reason;
     c->output.duty = c->output.steering = 0;
+    c->output.recovering=0;c->output.search_source=0;c->recovery_steer=0;
+    c->have_partial=c->straight_tracking=0;
     c->stable_frames = 0;
     c->derivative = 0;
 }
@@ -75,6 +78,8 @@ void vc_stop(vc_controller_t *c)
     c->local_run = 0;
     if (c->output.state != VC_FAULT) c->output.state = VC_DISARMED;
     c->output.duty = c->output.steering = 0;
+    c->output.recovering=0;c->output.search_source=0;c->recovery_steer=0;
+    c->have_partial=c->straight_tracking=0;
     c->stable_frames = 0;
     c->derivative = 0;
 }
@@ -96,9 +101,14 @@ void vc_poll(vc_controller_t *c, uint32_t now)
 {
     int remote=!c->local_run;
     if (c->output.state != VC_RUNNING) return;
+#if VISION_ROUTE_SWITCH
+    if(c->output.recovering&&(uint32_t)(now-c->last_valid_ms)>300U&&
+       (!c->have_partial||(uint32_t)(now-c->last_partial_ms)>100U||
+        (uint32_t)(now-c->last_valid_ms)>1200U))vc_trip(c,VC_FAULT_VISION);
+#endif
     if ((uint32_t)(now - c->last_frame_ms) >= c->config.frame_timeout_ms) vc_trip(c, VC_FAULT_FRAME);
     if (remote && (uint32_t)(now - c->last_command_ms) >= c->config.command_timeout_ms) vc_trip(c, VC_FAULT_COMMAND);
-    if ((uint32_t)(now - c->armed_ms) >= c->config.max_run_ms) vc_trip(c, VC_FAULT_RUNTIME);
+    if (c->config.max_run_ms && (uint32_t)(now - c->armed_ms) >= c->config.max_run_ms) vc_trip(c, VC_FAULT_RUNTIME);
 }
 
 int vc_arm(vc_controller_t *c, uint32_t now, int hardware_confirmed)
@@ -112,6 +122,7 @@ int vc_arm(vc_controller_t *c, uint32_t now, int hardware_confirmed)
     c->local_run = 0;
     c->last_command_ms = c->armed_ms = now;
     c->output.duty = c->output.steering = 0;
+    c->have_partial=c->straight_tracking=0;
     c->derivative = 0;
     return 1;
 }
@@ -136,14 +147,41 @@ static int band_error(const vision_result_t *r, const vc_config_t *c, float band
     int n = 0, y;
     for (y = VISION_ROI_TOP; y <= VISION_ROI_BOTTOM; ++y) {
         float yf = (float)y / (VISION_HEIGHT - 1), axis, half_width, center;
-        if (absolute(yf - band_y) > c->band_half_height || r->row_flags[y] != 3) continue;
-        if (r->left[y] >= r->right[y] || r->right[y] >= VISION_WIDTH ||
-            r->right[y] - r->left[y] + 1 < VISION_MIN_WIDTH) continue;
-        center = (r->left[y] + r->right[y]) * 0.5f;
-        if (r->center[y] >= VISION_WIDTH || absolute(r->center[y] - center) > 1) continue;
+        if (absolute(yf - band_y) > c->band_half_height) continue;
+        if(r->row_flags[y]==3
+#if VISION_ROUTE_SWITCH
+           || (r->row_flags[y]==4&&r->junction_rows>=4&&r->junction_anchors>=8)
+#endif
+          ) {
+            if(r->left[y]>=r->right[y] || r->right[y]>=VISION_WIDTH ||
+               r->right[y]-r->left[y]+1<VISION_MIN_WIDTH)continue;
+            center=(r->left[y]+r->right[y])*0.5f;
+            half_width=(r->right[y]-r->left[y]+1)*0.5f;
+            if(r->center[y]>=VISION_WIDTH || absolute(r->center[y]-center)>1)continue;
+        }
+#if VISION_ROUTE_SWITCH
+        else if((r->row_flags[y]==1 || r->row_flags[y]==2) &&
+                r->row_width[y]>=VISION_MIN_WIDTH && r->row_width[y]<=VISION_WIDTH*2U &&
+                r->center[y]<VISION_WIDTH) {
+            float predicted;
+            half_width=r->row_width[y]*0.5f;center=r->center[y];
+            if(r->row_flags[y]==1){
+                if(r->left[y]<2 || r->left[y]>=VISION_WIDTH)continue;
+                predicted=r->left[y]+(r->row_width[y]-1)*0.5f;
+            } else {
+                if(r->right[y]>=VISION_WIDTH-2)continue;
+                predicted=r->right[y]-(r->row_width[y]-1)*0.5f;
+            }
+            /* center[] is a drawable image coordinate. An actual measured
+             * edge may place the modeled lane center outside view: preserve
+             * that signed error instead of dropping the only return cue. */
+            if(absolute(center-clamp(predicted,0,VISION_WIDTH-1))>1)continue;
+            center=predicted;
+        }
+#endif
+        else continue;
         axis = c->axis_far_x + (c->axis_near_x - c->axis_far_x) *
                (yf - c->far_y) / (c->near_y - c->far_y);
-        half_width = (r->right[y] - r->left[y] + 1) * 0.5f;
         sum += (center - axis * (VISION_WIDTH - 1)) / half_width;
         center_sum += center / (VISION_WIDTH - 1);
         ++n;
@@ -153,6 +191,133 @@ static int band_error(const vision_result_t *r, const vc_config_t *c, float band
     *center_x = center_sum / n;
     return finite_value(*error);
 }
+
+static int control_band_error(const vision_result_t *r,const vc_config_t *c,float y,float *error,float *center)
+{
+    if(band_error(r,c,y,error,center))return 1;
+#if VISION_ROUTE_SWITCH
+    /* Current-frame BOTH edges only. Expand around the configured sample,
+     * bounded so near/far search regions cannot overlap. No history guessing. */
+    {
+        vc_config_t wide=*c;
+        wide.band_half_height=clamp((c->near_y-c->far_y)*0.45f,0,0.075f);
+        if(wide.band_half_height>c->band_half_height && band_error(r,&wide,y,error,center))return 1;
+        /* Racing_Line can remain visible above the fixed near band in a bend.
+         * Sample the closest actual traced strip, never an old frame center. */
+        if(y==c->near_y) {
+            float closest=2.0f;int row=-1,i;
+            for(i=56;i<=VISION_ROI_BOTTOM;++i)if(r->row_flags[i]) {
+                float d=absolute((float)i/(VISION_HEIGHT-1)-y);
+                if(d<closest){closest=d;row=i;}
+            }
+            if(row>=0){wide.band_half_height=.06f;
+                return band_error(r,&wide,(float)row/(VISION_HEIGHT-1),error,center);}
+        }
+    }
+#endif
+    return 0;
+}
+
+#if VISION_ROUTE_SWITCH
+static int current_partial_direction(const vision_result_t *r,const vc_config_t *c,float *target,int *strong,int *paired)
+{
+    vc_config_t strip=*c;
+    float sum=0,weights=0;
+    int n=0,y,first=-1,last=-1;
+    *strong=*paired=0;
+    if(r->status==VISION_LOW_CONTRAST||(r->status==VISION_TRACK&&!r->valid))return 0;
+    strip.band_half_height=.001f;strip.min_band_rows=1;
+    for(y=56;y<=100;++y) {
+        float e,x,w=y>=80?2.0f:1.0f;
+        if(!band_error(r,&strip,(float)y/(VISION_HEIGHT-1),&e,&x))continue;
+        if(r->row_flags[y]!=3)w*=.5f;
+        else ++*paired;
+        if(first<0)first=y;last=y;
+        sum+=w*e;weights+=w;++n;
+    }
+    if(n<6||weights<=0)return 0;
+    *strong=n>=8&&last-first>=7;
+    *target=clamp(c->kp*sum/weights,-1,1);
+    return finite_value(*target);
+}
+
+static int reference_preview_error(const vision_result_t *r,const vc_config_t *c,float *error,float *center)
+{
+    /* newnew main.c ImgDeal_GetMidError: weighted available middleline rows.
+     * Validate each row through the same measured/model consistency checks.
+     * Far bends contribute before the near center starts moving. */
+    float sum[2]={0,0},centers[2]={0,0},weights[2]={0,0},distant_scale=1.0f;
+    vc_config_t strip=*c;
+    int y,n=0,close_n=0;
+    strip.band_half_height=.001f;strip.min_band_rows=1;
+    for(y=40;y<=88;++y) {
+        float e,x,w=y>=60?14.0f:8.0f;
+        int band=y>=65?1:0;
+        if(!band_error(r,&strip,(float)y/(VISION_HEIGHT-1),&e,&x))continue;
+        if(r->row_flags[y]!=3)w*=.5f;
+        sum[band]+=w*e;centers[band]+=w*x;weights[band]+=w;++n;
+        if(band)++close_n;
+    }
+    if(n<6||weights[0]+weights[1]<=0)return 0;
+    /* Both directions contain consecutive bends with opposite directions. Finish the
+     * nearer visible bend before a distant reverse bend takes over steering.
+     * Retain some distant preview, bounded so it cannot cancel a clear nearer
+     * curve; the horizon moves automatically when that curve reaches row65. */
+    if(close_n>=6&&absolute(sum[1]/weights[1])>=.12f&&sum[0]*sum[1]<0) {
+        distant_scale=clamp(.35f*absolute(sum[1])/absolute(sum[0]),0,.20f);
+    }
+    *error=(sum[1]+distant_scale*sum[0])/(weights[1]+distant_scale*weights[0]);
+    *center=(centers[1]+distant_scale*centers[0])/(weights[1]+distant_scale*weights[0]);
+    return finite_value(*error);
+}
+
+static float corner_duty(vc_controller_t *c,const vision_result_t *r,
+                         float near_error,float far_error,int have_far,
+                         float target,float previous,float dt,float duty)
+{
+    float turn=absolute(target),actual=absolute(c->output.steering);
+    float transition=absolute(target-c->output.steering)*.5f;
+    float clear,centered,measured,boost,floor,ceiling;
+    if(actual>turn)turn=actual;
+    if(transition>turn)turn=transition;
+    clear=clamp((r->confidence-45.0f)/35.0f,0,1);
+    centered=clamp(1.0f-absolute(near_error)/.75f,0,1);
+    measured=clamp(r->measured_rows/12.0f,0,1);
+    boost=have_far?clear*centered*measured:0;
+    /* Opposite near/far bends and a servo still crossing center are not a
+     * straight. In B->A the return bends swap sides: finish the current bend
+     * at low speed before accelerating toward the newly visible corridor. */
+    if(have_far&&near_error*far_error<0)
+        boost*=1.0f-clamp((absolute(near_error)-.08f)/.22f,0,1)*
+                         clamp((absolute(far_error)-.10f)/.30f,0,1);
+    boost*=1.0f-clamp(transition/.50f,0,1);
+    /* Raise corner speed only with current paired preview and a centered
+     * chassis. At full evidence this is .77 of cruise (was .62); the large
+     * offset / single-edge floor stays .45-.52. */
+    floor=c->config.cruise_duty*(.45f+.07f*centered+.25f*boost);
+    /* Anticipate the requested bend, including while the physical command
+     * still points into the preceding bend. No straight-speed burst at zero.
+     * Missing far evidence disables the extra clear-lane boost; a large
+     * lateral offset returns to the old .45 floor. */
+    ceiling=c->config.cruise_duty*(1.0f-(.38f-.10f*boost)*clamp((turn-.15f)/.70f,0,1));
+    if(r->junction_rows)ceiling=c->config.cruise_duty*.45f;
+    if(duty<floor)duty=floor;
+    if(duty>ceiling)duty=ceiling;
+    /* Wait for sustained current two-edge geometry before using the extra
+     * straight speed. A newly visible bend revokes it in the same frame. */
+    if(have_far&&!r->junction_rows&&r->confidence>=70&&r->measured_rows>=40&&
+       absolute(near_error)<.12f&&absolute(far_error)<.16f&&turn<.18f) {
+        if(!c->straight_tracking){c->straight_tracking=1;c->straight_since_ms=c->last_frame_ms;}
+        if((uint32_t)(c->last_frame_ms-c->straight_since_ms)>=400U) {
+            float fast=clamp(c->config.cruise_duty*1.17f,0,c->config.duty_cap*.95f);
+            if(duty<fast)duty=fast;
+        }
+    } else c->straight_tracking=0;
+    if(duty>previous+c->config.duty_rise_per_s*dt)
+        duty=previous+c->config.duty_rise_per_s*dt;
+    return duty;
+}
+#endif
 
 void vc_observe(vc_controller_t *c, const vision_result_t *r,
                 uint32_t sequence, uint32_t frame_ms, uint32_t now)
@@ -182,21 +347,71 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     c->output.observation_valid = c->output.far_valid = 0;
     c->output.lateral = c->output.heading = 0;
     c->output.near_center_x = c->output.far_center_x = 0;
-    if ((uint32_t)(now - frame_ms) >= c->config.frame_timeout_ms || !r->valid ||
-        r->status != VISION_TRACK || r->confidence > 100 || r->confidence < c->config.min_coverage ||
-        !band_error(r, &c->config, c->config.near_y, &near_error, &c->output.near_center_x)) {
+    if ((uint32_t)(now - frame_ms) >= c->config.frame_timeout_ms || r->confidence > 100) {
+        c->stable_frames=0;
+        if(c->output.state==VC_RUNNING)vc_trip(c,VC_FAULT_VISION);
+        return;
+    }
+    if (!r->valid || r->status != VISION_TRACK || r->confidence < c->config.min_coverage ||
+        !control_band_error(r, &c->config, c->config.near_y, &near_error, &c->output.near_center_x)) {
         c->stable_frames = 0;
+        c->straight_tracking=0;
+#if VISION_ROUTE_SWITCH
+        /* Bounded turn search after a real, recent bend observation. Keeping
+         * motors at a low target rotates the chassis/camera; servo-only would
+         * not change the view. Never search from startup or straight evidence. */
+        {float current_target=0;int strong=0,paired=0,carry=0;
+        int current=current_partial_direction(r,&c->config,&current_target,&strong,&paired);
+        if(c->output.state==VC_RUNNING && (current||absolute(c->recovery_steer)>=.12f) &&
+           ((uint32_t)(now-c->last_valid_ms)<=300U||
+            (current&&strong&&(uint32_t)(now-c->last_valid_ms)<=1200U))) {
+            float step=c->config.steer_rate*dt;
+            float chosen=current?current_target:c->recovery_steer;
+            float search=chosen<0?-1.0f:1.0f;
+            search*=clamp(absolute(chosen),.60f,1.0f);
+            /* Current white-path steering is continuous across zero and the
+             * old .12 threshold. Do not jump from .119 to a .60 command. */
+            if(current)search=clamp(chosen*1.25f,-1,1);
+            /* A short modeled one-edge strip near center cannot establish a
+             * new straight. Retain some recent curvature until that CURRENT
+             * strip gives a clear new direction. Paired edges can unwind it. */
+            if(current&&strong&&!paired&&absolute(chosen)<.20f&&absolute(c->recovery_steer)>.35f){
+                search=clamp(search+c->recovery_steer*.85f*(1.0f-absolute(chosen)/.20f),-1,1);carry=1;}
+            if(current&&strong){c->have_partial=1;c->last_partial_ms=now;}
+            if(current&&search*c->output.steering<0)step*=2.0f;
+            else if(current&&absolute(search)<absolute(c->output.steering))step*=1.5f;
+            c->output.steering+=clamp(search-c->output.steering,-step,step);
+            c->output.duty=clamp(c->output.duty+(current?c->config.duty_rise_per_s*dt:0),0,c->config.cruise_duty*.45f);
+            c->output.recovering=1;c->invalid_frames=1;c->derivative=0;
+            c->output.search_source=(uint8_t)(current?(carry?3:2):1);
+            return;
+        }}
+        if(c->output.state==VC_RUNNING && c->invalid_frames<2 &&
+           (uint32_t)(now-c->last_valid_ms)<=40U) {
+            ++c->invalid_frames;c->output.duty=0;c->derivative=0;
+            return; /* No motor drive on missing evidence, no guessed steering. */
+        }
+#endif
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_VISION);
         return;
     }
+#if !VISION_ROUTE_SWITCH
     if (absolute(near_error) > c->config.max_lateral) {
         c->stable_frames = 0;
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_OFFSET);
         return;
     }
-    have_far = band_error(r, &c->config, c->config.far_y, &far_error, &c->output.far_center_x);
+#endif
+    have_far = control_band_error(r, &c->config, c->config.far_y, &far_error, &c->output.far_center_x);
+#if VISION_ROUTE_SWITCH
+    have_far=reference_preview_error(r,&c->config,&far_error,&c->output.far_center_x)||have_far;
+#endif
     if (have_far) heading = far_error - near_error;
     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
+    if(c->invalid_frames){c->previous_lateral=near_error;c->derivative=0;}
+    c->invalid_frames=0;c->last_valid_ms=frame_ms;
+    c->output.recovering=0;
+    c->output.search_source=0;
     c->output.observation_valid = 1;
     c->output.far_valid = (uint8_t)have_far;
     c->output.lateral = near_error;
@@ -208,17 +423,47 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         if (dt <= 0 || dt >= c->config.frame_timeout_ms * 0.001f) { vc_trip(c, VC_FAULT_FRAME); return; }
         derivative = (near_error - c->previous_lateral) / dt;
         c->derivative += dt / (c->config.derivative_filter_s + dt) * (derivative - c->derivative);
+#if VISION_ROUTE_SWITCH
+        /* Preview the bend before the near point has moved. Keep the calibrated
+         * far offset itself; subtracting near can cancel a useful turn command. */
+        /* Keep raw lateral telemetry, but saturate its steering contribution.
+         * A measured/clipped-edge lane is not discarded at an arbitrary offset
+         * before the vehicle has had time to turn. Missing evidence still zeros. */
+        {float preview_scale=1.0f;
+        /* When the near road center has crossed to the other side, prioritize
+         * centering instead of holding the previous bend from far preview.
+         * Continuous taper avoids switching abruptly at a tiny center error. */
+        if(have_far&&near_error*far_error<0)
+            preview_scale=clamp((.22f-absolute(near_error))/.18f,.05f,1.0f);
+        target=c->config.kp*clamp(near_error,-c->config.max_lateral,c->config.max_lateral)+
+            c->config.kd*c->derivative+
+            (have_far?preview_scale*c->config.heading_gain*clamp(far_error,-c->config.max_lateral,c->config.max_lateral):0);}
+#else
         target = c->config.kp * near_error + c->config.kd * c->derivative + c->config.heading_gain * heading;
+#endif
         if (!finite_value(target)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
         target = clamp(target, -1, 1);
-        c->output.steering += clamp(target - c->output.steering,
-                                   -c->config.steer_rate * dt, c->config.steer_rate * dt);
+#if VISION_ROUTE_SWITCH
+        c->recovery_steer=target;
+#endif
+        {float rate=c->config.steer_rate;
+#if VISION_ROUTE_SWITCH
+        /* Release an excessive bend command faster than building it up.
+         * A reversal still passes smoothly through center with bounded rate. */
+        if(absolute(target)<absolute(c->output.steering)||target*c->output.steering<0)rate*=1.5f;
+        else if(absolute(near_error)>.35f&&target*near_error>0)rate*=1.5f;
+#endif
+        c->output.steering += clamp(target - c->output.steering,-rate*dt,rate*dt);}
         if (!mol_step(&c->config.motor, near_error, heading, c->output.steering,
                       r->confidence * .01f, have_far, c->config.cruise_duty,
                       c->config.duty_cap, c->config.duty_rise_per_s,
                       c->output.duty, dt, &target_duty)) {
             vc_trip(c, VC_FAULT_NUMERIC); return;
         }
+#if VISION_ROUTE_SWITCH
+        target_duty=corner_duty(c,r,near_error,far_error,have_far,target,
+                               c->output.duty,dt,target_duty);
+#endif
         c->output.duty = target_duty;
     } else c->output.duty = c->output.steering = 0;
     c->previous_lateral = near_error;

@@ -5,6 +5,8 @@ typedef struct {
     uint32_t samples,sample_ms,faults;
     uint32_t fault_control_age_ms,fault_sample_age_ms,fault_interval_ms;
     int32_t total3,total4;
+    int16_t fault_raw3,fault_raw4,fault_target_right,fault_target_left;
+    uint16_t fault_pwm_right,fault_pwm_left;
     int16_t raw3,raw4,target_right,target_left,measured_right,measured_left;
     uint16_t pwm_right,pwm_left,max_ticks,kp_q8,ki_q8;
     int8_t sign3,sign4;

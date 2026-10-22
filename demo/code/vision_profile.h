@@ -1,6 +1,16 @@
 #ifndef VISION_PROFILE_H
 #define VISION_PROFILE_H
 
+#ifndef VISION_ROUTE_SWITCH
+#define VISION_ROUTE_SWITCH 0
+#endif
+#ifndef VISION_MIDTERM_ROUTE_TRIAL
+#define VISION_MIDTERM_ROUTE_TRIAL 0
+#endif
+#if VISION_MIDTERM_ROUTE_TRIAL
+#include "midterm_route_profile.h"
+#endif
+
 /* Geometry is expressed relative to the camera image, NOT a particular track
  * width, screenshot coordinate, lap time or a stored turn sequence. Defaults
  * preserve the previous 188x120 observation profile. Mounting still requires
@@ -142,7 +152,11 @@
 #if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
 #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
 #endif
-#if VISION_MIDTERM_AUTONOMOUS
+#if VISION_ROUTE_SWITCH
+#define VISION_FIELD_BUILD "MIDTERM_C26_19"
+#elif VISION_MIDTERM_ROUTE_TRIAL
+#define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+#elif VISION_MIDTERM_AUTONOMOUS
 #define VISION_FIELD_BUILD "MIDTERM_AUTO_1"
 #elif defined(VISION_MIDTERM_TRAINING) && VISION_MIDTERM_TRAINING
 #define VISION_FIELD_BUILD "MIDTERM_TRAIN_1"

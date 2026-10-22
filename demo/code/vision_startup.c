@@ -84,3 +84,58 @@ void vd_startup_poll_deadline(uint32_t now)
     }
 }
 #endif
+
+#if VISION_ROUTE_SWITCH
+/* C26 level authority: valid lane starts/restarts; OFF always revokes drive.
+ * Explicit UART STOP/pause still inhibits until a deliberate OFF cycle. */
+static uint8_t route_operator_stop,route_released;
+void vd_route_switch_init(void){route_operator_stop=route_released=0;}
+void vd_route_switch_cancel(void){route_operator_stop=1;}
+void vd_route_switch_mode_stop(void)
+{
+    uint8_t stopped=route_operator_stop;
+    vision_drive_stop();route_operator_stop=stopped;
+}
+void vd_route_switch_poll(uint32_t now)
+{
+    vd_speed_info_t s;
+    if(!app_mode_allows(APP_MODE_DRIVE)) {
+        /* STOP/query while already OFF must not inhibit the next ON. */
+        if(app_mode_allows(APP_MODE_OBSERVE))route_operator_stop=0;
+        if(app_mode_allows(APP_MODE_OBSERVE) && !route_released) {
+            vision_drive_speed_get(&s);
+            if(s.samples && (uint32_t)(now-s.sample_ms)<=20U) {
+                uint32_t mask=__get_PRIMASK();__disable_irq();
+                vd.guard_running=0;vd.probe_active=0;vd_output_zero();vd.guard_faults=0;
+                vc_clear_fault(&vd.control);__set_PRIMASK(mask);
+                (void)vision_drive_speed_enable(1);
+                route_released=1;route_operator_stop=0;
+            }
+        }
+        return;
+    }
+    route_released=0;
+    if(app_mode_change_pending() || route_operator_stop)return;
+    /* Missing vision is a zero-output wait, not a permanent start lock.
+     * Do not auto-clear numeric/configuration/encoder/offset/runtime faults. */
+    if(vd.control.output.state==VC_FAULT && vd.control.output.faults &&
+       !(vd.control.output.faults&~(VC_FAULT_VISION|VC_FAULT_FRAME))) {
+        uint32_t mask=__get_PRIMASK();__disable_irq();
+        vd.guard_running=0;vd_output_zero();
+        vd.guard_faults&=~(uint32_t)(VC_FAULT_VISION|VC_FAULT_FRAME);
+        vc_clear_fault(&vd.control);__set_PRIMASK(mask);
+        return; /* Reacquire five new valid frames before starting. */
+    }
+    if(vd.control.output.state!=VC_DISARMED)return;
+    vision_drive_speed_get(&s);
+    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>20U ||
+       vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
+    {
+        uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
+        accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
+            vc_arm_local(&vd.control,now,vd.hardware_ready);
+        if(accepted)vd_output_apply();
+        __set_PRIMASK(mask);
+    }
+}
+#endif

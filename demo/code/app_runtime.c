@@ -72,7 +72,13 @@ void app_runtime_run(void)
     vision_drive_init(now);
     {
         vd_profile_t saved;
-        if (vs_load(&saved) && vision_drive_configure(&saved)) {
+        /* The isolated route target uses its compiled measured profile.
+         * A stale saved profile cannot replace it or schedule auto-start. */
+#if !VISION_MIDTERM_ROUTE_TRIAL
+        if (vs_load(&saved)) (void)vision_drive_configure(&saved);
+#endif
+        vision_drive_get_profile(&saved);
+        {
             track.model.axis_near_x=saved.control.axis_near_x;
             track.model.axis_far_x=saved.control.axis_far_x;
             track.model.near_y=saved.control.near_y;track.model.far_y=saved.control.far_y;
@@ -91,14 +97,23 @@ void app_runtime_run(void)
         int selector_changed=app_mode_take_change();
         if (selector_changed) {
 #if VISION_DRIVE_ENABLE
+#if VISION_ROUTE_SWITCH
+            vd_route_switch_mode_stop();
+#else
             vision_drive_stop();
+#endif
             {
                 uint8_t partial=field_parser.active;
                 vf_init(&field_parser);
                 if(partial)field_parser.active=field_parser.discarded=1;
             }
 #endif
-            vision_midterm_reset();tb_reset(&track);invalidate_result();fresh=0;
+#if !VISION_ROUTE_SWITCH
+            vision_midterm_reset();
+#else
+            vision_midterm_route_reset();
+#endif
+            tb_reset(&track);invalidate_result();fresh=0;
         }
         uint8_t commands[16];
         uint8_t help_requested = 0, reset_requested = 0;
@@ -247,6 +262,9 @@ void app_runtime_run(void)
                     vision_midterm_reset();
                     ++history_resets;
                 }
+#if VISION_ROUTE_SWITCH
+                vision_midterm_route_enable((uint8_t)app_mode_allows(APP_MODE_DRIVE));
+#endif
                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
                 if (track.configured) {
                     tb_extract(&track.model, &image_two_value[0][0], &result, &track_observation);
@@ -293,7 +311,7 @@ void app_runtime_run(void)
         /* 行驶时限量输出一行，避免原多行浮点诊断阻塞 UART，挤占 100ms
          * 相机租约。停下后恢复完整视觉/标定诊断，不降低安全中断频率。 */
         if (mode == 't' && vision_drive_output()->state == VC_RUNNING) {
-            if (training_enabled() && !vision_drive_is_local() && (uint32_t)(now - last_run_text) >= 100U) {
+            if (training_enabled() && (!vision_drive_is_local() || VISION_ROUTE_SWITCH) && (uint32_t)(now - last_run_text) >= 100U) {
                 const vc_output_t *run = vision_drive_output();
                 app_console_printf("[RUN] n=%lu ms=%lu e=%.3f h=%.3f u=%.3f pwm=%.3f q=%u age=%lu\r\n",
                        (unsigned long)frames,(unsigned long)now,(double)run->lateral,
@@ -305,6 +323,7 @@ void app_runtime_run(void)
             last_text = now;
         }
 #endif
+        if(mode=='t')vision_telemetry_trace_poll(now);
         if (training_enabled() && mode == 't' && (uint32_t)(now - last_text) >= 500U) {
             vision_report_t report;
             report.lane=&result;report.track=&track;report.observation=&track_observation;

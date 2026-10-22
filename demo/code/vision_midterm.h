@@ -47,12 +47,22 @@ typedef struct {
     uint8_t left[VISION_HEIGHT];
     uint8_t right[VISION_HEIGHT];
     uint8_t center[VISION_HEIGHT];
+    /* C26 single-edge center is clipped for drawing when the modeled center
+     * lies outside view. Control reconstructs its signed value from the real
+     * edge and row_width, rather than treating this drawable value as raw. */
     /* 0: invalid, 1: left measured/right inferred, 2: right measured/left inferred,
-     * 3: both measured. Inferred rows are never reported as two-edge detections. */
+     * 3: both measured, 4: junction center joining CURRENT near/exit anchors.
+     * Inferred/junction rows are never reported as two-edge detections. */
     uint8_t row_flags[VISION_HEIGHT];
+    uint16_t row_width[VISION_HEIGHT]; /* Full width, including a clipped modeled edge. */
     uint8_t row_threshold[VISION_HEIGHT]; /* Actual threshold used by each row. */
     uint8_t threshold, contrast, gray_low, gray_high, white_percent;
     uint8_t measured_rows, inferred_rows, confidence, valid;
+    uint8_t junction_rows; /* Current white opening, bounded by current edge evidence. */
+    uint8_t junction_anchors; /* Current measured boundary rows supporting that opening. */
+    uint8_t roundabout_state; /* 0 idle, 1 enter, 2 follow, 3 exit, 4 cooldown. */
+    int8_t roundabout_side; /* Island relative to travel: -1 left, +1 right. */
+    uint8_t roundabout_rows; /* Current real island-side boundary support. */
     uint8_t adaptive_rows; /* ROI rows whose threshold differs from global Otsu. */
     uint8_t ambiguous_rows; /* Examined rows rejected for an exact best-score tie. */
     vision_status_t status;
@@ -63,6 +73,10 @@ typedef struct {
 } vision_result_t;
 
 void vision_midterm_reset(void);
+/* C26 route state is separate from the learned camera widths. OFF disables
+ * and resets recognition; enabling never starts an actuator in this module. */
+void vision_midterm_route_reset(void);
+void vision_midterm_route_enable(uint8_t enabled);
 void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_t *out);
 /* Input gray/binary buffers must be separate, each VISION_WIDTH*VISION_HEIGHT.
  * Preview output needs VISION_PREVIEW_WIDTH*VISION_PREVIEW_HEIGHT bytes.
