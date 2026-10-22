@@ -3,17 +3,22 @@
 /* Paired/curve mode boundaries are diagnostic labels, not a step in speed.
  * Only actual requested steering and remaining lateral margin reduce the
  * requested scale. Existing duty shaping also accounts for turn transitions. */
-static inline unsigned vt_route_ticks(unsigned mode,unsigned maximum,float steering,float requested,float lateral)
+static inline unsigned vt_route_ticks(unsigned maximum,float steering,float requested,float lateral,
+                                      float paired,float edge)
 {
     float ticks,turn=steering<0?-steering:steering,offset=lateral<0?-lateral:lateral;
     float ahead=requested<0?-requested:requested;
     if(ahead>turn)turn=ahead; /* Anticipate a bend before the servo catches up. */
-    if(!mode)return maximum>MT_ROUTE_BASE_TICKS?MT_ROUTE_BASE_TICKS:maximum;
-    if(mode==3)ticks=MT_ROUTE_EDGE_TICKS;
-    else {
+    {
         turn=(turn-.15f)/.85f;if(turn<0)turn=0;if(turn>1)turn=1;
         ticks=MT_ROUTE_FAST_TICKS-(MT_ROUTE_FAST_TICKS-MT_ROUTE_CORNER_TICKS)*turn;
     }
+    /* A one-row boundary flicker must not switch 132 -> 92 -> 50 ticks.
+     * Both weights come from validated CURRENT geometry. Missing preview,
+     * recovery and STOP supply zero weights immediately. */
+    {float support=paired>edge?paired:edge;
+     ticks=MT_ROUTE_BASE_TICKS+(MT_ROUTE_EDGE_TICKS-MT_ROUTE_BASE_TICKS)*support+
+        (ticks-MT_ROUTE_EDGE_TICKS)*paired;}
     /* |lateral|=1 places the inferred center one half-road-width away.
      * Restore the conservative base continuously as that margin is consumed. */
     offset=(offset-.30f)/.70f;if(offset<0)offset=0;if(offset>1)offset=1;

@@ -137,6 +137,30 @@ static void projected_cross(double cy,double offset,double yaw,int crossing)
 }
 int main(void)
 {
+    /* Identical current road, one measured boundary becomes modeled a row at
+     * a time. The 24-row paired label must not abruptly remove motor demand. */
+    for(int side=-1;side<=1;side+=2){
+        int previous=0;
+        switch_boot(0);
+        for(int paired=28;paired>=16;--paired){
+            set_lane(side*3);route_lane.measured_rows=(uint8_t)paired;
+            route_lane.inferred_rows=(uint8_t)(VISION_ROI_BOTTOM-VISION_ROI_TOP+1-paired);
+            for(int y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y){
+                route_lane.row_width[y]=81;
+                if(y<VISION_ROI_TOP+paired)continue;
+                route_lane.row_flags[y]=(uint8_t)(side<0?1:2);
+                if(side<0)route_lane.right[y]=VISION_INVALID_X;
+                else route_lane.left[y]=VISION_INVALID_X;
+            }
+            switch_wait(180,1);
+            int target=info().target_right>info().target_left?info().target_right:info().target_left;
+            if(paired==24||paired==23)printf("SUPPORT paired=%d side=%d target=%d\n",paired,side,target);
+            if(previous&&abs(previous-target)>8)
+                printf("SUPPORT STEP paired=%d before=%d after=%d\n",paired,previous,target);
+            CHECK(vision_drive_is_local()&&(!previous||abs(previous-target)<=8));
+            previous=target;
+        }
+    }
     /* A valid FOLLOW label must not cancel speed on the SAME current road.
      * Metadata comes through the public controller input, not private ring
      * state injection. Weak/current-missing geometry still revokes it. */
@@ -246,6 +270,13 @@ int main(void)
             tangent_road(cy,1,mirror);
             for(int i=0;i<4;++i){
                 vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(2,1);
+                /* Regression: after lower cap leaves ROI, admission and
+                 * actual steering must survive from CURRENT same-side pixels.
+                 * C30 drops all guides here and returns toward straight. */
+                if(cy<=400&&cy>=392){
+                    CHECK(route_lane.valid&&route_lane.roundabout_state==1&&route_lane.entry_guide_rows>=12);
+                    CHECK(vision_drive_is_local()&&side*vision_drive_output()->steering>.80f);
+                }
                 if(route_lane.entry_guide_rows&&vision_drive_is_local()){
                     ++guided;float value=side*vision_drive_output()->steering;if(value>turn)turn=value;
                     CHECK(route_lane.roundabout_state==1&&route_lane.valid);
@@ -253,7 +284,7 @@ int main(void)
             }
         }
         printf("TANGENT CONTROL side=%d guided=%d peak_turn=%.3f width90=%u\n",side,guided,(double)turn,width);
-        CHECK(guided>=4&&turn>.35f&&route_lane.row_width[90]==width);
+        CHECK(guided>=4&&turn>.80f&&route_lane.row_width[90]==width);
         memset(turn_gray,210,sizeof(turn_gray));vision_midterm_process(turn_gray,turn_binary,&route_lane);
         switch_wait(2,1);CHECK(!route_lane.entry_guide_rows&&!pwm[0]&&!pwm[1]);
     }

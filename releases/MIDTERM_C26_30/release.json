@@ -1,0 +1,46 @@
+{
+  "version": "MIDTERM_C26_30",
+  "base_version": "MIDTERM_C26_29",
+  "status": "built_not_flashed",
+  "sha256": "B4CA06EA3B5C2695E2063002EE78B6BC84B65DA81ED19B268737834DCBCB77EF",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "c26_startup_unchanged": true,
+  "change": "Fit all CURRENT outside-edge points for clipped tangent island, retain max residual 4px and add RMS <=2px",
+  "source_session": "camera-g-20261022-215128-961-921fc390",
+  "source_commit": "845367268f435068b286422ed692b362ad994336 (C29 working changes retained, C30 delta applied)",
+  "evidence": "evidence/C26_30_PREVIEW_REVIEW.json",
+  "code": 86728,
+  "ro": 13644,
+  "rw": 212,
+  "zi": 196604,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300874,
+    "turn": 374625,
+    "ring": 266,
+    "projection": 578909,
+    "field_preview": 40342,
+    "asan": true,
+    "c29_new_regression_failures": 40,
+    "independent_poses": 57,
+    "changed_poses": 5
+  },
+  "limitations": [
+    "Preview images, not full-resolution sensor frames",
+    "Hand-pushed/repositioned static samples, no synchronized motion",
+    "Physical tangent entry, exit and full-course acceptance pending"
+  ],
+  "c29_speed_and_telemetry_preserved": true,
+  "source_sha256": {
+    "demo/code/vision_profile.h": "D0A565A8BDD160979289134214D41E0E6CF7487B875D904498F52E8ED67D1580",
+    "demo/code/vision_reference_route.h": "ABAB5A3E01AA05167F7DCFFDCAD5B9FD78054B6338F5662CDAADBAB1574E937B",
+    "demo/code/vision_speed.c": "5C4D331ACB5A064BBE1C36CD928E00945C58024B90CAE0DB4E6967C8C17534DA",
+    "demo/code/vision_control.c": "4EB2B1C89EC64B4C3CF5780627475E1CED52E092470E24CB8DE63030EC83677E",
+    "demo/code/app_runtime.c": "C219EF1AB7ECF7B87486FBC0F8092DC6BEE18769B7B09545FC41F960C8D7900D",
+    "demo/mdk/midterm_switch.uvprojx": "6B2ABC9E5F995B4ADEAA2EF8AAC833745948430A401AB5344E13297072168978",
+    "tests/vision/test_tangent_preview.c": "BA912CB3CD9F0F58233ED525216DF36A9D55BA7E492F56FC36AF4A45CEB2F373"
+  }
+}

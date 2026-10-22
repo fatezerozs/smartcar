@@ -27,4 +27,11 @@ static int vj_current_bridge(const vision_result_t *r)
 
 static int vj_paired_support(const vision_result_t *r)
 {return r->measured_rows>=24||vj_current_bridge(r);}
+
+static float vj_paired_weight(const vision_result_t *r)
+{
+    float weight=(r->measured_rows-8.0f)/16.0f;
+    if(vj_current_bridge(r))return 1.0f;
+    return weight<0?0:(weight>1?1:weight);
+}
 #endif

@@ -1,0 +1,35 @@
+{
+  "version": "MIDTERM_C26_31",
+  "problem": "ENTER loses current island evidence and guide when lower cap crosses ROI bottom; ordinary straight corridor remains",
+  "field_observation": "Operator reports essentially straight traversal, no new synchronized RUN log supplied",
+  "physical_cause_confirmed": false,
+  "production_files_changed_since_c30": [
+    "vision_midterm.h",
+    "vision_profile.h",
+    "vision_reference_route.h",
+    "vision_telemetry.c"
+  ],
+  "c30_regression": "New actual vision_drive/PWM continuity assertion fails against isolated C30 source",
+  "new_entry_from_bottom_clip_allowed": false,
+  "rules": [
+    "Previously confirmed ENTER with prior lower cap near ROI bottom",
+    "Current same-side dark component and nearby visible top cap",
+    ">=10 current support rows, >=8 connected rows, >=9 coarse-row span",
+    "Current learned-width corridor and outside-line residual tests",
+    "Existing per-row white clearance checks; no historical pixels or timed steer hold"
+  ],
+  "tests": {
+    "c26": 300874,
+    "turn": 374774,
+    "ring": 266,
+    "projection": 801869,
+    "preview": 40342,
+    "normal": true,
+    "asan": true
+  },
+  "limitations": [
+    "Fixed-heading map projection does not follow control outputs",
+    "No calibrated vehicle/camera dynamics or physical entry acceptance",
+    "Existing grayscale dataset is hand-pushed/repositioned, not synchronized motion"
+  ]
+}

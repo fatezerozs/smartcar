@@ -1,6 +1,8 @@
+> 当前状态入口（2026-10-23）：本页保留测试工具/协议及较早变体说明，不代表当前实车验收或启动条件。现状见 [项目设计与演进档案](../../docs/PROJECT_EVOLUTION.md)；当前主程序为 C31，仍用 C26 启停。
+
 # 视觉静态调试与逐飞助手 V2
 
-当前说明：2026-10-19。工程入口 `demo/mdk/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。不启动屏幕、故障编码器、原速度 PID/PIT0。现场版已编入控制器，上电未标定、PWM 配置为零且停车；新增串口调参见 [MIDTERM_FIELD](../../docs/MIDTERM_FIELD.md)。
+当前说明：2026-10-19。工程入口 `demo/mdk/rt1064.uvprojx`，目标 `nor_sdram_zf_dtcm`。不启动屏幕、故障编码器、原速度 PID/PIT0。现场版已编入控制器，上电未标定、PWM 配置为零且停车；新增串口调参见 [MIDTERM_FIELD](../../docs/archive/history/MIDTERM_FIELD.md)。
 
 ## 识别路径
 
@@ -67,4 +69,4 @@
 - 叠线必须位于真实赛道两边之间。`valid=1` 仍可能是背景误识别；不要只看 q 高。保留对应灰度/二值图与日志，确认安装和曝光后再调几何参数。
 - 无实车时只运行合成回归、检查图像链路和偏差方向；它们不能证明停车距离、速度或全路线稳定性。
 
-最新测试及完整构建状态见 [验证记录](../../docs/VERIFICATION.md)。
+最新测试及完整构建状态见 [验证记录](../../docs/archive/history/VERIFICATION.md)。

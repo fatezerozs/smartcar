@@ -10,6 +10,32 @@
 static uint32_t trace_dump_run,trace_dump_revision,trace_dump_ms;
 static unsigned trace_dump_index,trace_dump_phase;
 #endif
+void vision_telemetry_run(uint32_t frames,uint32_t now,uint32_t frame_age,
+                          uint32_t max_process,uint32_t max_gap,
+                          const vision_result_t *lane,const tb_filter_t *track)
+{
+#if VISION_ROUTE_SWITCH && VISION_ENCODER_ENABLE
+    vd_speed_info_t speed;const vc_output_t *run=vision_drive_output();
+    vision_drive_speed_get(&speed);
+    /* One bounded nonblocking integer record replaces three floating-point
+     * lines. scale applies to errors/steering/demand/support, not wheel ticks.
+     * pwm_hz_cfg is the requested carrier, NOT an oscilloscope measurement. */
+    app_console_printf("[RUN] n=%lu ms=%lu age=%lu process_max=%lu gap_max=%lu enc_age=%lu e=%d h=%d u=%d duty=%d target=%d/%d measured=%d/%d pwm=%u/%u enabled=%u faults=%lu q=%u both=%u inferred=%u paired=%u edge=%u ring=%u side=%d guide=%u ring_seen=%u ring_candidate=%d ring_votes=%u bayes=%u accepted=%u pwm_hz_cfg=%u scale=1000\r\n",
+        (unsigned long)frames,(unsigned long)now,(unsigned long)frame_age,
+        (unsigned long)max_process,(unsigned long)max_gap,(unsigned long)(now-speed.sample_ms),
+        (int)(run->lateral*1000),(int)(run->heading*1000),(int)(run->steering*1000),
+        (int)(run->duty*1000),
+        speed.target_right,speed.target_left,speed.measured_right,speed.measured_left,
+        speed.pwm_right,speed.pwm_left,speed.enabled,(unsigned long)(speed.faults|run->faults),
+        lane->confidence,lane->measured_rows,lane->inferred_rows,
+        (unsigned)(run->paired_support*1000),(unsigned)(run->edge_support*1000),
+        lane->roundabout_state,lane->roundabout_side,lane->entry_guide_rows,
+        lane->roundabout_evidence,lane->roundabout_candidate,lane->roundabout_votes,
+        (unsigned)track->result.candidate,track->result.accepted,(unsigned)VISION_MOTOR_PWM_HZ);
+#else
+    (void)frames;(void)now;(void)frame_age;(void)max_process;(void)max_gap;(void)lane;(void)track;
+#endif
+}
 void vision_telemetry_trace_poll(uint32_t now)
 {
 #if VISION_ROUTE_SWITCH && VISION_DUAL_UART_ENABLE
@@ -171,9 +197,9 @@ void vision_telemetry_report(const vision_report_t *d)
                        coord(d->lane->left[90]), coord(d->lane->center[90]), coord(d->lane->right[90]),
                        d->lane->row_width[90],d->lane->row_flags[90],
                         (unsigned long)d->dropped_copies,d->lane->junction_rows,d->lane->junction_anchors);
-                app_console_printf("[VISION2] age_ms=%lu proc_ms=%lu history_reset=%lu row90_thr=%u local_rows=%u ambiguous=%u ring=%u ring_side=%d ring_rows=%u path_fallback=%u entry_guide=%u\r\n",
+                app_console_printf("[VISION2] age_ms=%lu proc_ms=%lu history_reset=%lu row90_thr=%u local_rows=%u ambiguous=%u ring=%u ring_side=%d ring_rows=%u path_fallback=%u entry_guide=%u ring_seen=%u ring_candidate=%d ring_votes=%u\r\n",
                        (unsigned long)(uint32_t)(d->now - d->last_frame), (unsigned long)d->process_ms,
                        (unsigned long)d->history_resets, d->lane->row_threshold[90], d->lane->adaptive_rows,
-                       d->lane->ambiguous_rows,d->lane->roundabout_state,d->lane->roundabout_side,d->lane->roundabout_rows,d->lane->path_fallback,d->lane->entry_guide_rows);
+                       d->lane->ambiguous_rows,d->lane->roundabout_state,d->lane->roundabout_side,d->lane->roundabout_rows,d->lane->path_fallback,d->lane->entry_guide_rows,d->lane->roundabout_evidence,d->lane->roundabout_candidate,d->lane->roundabout_votes);
             }
 }

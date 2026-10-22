@@ -24,6 +24,7 @@ typedef struct {
     uint32_t faults;
     float lateral, heading, steering, duty;
     float near_center_x, far_center_x; /* 双边实测中点 / (W-1)，供居中直道标定。 */
+    float paired_support, edge_support; /* Current geometry weights [0,1], not probabilities. */
     uint8_t observation_valid, far_valid;
     uint8_t recovering; /* Fresh images, temporarily missing lane, bounded turn search. */
     uint8_t search_source; /* 0:none, 1:history, 2:current partial, 3:current edge + curvature. */

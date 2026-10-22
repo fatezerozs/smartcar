@@ -45,6 +45,14 @@ static void exit_opening(int side)
     for(y=84;y<=110;++y)for(x=side<0?94:0;x<=(side<0?VISION_WIDTH-1:94);++x)
         gray[y*VISION_WIDTH+x]=210;
 }
+static void clipped_island(int side)
+{
+    road(0);
+    for(int y=35;y<=95;++y)for(int x=0;x<=100;++x)gray[y*VISION_WIDTH+x]=210;
+    for(int y=45;y<=85;++y)for(int x=0;x<=50;++x){int dx=x-10,dy=y-65;
+        if(dx*dx*20*20+dy*dy*40*40<=40*40*20*20)gray[y*VISION_WIDTH+x]=30;}
+    if(side>0)mirror();
+}
 int main(void)
 {
     int side,x,y;
@@ -63,15 +71,29 @@ int main(void)
     /* Side-clipped dark core, with upper/lower white caps and straight
      * outside main edge. Both mirror directions must still enter. */
     for(side=-1;side<=1;side+=2){
-        boot(1);road(0);
-        for(y=35;y<=95;++y)for(x=0;x<=100;++x)gray[y*VISION_WIDTH+x]=210;
-        for(y=45;y<=85;++y)for(x=0;x<=50;++x){int dx=x-10,dy=y-65;
-            if(dx*dx*20*20+dy*dy*40*40<=40*40*20*20)gray[y*VISION_WIDTH+x]=30;}
-        if(side>0)mirror();
+        boot(1);clipped_island(side);
         process(3);CHECK(lane.roundabout_state==0); /* Clipped case needs five votes. */
         process(3);CHECK(lane.roundabout_state==1&&lane.roundabout_side==side&&lane.valid);
         road(side);process(6);CHECK(lane.roundabout_state==2);
         road(-side);process(14);CHECK(lane.roundabout_state==0); /* No stale inner side. */
+    }
+    for(side=-1;side<=1;side+=2){
+        /* Bayesian ENTRY agreement shortens only the clipped confirmation.
+         * Opposite hints, absent islands, OFF and consumed hints add no votes. */
+        boot(1);clipped_island(side);
+        for(int i=0;i<3;++i){vision_midterm_route_hint(side);process(1);}
+        CHECK(lane.valid&&lane.roundabout_state==1&&lane.roundabout_side==side);
+        boot(1);clipped_island(side);
+        for(int i=0;i<3;++i){vision_midterm_route_hint(-side);process(1);}
+        CHECK(lane.roundabout_state==0);
+        boot(1);clipped_island(side);vision_midterm_route_hint(side);process(3);
+        CHECK(lane.roundabout_state==0); /* One hint cannot be replayed. */
+        boot(1);road(0);
+        for(int i=0;i<8;++i){vision_midterm_route_hint(side);process(1);}
+        CHECK(lane.roundabout_state==0);
+        boot(0);clipped_island(side);
+        for(int i=0;i<8;++i){vision_midterm_route_hint(side);process(1);}
+        CHECK(lane.roundabout_state==0);
     }
     vision_midterm_reset();vision_midterm_route_enable(1);island(-1);process(4);
     CHECK(lane.roundabout_state==0); /* No learned geometry, no island arm. */

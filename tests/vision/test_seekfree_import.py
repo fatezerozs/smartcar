@@ -14,6 +14,16 @@ spec.loader.exec_module(module)
 
 
 class ImportTests(unittest.TestCase):
+    def test_compact_run_units_and_embedded_speed(self):
+        rows = module.split_segments(
+            '[RUN] n=1 ms=100 e=-200 h=100 u=-300 duty=145 target=90/80 '
+            'measured=89/81 pwm=220/240 enabled=1 faults=0 q=85 scale=1000\n')
+        self.assertEqual(rows[0]['lateral_min_max'], [-0.2, -0.2])
+        self.assertEqual(rows[0]['steering_min_max'], [-0.3, -0.3])
+        self.assertEqual(rows[0]['speed_sample_count'], 1)
+        self.assertEqual(rows[0]['speed_rows'][0]['pwm_R/L'], '220/240')
+        self.assertEqual(rows[0]['run_rows'][0]['e'], -200)  # Source fields stay raw.
+
     def test_multiple_runs_timestamp_prefix_and_repeated_retained_stop(self):
         text = ('[12:00:01.000] [RUN] n=1 ms=1000 e=-0.2 h=0 u=0.3 pwm=0.145\n'
                 '[SPEED] ms=1001 raw3_L=-15 raw4_R=16 pwm_R/L=190/200\n'

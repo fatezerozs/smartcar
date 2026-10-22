@@ -55,5 +55,8 @@ void tb_extract(const tb_model_t *model, const uint8_t *binary,
 int tb_update(tb_filter_t *filter, const tb_observation_t *observation,
               uint32_t sequence, uint32_t frame_ms);
 void tb_poll(tb_filter_t *filter, uint32_t now_ms);
+/* Navigation adapter: only a trained, accepted, fresh ENTRY hypothesis can
+ * reinforce same-side pixel geometry. Other states/unknown return zero. */
+int tb_route_hint(const tb_filter_t *filter, uint32_t now_ms);
 const char *tb_state_name(tb_state_t state);
 #endif

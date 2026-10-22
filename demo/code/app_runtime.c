@@ -63,6 +63,9 @@ void app_runtime_run(void)
     uint32_t now = timer_get(GPT_TIM_1), last_frame = now, fps_start = now;
     uint32_t fps_frames = 0, fps_x10 = 0, dropped_copies = 0;
     uint32_t process_ms = 0, history_resets = 0;
+#if VISION_ROUTE_SWITCH
+    uint32_t max_process_ms=0,max_frame_gap_ms=0;
+#endif
     (void)app_mode_take_change(); /* Initial settled boot position is not a runtime switch. */
     vision_midterm_reset();
     tb_default_model(&track_model);
@@ -258,12 +261,17 @@ void app_runtime_run(void)
                 ++dropped_copies;
             } else {
                 uint32_t process_start = timer_get(GPT_TIM_1);
+#if VISION_ROUTE_SWITCH
+                if(frames&&(uint32_t)(process_start-last_frame)>max_frame_gap_ms)
+                    max_frame_gap_ms=process_start-last_frame;
+#endif
                 if (frames && (uint32_t)(process_start - last_frame) > HISTORY_GAP_MS) {
                     vision_midterm_reset();
                     ++history_resets;
                 }
 #if VISION_ROUTE_SWITCH
                 vision_midterm_route_enable((uint8_t)app_mode_allows(APP_MODE_DRIVE));
+                vision_midterm_route_hint(tb_route_hint(&track,process_start));
 #endif
                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
                 if (track.configured) {
@@ -271,6 +279,9 @@ void app_runtime_run(void)
                     (void)tb_update(&track, &track_observation, frames + 1U, process_start);
                 }
                 process_ms = (uint32_t)(timer_get(GPT_TIM_1) - process_start);
+#if VISION_ROUTE_SWITCH
+                if(process_ms>max_process_ms)max_process_ms=process_ms;
+#endif
                 memcpy(Left_Line, result.left, sizeof(Left_Line));
                 memcpy(Right_Line, result.right, sizeof(Right_Line));
                 memcpy(Mid_Line, result.center, sizeof(Mid_Line));
@@ -312,12 +323,17 @@ void app_runtime_run(void)
          * 相机租约。停下后恢复完整视觉/标定诊断，不降低安全中断频率。 */
         if (mode == 't' && vision_drive_output()->state == VC_RUNNING) {
             if (training_enabled() && (!vision_drive_is_local() || VISION_ROUTE_SWITCH) && (uint32_t)(now - last_run_text) >= 100U) {
+#if VISION_ROUTE_SWITCH
+                vision_telemetry_run(frames,now,now-last_frame,max_process_ms,max_frame_gap_ms,&result,&track);
+                max_process_ms=max_frame_gap_ms=0;
+#else
                 const vc_output_t *run = vision_drive_output();
                 app_console_printf("[RUN] n=%lu ms=%lu e=%.3f h=%.3f u=%.3f pwm=%.3f q=%u age=%lu\r\n",
                        (unsigned long)frames,(unsigned long)now,(double)run->lateral,
                        (double)run->heading,(double)run->steering,(double)run->duty,
                        result.confidence,(unsigned long)(uint32_t)(now-last_frame));
                 vision_telemetry_speed();
+#endif
                 last_run_text = now;
             }
             last_text = now;

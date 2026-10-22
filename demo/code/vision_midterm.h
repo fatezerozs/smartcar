@@ -66,6 +66,9 @@ typedef struct {
     uint8_t roundabout_state; /* 0 idle, 1 enter, 2 follow, 3 exit, 4 cooldown. */
     int8_t roundabout_side; /* Island relative to travel: -1 left, +1 right. */
     uint8_t roundabout_rows; /* Current real island-side boundary support. */
+    uint8_t roundabout_evidence; /* 0 absent, 1 current caps, 2 admitted bottom-clipped continuation. */
+    int8_t roundabout_candidate; /* CURRENT tentative side while idle. */
+    uint8_t roundabout_votes;
     uint8_t entry_guide_rows; /* Separate navigation guide; never learned as road width. */
     uint8_t adaptive_rows; /* ROI rows whose threshold differs from global Otsu. */
     uint8_t ambiguous_rows; /* Examined rows rejected for an exact best-score tie. */
@@ -81,6 +84,9 @@ void vision_midterm_reset(void);
  * and resets recognition; enabling never starts an actuator in this module. */
 void vision_midterm_route_reset(void);
 void vision_midterm_route_enable(uint8_t enabled);
+/* Optional trained, fresh Bayesian entry-side hint (-1/0/+1). Consumed on
+ * the next frame; it only reinforces matching CURRENT island geometry. */
+void vision_midterm_route_hint(int side);
 void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_t *out);
 /* Input gray/binary buffers must be separate, each VISION_WIDTH*VISION_HEIGHT.
  * Preview output needs VISION_PREVIEW_WIDTH*VISION_PREVIEW_HEIGHT bytes.

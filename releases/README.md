@@ -1,7 +1,27 @@
-# 本次固件
+# 版本固件与校验
 
-`MIDTERM_C26_28/rt1064.axf` 是当前候选，移除标签限速、连续调整速度并修复宽视野路口丢线，详见[C28说明](../docs/C26_28_EVIDENCE_DRIVEN_SPEED.md)。C27及更早发布副本保留，舵机仍为已确认的右1430/中1550/左1670µs。实车速度/稳定性仍待验收。分别核对各目录 `SHA256SUMS.txt` 和 `release.json`。AXF 是烧录/调试产物，不是 Keil 工程入口。
+当前源码为 **MIDTERM_C26_31**。当前能力/待办见 [演进档案](../docs/PROJECT_EVOLUTION.md)，本次变更见 [2026-10-23 提交说明](../docs/changes/2026-10-23_C31.md)。
 
-完整克隆仓库后打开 `demo/mdk/midterm_switch.uvprojx`，选择 `nor_sdram_zf_dtcm`，编译后由操作者使用自己的下载器设置烧录。也可按 `docs/TEAM_HANDOFF_20261022.md` 重新生成该工程。C26 OFF 烧录和搬车；ON 在连续看到有效跑道后自动启动，OFF 停车。
+工程入口为 `demo/mdk/midterm_switch.uvprojx`，目标 `nor_sdram_zf_dtcm`。
+C31 仍采用 C26 启停，上电识别赛道若干秒后启动尚未实现。
+发布副本有明确版本；重新编译当前源码不能冒称复现旧版本。
 
-C19 仅完成软件和合成场景验证，尚未实车验收完整环岛或整圈。C17 有真实无线/视频运行证据，也未完成完整赛道验收。当前源码标识为 C26，不能用当前源码重编译声称复现历史二进制。
+## 已归档版本
+
+| 版本 | 固件 | 清单 | 校验 |
+| --- | --- | --- | --- |
+| MIDTERM_C26_31 | [AXF](MIDTERM_C26_31/rt1064.axf) | [release.json](MIDTERM_C26_31/release.json) | [SHA256](MIDTERM_C26_31/SHA256SUMS.txt) |
+| MIDTERM_C26_30 | [AXF](MIDTERM_C26_30/rt1064.axf) | [release.json](MIDTERM_C26_30/release.json) | [SHA256](MIDTERM_C26_30/SHA256SUMS.txt) |
+| MIDTERM_C26_29 | [AXF](MIDTERM_C26_29/rt1064.axf) | [release.json](MIDTERM_C26_29/release.json) | [SHA256](MIDTERM_C26_29/SHA256SUMS.txt) |
+| MIDTERM_C26_28 | [AXF](MIDTERM_C26_28/rt1064.axf) | [release.json](MIDTERM_C26_28/release.json) | [SHA256](MIDTERM_C26_28/SHA256SUMS.txt) |
+| MIDTERM_C26_27 | [AXF](MIDTERM_C26_27/rt1064.axf) | [release.json](MIDTERM_C26_27/release.json) | [SHA256](MIDTERM_C26_27/SHA256SUMS.txt) |
+| MIDTERM_C26_26 | [AXF](MIDTERM_C26_26/rt1064.axf) | [release.json](MIDTERM_C26_26/release.json) | [SHA256](MIDTERM_C26_26/SHA256SUMS.txt) |
+| MIDTERM_C26_25 | [AXF](MIDTERM_C26_25/rt1064.axf) | [release.json](MIDTERM_C26_25/release.json) | [SHA256](MIDTERM_C26_25/SHA256SUMS.txt) |
+| MIDTERM_C26_24 | [AXF](MIDTERM_C26_24/rt1064.axf) | [release.json](MIDTERM_C26_24/release.json) | [SHA256](MIDTERM_C26_24/SHA256SUMS.txt) |
+| MIDTERM_C26_23 | [AXF](MIDTERM_C26_23/rt1064.axf) | [release.json](MIDTERM_C26_23/release.json) | [SHA256](MIDTERM_C26_23/SHA256SUMS.txt) |
+| MIDTERM_C26_19 | [AXF](MIDTERM_C26_19/rt1064.axf) | [release.json](MIDTERM_C26_19/release.json) | [SHA256](MIDTERM_C26_19/SHA256SUMS.txt) |
+| MIDTERM_C26_17 | [AXF](MIDTERM_C26_17/rt1064.axf) | [release.json](MIDTERM_C26_17/release.json) | [SHA256](MIDTERM_C26_17/SHA256SUMS.txt) |
+
+产物及校验只用于确定版本，不自动证明入环、出环、不出界、速度或完整赛道验收。
+C31 的软件回归和实拍缩略图回放不能替代真实自动驾驶。使用各目录清单核对下载文件。
+临时构建输出、原始录制及个人 IDE 状态不在发布列表内。

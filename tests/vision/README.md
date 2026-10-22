@@ -1,10 +1,22 @@
+> 当前状态入口（2026-10-23）：本页保留测试工具/协议及较早变体说明，不代表当前实车验收或启动条件。现状见 [项目设计与演进档案](../../docs/PROJECT_EVOLUTION.md)；当前主程序为 C31，仍用 C26 启停。
+
 # 可复现的主机验证
+
+C31 在 `test_turn_route.c` 中加入实际驱动链路跨越 ROI 下端截断位置的持续转向断言，在投影测试中检查已确认内岛延续、截断图不能新建入口、远岛不能接近处暗块、空白撤销；实拍控制模块回放使用当前 switch 工程参数。正常与 ASAN 均由 `run_switch_tests.cmd` 执行。见 [C31](../../docs/archive/versions/C26_31_ENTRY_CONTINUITY.md)。
+
+C30 的 `test_tangent_preview.c` 已接入正常及 ASAN 开关测试：5 个独立实拍入口及镜像、可见白色余量、实际控制器转向、外侧曲线反例、OFF 撤销和无边界反例。原始缩略图与校验见 `fixtures/tangent-preview/manifest.json`；重复帧仅用于静态获取，不代表真实采集时序。详见 [C30](../../docs/archive/versions/C26_30_CAPTURED_TANGENT_ENTRY.md)。
+
+C29 使用 `run_switch_tests.cmd` 和 `run_switch_tests.cmd asan`，新增同一道路双边支持量
+逐行波动的速度回归、已训练贝叶斯提示与当前暗岛的联合确认、18 组相切偏移/朝向及同步运行字段。
+`run_tests.cmd` 覆盖贝叶斯训练/拒识/过期门槛。详见 [C29](../../docs/archive/versions/C26_29_ENTRY_AND_CONTINUOUS_SUPPORT.md)。
+离线日志兼容使用 `python tests/vision/test_training_analysis.py` 和
+`python tests/vision/test_seekfree_import.py`，核对新旧单位一致、实际 PWM 提取和损坏记录拒绝。
 
 ## 当前无线与外设基线
 
-新增编码器速度环：`run_speed_tests.cmd`及`run_speed_tests.cmd asan`验证生产PI/采样/保护与板级引脚模式；当前正式默认未启用，独立速度诊断见 [ENCODER_SPEED](../../docs/ENCODER_SPEED.md)。
+新增编码器速度环：`run_speed_tests.cmd`及`run_speed_tests.cmd asan`验证生产PI/采样/保护与板级引脚模式；当前正式默认未启用，独立速度诊断见 [ENCODER_SPEED](../../docs/reference/ENCODER_SPEED.md)。
 
-实机范围见 [BASELINE_20261020](../../docs/BASELINE_20261020.md)。主机测试仍使用模拟IO。
+实机范围见 [BASELINE_20261020](../../docs/archive/history/BASELINE_20261020.md)。主机测试仍使用模拟IO。
 在仓库根目录分别执行；普通/ASAN或同目录构建需顺序运行：
 
 ```powershell
@@ -21,9 +33,9 @@ cmd /c tests\vision\run_motor_threshold_tests.cmd
 失联/切档撤输出、保持期间不重复写PWM、斜坡不重写舵机，以及停止后同值重新启动。
 首次/上限150‰只存在于显式MOTION_DIAG构建，默认正式版本限制不变。
 
-当前四键用例及实现已移除，保留蜂鸣器/拨码回归；主循环新增验证“恢复配置不自动启动”。test_startup 中历史开关核心兼容测试使用显式 `VISION_START_SWITCH_ENABLE=1`，正式固件为 0 且无实体按键 ISR 接入。见 [当前状态](../../docs/WIRELESS_CONTROL_ASSESSMENT.md)。
+当前四键用例及实现已移除，保留蜂鸣器/拨码回归；主循环新增验证“恢复配置不自动启动”。test_startup 中历史开关核心兼容测试使用显式 `VISION_START_SWITCH_ENABLE=1`，正式固件为 0 且无实体按键 ISR 接入。见 [当前状态](../../docs/archive/history/WIRELESS_CONTROL_ASSESSMENT.md)。
 
-2026-10-20：四种功能模式改由 C26/C27 拨码选择；新增 test_board_mode 的 GPIO、相机重试、权限与消抖检查，USB/无线集成增加切档停机和分段命令检查。编译宏矩阵保留用于裁剪、链路和模拟标定，不是实车功能档位。见 [架构与拨码](../../docs/ARCHITECTURE_MODES.md)。
+2026-10-20：四种功能模式改由 C26/C27 拨码选择；新增 test_board_mode 的 GPIO、相机重试、权限与消抖检查，USB/无线集成增加切档停机和分段命令检查。编译宏矩阵保留用于裁剪、链路和模拟标定，不是实车功能档位。见 [架构与拨码](../../docs/archive/history/ARCHITECTURE_MODES.md)。
 
 FIELD_4 新增 test_startup：C12 两秒启动、原始断开撤输出、无抖动重启、无效到期不补启动、保留远程心跳/本地视觉及总时限、CRC 双槽/写断电/单比特破坏/序号回绕。USB/无线适配新增真实主循环恢复配置后启动、STOP/图传取消、开关停止及无效后不重试场景。旧子系统夹具通过 HOST TEST 编译参数关闭物理开关门槛；test_startup 和部署目标保持开关启用。板级 Flash 适配仅 ARM/完整链接检查，尚未实机写入。
 
@@ -67,7 +79,7 @@ reference 是本项目此前性能优化前的实现快照，不加入 MCU 工�
 
 2026-10-19 新增亮灰地板、白通道和少量远侧暗物体的曝光回归：旧极值映射阈值复现 NO_LANE/q=0，新行内阈值为 TRACK/q=100。它是人工构造的故障机制，不是复原的现场完整原始帧。预览回放保留分辨率限制，不能由回放覆盖分数推断板端实时覆盖。
 
-断言总数包含逐像素、坐标及状态检查，不等同于独立场景数。实际记录见 [VERIFICATION](../../docs/VERIFICATION.md)。
+断言总数包含逐像素、坐标及状态检查，不等同于独立场景数。实际记录见 [VERIFICATION](../../docs/archive/history/VERIFICATION.md)。
 ## 中期训练与自主入口
 
-新增 `run_midterm_tests.cmd` 及 `run_midterm_tests.cmd asan`：生产启动/控制/速度/输出模块测试3秒边界、缺少速度/视觉确认、无远程心跳、STOP、图像和编码器超时、运行上限、不重启和计时回绕；另链接真实 app_runtime、视觉算法和双串口，验证无线持续忙、启动前后停止及相机断流。所有参数为测试专用合成值，不写入部署配置。实车顺序见 `docs/MIDTERM_IMPLEMENTATION.md`。
+新增 `run_midterm_tests.cmd` 及 `run_midterm_tests.cmd asan`：生产启动/控制/速度/输出模块测试3秒边界、缺少速度/视觉确认、无远程心跳、STOP、图像和编码器超时、运行上限、不重启和计时回绕；另链接真实 app_runtime、视觉算法和双串口，验证无线持续忙、启动前后停止及相机断流。所有参数为测试专用合成值，不写入部署配置。实车顺序见 `docs/archive/history/MIDTERM_IMPLEMENTATION.md`。

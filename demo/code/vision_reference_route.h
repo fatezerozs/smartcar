@@ -16,13 +16,15 @@ typedef struct {
 typedef struct {
     uint8_t enabled,state,votes,clear_votes,exit_votes,cancel_votes;
     int8_t side,candidate_side;
-    uint8_t island_bottom,rows,path_rejects,island_visible;
+    uint8_t island_top,island_bottom,rows,path_rejects,island_visible;
 } reference_ring_t;
 static reference_ring_t reference_ring;
+static int8_t reference_ring_hint;
 static void reference_roundabout_reset(void)
 {
     uint8_t enabled=reference_ring.enabled;
     memset(&reference_ring,0,sizeof(reference_ring));
+    reference_ring_hint=0;
     reference_ring.enabled=enabled;
 }
 
@@ -131,7 +133,7 @@ static int reference_ring_dark(const uint8_t *binary,int x,int y)
 {
     return !binary[(VISION_ROI_TOP+2*y)*VISION_WIDTH+2*x];
 }
-static int reference_roundabout_island(const uint8_t *binary,int *bottom,int *clipped,
+static int reference_roundabout_island(const uint8_t *binary,int *top,int *bottom,int *clipped,
                                       const reference_edge_t *left,const reference_edge_t *right)
 {
     int start,best_side=0,best_support=0;
@@ -140,7 +142,7 @@ static int reference_roundabout_island(const uint8_t *binary,int *bottom,int *cl
     for(start=0;start<REFERENCE_RING_N;++start) {
         unsigned head=0,tail=0;
         int minx=REFERENCE_RING_W,maxx=0,miny=REFERENCE_RING_H,maxy=0,border=0;
-        int side,support=0,connected=0,y,first=-1,last=-1;
+        int side,support=0,connected=0,y,first=-1,last=-1,continuation;
         uint8_t outer[REFERENCE_RING_H];
         if(reference_ring_seen[start>>3]&(1U<<(start&7)))continue;
         reference_ring_seen[start>>3]|=(uint8_t)(1U<<(start&7));
@@ -165,12 +167,25 @@ static int reference_roundabout_island(const uint8_t *binary,int *bottom,int *cl
                 if(reference_ring_dark(binary,nx,ny))reference_ring_queue[tail++]=(uint16_t)n;
             }
         }
-        if((border&12)||tail<24||maxx-minx<5||maxy-miny<5||
+        /* Once a capped island has established ENTER, its lower cap moves
+         * below the camera ROI precisely at the tangent commitment point.
+         * Continue only that SAME island side from CURRENT pixels. The top
+         * cap must remain visible; an ordinary wall touching both top/bottom
+         * cannot sustain this evidence and cannot initiate an entry. */
+        continuation=reference_ring.state==1&&reference_ring.island_bottom>=VISION_ROI_BOTTOM-12&&
+            (border&8)&&!(border&4);
+        /* An already matched, receding side contour may be one coarse
+         * column thinner after mirroring. Area, vertical support, CURRENT
+         * connected rows and outside-line residuals still bound continuation.
+         * A NEW island retains the original five-column extent requirement. */
+        if((border&4)||((border&8)&&!continuation)||tail<24||maxx-minx<(continuation?3:5)||maxy-miny<5||
            maxx-minx>3*(maxy-miny)||maxy-miny>3*(maxx-minx)||
            tail*5U<(unsigned)((maxx-minx+1)*(maxy-miny+1)*2))continue;
         side=(minx+maxx<axis-8)?-1:((minx+maxx>axis+8)?1:0);
         if(!side)continue;
-        if(border&&border!=(side<0?1:2))continue;
+        if(reference_ring.state==1&&side!=reference_ring.side)continue;
+        if(continuation&&vabs((float)(VISION_ROI_TOP+2*miny-reference_ring.island_top))>12)continue;
+        if((border&3)&&(border&3)!=(side<0?1:2))continue;
         memset(outer,255,sizeof(outer));
         /* A closed spot alone is insufficient: the strip on its near side
          * must fit the learned road, with a real opposite dark boundary.
@@ -210,20 +225,39 @@ static int reference_roundabout_island(const uint8_t *binary,int *bottom,int *cl
             if(support<8||connected<6||first<0||last-first<7)continue;
             for(y=miny;y<=maxy;++y)if(side<0?reference_ring_lo[y]==0:
                 reference_ring_hi[y]==REFERENCE_RING_W-1)++side_rows;
-            if(side_rows<6)continue; /* Thin dark connector is not a clipped island. */
+            if(!continuation&&side_rows<6)continue; /* Thin dark connector is not a new island. */
             for(y=miny+1;y<maxy;++y)if(reference_ring_lo[y]!=255) {
                 float edge=(float)(side<0?reference_ring_hi[y]:reference_ring_lo[y]);
                 float line=upper+(lower-upper)*(float)(y-miny)/(maxy-miny);
                 float bend=-side*2*(edge-line);if(bend>bulge)bulge=bend;
             }
-            if(bulge<8)continue;
-            a=outer[first];b=((float)outer[last]-a)/(last-first);
-            if(vabs(b)>3)continue;
-            for(y=first;y<=last;++y)if(outer[y]!=255&&vabs(outer[y]-(a+b*(y-first)))>4)break;
-            if(y<=last)continue;
+            if(continuation){if(support<10||connected<8||last-first<9)continue;}
+            else if(bulge<8)continue;
+            /* A clipped tangent's outside edge is observed on many rows.
+             * Fitting only the two endpoints lets their pixel quantization
+             * reject a straight edge (field preview 40--45). Fit all CURRENT
+             * samples; retain the per-row bound and also bound RMS residual.
+             * A curved outside wall still cannot establish a tangent island. */
+            {float sy=0,sx=0,syy=0,sxy=0,residual=0,denom;
+             int n=0;
+             for(y=first;y<=last;++y)if(outer[y]!=255){
+                float dy=(float)(y-first),x=(float)outer[y];
+                sy+=dy;sx+=x;syy+=dy*dy;sxy+=dy*x;++n;
+             }
+             denom=n*syy-sy*sy;
+             if(n<8||denom<=0)continue;
+             b=(n*sxy-sy*sx)/denom;a=(sx-b*sy)/n;
+             if(vabs(b)>3)continue;
+             for(y=first;y<=last;++y)if(outer[y]!=255){
+                float e=outer[y]-(a+b*(y-first));
+                if(vabs(e)>4)break;
+                residual+=e*e;
+             }
+             if(y<=last||residual>n*4.0f)continue;}
+
         }
         if(support>=6&&support>best_support){best_support=support;best_side=side;
-            *bottom=VISION_ROI_TOP+2*maxy;*clipped=border!=0;}
+            *top=VISION_ROI_TOP+2*miny;*bottom=VISION_ROI_TOP+2*maxy;*clipped=continuation?2:(border!=0);}
     }
     return best_side;
 }
@@ -268,20 +302,20 @@ static void reference_roundabout_observe(const uint8_t *binary,const reference_e
                                         const reference_edge_t *right,const uint8_t *joined,
                                         uint8_t anchors)
 {
-    int y,side,clipped=0,bottom=VISION_ROI_BOTTOM,normal=0,inner=0,opening=0,joined_n=0;
+    int y,side,clipped=0,top=VISION_ROI_TOP,bottom=VISION_ROI_BOTTOM,normal=0,inner=0,opening=0,joined_n=0;
     float near=0,far=0;int near_n=0,far_n=0;
     if(!reference_ring.enabled){reference_roundabout_reset();return;}
     reference_ring.island_visible=0;
     side=(reference_ring.state==0||reference_ring.state==1||reference_ring.state==4)?
-        reference_roundabout_island(binary,&bottom,&clipped,left,right):0;
+        reference_roundabout_island(binary,&top,&bottom,&clipped,left,right):0;
     if(reference_ring.state==0) {
         if(side&&side==reference_ring.candidate_side)++reference_ring.votes;
         else {reference_ring.candidate_side=(int8_t)side;reference_ring.votes=side?1:0;}
-        if(reference_ring.votes>=(clipped?5:3)){reference_ring.state=1;reference_ring.side=(int8_t)side;
-            reference_ring.island_bottom=(uint8_t)bottom;reference_ring.clear_votes=0;reference_ring.island_visible=1;}
+        if(reference_ring.votes>=((clipped&&reference_ring_hint!=side)?5:3)){reference_ring.state=1;reference_ring.side=(int8_t)side;
+            reference_ring.island_top=(uint8_t)top;reference_ring.island_bottom=(uint8_t)bottom;reference_ring.clear_votes=0;reference_ring.island_visible=1;}
         return;
     }
-    if(side==reference_ring.side){reference_ring.island_bottom=(uint8_t)bottom;reference_ring.island_visible=1;}
+    if(side==reference_ring.side){reference_ring.island_top=(uint8_t)top;reference_ring.island_bottom=(uint8_t)bottom;reference_ring.island_visible=(uint8_t)(clipped==2?2:1);}
     for(y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y) {
         int l=left->col[y],r=right->col[y],width=r-l+1;
         int edge=reference_ring.side<0?l:r;
@@ -368,6 +402,7 @@ static void reference_route(const uint8_t *binary,vision_result_t *out)
     reference_junction_entry_only(binary,&left,&right,joined,&out->junction_anchors);
     reference_junction_partial(binary,&left,&right,joined,&out->junction_anchors,&out->junction_partial);
     reference_roundabout_observe(binary,&raw_left,&raw_right,joined,out->junction_anchors);
+    reference_ring_hint=0; /* A hint cannot survive a new/missing observation. */
     if(reference_ring.state==1||reference_ring.state==2) {
         /* A closed island can be visible BEYOND a nearer cross (the central
          * 270-degree loop). Retain its already validated near white bridge
@@ -401,6 +436,8 @@ static void reference_route(const uint8_t *binary,vision_result_t *out)
         reference_roundabout_exit_path(binary,&left,&right,joined,&out->junction_anchors,1);
     out->roundabout_state=reference_ring.state;out->roundabout_side=reference_ring.side;
     out->roundabout_rows=reference_ring.rows;
+    out->roundabout_evidence=reference_ring.island_visible;
+    out->roundabout_candidate=reference_ring.candidate_side;out->roundabout_votes=reference_ring.votes;
     for(y=VISION_ROI_BOTTOM;y>=VISION_ROI_TOP;--y) {
         int l=left.col[y],r=right.col[y],flags=0,width;
         float center,weight;

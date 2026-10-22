@@ -1,0 +1,48 @@
+{
+  "source_session": "camera-g-20261022-215128-961-921fc390",
+  "width": 94,
+  "height": 60,
+  "notes": "Unlabelled hand-pushed/repositioned previews. Tests use independent static scenes, not captured control timing. Mirrors are derived samples. Not full-resolution camera frames or physical acceptance.",
+  "files": [
+    {
+      "frame": 20,
+      "sha256": "172f56e69d60226a401ddcd66f4fc91bbc816fc18b8ad0dc8a1bcbd3c7d07de9"
+    },
+    {
+      "frame": 24,
+      "sha256": "5df6065ad0742e068c36348f112f5b3d1dc036d46ca0344594fcd9af66ae8a18"
+    },
+    {
+      "frame": 30,
+      "sha256": "4ca623de270ba578d80a18d83d8f32a9c3903aa4230ae200785150e2986c8ce3"
+    },
+    {
+      "frame": 40,
+      "sha256": "ac73978cd71c257933f3dde2d9ca3fb38d0f7acd4e1e84d62df2d3224b67de9f"
+    },
+    {
+      "frame": 41,
+      "sha256": "237ce241c9173422c585ff8bc9daf1e774fb2236269039bf2781f9815f65f2e0"
+    },
+    {
+      "frame": 43,
+      "sha256": "49adb4190b8b275de6a03415218d135ba26da2a94fa9df7e004b3af3cbe5aff8"
+    },
+    {
+      "frame": 44,
+      "sha256": "378ff0840b4d5fdf96cbc148415cd04fd8e566bf5b3c9bfe27b1df8d3be6cd84"
+    },
+    {
+      "frame": 45,
+      "sha256": "eeabdaa0a9dff32b0f43f007f75849586cf3d7df9394e1d1995fdb7bc32b5cec"
+    },
+    {
+      "frame": 51,
+      "sha256": "9c0820a7983a92602059487f8179e3e98dfa8c160ad962ae686d33ac4339472a"
+    },
+    {
+      "frame": 65,
+      "sha256": "088970f7573dcdeacc5a05d24f2f9ce852d22a800859d422fe903b4b57b1d6e0"
+    }
+  ]
+}

@@ -28,6 +28,10 @@ cl /nologo /utf-8 /std:c11 /W4 /WX %speedFlags% /DVISION_ROUTE_SWITCH=1 /I"stubs
 if errorlevel 1 goto fail
 output\switch\test_roundabout_projection.exe
 if errorlevel 1 goto fail
+cl /nologo /utf-8 /std:c11 /W4 /WX %speedFlags% /DVISION_ENCODER_ENABLE=1 /DVISION_MIDTERM_TRAINING=1 /DVISION_MIDTERM_AUTONOMOUS=0 /DVISION_MIDTERM_ROUTE_TRIAL=1 /DVISION_ROUTE_SWITCH=1 /I"%speedSource%" test_tangent_preview.c "%speedSource%\vision_midterm.c" "%speedSource%\vision_control.c" "%speedSource%\midterm_open_loop.c" /Fooutput\switch\ /Fdoutput\switch\ /Feoutput\switch\test_tangent_preview.exe
+if errorlevel 1 goto fail
+output\switch\test_tangent_preview.exe
+if errorlevel 1 goto fail
 popd
 exit /b 0
 :fail

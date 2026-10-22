@@ -1,0 +1,38 @@
+{
+  "version": "MIDTERM_C26_29",
+  "status": "built_not_flashed",
+  "sha256": "35365F6D3F10C75BD73C2E00EE92EBC8C5078C4A718737C61B9539E653720E70",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "default_bayes_trained": false,
+  "pwm_hz_configured": 17000,
+  "entry_guide_max_road_width_fraction": 0.35,
+  "entry_guide_min_rows": 12,
+  "continuous_geometry_speed_support": true,
+  "code": 86600,
+  "ro": 13644,
+  "rw": 212,
+  "zi": 196604,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "trace_parser": 3,
+    "projection_cases": 58,
+    "protocol": 47,
+    "bayes": 70678,
+    "ring": 266,
+    "asan": true,
+    "turn": 374625,
+    "projection": 578909,
+    "cross_cases": 9,
+    "training_analysis": 3,
+    "seekfree_import": 11
+  },
+  "limitations": [
+    "No physical speed, jitter, entry or full-course acceptance",
+    "No labelled real-track Bayes model supplied; expert default remains an observer",
+    "Entry authority increased within current white clearance; actual vehicle dynamics require validation",
+    "Configured PWM frequency is not a measured waveform"
+  ]
+}

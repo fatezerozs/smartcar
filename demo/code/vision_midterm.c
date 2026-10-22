@@ -25,6 +25,15 @@ void vision_midterm_route_reset(void)
 #endif
 }
 
+void vision_midterm_route_hint(int side)
+{
+#if VISION_ROUTE_SWITCH
+    reference_ring_hint=(int8_t)(side==-1||side==1?side:0);
+#else
+    (void)side;
+#endif
+}
+
 void vision_midterm_route_enable(uint8_t enabled)
 {
 #if VISION_ROUTE_SWITCH
@@ -175,6 +184,9 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
     }
     out->white_percent = (uint8_t)(whites * 100 / count);
     if (out->contrast < VISION_MIN_CONTRAST) {
+#if VISION_ROUTE_SWITCH
+        reference_ring_hint=0;
+#endif
         out->status = VISION_LOW_CONTRAST;
         previous_valid = 0;
         /* Do not reuse lane widths across lens occlusion/exposure loss. */

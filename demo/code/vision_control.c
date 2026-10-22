@@ -62,6 +62,7 @@ void vc_trip(vc_controller_t *c, uint32_t reason)
     c->output.faults |= reason;
     c->output.duty = c->output.steering = 0;
     c->output.speed_boost=0;
+    c->output.paired_support=c->output.edge_support=0;
     c->output.recovering=0;c->output.search_source=0;c->recovery_steer=0;
     c->have_partial=c->straight_tracking=0;
     c->stable_frames = 0;
@@ -83,6 +84,7 @@ void vc_stop(vc_controller_t *c)
     if (c->output.state != VC_FAULT) c->output.state = VC_DISARMED;
     c->output.duty = c->output.steering = 0;
     c->output.speed_boost=0;
+    c->output.paired_support=c->output.edge_support=0;
     c->output.recovering=0;c->output.search_source=0;c->recovery_steer=0;
     c->have_partial=c->straight_tracking=0;
     c->stable_frames = 0;
@@ -289,7 +291,7 @@ static int reference_preview_error(const vision_result_t *r,const vc_config_t *c
 /* One visible boundary in each of many current rows is measured evidence,
  * although the opposite boundary is modeled. Never confuse that with zero
  * current road, or let a few detached rows authorize a fast corner. */
-static int current_single_edge(const vision_result_t *r)
+static float current_edge_weight(const vision_result_t *r)
 {
     unsigned count[2]={0,0},chain[2]={0,0},longest[2]={0,0};
     int top[2]={VISION_HEIGHT,VISION_HEIGHT},bottom[2]={-1,-1};
@@ -309,8 +311,15 @@ static int current_single_edge(const vision_result_t *r)
             else chain[i]=0;
         }
     }
-    for(int i=0;i<2;++i)if(count[i]>=28&&longest[i]>=20&&top[i]<=68&&bottom[i]>=98)return 1;
-    return 0;
+    {float best=0;
+     for(int i=0;i<2;++i){
+        float a=clamp((count[i]-12.0f)/16.0f,0,1);
+        float b=clamp((longest[i]-8.0f)/12.0f,0,1);
+        float far=clamp((80.0f-top[i])/12.0f,0,1);
+        float near=clamp((bottom[i]-86.0f)/12.0f,0,1);
+        float weight=(a<b?a:b)*far*near;if(weight>best)best=weight;
+     }
+     return best;}
 }
 
 static float corner_duty(vc_controller_t *c,const vision_result_t *r,
@@ -325,14 +334,15 @@ static float corner_duty(vc_controller_t *c,const vision_result_t *r,
     /* Confidence is traced-row coverage, not a probability of leaving the
      * track. Once a current corridor is established, coverage flicker alone
      * must not impose another independent speed penalty. */
-    clear=vj_paired_support(r)?1.0f:clamp((r->confidence-45.0f)/35.0f,0,1);
+    clear=vj_paired_weight(r);
+    {float edge=current_edge_weight(r)*.8f;if(edge>clear)clear=edge;}
     centered=clamp(1.0f-absolute(near_error)/.75f,0,1);
     measured=clamp(r->measured_rows/12.0f,0,1);
     if(vj_current_bridge(r))measured=1.0f;
     /* C22 field logs: 60-80 CURRENT single-edge rows were throttled solely
      * because only 5-8 rows had both edges. Use a bounded fraction of their
      * evidence; retain a lower speed class than paired road. */
-    if(measured<.80f&&current_single_edge(r))measured=.80f;
+    {float edge=current_edge_weight(r)*.80f;if(measured<edge)measured=edge;}
     boost=have_far?clear*centered*measured:0;
     /* Opposite near/far bends and a servo still crossing center are not a
      * straight. In B->A the return bends swap sides: finish the current bend
@@ -353,11 +363,11 @@ static float corner_duty(vc_controller_t *c,const vision_result_t *r,
     if(duty>ceiling)duty=ceiling;
     /* Wait for sustained current two-edge geometry before using the extra
      * straight speed. A newly visible bend revokes it in the same frame. */
-    if(have_far&&vj_paired_support(r)&&
+    if(have_far&&vj_paired_weight(r)>0&&
        absolute(near_error)<.12f&&absolute(far_error)<.16f&&turn<.18f) {
         if(!c->straight_tracking){c->straight_tracking=1;c->straight_since_ms=c->last_frame_ms;}
         if((uint32_t)(c->last_frame_ms-c->straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS) {
-            float fast=clamp(c->config.cruise_duty*1.17f,0,c->config.duty_cap*.95f);
+            float fast=clamp(c->config.cruise_duty*(1.0f+.17f*vj_paired_weight(r)),0,c->config.duty_cap*.95f);
             if(duty<fast)duty=fast;
         }
     } else c->straight_tracking=0;
@@ -394,6 +404,7 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     c->last_frame_ms = frame_ms;
     c->output.observation_valid = c->output.far_valid = 0;
     c->output.speed_boost=0;
+    c->output.paired_support=c->output.edge_support=0;
     c->output.lateral = c->output.heading = 0;
     c->output.near_center_x = c->output.far_center_x = 0;
     if ((uint32_t)(now - frame_ms) >= c->config.frame_timeout_ms || r->confidence > 100) {
@@ -519,13 +530,15 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         c->output.duty = target_duty;
 #if VISION_ROUTE_SWITCH
         c->output.speed_boost=(uint8_t)(have_far&&vj_paired_support(r));
+        c->output.paired_support=have_far?vj_paired_weight(r):0;
+        c->output.edge_support=have_far?current_edge_weight(r):0;
         /* Labels describe CURRENT support; they do not veto ring/cross speed.
          * The output layer blends paired/curve scales continuously using
          * actual/requested steering and lateral margin. Missing support still
          * falls back; coverage metadata alone cannot force a scale jump. */
         if(c->output.speed_boost&&absolute(c->output.steering)>=.45f)
             c->output.speed_boost=2;
-        else if(!c->output.speed_boost&&have_far&&current_single_edge(r))
+        else if(!c->output.speed_boost&&have_far&&current_edge_weight(r)>=1.0f)
             c->output.speed_boost=3;
 #endif
     } else c->output.duty = c->output.steering = 0;

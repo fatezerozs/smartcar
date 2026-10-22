@@ -104,6 +104,11 @@ def split_segments(text, gap_ms=1500):
             if kind in ('RUN', 'SPEED', 'TURN'):
                 row = dict(data, source_line=line_number, host_prefix=prefix)
                 active[{'RUN': 'run_rows', 'SPEED': 'speed_rows', 'TURN': 'turn_rows'}[kind]].append(row)
+                if kind == 'RUN' and data.get('scale') == 1000 and all(
+                        key in data for key in ('target', 'measured', 'pwm', 'enabled', 'faults')):
+                    active['speed_rows'].append(dict(row, embedded_in='RUN', **{
+                        'target_R/L': data['target'], 'measured_R/L': data['measured'],
+                        'pwm_R/L': data['pwm']}))
             if kind == 'DRIVE' and data.get('state') in (0, 2):
                 close('drive_state_stopped_or_fault', line_number, data)
             elif kind in ('LINK', 'FIELD') and re.match(r'\s*STOP\b', body):
@@ -114,7 +119,8 @@ def split_segments(text, gap_ms=1500):
         item['observed_run_span_ms'] = ((end - start) & 0xffffffff) if isinstance(start, int) and isinstance(end, int) else None
         rows = item['run_rows']
         for key, label in [('e', 'lateral'), ('h', 'heading'), ('u', 'steering')]:
-            values = [r[key] for r in rows if isinstance(r.get(key), (int, float))]
+            values = [r[key] / r.get('scale', 1) for r in rows
+                      if isinstance(r.get(key), (int, float)) and r.get('scale', 1) in (1, 1000)]
             if values:
                 item[label + '_min_max'] = [min(values), max(values)]
         item['run_sample_count'] = len(rows)
@@ -181,7 +187,7 @@ def import_log(source, output_root, encoding='auto', gap_ms=1500):
             'A telemetry gap is an uncertain boundary, not proof of a stop.',
             'Capture can start midway; whole-run completeness is not guaranteed.',
             'TRACE dumps arrive after stopping and are exported separately; no guessed segment association.',
-            'Encoder speed remains counts/10ms; RUN pwm is demand, SPEED pwm_R/L is output permille.',
+            'Encoder speed remains counts/10ms; legacy RUN pwm is demand. C29 scale=1000 RUN duty is demand and pwm is actual R/L output permille.',
         ],
     }
     (output / 'summary.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

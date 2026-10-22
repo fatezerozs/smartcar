@@ -10,6 +10,14 @@ static int finite_number(float x) { return x == x && x >= -FLT_MAX && x <= FLT_M
 static float limit(float x, float lo, float hi) { return x < lo ? lo : (x > hi ? hi : x); }
 static int bounded(float x, float lo, float hi) { return finite_number(x) && x >= lo && x <= hi; }
 
+int tb_route_hint(const tb_filter_t *f, uint32_t now)
+{
+    if(!f||!f->configured||!f->have_frame||!f->model.trained||
+       !f->result.trained||!f->result.accepted||
+       (uint32_t)(now-f->last_ms)>=f->model.stale_ms)return 0;
+    return f->result.state==TB_RING_L_ENTRY?-1:f->result.state==TB_RING_R_ENTRY?1:0;
+}
+
 /* 以下矩阵是观测模型的可替换初值，集中在一处；无单张照片坐标。
  * 对角高斯的独立性只是近似。真实部署应使用标注序列估计均值、方差、
  * 转移分布和拒识门限，并在不同光照/安装位置的留出集上验证。

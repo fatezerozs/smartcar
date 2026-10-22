@@ -49,6 +49,8 @@
 #define VISION_TRACK_MIN_BEND_PERMILLE 34
 #define VISION_TRACK_MIN_COVERAGE 25
 #define VISION_TRACK_HISTORY_WEIGHT 0.6f
+/* Entry candidate is rechecked against current connected white clearance. */
+#define VISION_RING_ENTRY_OFFSET_FRACTION .35f
 /* 使用 tools/fit_track_model.py 的标注数据模型时显式启用；不是安全解锁。 */
 #ifndef VISION_BAYES_FITTED_MODEL
 #define VISION_BAYES_FITTED_MODEL 0
@@ -153,7 +155,7 @@
 #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
 #endif
 #if VISION_ROUTE_SWITCH
-#define VISION_FIELD_BUILD "MIDTERM_C26_28"
+#define VISION_FIELD_BUILD "MIDTERM_C26_31"
 #elif VISION_MIDTERM_ROUTE_TRIAL
 #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
 #elif VISION_MIDTERM_AUTONOMOUS

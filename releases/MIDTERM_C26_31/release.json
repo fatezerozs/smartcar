@@ -1,0 +1,48 @@
+{
+  "version": "MIDTERM_C26_31",
+  "base_version": "MIDTERM_C26_30",
+  "status": "built_not_flashed",
+  "sha256": "76520E229057A63FE539A7D045DF1F9CD87D523B45A8FA62A3808AFCDE7F3CA7",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "c26_startup_unchanged": true,
+  "speed_pi_and_steering_gain_unchanged": true,
+  "c29_changes_retained": true,
+  "current_evidence_required": true,
+  "change": "Maintain previously confirmed same-side tangent island entry from current bottom-clipped contour with spatial/support/white/outside-edge checks",
+  "evidence": "evidence/C26_31_ENTRY_CONTINUITY_REVIEW.json",
+  "code": 87000,
+  "ro": 13732,
+  "rw": 212,
+  "zi": 196608,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300874,
+    "turn": 374774,
+    "ring": 266,
+    "projection": 801869,
+    "preview": 40342,
+    "normal": true,
+    "asan": true
+  },
+  "limitations": [
+    "Fixed-heading map projection does not follow control outputs",
+    "No calibrated vehicle/camera dynamics or physical entry acceptance",
+    "Existing grayscale dataset is hand-pushed/repositioned, not synchronized motion"
+  ],
+  "source_sha256": {
+    "demo/code/vision_reference_route.h": "212F87202328B9192800A0D07263E0AC503A3D482D0DB85D68CA39DF8B746B8D",
+    "demo/code/vision_midterm.h": "FEA3247690FC9A68B8664BC263FBB3BAA1224C7D96865731D06C253A0FC896CE",
+    "demo/code/vision_profile.h": "A0CC9B9F3DCDA70FEF637FD34914B8019F765305723E149A5F6F859AE4F4BC10",
+    "demo/code/vision_telemetry.c": "46A23A3AA9A4C62FF903693B5CE486580E6FD1963EFC0922E6ABC62255DAF716",
+    "demo/code/vision_control.c": "4EB2B1C89EC64B4C3CF5780627475E1CED52E092470E24CB8DE63030EC83677E",
+    "demo/code/vision_drive.c": "80DCE9C19EC49BE5931A87111C4A96ECCB0BE6E80F6C9B6A9CDE7D9357BFA2D1",
+    "demo/code/vision_speed.c": "5C4D331ACB5A064BBE1C36CD928E00945C58024B90CAE0DB4E6967C8C17534DA",
+    "demo/mdk/midterm_switch.uvprojx": "6B2ABC9E5F995B4ADEAA2EF8AAC833745948430A401AB5344E13297072168978",
+    "tests/vision/test_roundabout_projection.c": "42D07D7AF321F52D447D2103042496F3AC34F51A8C2023FE38EE7D9D41F27DCB",
+    "tests/vision/test_turn_route.c": "8D9244594CA86260E9FE4EEEBD544AB0D93D4DBDAB90B1173FEEB5388EA1871F",
+    "tests/vision/test_tangent_preview.c": "CACF5A31A83373328E7B931774EAE2EC812C865B19254BFC0EDD873F18200409"
+  }
+}

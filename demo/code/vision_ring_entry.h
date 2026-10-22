@@ -19,13 +19,23 @@ static void reference_ring_entry_guide(const uint8_t *binary,vision_result_t *ou
          * No elapsed-time turn schedule or old-frame pixels are used. */
         progress=(reference_ring.island_bottom+12.0f-y)/32.0f;
         if(progress<=0)continue;if(progress>1)progress=1;
-        desired=center+reference_ring.side*width*.18f*progress;
-        point=(int)(desired+.5f);margin=(width+3)/4;
+        desired=center+reference_ring.side*width*VISION_RING_ENTRY_OFFSET_FRACTION*progress;
+        point=(int)(center+.5f);margin=(width+3)/4;
         if(point-margin<0||point+margin>=VISION_WIDTH)continue;
         /* A central half-road-width strip around the candidate must be
          * current white, as must the whole lateral transition from center. */
         for(int x=point-margin;x<=point+margin;++x)if(!binary[y*VISION_WIDTH+x]){good=0;break;}
         if(!good)continue;
+        /* Move within the SAME connected white clearance. The old fixed
+         * offset rejected an entire row when only its last pixel was blocked,
+         * and under-used a wide tangent mouth. Stop at the current boundary
+         * with a quarter-width margin; never jump across the dark island. */
+        {int goal=(int)(desired+.5f),step=reference_ring.side;
+         while(point!=goal){
+            int next=point+step,edge=next+step*margin;
+            if(edge<0||edge>=VISION_WIDTH||!binary[y*VISION_WIDTH+edge])break;
+            point=next;
+         }}
         {int a=(int)(center+.5f),b=point;if(a>b){int t=a;a=b;b=t;}
          for(int x=a;x<=b;++x)if(!binary[y*VISION_WIDTH+x]){good=0;break;}}
         if(!good)continue;

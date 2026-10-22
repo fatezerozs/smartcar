@@ -1,14 +1,16 @@
-> 当前入口为 main 的 `app_runtime_run()`；驱动已按功能拆分，C26/C27 选择运行档位，C12 保持主使能。下文旧文件职责及分支交接为历史记录；当前操作参见 [架构与拨码](../../docs/ARCHITECTURE_MODES.md)。
+> 当前状态入口（2026-10-23）：本页保留测试工具/协议及较早变体说明，不代表当前实车验收或启动条件。现状见 [项目设计与演进档案](../../docs/PROJECT_EVOLUTION.md)；当前主程序为 C31，仍用 C26 启停。
+
+> 当前入口为 main 的 `app_runtime_run()`；驱动已按功能拆分，C26/C27 选择运行档位，C12 保持主使能。下文旧文件职责及分支交接为历史记录；当前操作参见 [架构与拨码](../../docs/archive/history/ARCHITECTURE_MODES.md)。
 
 # 视觉改动总结、安装标定与无编码器控制
 
 ## 对照范围与当前状态
 
-下表的原路径对照来自本机保留的队友副本 `smartcar-main/smartcar-main`；本次交付另以远端 vision-debug 的 30196f2 为 Git 基线，见根目录 docs/CHANGELOG.md。
+下表的原路径对照来自本机保留的队友副本 `smartcar-main/smartcar-main`；本次交付另以远端 vision-debug 的 30196f2 为 Git 基线，见根目录 docs/archive/history/CHANGELOG.md。
 当前完整项目以本 Git 检出目录/交付源码包为准，工程为 `demo/mdk/rt1064.uvprojx`。桌面旧 ZIP 副本不会自动同步。
 队友副本没有改动；原 Camera.c、Island.c、img_process.c、PID 保留，不把它们删除或整体改写。
 
-**FIELD_4：无有效保存记录时使用零 PWM 默认值；恢复有效配置后，C12 开启可在两秒后本地启动，调试/烧录先断开 C12。** 配置保存与启动条件见 [C12_STARTUP](../../docs/C12_STARTUP.md)。TEST_VISION 已退出入口；完整赛道仍只观测。
+**FIELD_4：无有效保存记录时使用零 PWM 默认值；恢复有效配置后，C12 开启可在两秒后本地启动，调试/烧录先断开 C12。** 配置保存与启动条件见 [C12_STARTUP](../../docs/archive/history/C12_STARTUP.md)。TEST_VISION 已退出入口；完整赛道仍只观测。
 新增控制实现通过离线模拟和 ARM 编译，不代表已经完成实际车辆闭环调参或安全验收；本次整理不烧录、不驱动车辆。发布到 vision-debug 的实际提交以 Git 历史为准，不修改队友 main。
 
 ## 相比队友原路径的变化
@@ -95,6 +97,6 @@ PIT1 不是独立硬件看门狗：关中断卡死、芯片失控、功率器件
 工程文件增加引用，isr.c 仅增加头文件和 VISION_DRIVE_ENABLE 条件下的 PIT1 安全钩子；main.c 保持视觉入口并移除临时诊断。main.h 和驱动库不改。新增 docs/tests/tools 不移动原固件目录。
 
 主机回归：图像/预览635837次、调试循环160次；控制核心8891次（含3000帧随机序列），板端默认关闭/未确认/确认测试配置分别5/27/69次，均0失败，亦通过 AddressSanitizer。次数包含像素/坐标、逐帧不变量及每次PWM写入检查，不是独立场景数；已停止时不在每次空转轮询反复写PWM。
-ARM检查包括四个模块、启用分支以及 ISR/main；完整重建和当前环境限制统一记录于 [docs/VERIFICATION.md](../../docs/VERIFICATION.md)。此前曾遇到本机链接器系统 DLL 启动错误，不把旧记录或旧 AXF 当作最新构建证明。未烧录新控制代码，合成验证不代表实际车辆、传感器/电源异常、停车距离或闭环稳定性验证。
+ARM检查包括四个模块、启用分支以及 ISR/main；完整重建和当前环境限制统一记录于 [docs/archive/history/VERIFICATION.md](../../docs/archive/history/VERIFICATION.md)。此前曾遇到本机链接器系统 DLL 启动错误，不把旧记录或旧 AXF 当作最新构建证明。未烧录新控制代码，合成验证不代表实际车辆、传感器/电源异常、停车距离或闭环稳定性验证。
 
 固件更新需包含 C/H、profile、工程引用和安全钩子的一致集合；本次交付同时包含完整 SDK、保留的原实现、文档和主机回归，不再按旧轮次的“7 文件”分批上传。不要上传构建产物，也不要覆盖队友 main 分支。

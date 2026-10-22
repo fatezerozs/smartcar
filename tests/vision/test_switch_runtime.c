@@ -55,6 +55,12 @@ int main(void)
         if(experiment==0||experiment==1||experiment==5){assert(observed_running&&moved&&vision_drive_is_local());}
         else{assert(observed_running&&!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);}
         if(experiment==6){
+            assert(strstr(trace_wire,"pwm_hz_cfg=17000 scale=1000")!=NULL);
+            assert(strstr(trace_wire,"process_max=")!=NULL);
+            assert(strstr(trace_wire,"accepted=0")!=NULL);
+            assert(strstr(trace_wire,"ring_seen=")!=NULL);
+            assert(strstr(trace_wire,"ring_candidate=")!=NULL);
+            assert(strstr(trace_wire,"ring_votes=")!=NULL);
             assert(strstr(trace_wire,"[TRACE_BEGIN] run=1 count=")!=NULL);
             assert(strstr(trace_wire,"[TRACE] run=1 i=0 ")!=NULL);
             assert(strstr(trace_wire,"[TRACE_END] run=1 count=")!=NULL);

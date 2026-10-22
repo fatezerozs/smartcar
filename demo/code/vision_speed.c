@@ -152,15 +152,16 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16
             unsigned target_ticks=speed.max_ticks;
 #if VISION_ROUTE_SWITCH
             int track=vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active;
-            if(track)target_ticks=vt_route_ticks(vd.control.output.speed_boost,target_ticks,
-                vd.control.output.steering,vd.control.recovery_steer,vd.control.output.lateral);
+            if(track)target_ticks=vt_route_ticks(target_ticks,
+                vd.control.output.steering,vd.control.recovery_steer,vd.control.output.lateral,
+                vd.control.output.paired_support,vd.control.output.edge_support);
 #endif
             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
             int32_t measured[2]={(int32_t)speed.raw4*speed.sign4,(int32_t)speed.raw3*speed.sign3};
             if(periods>5){trip(VS_FAULT_BACKLOG,now);return 0;}
             if(reverse){measured[0]=-measured[0];measured[1]=-measured[1];}
 #if VISION_ROUTE_SWITCH
-            if(track&&vd.control.output.speed_boost){
+            if(track){
                 unsigned rise=1;
                 if(vd.control.output.speed_boost==1&&vd.control.straight_tracking&&
                    (uint32_t)(now-vd.control.straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)

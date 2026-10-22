@@ -59,7 +59,16 @@ static void model_tests(void)
         tb_reset(&filter); memcpy(o.x,model.mean[j],sizeof(o.x));
         for (i=1;i<=80;++i) { CHECK(tb_update(&filter,&o,i,i*20)); probability(); }
         CHECK(filter.result.candidate == (tb_state_t)j);
+        if(j==TB_RING_L_ENTRY||j==TB_RING_R_ENTRY)CHECK(filter.result.accepted);
+        if(filter.result.accepted){
+            int hint=j==TB_RING_L_ENTRY?-1:j==TB_RING_R_ENTRY?1:0;
+            CHECK(tb_route_hint(&filter,1600)==hint);
+            CHECK(tb_route_hint(&filter,1600+model.stale_ms)==0);
+            filter.result.trained=0;CHECK(tb_route_hint(&filter,1600)==0);
+            filter.result.trained=1;filter.result.accepted=0;CHECK(tb_route_hint(&filter,1600)==0);
+        }
     }
+    CHECK(tb_route_hint(NULL,0)==0);
     /* 复现现场：无几何 mask=60，单侧全开、多个亮区。未训练即使 p 很高
      * 也不能在室内场景上确认十字。这个回归与逐飞抓取的现场特征一致。 */
     {
