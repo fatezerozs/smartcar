@@ -1,0 +1,317 @@
+test_vision.c
+vision_midterm.c
+正在生成代码...
+straight             valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+bright floor object  valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+thin black edges     valid=1 state=TRACK q=100 both=87 inferred=0 err=0.00 bend=0.00
+left displacement    valid=1 state=TRACK q=100 both=87 inferred=0 err=-24.50 bend=0.00
+right displacement   valid=1 state=TRACK q=100 both=87 inferred=0 err=25.50 bend=0.00
+left bend            valid=1 state=TRACK q=100 both=87 inferred=0 err=-15.14 bend=-19.00
+right bend           valid=1 state=TRACK q=100 both=87 inferred=0 err=16.14 bend=19.00
+bottom occlusion     valid=1 state=TRACK q=85 both=74 inferred=0 err=0.50 bend=0.00
+noise                valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+half shadow          valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+horizontal shadow    valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+brightness slope     valid=1 state=TRACK q=100 both=87 inferred=0 err=-15.14 bend=-19.00
+all white            valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+all black            valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+low contrast         valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+one edge learned     valid=1 state=TRACK q=50 both=0 inferred=87 err=28.50 bend=0.00
+one edge expired     valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+history quarantine   valid=1 state=TRACK q=50 both=0 inferred=87 err=26.40 bend=0.00
+right contradiction  valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+left contradiction   valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+rightmost inference  valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+side distractor      valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+equal candidates     valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+symmetric background valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+right false branch   valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+left false branch    valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+bend with row gap    valid=1 state=TRACK q=96 both=84 inferred=0 err=42.33 bend=34.00
+RESULT: 636029 checks, 0 failures (synthetic fixtures, not real-track validation)
+app_mode.c
+test_debug.c
+vision_debug.c
+app_runtime.c
+app_transport.c
+vision_frame.c
+vision_telemetry.c
+vision_midterm.c
+track_bayes.c
+正在生成代码...
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+ADAPTER RESULT: 228 checks, 0 failures (mock MCU/transport, no hardware claim)
+test_control.c
+vision_control.c
+midterm_open_loop.c
+正在生成代码...
+CONTROL RESULT: 8894 checks, 0 failures (synthetic control, no real vehicle claim)
+test_drive.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+DRIVE RESULT: enabled=0 confirmed=0 5 checks, 0 failures
+test_drive.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+DRIVE RESULT: enabled=1 confirmed=0 27 checks, 0 failures
+test_drive.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+DRIVE RESULT: enabled=1 confirmed=1 69 checks, 0 failures
+test_debug.c
+vision_debug.c
+app_runtime.c
+app_transport.c
+vision_frame.c
+vision_telemetry.c
+vision_midterm.c
+track_bayes.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+fragmented field gain  packets=0 elapsed=800: complete
+field trailing arm     packets=0 elapsed=800: complete
+field stops running    packets=0 elapsed=800: complete
+probe bounded text     packets=0 elapsed=1200: complete
+image cancels probe    packets=0 elapsed=1300: complete
+STOP before probe      packets=0 elapsed=1200: complete
+STOP after probe       packets=0 elapsed=1200: complete
+no probe in image      packets=0 elapsed=1300: complete
+wheel bounded text     packets=0 elapsed=1200: complete
+image cancels wheel    packets=0 elapsed=1300: complete
+STOP before wheel      packets=0 elapsed=1200: complete
+STOP after wheel       packets=0 elapsed=1200: complete
+no wheel in image      packets=0 elapsed=1300: complete
+saved profile stays stopped packets=0 elapsed=3000: complete
+STOP cancels countdown packets=0 elapsed=3000: complete
+image cancels countdown packets=2 elapsed=3000: complete
+physical samples do not arm packets=0 elapsed=3000: complete
+invalid boot no retry  packets=0 elapsed=3000: complete
+DIP observer rejects arm packets=0 elapsed=800: complete
+DIP stops running      packets=0 elapsed=800: complete
+DIP cancels partial line packets=0 elapsed=800: complete
+ADAPTER RESULT: 11769 checks, 0 failures (mock MCU/transport, no hardware claim)
+test_debug.c
+vision_debug.c
+app_runtime.c
+app_transport.c
+vision_frame.c
+vision_telemetry.c
+vision_midterm.c
+track_bayes.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+fragmented field gain  packets=0 elapsed=800: complete
+field trailing arm     packets=0 elapsed=800: complete
+field stops running    packets=0 elapsed=800: complete
+probe bounded text     packets=0 elapsed=1200: complete
+image cancels probe    packets=0 elapsed=1300: complete
+STOP before probe      packets=0 elapsed=1200: complete
+STOP after probe       packets=0 elapsed=1200: complete
+no probe in image      packets=0 elapsed=1300: complete
+wheel bounded text     packets=0 elapsed=1200: complete
+image cancels wheel    packets=0 elapsed=1300: complete
+STOP before wheel      packets=0 elapsed=1200: complete
+STOP after wheel       packets=0 elapsed=1200: complete
+no wheel in image      packets=0 elapsed=1300: complete
+saved profile stays stopped packets=0 elapsed=3000: complete
+STOP cancels countdown packets=0 elapsed=3000: complete
+image cancels countdown packets=2 elapsed=3000: complete
+physical samples do not arm packets=0 elapsed=3000: complete
+invalid boot no retry  packets=0 elapsed=3000: complete
+DIP observer rejects arm packets=0 elapsed=800: complete
+DIP stops running      packets=0 elapsed=800: complete
+DIP cancels partial line packets=0 elapsed=800: complete
+ADAPTER RESULT: 12935 checks, 0 failures (mock MCU/transport, no hardware claim)
+test_bayes.c
+track_bayes.c
+midterm_open_loop.c
+正在生成代码...
+BAYES + OPEN LOOP PASS: 70631 checks (synthetic, not track validation)
+test_field.c
+vision_field.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_control.c
+midterm_open_loop.c
+vision_storage.c
+正在生成代码...
+FIELD PASS: 2319 checks; no physical IO
+test_servo_probe.c
+vision_field.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_control.c
+midterm_open_loop.c
+vision_storage.c
+正在生成代码...
+SERVO PROBE PASS: 169 checks; no physical IO
+test_motor_probe.c
+vision_field.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_control.c
+midterm_open_loop.c
+vision_storage.c
+正在生成代码...
+MOTOR PROBE PASS: 264 checks; no physical IO
+test_startup.c
+vision_field.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_control.c
+midterm_open_loop.c
+vision_storage.c
+正在生成代码...
+STARTUP + STORAGE PASS: 13178 checks; no physical IO
+test_board_mode.c
+board_diagnostics.c
+board_io.c
+board_camera.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+app_mode.c
+vision_control.c
+midterm_open_loop.c
+正在生成代码...
+BOARD + MODE: 223 checks, 0 failures (mock GPIO only)
+ALL HOST SUITES PASSED. Synthetic IO is not real-vehicle validation.

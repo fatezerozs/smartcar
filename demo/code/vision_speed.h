@@ -5,6 +5,8 @@ typedef struct {
     uint32_t samples,sample_ms,faults;
     uint32_t fault_control_age_ms,fault_sample_age_ms,fault_interval_ms;
     int32_t total3,total4;
+    int16_t fault_raw3,fault_raw4,fault_target_right,fault_target_left;
+    uint16_t fault_pwm_right,fault_pwm_left;
     int16_t raw3,raw4,target_right,target_left,measured_right,measured_left;
     uint16_t pwm_right,pwm_left,max_ticks,kp_q8,ki_q8;
     int8_t sign3,sign4;
@@ -21,7 +23,9 @@ int vision_drive_speed_enable(int enable);
 void vd_speed_init(uint32_t now);
 void vd_speed_sample_tick(uint32_t now);
 void vd_speed_stop(void);
-/* Called only under output-layer IRQ mask; returns 0 after an interlock trip. */
+/* Called only under output-layer IRQ mask; returns 0 after an interlock trip.
+ * cap scales requests into encoder targets. C26 track driving has a separate
+ * MT_ROUTE_PWM_CAP_PERMILLE output ceiling; other modes use cap for both. */
 int vd_speed_output(uint16_t request_right,uint16_t request_left,int reverse,
                     uint16_t cap,uint16_t *pwm_right,uint16_t *pwm_left);
 #endif

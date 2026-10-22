@@ -1,0 +1,44 @@
+{
+  "version": "MIDTERM_C26_25",
+  "status": "built_not_flashed",
+  "sha256": "100AC0C064959D6552979C3B6E4197E43CF7364212161903ECEF39BE0AD3A238",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "servo_static_operator_confirmed": true,
+  "servo_mechanical_measurement_pending": false,
+  "servo_command_us": {
+    "right": 1430,
+    "center": 1550,
+    "left": 1670,
+    "right_sign": -1
+  },
+  "servo_measurement_source": "Operator confirmation on 2026-10-22; docs/SERVO_ENDPOINT_TEST_20261022.md",
+  "servo_angle_feedback": false,
+  "control_strategy_baseline": "MIDTERM_C26_24",
+  "fixed_40_percent_cap_removed": true,
+  "pwm_physical_full_scale": 1000,
+  "pwm_rise_permille_per_10ms": 10,
+  "signed_feedforward_trim": true,
+  "code": 85136,
+  "ro": 13348,
+  "rw": 212,
+  "zi": 196476,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300852,
+    "turn": 317083,
+    "ring": 238,
+    "projection_cases": 24,
+    "projection_checks": 2086,
+    "current_road_fallbacks": 12,
+    "field_protocol": 44,
+    "asan_this_revision": "not rerun; unchanged C24 core previously passed"
+  },
+  "limitations": [
+    "Servo confirmation is static operator observation, not a measured steering angle or loaded driving test",
+    "No C25 real vehicle speed, stability or full course coverage acceptance",
+    "C22 log and video clocks are not synchronized"
+  ]
+}

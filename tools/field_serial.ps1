@@ -1,6 +1,6 @@
 param(
     [string]$Port,
-    [ValidateRange(1,120)][int]$Seconds = 6,
+    [ValidateRange(1,1800)][int]$Seconds = 6,
     [switch]$TextMode,
     [string[]]$Command = @(),
     [ValidateRange(0,60)][int]$RunSeconds = 0,

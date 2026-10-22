@@ -1,0 +1,51 @@
+{
+  "source": "C:/download_temp/VID_20261022_191838.mp4",
+  "sha256": "A39CA4C6B7E437D830C562248B37FDDF50765DC52100B3950BF8798A656327F3",
+  "trust": "original frames reviewed; metadata computed",
+  "fps": 30,
+  "frames": 949,
+  "seconds": 31.633333333333333,
+  "resolution": [
+    1080,
+    1920
+  ],
+  "reviewed_seconds": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    30.5,
+    31,
+    31.6
+  ],
+  "whole_course_verified": false,
+  "right_tangent_complete_entry_exit_verified": false,
+  "uart_synchronized": false,
+  "notes": [
+    "Handheld view, occlusion and off-screen intervals prevent a continuous no-stop/no-exit claim",
+    "End junction progress appears slow; no linked MCU fault event available",
+    "Unentered right tangent ring identified by operator; code diagnosis uses separate projection fixtures"
+  ]
+}

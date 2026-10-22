@@ -1,0 +1,3 @@
+# Trial recordings are local evidence; do not commit large/raw captures by default.
+*
+!.gitignore

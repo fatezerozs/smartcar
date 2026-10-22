@@ -3,16 +3,47 @@
 
 static uint16_t learned_width[VISION_HEIGHT];
 static uint8_t width_age[VISION_HEIGHT];
+#if VISION_ROUTE_SWITCH
+/* Camera geometry model, learned only from repeated real two-edge rows.
+ * A current visible edge is still mandatory; never replay an old center. */
+static uint8_t width_samples[VISION_HEIGHT];
+#endif
 static uint8_t previous_valid;
 static float previous_error;
 static float previous_seed;
 
 static float vabs(float x) { return x < 0 ? -x : x; }
+#if VISION_ROUTE_SWITCH
+#include "vision_reference_route.h"
+#endif
+
+void vision_midterm_route_reset(void)
+{
+#if VISION_ROUTE_SWITCH
+    reference_roundabout_reset();
+    reference_course_reset();
+#endif
+}
+
+void vision_midterm_route_enable(uint8_t enabled)
+{
+#if VISION_ROUTE_SWITCH
+    if(!enabled){reference_roundabout_reset();reference_course_reset();}
+    reference_ring.enabled=enabled!=0;
+#else
+    (void)enabled;
+#endif
+}
 
 void vision_midterm_reset(void)
 {
     memset(learned_width, 0, sizeof(learned_width));
     memset(width_age, 255, sizeof(width_age));
+#if VISION_ROUTE_SWITCH
+    memset(width_samples,0,sizeof(width_samples));
+    reference_roundabout_reset();
+    reference_course_reset();
+#endif
     previous_valid = 0;
     previous_error = 0;
     previous_seed = (VISION_WIDTH - 1) * VISION_AXIS_NEAR_X;
@@ -77,16 +108,20 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
     uint32_t hist[256] = {0};
     const uint32_t count = (VISION_ROI_BOTTOM - VISION_ROI_TOP + 1) * VISION_WIDTH;
     uint32_t whites = 0;
-    int x, y, acquired = 0, gaps = 0, near_rows = 0;
+    int x, y;
+#if !VISION_ROUTE_SWITCH
+    int acquired = 0, gaps = 0, near_rows = 0;
     int last_left = 0, last_right = 0, last_flags = 0;
     float prediction = previous_valid ? previous_seed : (VISION_WIDTH - 1) * VISION_AXIS_NEAR_X;
     float seed = prediction, error_sum = 0, weights = 0;
     float near_sum = 0, far_sum = 0;
     int near_n = 0, far_n = 0;
+#endif
     memset(out, 0, sizeof(*out));
     memset(out->left, VISION_INVALID_X, sizeof(out->left));
     memset(out->right, VISION_INVALID_X, sizeof(out->right));
     memset(out->center, VISION_INVALID_X, sizeof(out->center));
+    memset(out->entry_guide, VISION_INVALID_X, sizeof(out->entry_guide));
     for (y = 0; y < VISION_HEIGHT; ++y) {
         if (width_age[y] < 255) ++width_age[y];
     }
@@ -144,8 +179,13 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
         previous_valid = 0;
         /* Do not reuse lane widths across lens occlusion/exposure loss. */
         memset(width_age, 255, sizeof(width_age));
+        /* Keep the learned camera-width geometry across exposure loss.
+         * No edge is inferred on this invalid frame; reset() still clears it. */
         return;
     }
+#if VISION_ROUTE_SWITCH
+    reference_route(binary,out);
+#else
     /* 从下向上跟踪白色赛道内部；允许绕过少量底部遮挡再寻找起点。 */
     for (y = VISION_ROI_BOTTOM; y >= VISION_ROI_TOP; --y) {
         const uint8_t *row = binary + y * VISION_WIDTH;
@@ -165,8 +205,12 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
             flags = has_l | (has_r << 1);
             if (flags == 3) {
                 center = (l + r) * 0.5f;
-            } else if ((flags == 1 || flags == 2) && previous_valid &&
-                       width_age[y] <= VISION_MAX_INFER_AGE && learned_width[y] >= VISION_MIN_WIDTH) {
+            } else if ((flags == 1 || flags == 2) && learned_width[y] >= VISION_MIN_WIDTH &&
+#if VISION_ROUTE_SWITCH
+                       ((previous_valid && width_age[y]<=VISION_MAX_INFER_AGE) || width_samples[y]>=5)) {
+#else
+                       previous_valid && width_age[y] <= VISION_MAX_INFER_AGE) {
+#endif
                 /* Infer only a boundary clipped by the image edge, never one
                  * hidden inside the image by an arbitrary dark obstruction. */
                 if (flags == 1 && r == VISION_WIDTH - 1) {
@@ -227,6 +271,7 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
         out->right[y] = (best_r >= 0 && best_r < VISION_WIDTH) ? (uint8_t)best_r : VISION_INVALID_X;
         out->center[y] = (uint8_t)(best_center + 0.5f);
         out->row_flags[y] = (uint8_t)best_flags;
+        out->row_width[y]=(uint16_t)(best_r-best_l+1);
         if (best_flags == 3) {
             ++out->measured_rows;
         } else ++out->inferred_rows;
@@ -257,6 +302,12 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
          * Rejected frames still age the last accepted measurements. */
         for (y = VISION_ROI_TOP; y <= VISION_ROI_BOTTOM; ++y) {
             if (out->row_flags[y] == 3) {
+#if VISION_ROUTE_SWITCH
+                {unsigned w=(unsigned)(out->right[y]-out->left[y]+1);
+                 if(!learned_width[y] || w*5U<learned_width[y]*4U || w*4U>learned_width[y]*5U)
+                     width_samples[y]=1;
+                 else if(width_samples[y]<5)++width_samples[y];}
+#endif
                 learned_width[y] = (uint16_t)(out->right[y] - out->left[y] + 1);
                 width_age[y] = 0;
             }
@@ -277,6 +328,7 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
         previous_error = 0;
     }
     previous_valid = out->valid;
+#endif
 }
 
 void vision_midterm_preview(const uint8_t *gray, const uint8_t *binary,

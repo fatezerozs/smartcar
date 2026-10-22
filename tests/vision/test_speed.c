@@ -54,6 +54,24 @@ int main(void)
     CHECK(pi.output>=135&&pi.output<=150);
     for(unsigned i=0;i<100;++i)CHECK(ws_pi_step(&pi,10,0,100*256,10*256,150,1)==150);
     CHECK(pi.integral_q8<=150*256);CHECK(ws_pi_step(&pi,0,0,256,256,150,1)==0&&pi.integral_q8==0);
+    /* Field C22: target 34/36, measured 88/79, still powered. An excessive
+     * feedforward must be removable by feedback, rather than impose a speed
+     * floor. Test different first-order wheel plants, not internal formulas. */
+    for(unsigned plant=0;plant<3;++plant){
+        double measured=0,gain=.30+.20*plant;
+        ws_pi_reset(&pi);
+        for(unsigned stage=0;stage<3;++stage){
+            int target=stage==0?40:stage==1?20:50;
+            for(unsigned i=0;i<600;++i){
+                uint16_t duty=ws_pi_step_ff(&pi,target,(int32_t)(measured+.5),256,12,400,1,(uint16_t)(target*36/10));
+                CHECK(duty<=400);
+                measured+=(gain*duty-measured)*.10;
+            }
+            printf("FF PLANT gain=%.2f target=%d measured=%.2f pwm=%u\n",gain,target,measured,pi.output);
+            CHECK(measured>=target-1.5&&measured<=target+1.5);
+        }
+        CHECK(ws_pi_step_ff(&pi,0,0,256,12,400,1,144)==0&&!pi.integral_q8);
+    }
     init();CHECK(!info().enabled&&!info().signs_confirmed);CHECK(!vision_drive_speed_enable(1));
     CHECK(!vision_drive_encoder_signs(0,1));CHECK(!vision_drive_speed_config(0,1,1));
     CHECK(!vision_drive_speed_config(1001,1,1));CHECK(!vision_drive_speed_config(10,-1,1));

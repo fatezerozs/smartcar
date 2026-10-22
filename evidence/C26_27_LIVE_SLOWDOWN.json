@@ -1,0 +1,218 @@
+{
+  "source": "recordings\\wireless-20261022-194432-183708\\rx.bin",
+  "sha256": "55b643968cefbc2ef54e80d4a2bc118ad720854b63d6872bdd4659691de9b021",
+  "bytes": 175724,
+  "firmware_identity": "unverified; no build query sent",
+  "method": "computed: full printable ASCII schema matches within archived raw bytes; malformed or binary-contaminated records rejected; no repairs",
+  "video_sync_verified": false,
+  "complete_trace": false,
+  "trace_records": [
+    {
+      "offset": 41670,
+      "text": "[TRACE] run=1 i=14 ms=7971 frame=369 e=51 h=-24 u=92 duty=65 servo=1542 raw=-10/12 target=17/18 pwm=96/106 v=1 q=88 f=3 w=143 cx=96 both=64 inferred=9 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 42673,
+      "text": "[TRACE] run=1 i=18 ms=8211 frame=381 e=47 h=-28 u=76 duty=65 servo=1542 raw=-18/19 target=17/18 pwm=91/100 v=1 q=88 f=3 w=144 cx=96 both=62 inferred=11 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 46630,
+      "text": "[TRACE] run=1 i=29 ms=8890 frame=415 e=25 h=-68 u=-20 duty=65 servo=1550 raw=-23/25 target=18/17 pwm=74/81 v=1 q=86 f=3 w=144 cx=95 both=56 inferred=15 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 48378,
+      "text": "[TRACE] run=1 i=36 ms=9310 frame=436 e=47 h=-182 u=-95 duty=65 servo=1556 raw=-22/22 target=18/17 pwm=70/73 v=1 q=85 f=3 w=145 cx=94 both=50 inferred=20 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 51555,
+      "text": "[TRACE] run=1 i=41 ms=9610 frame=451 e=42 h=-254 u=-201 duty=65 servo=1566 raw=-17/18 target=18/17 pwm=72/76 v=1 q=78 f=3 w=149 cx=92 both=40 inferred=24 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 53429,
+      "text": "[TRACE] run=1 i=49 ms=10090 frame=475 e=21 h=-172 u=-157 duty=65 servo=1562 raw=-16/15 target=18/17 pwm=77/77 v=1 q=74 f=3 w=156 cx=88 both=29 inferred=32 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 53997,
+      "text": "[TRACE] run=1 i=51 ms=10210 frame=481 e=3 h=-156 u=-181 duty=65 servo=1564 raw=-16/15 target=18/17 pwm=78/79 v=1 q=75 f=3 w=158 cx=86 both=27 inferred=35 state=1 source=0 obs=3 faults=0 junction=4 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    },
+    {
+      "offset": 54534,
+      "text": "[TRACE] run=1 i=53 ms=10330 frame=487 e=-9 h=-163 u=-222 duty=65 servo=1568 raw=-15/17 target=18/16 pwm=77/75 v=1 q=72 f=3 w=161 cx=83 both=18 inferred=40 state=1 source=0 obs=3 faults=0 junction=5 anchors=8 ring=0 ring_side=0 ring_rows=0 entry_guide=0"
+    }
+  ],
+  "speed_records": [
+    {
+      "offset": 51,
+      "text": "[SPEED] ms=49115 sample=4879 enabled=1 raw3_L=-14 raw4_R=19 target_R/L=18/11 measured_R/L=19/14 pwm_R/L=87/46 faults=0; counts/10ms"
+    },
+    {
+      "offset": 1613,
+      "text": "[SPEED] ms=49515 sample=4919 enabled=1 raw3_L=-13 raw4_R=20 target_R/L=18/11 measured_R/L=20/13 pwm_R/L=84/43 faults=0; counts/10ms"
+    },
+    {
+      "offset": 2030,
+      "text": "[SPEED] ms=49615 sample=4929 enabled=1 raw3_L=-12 raw4_R=17 target_R/L=18/11 measured_R/L=17/12 pwm_R/L=87/43 faults=0; counts/10ms"
+    },
+    {
+      "offset": 2799,
+      "text": "[SPEED] ms=49815 sample=4949 enabled=1 raw3_L=-11 raw4_R=14 target_R/L=18/11 measured_R/L=14/11 pwm_R/L=93/44 faults=0; counts/10ms"
+    },
+    {
+      "offset": 3499,
+      "text": "[SPEED] ms=50015 sample=4969 enabled=1 raw3_L=-12 raw4_R=19 target_R/L=18/11 measured_R/L=19/12 pwm_R/L=90/43 faults=0; counts/10ms"
+    },
+    {
+      "offset": 5278,
+      "text": "[SPEED] ms=50515 sample=5019 enabled=1 raw3_L=-10 raw4_R=19 target_R/L=18/11 measured_R/L=19/10 pwm_R/L=92/42 faults=0; counts/10ms"
+    },
+    {
+      "offset": 6463,
+      "text": "[SPEED] ms=50815 sample=5049 enabled=1 raw3_L=-13 raw4_R=18 target_R/L=18/11 measured_R/L=18/13 pwm_R/L=91/37 faults=0; counts/10ms"
+    },
+    {
+      "offset": 9172,
+      "text": "[SPEED] ms=51615 sample=5129 enabled=1 raw3_L=-13 raw4_R=18 target_R/L=18/12 measured_R/L=18/13 pwm_R/L=93/38 faults=0; counts/10ms"
+    },
+    {
+      "offset": 9918,
+      "text": "[SPEED] ms=51815 sample=5149 enabled=1 raw3_L=-17 raw4_R=22 target_R/L=18/13 measured_R/L=22/17 pwm_R/L=86/32 faults=0; counts/10ms"
+    },
+    {
+      "offset": 10747,
+      "text": "[SPEED] ms=52015 sample=5169 enabled=1 raw3_L=-16 raw4_R=18 target_R/L=18/13 measured_R/L=18/16 pwm_R/L=89/22 faults=0; counts/10ms"
+    },
+    {
+      "offset": 11387,
+      "text": "[SPEED] ms=52215 sample=5189 enabled=1 raw3_L=-15 raw4_R=20 target_R/L=18/14 measured_R/L=20/15 pwm_R/L=87/0 faults=0; counts/10ms"
+    },
+    {
+      "offset": 12134,
+      "text": "[SPEED] ms=52415 sample=5209 enabled=1 raw3_L=-14 raw4_R=19 target_R/L=18/14 measured_R/L=19/14 pwm_R/L=87/2 faults=0; counts/10ms"
+    },
+    {
+      "offset": 12554,
+      "text": "[SPEED] ms=52515 sample=5219 enabled=1 raw3_L=-15 raw4_R=17 target_R/L=18/14 measured_R/L=17/15 pwm_R/L=89/0 faults=0; counts/10ms"
+    },
+    {
+      "offset": 15103,
+      "text": "[SPEED] ms=53115 sample=5279 enabled=1 raw3_L=-13 raw4_R=17 target_R/L=18/12 measured_R/L=17/13 pwm_R/L=92/26 faults=0; counts/10ms"
+    },
+    {
+      "offset": 16974,
+      "text": "[SPEED] ms=53615 sample=5329 enabled=1 raw3_L=-12 raw4_R=18 target_R/L=18/15 measured_R/L=18/12 pwm_R/L=90/8 faults=0; counts/10ms"
+    },
+    {
+      "offset": 17389,
+      "text": "[SPEED] ms=53715 sample=5339 enabled=1 raw3_L=-13 raw4_R=15 target_R/L=18/16 measured_R/L=15/13 pwm_R/L=94/38 faults=0; counts/10ms"
+    },
+    {
+      "offset": 17722,
+      "text": "[SPEED] ms=53815 sample=5349 enabled=1 raw3_L=-15 raw4_R=16 target_R/L=18/16 measured_R/L=16/15 pwm_R/L=95/50 faults=0; counts/10ms"
+    },
+    {
+      "offset": 18938,
+      "text": "[SPEED] ms=54115 sample=5379 enabled=1 raw3_L=-18 raw4_R=21 target_R/L=18/17 measured_R/L=21/18 pwm_R/L=88/17 faults=0; counts/10ms"
+    },
+    {
+      "offset": 19322,
+      "text": "[SPEED] ms=54215 sample=5389 enabled=1 raw3_L=-18 raw4_R=19 target_R/L=18/17 measured_R/L=19/18 pwm_R/L=88/1 faults=0; counts/10ms"
+    },
+    {
+      "offset": 19673,
+      "text": "[SPEED] ms=54315 sample=5399 enabled=1 raw3_L=-16 raw4_R=16 target_R/L=18/17 measured_R/L=16/16 pwm_R/L=92/4 faults=0; counts/10ms"
+    },
+    {
+      "offset": 19994,
+      "text": "[SPEED] ms=54415 sample=5409 enabled=1 raw3_L=-17 raw4_R=16 target_R/L=18/17 measured_R/L=16/17 pwm_R/L=93/4 faults=0; counts/10ms"
+    },
+    {
+      "offset": 21114,
+      "text": "[SPEED] ms=54715 sample=5439 enabled=1 raw3_L=-18 raw4_R=19 target_R/L=18/17 measured_R/L=19/18 pwm_R/L=90/11 faults=0; counts/10ms"
+    },
+    {
+      "offset": 22993,
+      "text": "[SPEED] ms=55315 sample=5499 enabled=1 raw3_L=-18 raw4_R=20 target_R/L=18/17 measured_R/L=20/18 pwm_R/L=89/11 faults=0; counts/10ms"
+    },
+    {
+      "offset": 23345,
+      "text": "[SPEED] ms=55415 sample=5509 enabled=1 raw3_L=-17 raw4_R=17 target_R/L=18/17 measured_R/L=17/17 pwm_R/L=92/7 faults=0; counts/10ms"
+    },
+    {
+      "offset": 24588,
+      "text": "[SPEED] ms=55715 sample=5539 enabled=1 raw3_L=-21 raw4_R=19 target_R/L=18/18 measured_R/L=19/21 pwm_R/L=91/15 faults=0; counts/10ms"
+    },
+    {
+      "offset": 25084,
+      "text": "[SPEED] ms=55815 sample=5549 enabled=1 raw3_L=-17 raw4_R=18 target_R/L=18/18 measured_R/L=18/17 pwm_R/L=92/24 faults=0; counts/10ms"
+    },
+    {
+      "offset": 25850,
+      "text": "[SPEED] ms=56015 sample=5569 enabled=1 raw3_L=-18 raw4_R=17 target_R/L=18/18 measured_R/L=17/18 pwm_R/L=94/56 faults=0; counts/10ms"
+    },
+    {
+      "offset": 26576,
+      "text": "[SPEED] ms=56215 sample=5589 enabled=1 raw3_L=-18 raw4_R=19 target_R/L=17/18 measured_R/L=19/18 pwm_R/L=88/56 faults=0; counts/10ms"
+    },
+    {
+      "offset": 27314,
+      "text": "[SPEED] ms=56415 sample=5609 enabled=1 raw3_L=-20 raw4_R=21 target_R/L=17/18 measured_R/L=21/20 pwm_R/L=83/48 faults=0; counts/10ms"
+    },
+    {
+      "offset": 28094,
+      "text": "[SPEED] ms=56615 sample=5629 enabled=1 raw3_L=-17 raw4_R=16 target_R/L=18/18 measured_R/L=16/17 pwm_R/L=91/56 faults=0; counts/10ms"
+    },
+    {
+      "offset": 29661,
+      "text": "[SPEED] ms=57215 sample=5689 enabled=1 raw3_L=-14 raw4_R=13 target_R/L=18/17 measured_R/L=13/14 pwm_R/L=94/40 faults=0; counts/10ms"
+    },
+    {
+      "offset": 30413,
+      "text": "[SPEED] ms=57415 sample=5709 enabled=1 raw3_L=-14 raw4_R=17 target_R/L=18/17 measured_R/L=17/14 pwm_R/L=93/58 faults=0; counts/10ms"
+    },
+    {
+      "offset": 30821,
+      "text": "[SPEED] ms=57515 sample=5719 enabled=1 raw3_L=-16 raw4_R=17 target_R/L=18/17 measured_R/L=17/16 pwm_R/L=93/56 faults=0; counts/10ms"
+    },
+    {
+      "offset": 31219,
+      "text": "[SPEED] ms=57615 sample=5729 enabled=1 raw3_L=-16 raw4_R=17 target_R/L=18/17 measured_R/L=17/16 pwm_R/L=93/57 faults=0; counts/10ms"
+    },
+    {
+      "offset": 44937,
+      "text": "[SPEED] ms=63188 sample=6287 enabled=1 raw3_L=0 raw4_R=2 target_R/L=0/0 measured_R/L=13/-11 pwm_R/L=0/0 faults=256; counts/10ms"
+    },
+    {
+      "offset": 49691,
+      "text": "[SPEED] ms=63688 sample=6337 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=13/-11 pwm_R/L=0/0 faults=256; counts/10ms"
+    }
+  ],
+  "last_stop_records": [
+    {
+      "offset": 50106,
+      "text": "[LAST_STOP] seq=1 ms=62188 run_ms=55077 reason=2 faults=256 speed_detail=9 raw3_L=10 raw4_R=14 target_R/L=18/17 pwm_R/L=67/95 prev_e=0.216 prev_h=0.255 prev_u=-0.100 prev_servo_us=1558; retained_until_reset"
+    }
+  ],
+  "limitations": [
+    "Mixed binary and damaged text; records are incomplete and not a continuous trace",
+    "No synchronized mapping from video time to firmware clock",
+    "A retained reverse_left stop is evidence of a recorded fault, not proof of its physical cause"
+  ],
+  "schema_regex": {
+    "trace": "\\[TRACE\\] run=\\d+ i=\\d+ ms=\\d+ frame=\\d+ e=-?\\d+ h=-?\\d+ u=-?\\d+ duty=\\d+ servo=\\d+ raw=-?\\d+/-?\\d+ target=\\d+/\\d+ pwm=\\d+/\\d+ v=\\d+ q=\\d+ f=\\d+ w=\\d+ cx=\\d+ both=\\d+ inferred=\\d+ state=\\d+ source=\\d+ obs=\\d+ faults=\\d+ junction=\\d+ anchors=\\d+ ring=\\d+ ring_side=-?\\d+ ring_rows=\\d+ entry_guide=\\d+",
+    "speed": "\\[SPEED\\] ms=\\d+ sample=\\d+ enabled=\\d+ raw3_L=-?\\d+ raw4_R=-?\\d+ target_R/L=\\d+/\\d+ measured_R/L=-?\\d+/-?\\d+ pwm_R/L=\\d+/\\d+ faults=\\d+; counts/10ms",
+    "last_stop": "\\[LAST_STOP\\] seq=\\d+ ms=\\d+ run_ms=\\d+ reason=\\d+ faults=\\d+ speed_detail=\\d+ raw3_L=-?\\d+ raw4_R=-?\\d+ target_R/L=\\d+/\\d+ pwm_R/L=\\d+/\\d+ prev_e=-?[\\d.]+ prev_h=-?[\\d.]+ prev_u=-?[\\d.]+ prev_servo_us=\\d+; retained_until_reset"
+  },
+  "rejected_printable_candidates": {
+    "trace_records": 7,
+    "speed_records": 13,
+    "last_stop_records": 1
+  },
+  "diagnosis": {
+    "observed": "low positive targets and broadly following wheel measurements; repeated duty=65/1000 with junction=4 anchors=8",
+    "replicated_software_defect": "4 peripheral joined rows force junction crawl and discard real preview despite 83 paired rows",
+    "field_row_locations_verified": false,
+    "battery_static_v_operator": 10.8,
+    "cell_voltages_and_loaded_v": "not supplied",
+    "battery_causation_established": false
+  }
+}

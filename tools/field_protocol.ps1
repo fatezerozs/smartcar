@@ -1,5 +1,5 @@
 # Protocol helpers only: no port access or vehicle commands on import.
-$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1)'
+$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1|MIDTERM_ROUTE_TRAIN_1|MIDTERM_C26_(?:[1-9]|1[0-9]|2[0-8]))'
 function Test-FieldCommand([string]$Value) {
     if($Value -cin @('@status','@save','@load','@encoder_status','@speed_status','@encoder_hw')){return $true}
     $fieldNumber='[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?'

@@ -11,5 +11,8 @@ void app_mode_sample(int c26_high, int c27_high, uint32_t now);
 app_mode_t app_mode_current(void);
 int app_mode_allows(app_mode_t requested);
 int app_mode_take_change(void);
+/* C26-only target: one request per stable OFF -> ON; boot ON is inhibited. */
+uint32_t app_mode_start_request(void);
+int app_mode_change_pending(void);
 const char *app_mode_name(app_mode_t mode);
 #endif

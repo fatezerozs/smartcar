@@ -16,7 +16,7 @@ typedef struct {
     float near_y, far_y, band_half_height, axis_near_x, axis_far_x;
     float kp, kd, heading_gain, derivative_filter_s;
     float steer_rate, duty_rise_per_s, duty_cap, cruise_duty, max_lateral;
-    uint32_t frame_timeout_ms, command_timeout_ms, max_run_ms;
+    uint32_t frame_timeout_ms, command_timeout_ms, max_run_ms; /* C26 only: 0 = continuous. */
     uint8_t arm_frames, min_coverage, min_band_rows, calibration_confirmed;
 } vc_config_t;
 typedef struct {
@@ -25,6 +25,9 @@ typedef struct {
     float lateral, heading, steering, duty;
     float near_center_x, far_center_x; /* 双边实测中点 / (W-1)，供居中直道标定。 */
     uint8_t observation_valid, far_valid;
+    uint8_t recovering; /* Fresh images, temporarily missing lane, bounded turn search. */
+    uint8_t search_source; /* 0:none, 1:history, 2:current partial, 3:current edge + curvature. */
+    uint8_t speed_boost; /* 0:base, 1:paired road, 2:paired corner, 3:current single edge. */
 } vc_output_t;
 typedef struct {
     vc_config_t config;
@@ -32,6 +35,11 @@ typedef struct {
     uint32_t last_frame_ms, last_sequence, last_command_ms, armed_ms;
     float previous_lateral, derivative;
     uint8_t configured, have_frame, stable_frames;
+    uint8_t invalid_frames;
+    uint32_t last_valid_ms;
+    float recovery_steer;
+    uint32_t last_partial_ms,straight_since_ms;
+    uint8_t have_partial,straight_tracking;
     uint8_t local_run; /* Volatile authority: never serialized as configuration. */
 } vc_controller_t;
 

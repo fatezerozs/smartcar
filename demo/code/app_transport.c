@@ -12,7 +12,8 @@ static uint8_t in_line[2], discard[2];
 static uint32_t last_summary;
 void app_transport_init(void)
 {
-    owner=busy_now=0;stop_now=changed_now=activity_now=0;last_summary=0;
+    owner=VISION_ROUTE_SWITCH?APP_LINK_RADIO:APP_LINK_USB;busy_now=0;
+    stop_now=changed_now=activity_now=0;last_summary=0;
     memset(in_line,0,sizeof(in_line));memset(discard,0,sizeof(discard));
     app_link_init();
 }

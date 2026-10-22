@@ -1,0 +1,203 @@
+{
+  "firmware": "MIDTERM_C26_22",
+  "source": "recordings\\seekfree-20261022-175957-063267\\source-original.bin",
+  "sha256": "204fe21b6df89573f19e13f84adc12013e41dc2d2dfb852686f7b782778bd894",
+  "trust": "computed from archived raw telemetry",
+  "criterion": "fault-free enabled positive target; measured > target + max(4,0.2*target) and PWM > 0",
+  "span_rule": "consecutive qualifying observations, distinct encoder samples, maximum adjacent gap 200ms; sampled span, NOT proof of continuous overspeed",
+  "whole_course_validated": false,
+  "segments": [
+    {
+      "segment": "segment-001",
+      "wheels": {
+        "right": {
+          "eligible_samples": 9,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        },
+        "left": {
+          "eligible_samples": 9,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        }
+      }
+    },
+    {
+      "segment": "segment-002",
+      "wheels": {
+        "right": {
+          "eligible_samples": 314,
+          "powered_overspeed_samples": 178,
+          "longest_sampled_span_ms": 5500,
+          "longest_sample_count": 56,
+          "first_last_ms_target_measured_pwm": [
+            [
+              25075,
+              42,
+              53,
+              141
+            ],
+            [
+              30575,
+              24,
+              36,
+              74
+            ]
+          ]
+        },
+        "left": {
+          "eligible_samples": 314,
+          "powered_overspeed_samples": 180,
+          "longest_sampled_span_ms": 5700,
+          "longest_sample_count": 58,
+          "first_last_ms_target_measured_pwm": [
+            [
+              25175,
+              33,
+              44,
+              107
+            ],
+            [
+              30875,
+              15,
+              20,
+              49
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "segment": "segment-003",
+      "wheels": {
+        "right": {
+          "eligible_samples": 4,
+          "powered_overspeed_samples": 1,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 1,
+          "first_last_ms_target_measured_pwm": [
+            [
+              36763,
+              21,
+              32,
+              73
+            ],
+            [
+              36763,
+              21,
+              32,
+              73
+            ]
+          ]
+        },
+        "left": {
+          "eligible_samples": 4,
+          "powered_overspeed_samples": 1,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 1,
+          "first_last_ms_target_measured_pwm": [
+            [
+              36863,
+              17,
+              23,
+              64
+            ],
+            [
+              36863,
+              17,
+              23,
+              64
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "segment": "segment-004",
+      "wheels": {
+        "right": {
+          "eligible_samples": 0,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        },
+        "left": {
+          "eligible_samples": 0,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        }
+      }
+    },
+    {
+      "segment": "segment-005",
+      "wheels": {
+        "right": {
+          "eligible_samples": 561,
+          "powered_overspeed_samples": 278,
+          "longest_sampled_span_ms": 4900,
+          "longest_sample_count": 50,
+          "first_last_ms_target_measured_pwm": [
+            [
+              69804,
+              41,
+              53,
+              135
+            ],
+            [
+              74704,
+              26,
+              39,
+              80
+            ]
+          ]
+        },
+        "left": {
+          "eligible_samples": 561,
+          "powered_overspeed_samples": 286,
+          "longest_sampled_span_ms": 6000,
+          "longest_sample_count": 61,
+          "first_last_ms_target_measured_pwm": [
+            [
+              69904,
+              37,
+              49,
+              121
+            ],
+            [
+              75904,
+              25,
+              36,
+              79
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "segment": "segment-006",
+      "wheels": {
+        "right": {
+          "eligible_samples": 1,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        },
+        "left": {
+          "eligible_samples": 1,
+          "powered_overspeed_samples": 0,
+          "longest_sampled_span_ms": 0,
+          "longest_sample_count": 0,
+          "first_last_ms_target_measured_pwm": []
+        }
+      }
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 param([string]$UV4='E:\ElecTronic\Keil\UV4\UV4.exe',
-      [ValidateSet('train','auto')][string]$Variant='train')
+      [ValidateSet('train','auto','route','switch')][string]$Variant='train')
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path $PSScriptRoot -Parent
 $taskMdk=Join-Path $taskRoot 'demo\mdk'
 $taskBuildName='midterm-'+$Variant
 $taskProjectName='midterm_'+$Variant+'.uvprojx'
 $taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -eq 'auto'){'1'}else{'0'})+','
+if($Variant -in @('route','switch')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
+if($Variant -eq 'switch'){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
 $taskOutput=Join-Path $taskRoot ('.build\'+$taskBuildName)
 New-Item -ItemType Directory -Force -Path (Join-Path $taskOutput 'Objects'),(Join-Path $taskOutput 'Listings'),(Join-Path $taskOutput 'tmp') | Out-Null
 if(-not(Test-Path -LiteralPath $UV4)){throw 'UV4 executable not found; supply -UV4.'}

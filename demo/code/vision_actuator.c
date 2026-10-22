@@ -1,4 +1,5 @@
 #include "vision_drive_internal.h"
+#include "vision_steering.h"
 
 #if VISION_DRIVE_ENABLE
 void vd_output_zero(void)
@@ -16,6 +17,15 @@ void vd_output_zero(void)
      * stays fixed while armed. PWM=0 is not a guaranteed stopping distance. */
 }
 
+#if VISION_ROUTE_SWITCH
+uint16_t vision_drive_servo_command_us(void)
+{
+    uint32_t mask=__get_PRIMASK(),duty;__disable_irq();
+    duty=(vd.motion_written_mask&4U)?vd.motion_written_pwm[2]:0;
+    __set_PRIMASK(mask);
+    return (uint16_t)(duty*1000000U/(PWM_DUTY_MAX*SERVO_MOTOR_FREQ));
+}
+#endif
 static void write_changed(unsigned index,int channel,uint32_t duty)
 {
     uint8_t bit=(uint8_t)(1U<<index);
@@ -50,6 +60,12 @@ void vd_output_apply(void)
         vd_output_zero();
     } else {
         float steer = vd.control.output.steering * vd.profile.right_sign;
+#if VISION_ROUTE_SWITCH
+        /* Keep about the previous center slope while adding bend authority:
+         * for the 120us span, offset = 80*u + 40*u^3 microseconds. Continuous,
+         * monotonic and symmetric; endpoints remain the validated profile. */
+        steer=vs_steering_shape(vd.control.output.steering)*vd.profile.right_sign;
+#endif
         float pulse = vd.profile.servo_center_us + steer * (steer >= 0 ?
             vd.profile.servo_max_us - vd.profile.servo_center_us :
             vd.profile.servo_center_us - vd.profile.servo_min_us);
@@ -63,6 +79,20 @@ void vd_output_apply(void)
             __DMB(); __set_PRIMASK(mask);
             return;
         }
+#if VISION_ROUTE_SWITCH
+        /* M1 RIGHT, M2 LEFT. Let the inner wheel run slower with the steering
+         * command; equal closed-loop wheel targets can fight a tight bend.
+         * Never boost the outer wheel or exceed the existing duty cap. */
+        {
+         float offset=vd.control.output.lateral;
+         if(offset<0)offset=-offset;
+         if(vd.control.output.observation_valid&&offset>1.0f) {
+            float slow=1.0f-.20f*(offset-1.0f);
+            if(slow<.75f)slow=.75f;
+            motor1*=slow;motor2*=slow;
+         }
+         vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
+#endif
         uint32_t servo_duty = (uint32_t)(pulse * SERVO_MOTOR_FREQ * PWM_DUTY_MAX / 1000000.0f);
         uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
 #if VISION_ENCODER_ENABLE

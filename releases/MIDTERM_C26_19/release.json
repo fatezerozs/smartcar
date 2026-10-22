@@ -1,0 +1,29 @@
+{
+  "version": "MIDTERM_C26_19",
+  "status": "built_not_flashed",
+  "sha256": "7BD81E4BB910C9248F4958C848796A02F4C6492C2B0FAFAC74B4F2A25E22EEBA",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "roundabout_logic_implemented": true,
+  "clipped_island_entry": true,
+  "code": 82048,
+  "ro": 12980,
+  "rw": 212,
+  "zi": 196472,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 297347,
+    "turn": 227567,
+    "ring": 230,
+    "projection_cases": 24,
+    "projection_checks": 1203,
+    "asan": true
+  },
+  "limitations": [
+    "Projection is approximate and not a dynamics/calibration test",
+    "Only laterally clipped cores with visible vertical caps and current main-line support are accepted",
+    "No C19 physical orbit/lap acceptance yet"
+  ]
+}

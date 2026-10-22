@@ -1,0 +1,38 @@
+{
+  "version": "MIDTERM_C26_23",
+  "status": "built_not_flashed",
+  "sha256": "28CBB1805B5E8254319D0BD6BA4DC64249D0A6D46FB5D43C015F76DDE28E42F0",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "real_track_validated": false,
+  "servo_mechanical_measurement_pending": true,
+  "servo_default_us": [
+    1430,
+    1550,
+    1670
+  ],
+  "fixed_40_percent_cap_removed": true,
+  "pwm_physical_full_scale": 1000,
+  "pwm_rise_permille_per_10ms": 10,
+  "code": 85016,
+  "ro": 13236,
+  "rw": 212,
+  "zi": 196476,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300864,
+    "projection_checks": 2086,
+    "turn": 303613,
+    "current_road_fallbacks": 12,
+    "ring": 238,
+    "projection_cases": 24,
+    "asan": true
+  },
+  "limitations": [
+    "No C23 real vehicle speed or stability acceptance",
+    "Default servo window retained pending mechanical measurement",
+    "Projection tests are not vehicle dynamics or full course coverage evidence",
+    "C22 log and video clocks are not synchronized"
+  ]
+}

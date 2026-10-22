@@ -37,6 +37,12 @@ extern vd_context_t vd;
 void vd_output_zero(void);
 void vd_output_apply(void);
 void vd_startup_poll_switch(uint32_t now);
+#if VISION_ROUTE_SWITCH
+void vd_route_switch_init(void);
+void vd_route_switch_cancel(void);
+void vd_route_switch_mode_stop(void);
+void vd_route_switch_poll(uint32_t now);
+#endif
 void vd_startup_poll_deadline(uint32_t now);
 void vd_probe_poll(uint32_t now);
 void vd_motion_cancel(unsigned reason,uint32_t now);
