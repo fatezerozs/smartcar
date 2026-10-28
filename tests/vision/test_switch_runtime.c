@@ -30,7 +30,7 @@ uint32_t timer_get(int index)
     (void)index;uint32_t at=++elapsed;
     if(at>=finish_at)longjmp(stop_loop,1);
     if(at%20U==0&&(experiment!=4||at<2800)&&(experiment!=5||at<2800||at>=3200)){
-        fill_camera(0,0);mt9v03x_image=camera[0];mt9v03x_finish_flag=1;
+        fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(at);
     }
     if(at>100&&vision_drive_is_local())observed_running=1;
     if(experiment==3&&at==2800)app_link_rx_isr(1,'!');

@@ -60,6 +60,10 @@
 
 #include "zf_device_mt9v03x.h"
 
+uint32 (*mt9v03x_capture_clock_ms)(void) = NULL;
+vuint32 mt9v03x_capture_sequence = 0;
+vuint32 mt9v03x_capture_ms = 0;
+vuint8 mt9v03x_capture_time_valid = 0;
 vuint8 mt9v03x_finish_flag = 0;                                                  // 一场图像采集完成标志位
 // 图像缓冲区  如果用户需要访问图像数据 最好通过mt9v03x_csi_image来访问数据，最好不要直接访问缓冲区
 AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_image1[MT9V03X_H][MT9V03X_W], 64);
@@ -401,6 +405,21 @@ void mt9v03x_finished_callback(CSI_Type *base, csi_handle_t *handle, status_t st
             mt9v03x_image = mt9v03x_image2; // image_csi2采集完成
             csi_add_empty_buffer(&csi_handle, mt9v03x_image1[0]);
         }
+        else
+        {
+            return;
+        }
+        if(mt9v03x_capture_clock_ms != NULL)
+        {
+            mt9v03x_capture_ms = mt9v03x_capture_clock_ms();
+            mt9v03x_capture_time_valid = 1;
+        }
+        else
+        {
+            mt9v03x_capture_ms = 0;
+            mt9v03x_capture_time_valid = 0;
+        }
+        mt9v03x_capture_sequence++;
         mt9v03x_finish_flag = 1;            // 采集完成标志位置一
     }
 }
@@ -416,6 +435,10 @@ uint8 mt9v03x_init (void)
 {
     uint8 return_state = 0;
     soft_iic_info_struct mt9v03x_iic_struct;
+    mt9v03x_finish_flag = 0;
+    mt9v03x_capture_sequence = 0;
+    mt9v03x_capture_ms = 0;
+    mt9v03x_capture_time_valid = 0;
     do
     {
         system_delay_ms(200);

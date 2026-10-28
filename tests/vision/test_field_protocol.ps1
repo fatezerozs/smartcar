@@ -24,10 +24,10 @@ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_16 ready
 Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_17 ready=1')
 Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_18 ready=1')
 Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_19 ready=1')
-foreach($fieldVersion in 20..28) {
+foreach($fieldVersion in 20..31) {
     Assert-Protocol (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldVersion ready=1")
 }
-foreach($fieldUnknown in @('29','280','28_extra','0')) {
+foreach($fieldUnknown in @('32','320','31_extra','0')) {
     Assert-Protocol (-not (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldUnknown ready=1"))
 }
 Write-Output "FIELD PROTOCOL PASS: $fieldChecks checks; no COM opened."

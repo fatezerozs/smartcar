@@ -1,5 +1,4 @@
 #include "vision_drive_internal.h"
-#include "midterm_boot.h"
 
 /* Lifecycle and command facade; IO, guard, startup, probing and profile
  * validation live in their own implementation units. */
@@ -121,6 +120,7 @@ void vision_drive_init(uint32_t now)
     vd.switch_seen=0;vd.switch_closed=0;vd.switch_inhibit=VISION_START_SWITCH_ENABLE;vd.switch_stop_pending=0;
     vd.switch_rearm=0;vd.switch_boot_pending=0;vd.switch_changed_ms=now;
     vd.local_permitted=0;
+    vd.autonomous_stopped=0;
     vd.probe_active = 0; vd.probe_last_us = 0;
     memset(vd.motor_last_permille,0,sizeof(vd.motor_last_permille)); vd.have_motor_probe = 0;
     vd.guard_max_run_ms = cfg.max_run_ms;
@@ -193,13 +193,16 @@ void vision_drive_poll(uint32_t now)
      * later STOP/config changes/faults must not silently re-enable PI. */
     if(route_speed_pending) {
         vd_speed_info_t s;vision_drive_speed_get(&s);
-        if(s.samples && (uint32_t)(now-s.sample_ms)<=20U) {
+        if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
             route_speed_pending=0;
             if(!(vision_drive_encoder_signs(-1,1) &&
                  vision_drive_speed_config(VISION_ROUTE_SWITCH?MT_ROUTE_FAST_TICKS:40,1.0f,0.05f) && vision_drive_speed_enable(1)))
                 vision_drive_trip(VC_FAULT_CONFIG);
         }
     }
+#endif
+#if VISION_ENCODER_ENABLE
+    vd_speed_control_poll(now); /* Independent of visual-frame publication. */
 #endif
     vd_startup_poll_switch(now);
     vd_probe_poll(now);
@@ -210,7 +213,7 @@ void vision_drive_poll(uint32_t now)
     route_record_fault(); /* Save before stable OFF acknowledges/clears faults. */
 #endif
     vd_startup_poll_deadline(now);
-#if VISION_ROUTE_SWITCH
+#if VISION_ROUTE_SWITCH && !VISION_MIDTERM_AUTONOMOUS
     vd_route_switch_poll(now);
 #endif
     if ((vd.control.output.state != VC_RUNNING && vd.guard_running)
@@ -237,6 +240,12 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t 
     trace_visual.entry_guide_rows=r->entry_guide_rows;
 #endif
     vc_observe(&vd.control, r, sequence, frame_ms, now);
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    /* No C26 vision reacquisition/recovery authority in autonomous mode. */
+    if(vd.control.output.state==VC_RUNNING &&
+       (!vd.control.output.observation_valid || !vd.control.output.far_valid))
+        vc_trip(&vd.control,VC_FAULT_VISION);
+#endif
 #if VISION_ROUTE_SWITCH
     route_record_fault();
 #endif
@@ -257,14 +266,17 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t 
 
 void vision_drive_stop(void)
 {
+#if VISION_DRIVE_ENABLE
+#if VISION_MIDTERM_AUTONOMOUS
+    vd.autonomous_stopped=1;
+#endif
+    vd_output_zero(); /* Revoke before telemetry, boot cancellation or controller updates. */
+#endif
 #if VISION_ROUTE_SWITCH
     route_record_fault();
     if(vd.control.output.state==VC_RUNNING)
         route_record_stop(vd.guard_faults?2:1,vd.guard_faults);
     vd_route_switch_cancel();
-#endif
-#if VISION_MIDTERM_AUTONOMOUS
-    midterm_boot_cancel(timer_get(GPT_TIM_1));
 #endif
     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
     vc_stop(&vd.control);
@@ -281,11 +293,16 @@ void vision_drive_stop(void)
 
 void vision_drive_trip(uint32_t reason)
 {
+#if VISION_DRIVE_ENABLE
+    uint32_t fault_mask=__get_PRIMASK();__disable_irq();
+#if VISION_MIDTERM_AUTONOMOUS
+    vd.autonomous_stopped=1;
+#endif
+    vd.guard_faults|=reason|VC_FAULT_EXTERNAL;vd_output_zero();
+    __set_PRIMASK(fault_mask);
+#endif
 #if VISION_ROUTE_SWITCH
     vd_route_switch_cancel();
-#endif
-#if VISION_MIDTERM_AUTONOMOUS
-    midterm_boot_cancel(timer_get(GPT_TIM_1));
 #endif
     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
     vc_trip(&vd.control, reason | VC_FAULT_EXTERNAL);
@@ -332,7 +349,7 @@ int vision_drive_command(char command, uint32_t now, int text_mode)
         !vd.switch_inhibit &&
         !(vd.switch_seen && (!vd.switch_closed || vd.switch_inhibit)) &&
         (!vd.have_motor_probe || (uint32_t)(now-vd.motor_probe_started_ms) >= vd.motor_probe_hold_ms+VISION_MOTOR_PROBE_COAST_MS))
-        return vc_arm(&vd.control, now, vd.hardware_ready);
+        return vd_output_arm(now,0);
 #else
     (void)command; (void)now; (void)text_mode;
 #endif

@@ -3,6 +3,9 @@
 void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now)
 {
 #if VISION_DRIVE_ENABLE
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)boot_ms;(void)now;return; /* Dedicated startup owner only. */
+#else
     /* Not re-schedulable within a boot, including after STOP/clear/configure. */
     if (vd.auto_info.restored) return;
 #if VISION_MOTOR_THRESHOLD_DIAG
@@ -16,6 +19,7 @@ void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now)
     if (vd.profile.autostart_enabled && (uint32_t)(now-boot_ms)>=vd.profile.startup_delay_ms) {
         vd.switch_boot_pending=0;vd.auto_info.state=VD_AUTO_BLOCKED;
     }
+#endif
 #else
     (void)boot_ms; (void)now;
 #endif
@@ -44,6 +48,9 @@ int vision_drive_is_local(void) { return vd.control.output.state==VC_RUNNING && 
 #if VISION_DRIVE_ENABLE
 void vd_startup_poll_switch(uint32_t now)
 {
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now;return; /* No legacy switch rearm/clear authority. */
+#else
     if (vd.switch_stop_pending) {
         uint32_t mask=__get_PRIMASK();__disable_irq();
         vd.switch_stop_pending=0;__set_PRIMASK(mask);
@@ -66,9 +73,13 @@ void vd_startup_poll_switch(uint32_t now)
         }
 #endif
     }
+#endif
 }
 void vd_startup_poll_deadline(uint32_t now)
 {
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now; /* Only midterm_boot owns the C31 continuous-track launch. */
+#else
     if (vd.auto_info.state==VD_AUTO_WAITING &&
         (uint32_t)(now-vd.auto_info.boot_ms)>=vd.auto_info.delay_ms) {
         /* A blocked deadline is terminal for this boot: never creep into
@@ -77,11 +88,12 @@ void vd_startup_poll_deadline(uint32_t now)
 #if !VISION_MOTOR_THRESHOLD_DIAG
         accepted=app_mode_allows(APP_MODE_DRIVE) && vd.local_permitted && vd.switch_seen && vd.switch_closed && !vd.switch_inhibit &&
             !vd.guard_faults && !vd.probe_active && vd.hardware_ready &&
-            vc_arm_local(&vd.control,now,vd.hardware_ready);
+            vd_output_arm(now,1);
 #endif
         vd.auto_info.state=accepted?VD_AUTO_STARTED:VD_AUTO_BLOCKED;
         vd_output_apply(); /* First command is zero duty; next fresh frame ramps. */
     }
+#endif
 }
 #endif
 
@@ -98,13 +110,16 @@ void vd_route_switch_mode_stop(void)
 }
 void vd_route_switch_poll(uint32_t now)
 {
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now; /* Defense in depth: no clear, arm or restart through C26. */
+#else
     vd_speed_info_t s;
     if(!app_mode_allows(APP_MODE_DRIVE)) {
         /* STOP/query while already OFF must not inhibit the next ON. */
         if(app_mode_allows(APP_MODE_OBSERVE))route_operator_stop=0;
         if(app_mode_allows(APP_MODE_OBSERVE) && !route_released) {
             vision_drive_speed_get(&s);
-            if(s.samples && (uint32_t)(now-s.sample_ms)<=20U) {
+            if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
                 uint32_t mask=__get_PRIMASK();__disable_irq();
                 vd.guard_running=0;vd.probe_active=0;vd_output_zero();vd.guard_faults=0;
                 vc_clear_fault(&vd.control);__set_PRIMASK(mask);
@@ -128,14 +143,15 @@ void vd_route_switch_poll(uint32_t now)
     }
     if(vd.control.output.state!=VC_DISARMED)return;
     vision_drive_speed_get(&s);
-    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>20U ||
+    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
        vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
     {
         uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
         accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
-            vc_arm_local(&vd.control,now,vd.hardware_ready);
+            vd_output_arm(now,1);
         if(accepted)vd_output_apply();
         __set_PRIMASK(mask);
     }
+#endif
 }
 #endif

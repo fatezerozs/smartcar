@@ -3,9 +3,10 @@
 #include "vision_profile.h"
 #include "vision_control.h"
 
-/* 现场配置：调参先作用于 RAM；只有显式 @save 才持久化。
- * 启动先尝试恢复有效记录，否则保留零 PWM 默认值。C12 本地启动和
- * 串口 a 的授权源独立；舵机 right_sign 必须确认，不能从轮速推断。 */
+/* Runtime profile: tuning stays in RAM until explicit @save.
+ * Restoring a valid profile never grants output authority. Legacy C12/UART
+ * arm paths are build-specific; C31 auto-track uses track-gated boot and
+ * rejects UART/probe/motion arming. Servo right_sign requires calibration. */
 typedef struct {
     vc_config_t control;
     uint16_t servo_center_us, servo_min_us, servo_max_us;
@@ -27,9 +28,9 @@ typedef struct {
 } vd_auto_info_t;
 int vision_drive_profile_valid(const vd_profile_t *profile);
 int vision_drive_profile_ready(const vd_profile_t *profile);
-/* Called once by startup after persistent restore, NEVER by UART commands.
- * One attempt per boot/C12 enable edge; rejected deadlines never retry until
- * an explicit new OFF>=300ms/ON cycle. MODE/RST are not application keys. */
+/* Legacy delayed-start scheduler, called once after profile restore.
+ * C31 auto-track does not use this deadline path; it waits for fresh, valid
+ * track observations and performs a separate startup qualification check. */
 void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now_ms);
 /* Logical C12 toggle enable sampled by PIT1. OFF cuts PWM immediately;
  * foreground handles debounce/countdown. No floating point/UART in ISR. */

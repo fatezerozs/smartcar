@@ -15,6 +15,7 @@ void board_io_hw_capture(board_io_state_t *s) {s->buzzer_mux=5;s->buzzer_directi
 static char diagnostic[2048];
 int app_console_printf(const char *format,...) {int n;va_list args;size_t used=strlen(diagnostic);va_start(args,format);n=vsnprintf(diagnostic+used,sizeof(diagnostic)-used,format,args);va_end(args);return n;}
 static int pins[128], init_count, failures, checks, camera_attempts;
+uint32_t (*mt9v03x_capture_clock_ms)(void);
 int mt9v03x_init(void) {return ++camera_attempts<2;}
 #define CHECK(x) do { ++checks; if (!(x)) { ++failures; fprintf(stderr,"FAIL mode:%d %s\n",__LINE__,#x); } } while (0)
 uint32_t timer_get(int c) { (void)c; return now; }
@@ -91,11 +92,13 @@ int main(void)
     pins[C26]=1;pins[C27]=0;board_mode_sample();vision_drive_safety_tick();
     CHECK(!pwm[0] && !pwm[1] && !pwm[2]);vision_drive_poll(now);
     now+=30;board_mode_sample();CHECK(app_mode_allows(APP_MODE_MOTOR));
+    if(app_mode_take_change())vision_drive_stop();
     CHECK(!vision_drive_servo_probe(1500,200,now));CHECK(!vision_drive_command('a',now,1));
     CHECK(vision_drive_motor_probe(1,10,1,200,now));CHECK(pwm[0]>0 && !pwm[1] && !pwm[2]);
     pins[C26]=0;pins[C27]=0;board_mode_sample();vision_drive_safety_tick();
     CHECK(!pwm[0] && !pwm[1] && !pwm[2]);vision_drive_poll(now);
     now+=30;board_mode_sample();CHECK(app_mode_allows(APP_MODE_DRIVE));
+    if(app_mode_take_change())vision_drive_stop();
     CHECK(!vision_drive_command('a',now,1)); /* Mode selection is not calibration. */
     CHECK(!vision_drive_motor_probe(1,10,1,200,now));CHECK(!vision_drive_servo_probe(1500,200,now));
     vision_drive_get_profile(&profile);

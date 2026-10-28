@@ -473,8 +473,7 @@ int main(void)
          CHECK(info().pwm_left<=before.pwm_left+MT_ROUTE_PWM_RISE_PER_SAMPLE);
          CHECK(info().pwm_right<=MT_ROUTE_PWM_FULL_SCALE&&info().pwm_left<=MT_ROUTE_PWM_FULL_SCALE);
          CHECK(pwm[0]<=PWM_DUTY_MAX&&pwm[1]<=PWM_DUTY_MAX);}
-     /* Conditional integration can settle just below saturation by one PI
-      * increment; both channels must use the new headroom, never exceed it. */
+     /* Both channels must use the new headroom, never exceed it. */
      CHECK(info().pwm_right>=995&&info().pwm_left>=995); /* No hidden 40% ceiling. */
      CHECK(info().target_right==baseline.target_right&&info().target_left==baseline.target_left);
      switch_a=1;switch_step(1);CHECK(!pwm[0]&&!pwm[1]);}
@@ -819,11 +818,15 @@ int main(void)
      * partial path must ramp low drive back up instead of retaining duty=0. */
     run_gray(0);route_lane.valid=0;memset(route_lane.row_flags,0,sizeof(route_lane.row_flags));switch_wait(2,1);
     CHECK(vision_drive_output()->duty==0);
+    CHECK(vision_drive_output()->recovering&&vd.output_authorized&&!pwm[0]&&!pwm[1]);
+    /* Slow nonzero counts make positive recovery torque observable. */
+    switch_delta_left=-1;switch_delta_right=1;
     memset(turn_gray,30,sizeof(turn_gray));
     for(int y=70;y<=79;++y)for(int x=23;x<=103;++x)turn_gray[y*VISION_WIDTH+x]=210;
     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2&&vision_drive_output()->steering<-.2f);
     CHECK(vision_drive_output()->duty>.02f&&info().target_right>3);
+    CHECK(vd.output_authorized&&pwm[0]&&pwm[1]);
     switch_boot(0);measured_curve(.4f,0);switch_wait(80,1);
     CHECK(vision_drive_is_local()&&vision_drive_output()->far_valid&&vision_drive_servo_command_us()<=1530);
     measured_curve(.4f,1);switch_wait(30,1);

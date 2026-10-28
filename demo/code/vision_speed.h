@@ -1,6 +1,17 @@
 #ifndef VISION_SPEED_H
 #define VISION_SPEED_H
 #include <stdint.h>
+
+/* Software timing contract for the foreground PI service and PIT sampling.
+ * These are fail-closed limits, not a claim of hard real-time scheduling.
+ * The nominal encoder sample cadence is 10ms; the foreground service must
+ * consume each new sample once and must not replay missed samples. */
+#define VD_SPEED_SAMPLE_MIN_INTERVAL_MS 10U
+#define VD_SPEED_SAMPLE_MAX_INTERVAL_MS 20U
+#define VD_SPEED_SAMPLE_MAX_AGE_MS 30U
+#define VD_SPEED_CONTROL_STALL_TIMEOUT_MS 50U
+#define VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS 20U
+#define VD_SPEED_MAX_UNCONSUMED_SAMPLES 1U
 typedef struct {
     uint32_t samples,sample_ms,faults;
     uint32_t fault_control_age_ms,fault_sample_age_ms,fault_interval_ms;
@@ -23,9 +34,13 @@ int vision_drive_speed_enable(int enable);
 void vd_speed_init(uint32_t now);
 void vd_speed_sample_tick(uint32_t now);
 void vd_speed_stop(void);
-/* Called only under output-layer IRQ mask; returns 0 after an interlock trip.
- * cap scales requests into encoder targets. C26 track driving has a separate
- * MT_ROUTE_PWM_CAP_PERMILLE output ceiling; other modes use cap for both. */
+/* Publish target and read held PWM under the output IRQ mask. No PI here.
+ * cap is the target-request scale; max_ticks limits count/10ms targets.
+ * C31 PWM hard limit is MT_ROUTE_PWM_FULL_SCALE, independently of this cap. */
 int vd_speed_output(uint16_t request_right,uint16_t request_left,int reverse,
                     uint16_t cap,uint16_t *pwm_right,uint16_t *pwm_left);
+/* Foreground service, at most once per distinct encoder sample. Missing samples
+ * fail closed; never replay the latest measurement as multiple PI steps.
+ * Not a guaranteed fixed-period scheduler; PIT1 remains sample/cutoff only. */
+void vd_speed_control_poll(uint32_t now_ms);
 #endif

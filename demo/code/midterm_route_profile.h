@@ -5,7 +5,9 @@
  * Successful speed baseline and measured servo window are applied in drive_init.
  * Existing steering controller and frame/heartbeat/encoder protections remain.
  * Manual route target never starts on power-up. C26 switch target can start
- * with ON at boot after five valid frames. Neither loads a saved profile.
+ * with ON at boot after five valid frames. Autonomous C31 instead requires
+ * continuous valid track for 3000ms and the visual review gate; C26/C27 have
+ * no start/stop authority. No route variant loads a saved profile.
  */
 #define MT_ROUTE_AXIS_NEAR_X 0.49733f
 #define MT_ROUTE_AXIS_FAR_X 0.49833f
@@ -36,7 +38,7 @@
 #if !defined(VISION_ENCODER_ENABLE) || !VISION_ENCODER_ENABLE || !defined(VISION_MIDTERM_TRAINING) || !VISION_MIDTERM_TRAINING
 #error "Route training requires explicit training and encoder build flags."
 #endif
-#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS
+#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS && !(VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
 #error "Route training must not enable autonomous boot."
 #endif
 #endif

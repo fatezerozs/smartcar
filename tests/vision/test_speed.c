@@ -54,6 +54,29 @@ int main(void)
     CHECK(pi.output>=135&&pi.output<=150);
     for(unsigned i=0;i<100;++i)CHECK(ws_pi_step(&pi,10,0,100*256,10*256,150,1)==150);
     CHECK(pi.integral_q8<=150*256);CHECK(ws_pi_step(&pi,0,0,256,256,150,1)==0&&pi.integral_q8==0);
+    /* A crossing PI increment must reach the cap, including with the route
+     * effort ramp. Persistent error must not wind up beyond that boundary. */
+    for(int target=122;target<=123;++target) {
+        ws_pi_reset(&pi);
+        for(unsigned i=0;i<250;++i) {
+            uint16_t before=pi.output,cap=(uint16_t)(before+10);
+            if(cap>1000)cap=1000;
+            CHECK(ws_pi_step_ff_ms(&pi,target,1,256,12,cap,10,246)<=before+10);
+        }
+        CHECK(pi.output==1000);
+        {int32_t held=pi.integral_q8;
+         for(unsigned i=0;i<100;++i)CHECK(ws_pi_step_ff_ms(&pi,target,1,256,12,1000,10,246)==1000);
+         CHECK(pi.integral_q8==held);}
+        CHECK(ws_pi_step_ff_ms(&pi,target,target+10,256,12,1000,10,246)<1000);
+    }
+    /* Mirror the crossing at zero with removable feedforward, then recover. */
+    ws_pi_reset(&pi);
+    for(unsigned i=0;i<250;++i)CHECK(ws_pi_step_ff_ms(&pi,10,23,256,12,150,10,100)<=150);
+    CHECK(pi.output==0);
+    {int32_t held=pi.integral_q8;
+     for(unsigned i=0;i<100;++i)CHECK(ws_pi_step_ff_ms(&pi,10,23,256,12,150,10,100)==0);
+     CHECK(pi.integral_q8==held);}
+    CHECK(ws_pi_step_ff_ms(&pi,10,0,256,12,150,10,100)>0);
     /* Field C22: target 34/36, measured 88/79, still powered. An excessive
      * feedforward must be removable by feedback, rather than impose a speed
      * floor. Test different first-order wheel plants, not internal formulas. */

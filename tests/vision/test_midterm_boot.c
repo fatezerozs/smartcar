@@ -34,6 +34,7 @@ static void boot(uint32_t start)
     vd_profile_t p;
     now=start;raw3=raw4=0;mask=0;sequence=0;
     vision_drive_init(now);app_mode_init(1,1,now);
+    (void)app_mode_take_change();
     CHECK(app_mode_allows(APP_MODE_DRIVE)); /* No switch/key needed. */
     CHECK(app_mode_current()==APP_MODE_DRIVE);
     vision_drive_get_profile(&p);
@@ -65,7 +66,7 @@ int main(void)
     CHECK(vision_drive_is_local()&&!vision_drive_output()->faults);
     CHECK(pwm[0]>0&&pwm[1]>0);
     CHECK(!vision_drive_command('a',now,1));
-    vision_drive_stop();CHECK(midterm_boot_state()==MT_BOOT_STOPPED);
+    midterm_boot_cancel(now);vision_drive_stop();CHECK(midterm_boot_state()==MT_BOOT_STOPPED);
     for(int i=0;i<80;++i)step(1);
     CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_is_local());
     boot(0);for(int i=0;i<310;++i)step(1);

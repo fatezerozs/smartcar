@@ -46,40 +46,6 @@ void vd_motion_tick(uint32_t now)
         } else vd_motion_cancel(VD_MOTION_DONE,now);
     }
 }
-void vd_motion_output(void)
-{
-    uint8_t phase=vd.motion.phase;
-    uint32_t duty=vd.motion.actual_permille;
-    int reverse=phase==VD_MOTION_REVERSE_SETTLE || phase==VD_MOTION_REVERSE;
-    if(!phase || phase==VD_MOTION_WAIT_REVERSE){vd_output_zero();return;}
-    /* A new direction is selected only from zero PWM after the coast gate. */
-    gpio_set_level(MOTOR1_DIR,vd.profile.motor1_forward_level^(uint8_t)reverse);
-    gpio_set_level(MOTOR2_DIR,vd.profile.motor2_forward_level^(uint8_t)reverse);
-    /* pwm_set_duty clears LDOK before updating buffered registers, then
-     * requests a full-cycle reload. Do not cancel/requeue identical values
-     * at foreground-loop frequency. In particular the 50Hz servo must keep
-     * its pending pulse while the motor ramp changes every ~10ms.
-     * Caller masks IRQs; every stop invalidates this per-channel cache. */
-    {
-        uint32_t values[3]={duty*vd.motion_scale1/1000U*PWM_DUTY_MAX/1000U,
-            duty*vd.motion_scale2/1000U*PWM_DUTY_MAX/1000U,
-            (uint32_t)vd.motion.servo_us*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U};
-#if VISION_ENCODER_ENABLE
-        uint16_t right,left;
-        if(!vd_speed_output((uint16_t)(duty*vd.motion_scale1/1000U),(uint16_t)(duty*vd.motion_scale2/1000U),reverse,
-            (uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left))return;
-        values[0]=(uint32_t)right*PWM_DUTY_MAX/1000U;values[1]=(uint32_t)left*PWM_DUTY_MAX/1000U;
-#endif
-        const int channels[3]={MOTOR1_PWM,MOTOR2_PWM,SERVO_MOTOR_PWM};
-        for(unsigned i=0;i<3;++i) {
-            uint8_t bit=(uint8_t)(1U<<i);
-            if(!(vd.motion_written_mask&bit) || vd.motion_written_pwm[i]!=values[i]) {
-                pwm_set_duty(channels[i],values[i]);
-                vd.motion_written_pwm[i]=values[i];vd.motion_written_mask|=bit;
-            }
-        }
-    }
-}
 void vd_motion_poll(uint32_t now)
 {
     uint32_t mask=__get_PRIMASK();__disable_irq();
@@ -94,14 +60,14 @@ void vd_motion_poll(uint32_t now)
         uint32_t ramp=(uint32_t)(now-vd.motion.phase_ms)*VISION_MOTION_RISE_PERMILLE_S/1000U;
         vd.motion.actual_permille=(uint16_t)(ramp>vd.motion.requested_permille?vd.motion.requested_permille:ramp);
     }
-    if(vd.motion.phase)vd_motion_output();
+    if(vd.motion.phase)vd_output_apply();
     __DMB();__set_PRIMASK(mask);
 }
 #endif
 int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration,uint16_t pulse,uint32_t now)
 {
-#if VISION_DRIVE_ENABLE
-    uint32_t mask;unsigned delta;
+#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
+    uint32_t mask;unsigned delta;int accepted;
     vision_drive_poll(now);
     delta=pulse>vd.profile.servo_center_us?pulse-vd.profile.servo_center_us:vd.profile.servo_center_us-pulse;
     if(!vd.initialized || !app_mode_allows(APP_MODE_DRIVE) || vd.motion.phase || vd.probe_active ||
@@ -133,21 +99,24 @@ int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration,
     vd.motion.reason=VD_MOTION_NONE;vd.motion.actual_permille=0;vd.motion.requested_permille=permille;
     vd.motion.servo_us=pulse;vd.motion.duration_ms=duration;
     vd.motion.phase_ms=vd.motion.heartbeat_ms=timer_get(GPT_TIM_1);
-    vd.motion_last_permille=permille;vd_motion_output();
-    __DMB();__set_PRIMASK(mask);return 1;
+    vd.motion_last_permille=permille;accepted=vd_output_bench_start();
+    if(!accepted)vd_motion_cancel(VD_MOTION_FAULT,timer_get(GPT_TIM_1));
+    __DMB();__set_PRIMASK(mask);return accepted;
 #else
     (void)kind;(void)permille;(void)duration;(void)pulse;(void)now;return 0;
 #endif
 }
 int vision_drive_motion_reverse(uint32_t now,int allowed)
 {
-#if VISION_DRIVE_ENABLE
-    uint32_t mask;
+#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
+    uint32_t mask;int accepted;
     vision_drive_poll(now);mask=__get_PRIMASK();__disable_irq();
     if(!allowed || !app_mode_allows(APP_MODE_DRIVE) || vd.motion.phase!=VD_MOTION_WAIT_REVERSE ||
        (uint32_t)(now-vd.motion.phase_ms)<VISION_MOTION_COAST_MS) {__set_PRIMASK(mask);return 0;}
     vd_output_zero();vd.motion.phase=VD_MOTION_REVERSE_SETTLE;vd.motion.phase_ms=timer_get(GPT_TIM_1);
-    vd_motion_output();__DMB();__set_PRIMASK(mask);return 1;
+    accepted=vd_output_bench_start();
+    if(!accepted)vd_motion_cancel(VD_MOTION_FAULT,timer_get(GPT_TIM_1));
+    __DMB();__set_PRIMASK(mask);return accepted;
 #else
     (void)now;(void)allowed;return 0;
 #endif

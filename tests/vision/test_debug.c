@@ -16,6 +16,8 @@
 /* Actual vision_debug.c runs unchanged. Only MCU time, camera delivery,
  * interrupts and UART transport are simulated; this is not a hardware test. */
 volatile uint8_t mt9v03x_finish_flag;
+volatile uint32_t mt9v03x_capture_sequence, mt9v03x_capture_ms;
+volatile uint8_t mt9v03x_capture_time_valid;
 uint8_t (*mt9v03x_image)[VISION_WIDTH];
 uint8_t image_two_value[VISION_HEIGHT][VISION_WIDTH];
 uint8_t Left_Line[VISION_HEIGHT], Right_Line[VISION_HEIGHT], Mid_Line[VISION_HEIGHT];
@@ -60,6 +62,14 @@ static void fill_camera(int id, int shift)
             camera[id][y][x] = (uint8_t)(x >= center - width / 2 && x <= center + width / 2 ? 210 : 30);
     }
 }
+/* Publish the same capture metadata contract as the camera completion ISR. */
+static void finish_camera(uint32_t at)
+{
+    mt9v03x_capture_ms=at;
+    mt9v03x_capture_time_valid=1;
+    ++mt9v03x_capture_sequence;
+    mt9v03x_finish_flag=1;
+}
 void pwm_set_duty(int channel, uint32_t duty)
 {
     check(channel >= 0 && channel < 3 && duty <= 10000, "bounded output");
@@ -80,7 +90,7 @@ void __DMB(void)
     if ((current_case == COPY_RACE || current_case == COPY_ABA) && barriers % 2 == 0) {
         if (current_case == COPY_RACE)
             mt9v03x_image = mt9v03x_image == camera[0] ? camera[1] : camera[0];
-        mt9v03x_finish_flag = 1;
+        finish_camera(ticks_base+elapsed);
     }
 }
 void board_diagnostics_report(void) {}
@@ -99,7 +109,11 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
     }
 #if VISION_DRIVE_ENABLE
     if(current_case>=AUTO_RUN)vision_drive_switch_sample(current_case!=AUTO_OPEN || elapsed<2300);
+#if VISION_TEST_MIDTERM_RUNTIME
+    vision_test_runtime_tick();
+#else
     vision_drive_safety_tick();
+#endif
 #endif
     if (elapsed >= finish_at) longjmp(stop_loop, 1);
 #if VISION_DRIVE_ENABLE
@@ -131,7 +145,7 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
                         (current_case==AUTO_INVALID && elapsed<2200) ? 70 : 0);
             mt9v03x_image = camera[id];
         }
-        mt9v03x_finish_flag = 1;
+        finish_camera(ticks_base+elapsed);
     }
     if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 100) command = 'f';
     if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 200) command = 'a';

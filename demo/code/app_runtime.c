@@ -257,7 +257,8 @@ void app_runtime_run(void)
 #endif
 #endif
         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {
-            if (!vision_frame_copy(&gray_frame[0][0])) {
+            vision_frame_stamp_t stamp;
+            if (!vision_frame_copy(&gray_frame[0][0], &stamp)) {
                 ++dropped_copies;
             } else {
                 uint32_t process_start = timer_get(GPT_TIM_1);
@@ -276,7 +277,8 @@ void app_runtime_run(void)
                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
                 if (track.configured) {
                     tb_extract(&track.model, &image_two_value[0][0], &result, &track_observation);
-                    (void)tb_update(&track, &track_observation, frames + 1U, process_start);
+                    if(stamp.time_valid)
+                        (void)tb_update(&track, &track_observation, stamp.sequence, stamp.capture_ms);
                 }
                 process_ms = (uint32_t)(timer_get(GPT_TIM_1) - process_start);
 #if VISION_ROUTE_SWITCH
@@ -286,9 +288,13 @@ void app_runtime_run(void)
                 memcpy(Right_Line, result.right, sizeof(Right_Line));
                 memcpy(Mid_Line, result.center, sizeof(Mid_Line));
                 ++frames;
-                last_frame = process_start;
+                last_frame = stamp.time_valid?stamp.capture_ms:last_frame;
 #if VISION_DRIVE_ENABLE
-                if (midterm_mode) vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
+                if (midterm_mode) {
+                    if(stamp.time_valid)
+                        vision_drive_observe(&result, stamp.sequence, stamp.capture_ms, timer_get(GPT_TIM_1));
+                    else vision_drive_trip(VC_FAULT_FRAME); /* Missing clock is fail-closed. */
+                }
 #endif
                 fresh = 1;
                 timeout_reset = 0;

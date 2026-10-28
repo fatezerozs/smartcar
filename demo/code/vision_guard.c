@@ -33,7 +33,7 @@ void vision_drive_safety_tick(void)
 
 void vision_drive_switch_sample(int closed)
 {
-#if VISION_DRIVE_ENABLE
+#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_C31_AUTONOMOUS
     uint32_t now;int changed;
     if(!vd.initialized)return;
     now=timer_get(GPT_TIM_1);

@@ -124,6 +124,10 @@ typedef enum
     MT9V03X_SCCB,
 }m9v03x_type_enum;
 
+extern uint32   (*mt9v03x_capture_clock_ms)(void);
+extern vuint32  mt9v03x_capture_sequence;
+extern vuint32  mt9v03x_capture_ms;
+extern vuint8   mt9v03x_capture_time_valid;
 extern vuint8   mt9v03x_finish_flag;                                            // 一场图像采集完成标志位
 extern uint8    (*mt9v03x_image)[MT9V03X_W];
 

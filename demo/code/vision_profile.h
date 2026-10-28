@@ -7,6 +7,18 @@
 #ifndef VISION_MIDTERM_ROUTE_TRIAL
 #define VISION_MIDTERM_ROUTE_TRIAL 0
 #endif
+#ifndef VISION_MIDTERM_AUTO_TRACK
+#define VISION_MIDTERM_AUTO_TRACK 0
+#endif
+/* Derived source mode: the three C31 flags are sufficient. The older
+ * AUTO_TRACK flag remains a compatibility assertion, never start authority. */
+#define VISION_MIDTERM_C31_AUTONOMOUS (VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
+#if VISION_MIDTERM_AUTO_TRACK && !VISION_MIDTERM_C31_AUTONOMOUS
+#error "Auto-track requires autonomous + C31 route switch/trial algorithms."
+#endif
+#if VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && !VISION_MIDTERM_ROUTE_TRIAL
+#error "Autonomous route switch requires the C31 route trial profile."
+#endif
 #if VISION_MIDTERM_ROUTE_TRIAL
 #include "midterm_route_profile.h"
 #endif
@@ -154,7 +166,9 @@
 #if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
 #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
 #endif
-#if VISION_ROUTE_SWITCH
+#if VISION_MIDTERM_C31_AUTONOMOUS
+#define VISION_FIELD_BUILD "MIDTERM_C31_AUTO_TRACK_1"
+#elif VISION_ROUTE_SWITCH
 #define VISION_FIELD_BUILD "MIDTERM_C26_31"
 #elif VISION_MIDTERM_ROUTE_TRIAL
 #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
@@ -178,7 +192,7 @@
 #define VISION_AUTO_START_DELAY_MS 2000U
 #define VISION_START_SWITCH_ACTIVE_LEVEL 0U /* C12 -> GND enables; open stops. */
 #ifndef VISION_START_SWITCH_ENABLE
-#define VISION_START_SWITCH_ENABLE 0U /* Physical key control removed; UART arm remains explicit. */
+#define VISION_START_SWITCH_ENABLE 0U /* Legacy C12 gate only; C31 auto-track rejects switch/command arming. */
 #endif
 #define VISION_START_SWITCH_DEBOUNCE_MS 30U
 #define VISION_START_SWITCH_REARM_MS 300U

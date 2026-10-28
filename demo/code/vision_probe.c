@@ -2,8 +2,8 @@
 
 int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
 {
-#if VISION_DRIVE_ENABLE
-    uint32_t mask;
+#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
+    uint32_t mask;int accepted;
     unsigned difference = pulse_us > vd.probe_last_us ? pulse_us - vd.probe_last_us : vd.probe_last_us - pulse_us;
     vision_drive_poll(now);
     if (!app_mode_allows(APP_MODE_SERVO) || !vd.initialized || vd.motion.phase || vd.guard_faults || vd.control.output.state != VC_DISARMED ||
@@ -23,9 +23,10 @@ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
     vd.probe_last_us = pulse_us; vd.probe_active = 1;
     ++vd.probe_info.sequence;vd.probe_info.kind=1;vd.probe_info.channel=0;vd.probe_info.level=0;
     vd.probe_info.value=pulse_us;vd.probe_info.hold_ms=hold_ms;
-    pwm_set_duty(SERVO_MOTOR_PWM, vd.probe_duty);
+    accepted=vd_output_bench_start();
+    if(!accepted)vd.probe_active=0;
     __DMB(); __set_PRIMASK(mask);
-    return 1;
+    return accepted;
 #else
     (void)pulse_us; (void)hold_ms; (void)now;
     return 0;
@@ -35,8 +36,8 @@ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
 int vision_drive_motor_probe(uint8_t channel, uint16_t duty_permille, uint8_t level,
                              uint16_t hold_ms, uint32_t now)
 {
-#if VISION_DRIVE_ENABLE
-    uint32_t mask;uint16_t last;
+#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
+    uint32_t mask;uint16_t last;int accepted;
     vision_drive_poll(now);
     if (!app_mode_allows(APP_MODE_MOTOR) || !vd.initialized || vd.motion.phase || channel<1 || channel>2 || level>1 || vd.guard_faults ||
         (vd.motion_have_stopped && (uint32_t)(now-vd.motion.stopped_ms)<VISION_MOTION_COAST_MS) ||
@@ -62,8 +63,9 @@ int vision_drive_motor_probe(uint8_t channel, uint16_t duty_permille, uint8_t le
     vd.motor_last_permille[channel-1]=duty_permille;vd.probe_active=(uint8_t)(channel+1);
     ++vd.probe_info.sequence;vd.probe_info.kind=2;vd.probe_info.channel=channel;vd.probe_info.level=level;
     vd.probe_info.value=duty_permille;vd.probe_info.hold_ms=hold_ms;
-    pwm_set_duty(channel==1?MOTOR1_PWM:MOTOR2_PWM,vd.probe_duty);
-    __DMB();__set_PRIMASK(mask);return 1;
+    accepted=vd_output_bench_start();
+    if(!accepted)vd.probe_active=0;
+    __DMB();__set_PRIMASK(mask);return accepted;
 #else
     (void)channel;(void)duty_permille;(void)level;(void)hold_ms;(void)now;return 0;
 #endif

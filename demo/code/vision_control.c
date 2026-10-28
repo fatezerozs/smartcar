@@ -450,7 +450,10 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         }}
         if(c->output.state==VC_RUNNING && c->invalid_frames<2 &&
            (uint32_t)(now-c->last_valid_ms)<=40U) {
-            c->output.recovering=0;c->output.search_source=0;
+            /* The bounded zero-demand grace period is still recovery. Keep
+             * the armed lease while waiting for current road evidence;
+             * duty remains zero and the original invalid-frame limit applies. */
+            c->output.recovering=1;c->output.search_source=0;
             ++c->invalid_frames;c->output.duty=0;c->derivative=0;
             return; /* No motor drive on missing evidence, no guessed steering. */
         }

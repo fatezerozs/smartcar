@@ -21,6 +21,11 @@ typedef struct {
     uint8_t initialized, hardware_ready;
     volatile uint32_t guard_faults, guard_frame_ms, guard_command_ms, guard_armed_ms;
     volatile uint32_t guard_max_run_ms;
+    /* Source-bound lease, granted only in vision_actuator under PRIMASK.
+     * Every zero revokes it; foreground targets cannot renew it. */
+    volatile uint8_t output_authorized;
+    /* Sticky for this initialized software session; no persistent reset claim. */
+    volatile uint8_t autonomous_stopped;
     volatile uint8_t guard_running, guard_local, mode_stop_pending;
     volatile uint8_t switch_seen, switch_closed, switch_inhibit, switch_stop_pending;
     volatile uint32_t switch_changed_ms;
@@ -36,6 +41,10 @@ extern vd_context_t vd;
 #if VISION_DRIVE_ENABLE
 void vd_output_zero(void);
 void vd_output_apply(void);
+int vd_output_arm(uint32_t now,int local);
+#if !VISION_MIDTERM_AUTONOMOUS
+int vd_output_bench_start(void);
+#endif
 void vd_startup_poll_switch(uint32_t now);
 #if VISION_ROUTE_SWITCH
 void vd_route_switch_init(void);
@@ -48,6 +57,5 @@ void vd_probe_poll(uint32_t now);
 void vd_motion_cancel(unsigned reason,uint32_t now);
 void vd_motion_tick(uint32_t now);
 void vd_motion_poll(uint32_t now);
-void vd_motion_output(void);
 #endif
 #endif

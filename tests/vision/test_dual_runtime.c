@@ -19,7 +19,7 @@ uint32_t timer_get(int index)
     (void)index;++elapsed;
     if(elapsed>=finish_at)longjmp(stop_loop,1);
     if(elapsed%10==0) {
-        fill_camera(0,0);mt9v03x_image=camera[0];mt9v03x_finish_flag=1;
+        fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(elapsed);
     }
     if(vision_drive_output()->state==VC_RUNNING)observed_running=1;
     if(experiment==0) {
