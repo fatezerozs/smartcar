@@ -683,5 +683,236 @@
       }
     },
     "preflashExecuted": false
+  },
+  "mainCI": {
+    "schemaVersion": "1.0",
+    "repository": "fatezerozs/smartcar",
+    "branch": "main",
+    "codeSha": "d78eb9d0bf59a434276e7191f8c04b478aebaab9",
+    "runId": 41406605613,
+    "url": "https://github.com/fatezerozs/smartcar/actions/runs/41406605613",
+    "conclusion": "success",
+    "createdAt": "2026-11-02T07:29:14Z",
+    "updatedAt": "2026-11-02T07:34:25Z",
+    "jobs": [
+      {
+        "id": 125149956814,
+        "name": "host (optimized)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 41406605613,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Validate manifest and dependency graph",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run the shared Host plan",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Archive structured results and raw evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          }
+        ]
+      },
+      {
+        "id": 125149957134,
+        "name": "host (asan)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 41406605613,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Validate manifest and dependency graph",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run the shared Host plan",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Archive structured results and raw evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 13123373343,
+        "name": "host-asan-41406605613",
+        "size_in_bytes": 84833474,
+        "url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13123373343",
+        "archive_download_url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13123373343/zip",
+        "expired": false,
+        "created_at": "2026-11-02T07:34:20Z",
+        "expires_at": "2026-12-02T07:34:11Z",
+        "updated_at": "2026-11-02T07:34:20Z",
+        "digest": "sha256:8ec5dbec697393d2e2dbb8e43ce2767d221025c78d7d0ad2c783baacd0ea905a",
+        "workflow_run": {
+          "id": 41406605613,
+          "repository_id": 1416937820,
+          "head_repository_id": 1416937820,
+          "head_branch": "main",
+          "head_sha": "d78eb9d0bf59a434276e7191f8c04b478aebaab9"
+        }
+      },
+      {
+        "id": 13123313970,
+        "name": "host-optimized-41406605613",
+        "size_in_bytes": 6784110,
+        "url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13123313970",
+        "archive_download_url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13123313970/zip",
+        "expired": false,
+        "created_at": "2026-11-02T07:31:33Z",
+        "expires_at": "2026-12-02T07:31:30Z",
+        "updated_at": "2026-11-02T07:31:33Z",
+        "digest": "sha256:58e371a6df923cf2de0a2f38968ccc4a616ce7e4c37242e121d238d19af9edae",
+        "workflow_run": {
+          "id": 41406605613,
+          "repository_id": 1416937820,
+          "head_repository_id": 1416937820,
+          "head_branch": "main",
+          "head_sha": "d78eb9d0bf59a434276e7191f8c04b478aebaab9"
+        }
+      }
+    ],
+    "suiteCountsByMode": {
+      "optimized": {
+        "PASS": 43,
+        "SKIPPED": 1
+      },
+      "asan": {
+        "PASS": 43,
+        "SKIPPED": 1
+      }
+    },
+    "reports": {
+      "optimized": {
+        "suiteCounts": {
+          "PASS": 43,
+          "SKIPPED": 1
+        },
+        "hostRunIdFromLog": "20261102T072931-da66fe7912",
+        "verification": "GitHub job/step/log plus local ZIP SHA-256 and result Schema/JSON verification",
+        "localArchiveDigestVerified": true,
+        "managedProcessCount": 107,
+        "inputsUnchanged": true,
+        "compileCommands": 52
+      },
+      "asan": {
+        "suiteCounts": {
+          "PASS": 43,
+          "SKIPPED": 1
+        },
+        "hostRunIdFromLog": "20261102T072930-56568219b4",
+        "verification": "GitHub job/step result and full job log; artifact metadata",
+        "localArchiveDigestVerified": false
+      }
+    },
+    "sourceIdentityAudit": {
+      "verifiedSnapshot": "9be664d2bfb7b4bb136509538c8235f556519df0",
+      "treeEntries": 729,
+      "equalGitBlobs": true,
+      "productionUnchangedSince": "79c8ec61bf5e5e78e48c860c20c53b4c836b9b58"
+    },
+    "preflashExecuted": false
+  },
+  "c32Preparation": {
+    "targetedRunId": "20261102T072026-4794159999",
+    "targetedSuite": "auto-track",
+    "status": "PASS",
+    "passedSuites": 6,
+    "reason": "UTF-8 BOM only normalized to the exact CI source snapshot",
+    "protectedFilesChecked": 27,
+    "protectedFilesChanged": 0,
+    "committedFiles": 68
   }
 }

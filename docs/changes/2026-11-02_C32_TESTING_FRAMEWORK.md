@@ -228,3 +228,47 @@ P95/P99 等统计、绝对/相对退化/不退化/观察门禁。差异落入声
 DAG、公共夹具正文、链接目标、计数与原报告一致性、暂存执行代码与已通过 CI
 快照的 Git blob 对照。源码工程归档、自动软件验证、正式烧录放行和实车验收
 在本文及当前状态入口中分别表述，没有互相替代。
+
+## 10. C32 提交后的 main CI（补充证据）
+
+C32 主提交为 [`d78eb9d0bf59a434276e7191f8c04b478aebaab9`](https://github.com/fatezerozs/smartcar/commit/d78eb9d0bf59a434276e7191f8c04b478aebaab9)，
+已常规快进推送到 `origin/main`。本节是该提交触发的实际 main 执行结果，
+不借用前述独立验证分支的运行状态。
+
+| 项目 | main 上的实际证据 |
+| --- | --- |
+| Workflow | [Host regression / 41406605613](https://github.com/fatezerozs/smartcar/actions/runs/41406605613)，conclusion=success |
+| MSVC optimized | [job 125149956814](https://github.com/fatezerozs/smartcar/actions/runs/41406605613/job/125149956814)，43 PASS / 1 SKIPPED |
+| MSVC ASan | [job 125149957134](https://github.com/fatezerozs/smartcar/actions/runs/41406605613/job/125149957134)，43 PASS / 1 SKIPPED |
+| optimized 归档 | [artifact 13123313970](https://github.com/fatezerozs/smartcar/actions/runs/41406605613/artifacts/13123313970)，6,784,110 字节 |
+| ASan 归档 | [artifact 13123373343](https://github.com/fatezerozs/smartcar/actions/runs/41406605613/artifacts/13123373343)，84,833,474 字节 |
+
+唯一 SKIPPED 仍为按约定延期的 `performance-host`。两组 Job 的清单检查、Host
+执行与归档步骤均为 success。完整 Job 日志的套件统计与 GitHub 状态已交叉
+核对；optimized 归档另已在本机重新计算 ZIP 摘要，确认 clean checkout、52 次
+`/W4 /WX /O2` 编译、107 次受管调用清理通过、输入前后一致，run.json 与套件
+JSON 完全对应并通过 Schema 校验。
+
+| main 归档 | GitHub 提供的 SHA-256 | 本机独立校验范围 |
+| --- | --- | --- |
+| optimized | `58e371a6df923cf2de0a2f38968ccc4a616ce7e4c37242e121d238d19af9edae` | ZIP 摘要、结构化 JSON、套件 JSON、日志 |
+| ASan | `8ec5dbec697393d2e2dbb8e43ce2767d221025c78d7d0ad2c783baacd0ea905a` | Job/step 状态、完整 Job 日志和归档元数据；未声称本机已重新计算该份 ZIP 摘要 |
+
+ASan 的测试成功与其归档是否在本机再次下载分别记录。独立分支的 ASan ZIP/JSON
+已按第 5 节核验，且 C32 执行相关 Git 树与该快照一致；这也不替代本表对 main
+证据来源的区分。精确身份、计数与校验范围保存在 `validation.json` 的 `mainCI`。
+
+提交前对 `.github/`、`tools/`、`tests/`、`demo/`、`libraries/` 及 Git 属性/忽略
+规则共 729 个 Git 树条目（包括目录内 README、许可证和静态夹具）比较，Git
+blob/mode 完全相同。版本说明、根 README 和演进档案的差异单独归档。可复核：
+
+```powershell
+# 本地尚无验证快照时先取回其对象，无需 checkout/merge：
+git fetch origin ci/testing-refactor-20261102
+git diff --exit-code 9be664d2bfb7b4bb136509538c8235f556519df0 d78eb9d0bf59a434276e7191f8c04b478aebaab9 -- .github .gitignore .gitattributes tools tests demo libraries
+git diff --exit-code 79c8ec61bf5e5e78e48c860c20c53b4c836b9b58 d78eb9d0bf59a434276e7191f8c04b478aebaab9 -- demo libraries
+```
+
+两条 diff 均无差异。追加本节的证据提交仅更新文档，不改变被测 C32 代码。
+main Host CI 通过没有关闭第 7 节的完整 PreFlash 放行、人工审查、真实数据或
+硬件未验项；也没有生成新的 C32 固件发布件或执行烧录。

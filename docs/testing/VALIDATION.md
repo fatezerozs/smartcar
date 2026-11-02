@@ -133,6 +133,19 @@ runner 和人工触发。本轮通过结论只覆盖远程 Host optimized/ASan�
 目标构建、真实数据性能、硬件验收或合并 main。随后补充的验收文档不改变上述
 被测代码提交。
 
+## C32 main 提交的后续 CI
+
+C32 代码提交 `d78eb9d0bf59a434276e7191f8c04b478aebaab9` 推送到 main 后，
+[Host regression 41406605613](https://github.com/fatezerozs/smartcar/actions/runs/41406605613)
+实际完成，MSVC optimized 与 ASan 均为 success，各 43 PASS / 1 SKIPPED。
+此前独立分支的结果仍按其原 SHA 保存，不混写成此轮 main 的运行结果。
+
+main 的 Job 状态、完整日志和归档元数据已复核；optimized ZIP/JSON 另已本机
+校验。main ASan ZIP 的 digest 在此为 GitHub 元数据，不冒充本机独立计算。
+精确链接、digest、源码树对照与来源边界见
+[C32 提交说明第 10 节](../changes/2026-11-02_C32_TESTING_FRAMEWORK.md#10-c32-提交后的-main-ci补充证据)，
+机器可读索引为 `validation.json.mainCI`。正式烧录放行与硬件未验项保持原状态。
+
 ## 阅读和证据层级
 
 - 原任务书：直接读取原始 Markdown；当前无 MarkItDown MCP，未使用 Markdown 转换结果冒充版面证据。
