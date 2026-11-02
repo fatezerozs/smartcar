@@ -4,6 +4,9 @@
 `tests/suites/catalog.json`。普通执行只做 Host 模拟、离线协议/工具测试、
 静态检查和目标纯构建，不烧录，不打开串口，不连接车辆或执行器。
 
+完整使用、开发、维护和排障流程见 [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md)。
+本页保留架构概要，精确运行事实仍以验收记录为准。
+
 ## 使用
 
 需要 Windows、PowerShell 7、Python 3.10+ 和 Git。MSVC 是默认 Host 工具链；
