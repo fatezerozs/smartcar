@@ -5,7 +5,8 @@
 ## 维护中的两类主文档
 
 - [项目设计与演进档案](PROJECT_EVOLUTION.md)：持续更新，含每次提交简略索引、目标、模型、现状与决策。
-- [2026-10-28 / C31 软件架构硬化（pre-flash）](changes/2026-10-28_C31_SOFTWARE_HARDENING.md)：当前提交差异、既有软件验收摘要与未关闭硬件风险。
+- [2026-11-02 / C32 测试体系重构](changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：当前工程提交、接口延期、本地/远程验收与烧录放行边界。
+- [2026-10-28 / C31 软件架构硬化（pre-flash）](changes/2026-10-28_C31_SOFTWARE_HARDENING.md)：此前软件提交差异、验收摘要与继续保留的硬件风险。
 - [2026-10-23 / C31 详细提交说明](changes/2026-10-23_C31.md)：此前提交快照，冻结历史结论。
 - [2026-10-22 / C28 详细总结](changes/2026-10-22_C28.md)：上次提交快照，冻结历史结论。
 
@@ -15,6 +16,8 @@
 
 | 文档 | 用途 |
 | --- | --- |
+| [TESTING_ARCHITECTURE.md](TESTING_ARCHITECTURE.md) | 统一测试入口、套件分层、隔离执行、报告和数据集待接入接口 |
+| [测试重构验收记录](testing/VALIDATION.md) | 本轮源码/夹具前后对照、Host/ARM/Keil 证据与未执行范围 |
 | [ENCODER_SPEED.md](reference/ENCODER_SPEED.md) | 编码器3左/4右与速度环；区分赛道和历史诊断参数 |
 | [DUAL_UART.md](reference/DUAL_UART.md) | 链路、队列、所有权和诊断基线 |
 | [VISION_DATA_CAPTURE.md](reference/VISION_DATA_CAPTURE.md) | 停车/手推图像采集；不等于运动中图文同步 |

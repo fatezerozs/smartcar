@@ -1,6 +1,5 @@
-﻿/* Real C31 controller, wheel loop and guard; board IO is simulated. */
-#define SWITCH_TEST_FUNCTION legacy_switch_main
-#include "test_route_switch.c"
+/* Real C31 controller, wheel loop and guard; board IO is simulated. */
+#include "../support/fixtures/switch_io.h"
 #include "midterm_boot.h"
 #include "vision_drive_internal.h"
 static int buzzer,block_local;

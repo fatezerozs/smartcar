@@ -2,6 +2,7 @@
 **/Objects/
 **/Listings/
 .build/
+.test-results/
 tests/vision/output/
 *.o
 *.obj

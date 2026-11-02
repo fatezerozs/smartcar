@@ -1,0 +1,37 @@
+name: Host regression
+on:
+  push:
+    paths: ['demo/**', 'libraries/**', 'tests/**', 'tools/**', '.github/workflows/**']
+  pull_request:
+    paths: ['demo/**', 'libraries/**', 'tests/**', 'tools/**', '.github/workflows/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [optimized, asan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate manifest and dependency graph
+        shell: pwsh
+        run: ./tools/testing/Test-Manifest.ps1
+      - name: Run the shared Host plan
+        shell: pwsh
+        run: ./tools/testing/Invoke-TestPlan.ps1 -Profile Host -Mode ${{ matrix.mode }}
+      - name: Archive structured results and raw evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-${{ matrix.mode }}-${{ github.run_id }}
+          path: .test-results/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

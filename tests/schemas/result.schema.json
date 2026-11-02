@@ -1,0 +1,327 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR",
+            "TIMEOUT",
+            "BLOCKED",
+            "SKIPPED",
+            "MANUAL_PENDING"
+          ]
+        },
+        "evidenceClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "exitCode": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "startedAt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "finishedAt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "processes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "logDirectory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "details": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "status",
+        "evidenceClass",
+        "layer",
+        "category",
+        "required",
+        "reason",
+        "durationSeconds",
+        "exitCode",
+        "startedAt",
+        "finishedAt",
+        "processes",
+        "variants",
+        "logDirectory",
+        "dependsOn",
+        "artifacts",
+        "details"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0"
+        },
+        "runId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile": {
+          "enum": [
+            "Suite",
+            "Host",
+            "PreFlash",
+            "Diagnostic"
+          ]
+        },
+        "startedAt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "finishedAt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "git": {
+          "type": "object"
+        },
+        "manifestSha256": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR",
+            "TIMEOUT",
+            "BLOCKED",
+            "SKIPPED",
+            "MANUAL_PENDING"
+          ]
+        },
+        "softwarePassed": {
+          "type": "boolean"
+        },
+        "releaseEligible": {
+          "type": "boolean"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "suites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "const": "1.0"
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$"
+              },
+              "status": {
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "ERROR",
+                  "TIMEOUT",
+                  "BLOCKED",
+                  "SKIPPED",
+                  "MANUAL_PENDING"
+                ]
+              },
+              "evidenceClass": {
+                "type": "string",
+                "minLength": 1
+              },
+              "layer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "durationSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "exitCode": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "startedAt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "finishedAt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "processes": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "logDirectory": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dependsOn": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "artifacts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "details": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "id",
+              "status",
+              "evidenceClass",
+              "layer",
+              "category",
+              "required",
+              "reason",
+              "durationSeconds",
+              "exitCode",
+              "startedAt",
+              "finishedAt",
+              "processes",
+              "variants",
+              "logDirectory",
+              "dependsOn",
+              "artifacts",
+              "details"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "runId",
+        "profile",
+        "startedAt",
+        "finishedAt",
+        "durationSeconds",
+        "git",
+        "manifestSha256",
+        "environment",
+        "status",
+        "softwarePassed",
+        "releaseEligible",
+        "scope",
+        "risks",
+        "suites"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

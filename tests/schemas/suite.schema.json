@@ -1,0 +1,307 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "suites": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "const": "1.0"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "layer": {
+            "enum": [
+              "environment",
+              "unit",
+              "integration",
+              "contract",
+              "performance",
+              "build",
+              "hardware"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidenceClass": {
+            "enum": [
+              "host",
+              "host_simulated",
+              "static",
+              "target_compile",
+              "target_build",
+              "pq_host",
+              "pq_target",
+              "pq_system",
+              "hardware"
+            ]
+          },
+          "entrypoint": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "environment",
+                  "compiler-environment",
+                  "target-environment",
+                  "arm-environment",
+                  "c",
+                  "python",
+                  "powershell",
+                  "cmd",
+                  "native",
+                  "aggregate",
+                  "static",
+                  "arm",
+                  "keil",
+                  "benchmark",
+                  "manual"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+              },
+              "arguments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "variants": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    },
+                    "sources": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+                      },
+                      "uniqueItems": true
+                    },
+                    "includeDirectories": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+                      },
+                      "uniqueItems": true
+                    },
+                    "defines": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "uniqueItems": true
+                    },
+                    "expectCompileFailure": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reference": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+                        },
+                        "defines": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "uniqueItems": true
+                        }
+                      },
+                      "required": [
+                        "source",
+                        "defines"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "sources",
+                    "includeDirectories",
+                    "defines"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "fixtures": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+                }
+              },
+              "defines": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "c"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "variants"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "python",
+                        "powershell",
+                        "cmd",
+                        "native",
+                        "benchmark"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            ]
+          },
+          "workingDirectory": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+          },
+          "timeoutSeconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7200
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$"
+            },
+            "uniqueItems": true
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$"
+            },
+            "uniqueItems": true
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Host",
+                "PreFlash",
+                "Diagnostic"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "environment": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionMethod": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "id",
+          "name",
+          "layer",
+          "category",
+          "evidenceClass",
+          "entrypoint",
+          "workingDirectory",
+          "timeoutSeconds",
+          "required",
+          "dependsOn",
+          "resources",
+          "profiles",
+          "environment",
+          "artifacts"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "suites"
+  ],
+  "additionalProperties": false
+}

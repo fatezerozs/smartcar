@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0",
+  "id": "vision-host",
+  "status": "pending",
+  "reason": "Dataset, versioned ground truth, measurement adapter and approved baseline await later integration; other suites remain independent.",
+  "evidenceClass": "pq_host",
+  "dataset": {
+    "id": "vision-track",
+    "version": "pending",
+    "sha256": null,
+    "groundTruthSha256": null,
+    "groundTruthPath": null,
+    "path": null
+  },
+  "parameters": {},
+  "warmup": 5,
+  "repetitions": 20,
+  "adapter": null,
+  "approvedBaseline": null,
+  "metrics": [
+    {
+      "id": "boundary-mae",
+      "dimension": "quality",
+      "unit": "px",
+      "direction": "lower",
+      "statistic": "mean",
+      "validSampleRule": "Valid labelled rows; left/right absolute boundary errors are recorded per sample.",
+      "thresholdSource": "Pending labelled dataset and human-approved thresholds; observation only.",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0
+    },
+    {
+      "id": "processing-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Completed frames after warmup; use a monotonic high-resolution clock in one recorded Host environment.",
+      "thresholdSource": "Pending measured noise and human-approved baseline; observation only.",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0
+    }
+  ]
+}

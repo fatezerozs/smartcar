@@ -1,19 +1,5 @@
-/* Exercise actual route-profile lifecycle and control, with simulated IO only. */
-#define main legacy_speed_main
-#include "test_speed.c"
-#undef main
-static vision_result_t route_lane;
-static uint32_t route_sequence;
-static void set_lane(int shift)
-{
-    memset(&route_lane,0,sizeof(route_lane));
-    route_lane.valid=1;route_lane.status=VISION_TRACK;route_lane.confidence=85;
-    for(int y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y){
-        int center=93+shift;
-        route_lane.left[y]=(uint8_t)(center-40);route_lane.right[y]=(uint8_t)(center+40);
-        route_lane.center[y]=(uint8_t)center;route_lane.row_flags[y]=3;
-    }
-}
+/* Independent route lifecycle scenarios; simulated IO only. */
+#include "../support/fixtures/route_lane.h"
 static void route_step(int frames,int heartbeat)
 {
     tick(-15,15,heartbeat);
@@ -30,10 +16,7 @@ static void warm_arm(void)
     for(unsigned i=0;i<30;++i)route_step(1,0);
     CHECK(vision_drive_command('a',now,1));
 }
-#ifndef ROUTE_TEST_FUNCTION
-#define ROUTE_TEST_FUNCTION main
-#endif
-int ROUTE_TEST_FUNCTION(void)
+int main(void)
 {
     vd_profile_t p;
     route_boot();vision_drive_get_profile(&p);

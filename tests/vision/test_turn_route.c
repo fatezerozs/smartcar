@@ -1,6 +1,5 @@
 /* Actual grayscale vision -> route control -> PWM, simulated hardware. */
-#define SWITCH_TEST_FUNCTION legacy_switch_main
-#include "test_route_switch.c"
+#include "../support/fixtures/switch_io.h"
 #include "vision_drive_internal.h"
 #include "vision_steering.h"
 #include <math.h>

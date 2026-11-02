@@ -1,10 +1,8 @@
 /* Reuse the existing camera/output model; replace its clock/entry only.
  * The legacy scenario entry is not run by this executable. */
-#define main legacy_scenarios_main
 #define timer_get legacy_timer_get
-#include "test_debug.c"
+#include "../support/fixtures/runtime_io.h"
 #undef timer_get
-#undef main
 #include "app_transport.h"
 #include "app_link.h"
 #include <assert.h>

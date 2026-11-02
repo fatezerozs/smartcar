@@ -1,13 +1,11 @@
 /* Real scheduler, vision, speed PI and link modules; simulated peripherals only. */
 #define VISION_TEST_MIDTERM_RUNTIME 1
 void vision_test_runtime_tick(void);
-#define main legacy_scenarios_main
 #define timer_get legacy_timer_get
 #define board_camera_poll legacy_board_camera_poll
-#include "test_debug.c"
+#include "../support/fixtures/runtime_io.h"
 #undef board_camera_poll
 #undef timer_get
-#undef main
 #include "app_transport.h"
 #include "app_link.h"
 #include "midterm_boot.h"

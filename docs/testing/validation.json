@@ -1,0 +1,687 @@
+{
+  "schemaVersion": "1.0",
+  "trust": [
+    "structured_parsed",
+    "computed"
+  ],
+  "date": "2026-11-02",
+  "runId": "20261101T175852-a5a26be988",
+  "profile": "PreFlash",
+  "status": "PASS",
+  "softwarePassed": true,
+  "releaseEligible": false,
+  "gitSha": "79c8ec61bf5e5e78e48c860c20c53b4c836b9b58",
+  "dirty": true,
+  "runJsonSha256": "de3eebfa1dd579766a095b5cdf972f949d7c124f2c874b595f21af96cfded486",
+  "manifestSha256": "c6070e377693a3b1650f2f1d0538d0cf96137081bd624633f1528a801c7912a3",
+  "durationSeconds": 313.734629,
+  "suiteCounts": {
+    "PASS": 57,
+    "SKIPPED": 1
+  },
+  "processCount": 121,
+  "allProcessTreesCleaned": true,
+  "frameworkTests": 29,
+  "keilVariants": [
+    {
+      "id": "keil-base",
+      "status": "PASS",
+      "axfSha256": "2d4bfb00385afb442d42b40cffabece5f79f74564e01e1c8bfcc237c657ce3d2"
+    },
+    {
+      "id": "keil-train",
+      "status": "PASS",
+      "axfSha256": "9b03eb18ff0d6c147fb1b9f09fc7d412425e28d450d11883a75498ac8b05a425"
+    },
+    {
+      "id": "keil-route",
+      "status": "PASS",
+      "axfSha256": "0d2d8dbe7ab32422c414af012d889d7a7f0ae26bca5b96738e512ff324209876"
+    },
+    {
+      "id": "keil-switch",
+      "status": "PASS",
+      "axfSha256": "b0866536c14f2c9c07fa62d8a39bc4a086cb5c0a20ad68b1daddfd66ceff520a"
+    },
+    {
+      "id": "keil-auto-track",
+      "status": "PASS",
+      "axfSha256": "b9ba2f558e8ecb55166bc8e5ed3ea3b9eb306e91a8bc9dd87bbf6d48cbe2349c"
+    },
+    {
+      "id": "keil-link",
+      "status": "PASS",
+      "axfSha256": "8ed3737bfd0b80fce760fb151f8e6dcbdd1a28da46a0a0eae76d89fbcaad6f05"
+    },
+    {
+      "id": "keil-threshold",
+      "status": "PASS",
+      "axfSha256": "c3b6a1bc1aac33de3b81e15114d452f81aee4526373fc91d2648f92d6bd4ee1a"
+    },
+    {
+      "id": "keil-motion",
+      "status": "PASS",
+      "axfSha256": "7a396f918bc771e02f142af6b4542895756970de09df5d6f25ee9d3a650890e0"
+    },
+    {
+      "id": "keil-speed",
+      "status": "PASS",
+      "axfSha256": "fcf0b29c2cbcf1b95d5ad1d3a1b6954bdda7135a8e901422d03de96d2f87c7e7"
+    }
+  ],
+  "inputFilesUnchanged": true,
+  "deferred": [
+    "Real labelled dataset, adapter, approved performance baseline and measured quality/timing gates",
+    "Manual ISR/DMA/critical-section review and physical hardware acceptance",
+    "Local MSVC/GCC ASan remain unavailable; remote MSVC optimized/ASan are verified separately",
+    "Remote PreFlash workflow and dedicated licensed Keil runner are not verified"
+  ],
+  "suites": [
+    {
+      "id": "environment",
+      "layer": "environment",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.566669
+    },
+    {
+      "id": "compiler-environment",
+      "layer": "environment",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.535373
+    },
+    {
+      "id": "target-environment",
+      "layer": "environment",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.698358
+    },
+    {
+      "id": "arm-environment",
+      "layer": "environment",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.70509
+    },
+    {
+      "id": "vision",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.973791
+    },
+    {
+      "id": "control",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.833826
+    },
+    {
+      "id": "bayes",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.187875
+    },
+    {
+      "id": "field",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.48476
+    },
+    {
+      "id": "servo-probe",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.458329
+    },
+    {
+      "id": "motor-probe",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.398841
+    },
+    {
+      "id": "startup",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.599099
+    },
+    {
+      "id": "board-mode",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.153657
+    },
+    {
+      "id": "drive",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 6.86193
+    },
+    {
+      "id": "debug",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 11.730909
+    },
+    {
+      "id": "link",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.579508
+    },
+    {
+      "id": "link-board",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.768309
+    },
+    {
+      "id": "transport",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.810868
+    },
+    {
+      "id": "dual-runtime",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 4.241172
+    },
+    {
+      "id": "speed",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 3.41172
+    },
+    {
+      "id": "encoder-board",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.529754
+    },
+    {
+      "id": "route-trial",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 3.199374
+    },
+    {
+      "id": "route-switch",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 3.810723
+    },
+    {
+      "id": "switch-runtime",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 7.110768
+    },
+    {
+      "id": "turn-route",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 15.724356
+    },
+    {
+      "id": "roundabout",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.140814
+    },
+    {
+      "id": "roundabout-projection",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 10.698361
+    },
+    {
+      "id": "tangent-preview",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 2.43804
+    },
+    {
+      "id": "midterm-boot",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 5.030148
+    },
+    {
+      "id": "midterm-runtime",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 4.635245
+    },
+    {
+      "id": "auto-track",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 7.113129
+    },
+    {
+      "id": "motion",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 17.905237
+    },
+    {
+      "id": "motor-threshold",
+      "layer": "integration",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 4.811183
+    },
+    {
+      "id": "vision-contract",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 16.729435
+    },
+    {
+      "id": "capture-vision",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 7.650664
+    },
+    {
+      "id": "fit-model",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.20186
+    },
+    {
+      "id": "restore-training-parameters",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.360226
+    },
+    {
+      "id": "run-analysis",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.200489
+    },
+    {
+      "id": "seekfree-import",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.353576
+    },
+    {
+      "id": "track-trials",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.134146
+    },
+    {
+      "id": "training-analysis",
+      "layer": "unit",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.591631
+    },
+    {
+      "id": "field-protocol",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.658708
+    },
+    {
+      "id": "configuration-contract",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.77748
+    },
+    {
+      "id": "invalid-configuration",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.578244
+    },
+    {
+      "id": "interface-contract",
+      "layer": "contract",
+      "evidenceClass": "host_simulated",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 0.328158
+    },
+    {
+      "id": "project-structure",
+      "layer": "build",
+      "evidenceClass": "static",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.538798
+    },
+    {
+      "id": "static-safety",
+      "layer": "build",
+      "evidenceClass": "static",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 1.450139
+    },
+    {
+      "id": "arm-source",
+      "layer": "build",
+      "evidenceClass": "target_compile",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 42.80467
+    },
+    {
+      "id": "keil-base",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 23.537769
+    },
+    {
+      "id": "keil-train",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 25.319876
+    },
+    {
+      "id": "keil-route",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 31.30047
+    },
+    {
+      "id": "keil-switch",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 47.963162
+    },
+    {
+      "id": "keil-auto-track",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 47.959757
+    },
+    {
+      "id": "keil-link",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 51.265908
+    },
+    {
+      "id": "keil-threshold",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 50.735016
+    },
+    {
+      "id": "keil-motion",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 48.230051
+    },
+    {
+      "id": "keil-speed",
+      "layer": "build",
+      "evidenceClass": "target_build",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 50.685388
+    },
+    {
+      "id": "performance-host",
+      "layer": "performance",
+      "evidenceClass": "pq_host",
+      "status": "SKIPPED",
+      "required": false,
+      "exitCode": 0,
+      "durationSeconds": 1.300475
+    },
+    {
+      "id": "framework",
+      "layer": "unit",
+      "evidenceClass": "host",
+      "status": "PASS",
+      "required": true,
+      "exitCode": 0,
+      "durationSeconds": 30.798126
+    }
+  ],
+  "remoteCI": {
+    "repository": "fatezerozs/smartcar",
+    "branch": "ci/testing-refactor-20261102",
+    "codeSha": "9be664d2bfb7b4bb136509538c8235f556519df0",
+    "mainUnchangedSha": "79c8ec61bf5e5e78e48c860c20c53b4c836b9b58",
+    "runId": 41389161428,
+    "url": "https://github.com/fatezerozs/smartcar/actions/runs/41389161428",
+    "conclusion": "success",
+    "createdAt": "2026-11-02T04:33:46Z",
+    "updatedAt": "2026-11-02T04:37:51Z",
+    "artifacts": [
+      {
+        "id": 13116643131,
+        "name": "host-optimized-41389161428",
+        "size_in_bytes": 6784207,
+        "url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13116643131",
+        "archive_download_url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13116643131/zip",
+        "expired": false,
+        "created_at": "2026-11-02T04:35:59Z",
+        "expires_at": "2026-12-02T04:35:57Z",
+        "updated_at": "2026-11-02T04:35:59Z",
+        "digest": "sha256:671242310d5704f01eda146b61244e246fa0e928bb306ba0ce3c978345872382",
+        "workflow_run": {
+          "id": 41389161428,
+          "repository_id": 1416937820,
+          "head_repository_id": 1416937820,
+          "head_branch": "ci/testing-refactor-20261102",
+          "head_sha": "9be664d2bfb7b4bb136509538c8235f556519df0"
+        }
+      },
+      {
+        "id": 13116608597,
+        "name": "host-asan-41389161428",
+        "size_in_bytes": 84728379,
+        "url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13116608597",
+        "archive_download_url": "https://api.github.com/repos/fatezerozs/smartcar/actions/artifacts/13116608597/zip",
+        "expired": false,
+        "created_at": "2026-11-02T04:37:46Z",
+        "expires_at": "2026-12-02T04:37:39Z",
+        "updated_at": "2026-11-02T04:37:46Z",
+        "digest": "sha256:8c90bafaee4bd0420b91b2e7b45d0c6f2e94abca581363238154ffd7823be842",
+        "workflow_run": {
+          "id": 41389161428,
+          "repository_id": 1416937820,
+          "head_repository_id": 1416937820,
+          "head_branch": "ci/testing-refactor-20261102",
+          "head_sha": "9be664d2bfb7b4bb136509538c8235f556519df0"
+        }
+      }
+    ],
+    "modes": {
+      "optimized": {
+        "status": "PASS",
+        "runId": "20261102T043401-6626bd621c",
+        "counts": {
+          "PASS": 43,
+          "SKIPPED": 1
+        },
+        "processCount": 107,
+        "compileCommands": 52,
+        "frameworkTests": 29,
+        "cleanCheckout": true,
+        "inputsUnchanged": true,
+        "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "allProcessesCleaned": true
+      },
+      "asan": {
+        "status": "PASS",
+        "runId": "20261102T043400-8ca3ae362f",
+        "counts": {
+          "PASS": 43,
+          "SKIPPED": 1
+        },
+        "processCount": 107,
+        "compileCommands": 52,
+        "frameworkTests": 29,
+        "cleanCheckout": true,
+        "inputsUnchanged": true,
+        "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "allProcessesCleaned": true
+      }
+    },
+    "preflashExecuted": false
+  }
+}

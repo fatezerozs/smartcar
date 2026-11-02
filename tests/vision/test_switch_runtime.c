@@ -1,11 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <assert.h>
 /* Actual scheduler/transport/camera path, no UART start or heartbeat. */
-#define main legacy_scenarios_main
 #define timer_get legacy_timer_get
-#include "test_debug.c"
+#include "../support/fixtures/runtime_io.h"
 #undef timer_get
-#undef main
 #include "app_transport.h"
 #include "app_link.h"
 #include "board_encoder.h"

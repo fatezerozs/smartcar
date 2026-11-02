@@ -1,0 +1,28 @@
+name: PreFlash software evidence
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflash:
+    # Dedicated Windows host with licensed MDK and the RT1064 device pack.
+    # This job only rebuilds private copies; it has no flashing step.
+    runs-on: [self-hosted, Windows, smartcar-keil]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run the same local PreFlash contract
+        shell: pwsh
+        run: ./tools/testing/Invoke-TestPlan.ps1 -Profile PreFlash
+      - name: Archive evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: preflash-${{ github.run_id }}
+          path: .test-results/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

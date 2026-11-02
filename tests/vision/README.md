@@ -2,6 +2,19 @@
 
 # 可复现的主机验证
 
+2026-11-02：现行统一入口、套件清单、分层、工具链和报告说明见
+[测试体系](../../docs/TESTING_ARCHITECTURE.md)。下述历史用例说明继续有效，但旧
+CMD 现已转为兼容包装，产物位于 `.test-results/<run-id>/suites/<id>/artifacts/`。
+默认串行；显式并行仅通过统一编排器执行，不再向共享 output 目录写新产物。
+
+```powershell
+./tools/testing/Invoke-TestPlan.ps1 -Profile Host
+./tools/testing/Invoke-TestPlan.ps1 -Suite speed
+./tools/testing/Invoke-TestPlan.ps1 -Profile PreFlash
+```
+
+需要数据集的性能/质量接口暂为可选 SKIPPED，不影响这里的功能、协议和构建测试。
+
 C31 在 `test_turn_route.c` 中加入实际驱动链路跨越 ROI 下端截断位置的持续转向断言，在投影测试中检查已确认内岛延续、截断图不能新建入口、远岛不能接近处暗块、空白撤销；实拍控制模块回放使用当前 switch 工程参数。正常与 ASAN 均由 `run_switch_tests.cmd` 执行。见 [C31](../../docs/archive/versions/C26_31_ENTRY_CONTINUITY.md)。
 
 C30 的 `test_tangent_preview.c` 已接入正常及 ASAN 开关测试：5 个独立实拍入口及镜像、可见白色余量、实际控制器转向、外侧曲线反例、OFF 撤销和无边界反例。原始缩略图与校验见 `fixtures/tangent-preview/manifest.json`；重复帧仅用于静态获取，不代表真实采集时序。详见 [C30](../../docs/archive/versions/C26_30_CAPTURED_TANGENT_ENTRY.md)。

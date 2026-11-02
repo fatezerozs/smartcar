@@ -1,0 +1,923 @@
+{
+  "schemaVersion": "1.0",
+  "gitSha": "79c8ec61bf5e5e78e48c860c20c53b4c836b9b58",
+  "gitStatus": " M .gitignore\n M demo/mdk/competition/midterm_switch.uvprojx\n?? docs/changes/c31-architecture-next/\n?? docs/changes/c31-implementation/\n?? docs/changes/c31-software-baseline/\n?? docs/changes/c31-software-round/git-status-final.txt\n?? docs/changes/c31-software-round/head-before.txt\n?? docs/changes/c31-software-round/preflight-existing.diff\n?? docs/changes/c31-software-round/status-before.txt\n?? docs/changes/c31-software-round/switch-baseline.log\n?? docs/changes/c31-software-round/switch-diagnostic.log\n?? docs/changes/c31-software-round/tracked-before.patch\n?? docs/changes/c31-software-round/validation/\n?? tests/suites/\n?? tools/testing/\n",
+  "assets": [
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000020.gray",
+      "sha256": "172f56e69d60226a401ddcd66f4fc91bbc816fc18b8ad0dc8a1bcbd3c7d07de9",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000024.gray",
+      "sha256": "5df6065ad0742e068c36348f112f5b3d1dc036d46ca0344594fcd9af66ae8a18",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000030.gray",
+      "sha256": "4ca623de270ba578d80a18d83d8f32a9c3903aa4230ae200785150e2986c8ce3",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000040.gray",
+      "sha256": "ac73978cd71c257933f3dde2d9ca3fb38d0f7acd4e1e84d62df2d3224b67de9f",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000041.gray",
+      "sha256": "237ce241c9173422c585ff8bc9daf1e774fb2236269039bf2781f9815f65f2e0",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000043.gray",
+      "sha256": "49adb4190b8b275de6a03415218d135ba26da2a94fa9df7e004b3af3cbe5aff8",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000044.gray",
+      "sha256": "378ff0840b4d5fdf96cbc148415cd04fd8e566bf5b3c9bfe27b1df8d3be6cd84",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000045.gray",
+      "sha256": "eeabdaa0a9dff32b0f43f007f75849586cf3d7df9394e1d1995fdb7bc32b5cec",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000051.gray",
+      "sha256": "9c0820a7983a92602059487f8179e3e98dfa8c160ad962ae686d33ac4339472a",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/frame-000065.gray",
+      "sha256": "088970f7573dcdeacc5a05d24f2f9ce852d22a800859d422fe903b4b57b1d6e0",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/fixtures/tangent-preview/manifest.json",
+      "sha256": "836f7059bf10308c0526f9792462283b85a0ba9ac8ea055b42f58febdfd421c2",
+      "suites": [
+        "tangent-preview",
+        "static-safety"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "unlabelled_static_fixture"
+    },
+    {
+      "path": "tests/vision/README.md",
+      "sha256": "deb6a0cbf195ccefdeb3330b3bafa3f94d2d21bc0ad79514b2faeb0bd8d36259",
+      "suites": [],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "documentation"
+    },
+    {
+      "path": "tests/vision/reference/vision_reference.c",
+      "sha256": "a5bd5a5bb531b601568ad07bdc787d8271a6f2dbf92d5854fa2e67066d45e4e0",
+      "suites": [
+        "vision-contract"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "historical_reference"
+    },
+    {
+      "path": "tests/vision/replay_preview.c",
+      "sha256": "0930d7e6b1a682599881357ce1bed208f3a6526b533857b25b041dd33df069be",
+      "suites": [],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "offline_diagnostic_utility",
+      "exclusionReason": "Argument-driven preview replay, not a self-checking regression suite. Retained unchanged; dataset-based measurement integration remains pending."
+    },
+    {
+      "path": "tests/vision/run_auto_track_tests.cmd",
+      "sha256": "9faef27543b3d8568adac794026104b779b414aba41739da934975f170efbca2",
+      "suites": [
+        "auto-track"
+      ],
+      "directIncludes": [],
+      "c31Change": "A",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_equivalence.cmd",
+      "sha256": "0664ec6a0c07619bb5fa95c2468e843a17f0a67b1c288a41d6b29d01cb2f442b",
+      "suites": [
+        "equivalence"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_link_tests.cmd",
+      "sha256": "59c3157006893f8408c3ccdb4440a3927a800370971f6afc3a5fc5b79a710419",
+      "suites": [
+        "link-group"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_midterm_tests.cmd",
+      "sha256": "b9fe5c28d2eb6c6494d65e21b518fcc1417a9e648493238f66e957d462fd5870",
+      "suites": [
+        "midterm"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_motion_tests.cmd",
+      "sha256": "40a8932a7f0ee5e04d9655b9022c80061c5186352eedcc09ab57c51db5bd9df8",
+      "suites": [
+        "motion"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_motor_threshold_tests.cmd",
+      "sha256": "0411045356fd5be839c0c06240a36171fcfdcc11b9b79b1262d6d64e06bbb10e",
+      "suites": [
+        "motor-threshold"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_route_tests.cmd",
+      "sha256": "b44602c63025518bdefd382c3f297c6121ca20eef3148a793427b444c486f343",
+      "suites": [
+        "route"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_speed_tests.cmd",
+      "sha256": "332520e8c2f8887928cc02ff0746d53d122fde7bb2e2367260703ca0621a3610",
+      "suites": [
+        "speed-group"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_switch_tests.cmd",
+      "sha256": "73e950649bd43a78ae104a0f235cca2f3f68deaf3446f8d9336c64d4cf7209cc",
+      "suites": [
+        "switch"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/run_tests.cmd",
+      "sha256": "4592569b886fe7a5f0a40235ba23a58472a1d4579bfa0f69be242447add948fb",
+      "suites": [
+        "core"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "compatibility_entrypoint"
+    },
+    {
+      "path": "tests/vision/stubs/encoder_board/fsl_qtmr.h",
+      "sha256": "7e9ad43920af5e59f1ded07d50782657a14e93745d040e6934212f7b22c0ebfd",
+      "suites": [
+        "auto-track",
+        "board-mode",
+        "debug",
+        "drive",
+        "dual-runtime",
+        "encoder-board",
+        "field",
+        "midterm-boot",
+        "midterm-runtime",
+        "motion",
+        "motor-probe",
+        "motor-threshold",
+        "roundabout",
+        "roundabout-projection",
+        "route-switch",
+        "route-trial",
+        "servo-probe",
+        "speed",
+        "startup",
+        "switch-runtime",
+        "transport",
+        "turn-route"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "host_stub"
+    },
+    {
+      "path": "tests/vision/stubs/encoder_board/main.h",
+      "sha256": "9b17781c39f78ea103d8a78ea7ed95c9293ca7d12a1717bce3093835fb6ac6b7",
+      "suites": [
+        "auto-track",
+        "board-mode",
+        "debug",
+        "drive",
+        "dual-runtime",
+        "encoder-board",
+        "field",
+        "midterm-boot",
+        "midterm-runtime",
+        "motion",
+        "motor-probe",
+        "motor-threshold",
+        "roundabout",
+        "roundabout-projection",
+        "route-switch",
+        "route-trial",
+        "servo-probe",
+        "speed",
+        "startup",
+        "switch-runtime",
+        "transport",
+        "turn-route"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "host_stub"
+    },
+    {
+      "path": "tests/vision/stubs/link_board/main.h",
+      "sha256": "f7de29c31283f32e27f842a872e0a3ebe1b50ca8bd8cf3c725545151dabb32e3",
+      "suites": [
+        "auto-track",
+        "board-mode",
+        "debug",
+        "drive",
+        "dual-runtime",
+        "field",
+        "link-board",
+        "midterm-boot",
+        "midterm-runtime",
+        "motion",
+        "motor-probe",
+        "motor-threshold",
+        "roundabout",
+        "roundabout-projection",
+        "route-switch",
+        "route-trial",
+        "servo-probe",
+        "speed",
+        "startup",
+        "switch-runtime",
+        "transport",
+        "turn-route"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "host_stub"
+    },
+    {
+      "path": "tests/vision/stubs/main.h",
+      "sha256": "553d68c41669a2bb93483ab04ad64979781ebf8eea782e9285f4542267ca5970",
+      "suites": [
+        "auto-track",
+        "board-mode",
+        "debug",
+        "drive",
+        "dual-runtime",
+        "field",
+        "midterm-boot",
+        "midterm-runtime",
+        "motion",
+        "motor-probe",
+        "motor-threshold",
+        "roundabout",
+        "roundabout-projection",
+        "route-switch",
+        "route-trial",
+        "servo-probe",
+        "speed",
+        "startup",
+        "switch-runtime",
+        "transport",
+        "turn-route"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "host_stub"
+    },
+    {
+      "path": "tests/vision/test_auto_track.c",
+      "sha256": "2be6d91a7317551735e463f889eee02e9ac1821c8bab8c33c7ab005d3593da5b",
+      "suites": [
+        "auto-track"
+      ],
+      "directIncludes": [
+        "test_route_switch.c"
+      ],
+      "c31Change": "A",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_bayes.c",
+      "sha256": "3c8900480438e201ec406cc6d3e39d8525d5e3e5d9b40f3d01d479989b249c2c",
+      "suites": [
+        "bayes"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_board_mode.c",
+      "sha256": "8c25be76451ccb75f73576bd02a093b26216bfe1be0731a976ade6a6a7d3a6a4",
+      "suites": [
+        "board-mode"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_capture_vision.py",
+      "sha256": "420a1cd9533f12350b6e0d60fc057ad538be7966a0bbf9538bc67eda0677d83d",
+      "suites": [
+        "capture-vision"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_control.c",
+      "sha256": "1ae4186f6b6b8b8897b41d3b307ab13281d5d39a9d00ae87d48305b81ebcc8e7",
+      "suites": [
+        "control"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_debug.c",
+      "sha256": "fab3fb0b57029b3d9e4ca009d4e048d1018d82b9ffbb530c837c8d468e6fd7c2",
+      "suites": [
+        "debug"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_drive.c",
+      "sha256": "59ffd6a867a5c71cac4ebdfc94cb28fe93edac424ea9c93af011025090dd200d",
+      "suites": [
+        "drive"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_dual_runtime.c",
+      "sha256": "7ff0f8af6d563d9808cd575888d5175006587a59f383dfd8181472d59e06f0a9",
+      "suites": [
+        "dual-runtime"
+      ],
+      "directIncludes": [
+        "test_debug.c"
+      ],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_encoder_board.c",
+      "sha256": "fc211b34d1a442613e8ce578abb63d73704610fb3cb61044c9c89074c7f8462d",
+      "suites": [
+        "encoder-board"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_equivalence.c",
+      "sha256": "338ab3238c4a37ca4944b5a0a3feb2076f2493eb288e0e73a197c84b1084f6af",
+      "suites": [
+        "vision-contract"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_field.c",
+      "sha256": "165634da96c7af413674578b2d6de6d04cc2c17f36ae41ebf843d501aafad263",
+      "suites": [
+        "field"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_field_protocol.ps1",
+      "sha256": "0c69ec5ee142d0159da61f7e0b678157b08435a666130df78b323ae67ee42274",
+      "suites": [
+        "field-protocol"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_fit_model.py",
+      "sha256": "94bba7449ba1a29cb15a526149b5441b0a9aedf353a35aed8108867de2077c21",
+      "suites": [
+        "fit-model"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_link.c",
+      "sha256": "bb955988ad0194d353867d72a8bc67a7fe1e8e6b7367f8c83f7573e5336436e7",
+      "suites": [
+        "link"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_link_board.c",
+      "sha256": "f45fdd98859b0da7de7ed642a4ded24535306977e44aac2d8a2a2dce370c8638",
+      "suites": [
+        "link-board"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_midterm_boot.c",
+      "sha256": "cfbf2a332eb0c7615c8db9d3dfec2bd7fd643269ff40e7c4db128c86f21454a4",
+      "suites": [
+        "midterm-boot"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_midterm_runtime.c",
+      "sha256": "8d192f41230e3d269504dc4b24d16e4c81057ea2b561dbec553c85d52a4a6cb7",
+      "suites": [
+        "midterm-runtime"
+      ],
+      "directIncludes": [
+        "test_debug.c"
+      ],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_motion.c",
+      "sha256": "5932a6dc7fa1ba6655d64f06a8595eca32aa4e7ffd7b6f2e93aedc537603fe9c",
+      "suites": [
+        "motion"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_motor_probe.c",
+      "sha256": "b51c3b93866d721993e43dd83cfd72f708330deca3510a480328fcb8b66304e0",
+      "suites": [
+        "motor-probe"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_motor_threshold.c",
+      "sha256": "68a68fd334d8956eb3811c382c33498d72ac65b52bfdeb1fc07f2a412f1fb4da",
+      "suites": [
+        "motor-threshold"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_restore_training_parameters.py",
+      "sha256": "37ba17d3302206dd5262dd264ddb8b1d67b63de8bdcdf1ed1c5e7bae06fdb85a",
+      "suites": [
+        "restore-training-parameters"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_roundabout.c",
+      "sha256": "b7b32408c46b4b1a785b6efde913b88d8869d7db147ab29b1472fd9fd4dd0f75",
+      "suites": [
+        "roundabout"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_roundabout_projection.c",
+      "sha256": "42d07d7af321f52d447d2103042496f3ac34f51a8c2023fe38ee7d9d41f27dcb",
+      "suites": [
+        "roundabout-projection"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_route_switch.c",
+      "sha256": "15a205ade1a2fa2da6df22ecaef8f397d7b7d90baa2fcd564c062476a1ef74d3",
+      "suites": [
+        "route-switch"
+      ],
+      "directIncludes": [
+        "test_route_trial.c"
+      ],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_route_trial.c",
+      "sha256": "528e4523aeb3eb68914af0cebdb5675e5bd0335dd44b872f2ea34967b140ce12",
+      "suites": [
+        "route-trial"
+      ],
+      "directIncludes": [
+        "test_speed.c"
+      ],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_run_analysis.py",
+      "sha256": "0d9b8b68aa313342623ee0a60bc2cd81b32e1843bea294761063417d14ef8468",
+      "suites": [
+        "run-analysis"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_seekfree_import.py",
+      "sha256": "59bc2199c1ea06afa9cc01e3bc19ff5e2664f045610305aab37bddb05919097c",
+      "suites": [
+        "seekfree-import"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_servo_probe.c",
+      "sha256": "13d4626e12a7c29e4b0c5c58e1d335f421904ae1ba23381aa6018833b43145c2",
+      "suites": [
+        "servo-probe"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_speed.c",
+      "sha256": "efc256e984e76d5e4e81bc31d826fca50ab3bb980b519e33efc93cdcac45d6c1",
+      "suites": [
+        "speed"
+      ],
+      "directIncludes": [],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_startup.c",
+      "sha256": "3488c268a5195504fdcfa81dc13ddd81156ae68937f67173a68b14bec6292f17",
+      "suites": [
+        "startup"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_switch_runtime.c",
+      "sha256": "e89a99c5548d72bce9b1b5d53ece8e640a98b3529e1ffd4fe22917045b9c0162",
+      "suites": [
+        "switch-runtime"
+      ],
+      "directIncludes": [
+        "test_debug.c"
+      ],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_tangent_preview.c",
+      "sha256": "cacf5a31a83373328e7b931774eae2ec812c865b19254bfc0edd873f18200409",
+      "suites": [
+        "tangent-preview"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_track_trials.py",
+      "sha256": "8bda4a9febf1f9b8656f2b9ac1efc939c170f5ae848b7e64646060ed89ec493c",
+      "suites": [
+        "track-trials"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_training_analysis.py",
+      "sha256": "1541f14500c276ceac40aa9dca3d07c482d82cb0b61bea301fa23a26683b381c",
+      "suites": [
+        "training-analysis"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_transport.c",
+      "sha256": "e07e673b1ed3babe6be6ae7271c1719c708cd9803c41223b49ad421290edbdce",
+      "suites": [
+        "transport"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_turn_route.c",
+      "sha256": "7c57b8ee57a9ef807a8b0c19d1a66376ddd960fad87a0c71a7fa08e72ae17421",
+      "suites": [
+        "turn-route"
+      ],
+      "directIncludes": [
+        "test_route_switch.c"
+      ],
+      "c31Change": "M",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/test_vision.c",
+      "sha256": "8e52bdf0f4bb6de1e8f8a50325a7568c1f10694e86e2a02a10552bf85e64241d",
+      "suites": [
+        "vision"
+      ],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "test_case"
+    },
+    {
+      "path": "tests/vision/vc140.pdb",
+      "sha256": "646bdfe836876e70f89bc4420a68dbd3a54016e342b844774458416ad5b0c720",
+      "suites": [],
+      "directIncludes": [],
+      "c31Change": "pre-existing, not changed by 79c8ec6",
+      "role": "documentation"
+    }
+  ],
+  "legacyEntrypoints": [
+    "run_auto_track_tests.cmd",
+    "run_equivalence.cmd",
+    "run_link_tests.cmd",
+    "run_midterm_tests.cmd",
+    "run_motion_tests.cmd",
+    "run_motor_threshold_tests.cmd",
+    "run_route_tests.cmd",
+    "run_speed_tests.cmd",
+    "run_switch_tests.cmd",
+    "run_tests.cmd"
+  ],
+  "classificationNote": "C31 history is identified from source comments and Git history; no historical pass is claimed as a current result.",
+  "toolAssets": [
+    {
+      "path": "tools/analyze_run_log.py",
+      "sha256": "e854c701b25f2e6066cd5df80e315f01a8995ad9002f6e37adf828830e1d3532",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/analyze_training_run.py",
+      "sha256": "a15436189d7f78dcf5c537f1b83c44666dd93023a63730c1ce7e8f27b3004b32",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/apply_field_profile.ps1",
+      "sha256": "a1417ef01975ad537218ba15d9feef1ba76cc2e599d259d55ee6a99fdff02152",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/build_keil.ps1",
+      "sha256": "ea9d3b0754eb9bb834375843841c4e28d1f775619933e4a0464cc0f145c2cb01",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/build_link_mvp.ps1",
+      "sha256": "d758c17266346e7c29aa79680c4f77be3cec86edeaa83c4d0b73ba8adb745537",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/build_midterm.ps1",
+      "sha256": "47c999e5d4f0442a3b9cc495f183d2bc7996ff69b805a5da2db164c551f1e7e1",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/build_motor_threshold.ps1",
+      "sha256": "10a7cd84cbf0ecc06609b1cb80cde74f3ac539caa807254b472b1b2f1b74018e",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/capture_vision.ps1",
+      "sha256": "3611b044a571bd3686066b05f965f95eb84076e8797e7a594ed0d632f09e0809",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": "Capture decoder tests only use explicit -ReplayPath. Serial restoration tests replace serial with a fake port."
+    },
+    {
+      "path": "tools/check_arm.ps1",
+      "sha256": "de024d5ea414ae3af70577b6f069fec123864d05fc1e1baefb2a0cad12f2d45f",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/evaluate_track_trials.py",
+      "sha256": "5a5a7367c81d4c2ab8b366534eedfe30a4e8ae2e962170c79687923c52ef0dd4",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/field_protocol.ps1",
+      "sha256": "628044639643ebb3cde93ac87ab3e5bfaabcde4debe0364bc47d83ed9931ce22",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/field_serial.ps1",
+      "sha256": "421a7a2a613ca1f58fb265c9dd224d1329de6e45b539cd28db1454f919b125dd",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/fit_track_model.py",
+      "sha256": "94b784fb6a14d98c1e21f89aafb029a792f0512c0ff3710d1d3f9e44d736cd1f",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/flash_keil.ps1",
+      "sha256": "3a0734f0ab90930c1e2036c462ba88b6e1753b3cfc914fc645434c2fad00ae6d",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/import_seekfree_log.ps1",
+      "sha256": "9dcd7fee8ffe74a9693b042b82541217322c3d755608fb7242e8ea6d4e69869d",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/import_seekfree_log.py",
+      "sha256": "2e25c312b3e9809c6569f9848181e9fa84324262fba1cb8da1725184fb64b9de",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/listen_wireless_raw.ps1",
+      "sha256": "138391e1e8c7800c3abdb6bc9266e52b98365594966bcf5c5e61676eb13b7251",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/motion_test.ps1",
+      "sha256": "69f521c6260ac2301c8dc8b8576f302614c1ee96596912540fb162c6c350ed0b",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/msvc_env.cmd",
+      "sha256": "b164e2771e11b9fce394f7ad545eaf7756bdd2120b1ce82939ea57763b355ec7",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/restore_training_parameters.py",
+      "sha256": "f06a00c6a1475b3c41594e14cc3a7bad3cd08b51f7db45c4bd0284883573b71f",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": "Capture decoder tests only use explicit -ReplayPath. Serial restoration tests replace serial with a fake port."
+    },
+    {
+      "path": "tools/run_prepared_training.ps1",
+      "sha256": "064697a8286a1a61abf9652fec0a3db5a581def2de7c1dd513a1f60bffdf73aa",
+      "role": "hardware-capable utility, excluded from automatic invocation",
+      "note": ""
+    },
+    {
+      "path": "tools/verify_project.ps1",
+      "sha256": "16e6d93f1f821307c79955f505efe491207dbe1bd0166c68ab4493a2d91f5fe1",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    },
+    {
+      "path": "tools/导入逐飞日志.cmd",
+      "sha256": "04662329803cbc1af7787499a3d215e30f699f0f0c536e857767337f504dac63",
+      "role": "existing build/offline/support utility",
+      "note": ""
+    }
+  ]
+}

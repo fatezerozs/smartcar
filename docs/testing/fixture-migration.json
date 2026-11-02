@@ -1,0 +1,401 @@
+{
+  "trust": "computed",
+  "beforeRun": "20261101T173921-f7a2f30905",
+  "afterRun": "20261101T175852-a5a26be988",
+  "scenarioBodies": [
+    {
+      "path": "tests/vision/test_speed.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "933e854e5e05acb7747154cd98220b06c6b7c0798e05489c5d9483225865d4f8"
+    },
+    {
+      "path": "tests/vision/test_route_trial.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "6f81665187332853e925aeeb4f0e88e9d60322d67eeadbefbd01bfb7bfe47ce0"
+    },
+    {
+      "path": "tests/vision/test_route_switch.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "bd5688d9b1c5a0d209e0313c2b32abbfb18175b37f6173acb96177218bc04151"
+    },
+    {
+      "path": "tests/vision/test_turn_route.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "b1cfa8eeeb874b853200d9b2275bcde0e2e1b5d313cc05c9b0bf2a670bd8f023"
+    },
+    {
+      "path": "tests/vision/test_auto_track.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "1320957227059c1c876374a709409f8da9f1909c930a87613a2e704114aabdf6"
+    },
+    {
+      "path": "tests/vision/test_debug.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "877181e4fed45df7c52dc992b709f190b8d63c851d6995588821ffae7c266555"
+    },
+    {
+      "path": "tests/vision/test_dual_runtime.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "b1ffcc74b26e4bbcc96d1703cd8954d35c1fb8fd0ed297f00bf63329941579ad"
+    },
+    {
+      "path": "tests/vision/test_midterm_runtime.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "31dd215ea47dffa8367f0e695f5360e805d59de15a1012dc47061660c74c3533"
+    },
+    {
+      "path": "tests/vision/test_switch_runtime.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "d54cc42b330decfbd0cbb297ddcaaeb9f98babb16db4634c02de42673e89f3c0"
+    },
+    {
+      "path": "tests/vision/test_midterm_boot.c",
+      "unchangedAfterEntrypointNormalization": true,
+      "sha256": "3f5f44db4972d05c7b76ff5a0a26b7f5dc57cf430edcffe5c6c4d8a63cc7a065"
+    }
+  ],
+  "suites": [
+    {
+      "id": "vision",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "d448c8cd250b41b28a6751c62ce48c39e06b1311b4d3b964b11b4511e00ae439",
+      "checkCounts": [
+        "636029"
+      ]
+    },
+    {
+      "id": "control",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "f110a2236da5224aed0cf1df48e4c17540938925ba0c7badfca0ada7edb9ef5e",
+      "checkCounts": [
+        "8894"
+      ]
+    },
+    {
+      "id": "bayes",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "16125dbbc11a13aab062b23d017116920543e67abb9048cda40ac102d636bd13",
+      "checkCounts": [
+        "70678"
+      ]
+    },
+    {
+      "id": "field",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "58e9622a3fea58614311dffaf8f40b8f24f277b11888d4fc397ce2f762581adb",
+      "checkCounts": [
+        "2433"
+      ]
+    },
+    {
+      "id": "servo-probe",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "1b83bee21caa756da04ae1d3fc9552cd4174457487ec4a9de2500f69f07902d9",
+      "checkCounts": [
+        "199"
+      ]
+    },
+    {
+      "id": "motor-probe",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "8acfb7703a607ada7778121f155efa997a9b012cb427f6b4b3b1f827905c8763",
+      "checkCounts": [
+        "298"
+      ]
+    },
+    {
+      "id": "startup",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "d62ec1640a02aa5df9d386b0b72121cef6cf1f3b46bb902a7efd67e488ece3ba",
+      "checkCounts": [
+        "13220"
+      ]
+    },
+    {
+      "id": "board-mode",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "7c161a84d74769beffc527d664b2979ff5ff73306f1292c4cc948a161758b4f7",
+      "checkCounts": [
+        "248"
+      ]
+    },
+    {
+      "id": "drive",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 3,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "b193ce794517aff86db1ebc958a3674377fc8425129c9d6b9f7c39a4b3b5f794",
+      "checkCounts": [
+        "5",
+        "27",
+        "72"
+      ]
+    },
+    {
+      "id": "debug",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 3,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "3f3a911d6dba2154da18cf4313474318d1515eee26165fb0d19cba6632debfa4",
+      "checkCounts": [
+        "228",
+        "12923",
+        "14089"
+      ]
+    },
+    {
+      "id": "link",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "037bc05f27db8b0a6fd9426a4f0a8c53b1bdabb52564a1a3bda6db8182d2b3ab",
+      "checkCounts": []
+    },
+    {
+      "id": "link-board",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "f84a6bd113bdc914b3536b689d20049a685dd6b3020abd60d82c4ed870278abc",
+      "checkCounts": []
+    },
+    {
+      "id": "transport",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "cfaa4bb97ecd703fa076778416b85ce84995d319eef66f4ba5a8bea021778e02",
+      "checkCounts": []
+    },
+    {
+      "id": "dual-runtime",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "dd67039b128c51b19bbfe25ba5104d0f727bed16d5381dafeb8080982457460d",
+      "checkCounts": []
+    },
+    {
+      "id": "speed",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "96b021d2a542a947f29ff8aca68d738ea762ccf0245d0486f60a57b4fe2b9d79",
+      "checkCounts": [
+        "13284"
+      ]
+    },
+    {
+      "id": "encoder-board",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "688ea7a8be1ae3cbd32f88d97dc228a766b9c6eb801c9401ffc71f207111e05e",
+      "checkCounts": []
+    },
+    {
+      "id": "route-trial",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "bd6829e81aff13bec4f05844228a2cd7efac5eab75d62908d8753761ea60f12d",
+      "checkCounts": [
+        "36605"
+      ]
+    },
+    {
+      "id": "route-switch",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "654771a43c2e95ad8ef1559c6b88f157ccd920b2d152fcd55ae34db1ad9bb835",
+      "checkCounts": [
+        "300940"
+      ]
+    },
+    {
+      "id": "switch-runtime",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "ee318ec8164fae29f15d25dccab9fad03057cd065139d95238e879eea9f21b10",
+      "checkCounts": []
+    },
+    {
+      "id": "turn-route",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "245f5d26fb41cde61823b3185fd8ae43514048c00a86a2f78366e76e33ff6b6c",
+      "checkCounts": [
+        "371490"
+      ]
+    },
+    {
+      "id": "roundabout",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "3213c9d3457e02221275a1248c012ce88eedacbac42ec0240dde80f1f0a0b19a",
+      "checkCounts": [
+        "266"
+      ]
+    },
+    {
+      "id": "roundabout-projection",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "668a490be952f0326cf42b985610c34b0b9c9d1e12a6676c173d906af121793c",
+      "checkCounts": [
+        "801869"
+      ]
+    },
+    {
+      "id": "tangent-preview",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "8917af751106d40d7ef65834ec7ba12da4931b89ba0f395026fcb09172b47acf",
+      "checkCounts": [
+        "40342"
+      ]
+    },
+    {
+      "id": "midterm-boot",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 2,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "d02fd185c5f67eb1c98a175f7707cc23bd89c334a427ce2bf7a041de3cfb3e1c",
+      "checkCounts": [
+        "7009",
+        "920"
+      ]
+    },
+    {
+      "id": "midterm-runtime",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "4fa2fba8296754c9a9cfbd7ff39cacda0c521923d2c942f3735386558b27864c",
+      "checkCounts": []
+    },
+    {
+      "id": "auto-track",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 2,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "4d88fc3580068ee976a7101e40f2f79c562154b5295eb95a05c2075b02f9a1e5",
+      "checkCounts": [
+        "29198",
+        "41396"
+      ]
+    },
+    {
+      "id": "motion",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 2,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "ebceb9ef2df0ddd7f00bbebeb666a1cb257497e789794084c00589d5de6700a9",
+      "checkCounts": [
+        "6346",
+        "17034"
+      ]
+    },
+    {
+      "id": "motor-threshold",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 2,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "35f8e412e64fa0cb4b72d22e9e26f19709e4a11a0360de62bce28c7d8d83b6cf",
+      "checkCounts": [
+        "231",
+        "297"
+      ]
+    },
+    {
+      "id": "vision-contract",
+      "statusBefore": "PASS",
+      "statusAfter": "PASS",
+      "variants": 1,
+      "sameMacrosAndSources": true,
+      "identicalScenarioOutput": true,
+      "stdoutSha256": "e3637a0301d2baeb73024ac984cad5deed6c5f6198d3d7a7855018c5af9a833a",
+      "checkCounts": []
+    }
+  ],
+  "suiteCount": 29,
+  "variantCount": 37
+}
