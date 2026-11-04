@@ -1,0 +1,49 @@
+{
+  "version": "MIDTERM_C26_28_WC6",
+  "base_commit": "845367268f435068b286422ed692b362ad994336",
+  "previous_local_version": "MIDTERM_C26_28_WC5",
+  "sha256": "0FEA6E75DF0D56EE2806A8CE9B0AFFD4DB419C64556C7AD82A7E8241142F4052",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "built_not_flashed": true,
+  "real_track_validated": false,
+  "changes": [
+    "Current-white curved exit connection anchored to measured near footprint",
+    "Confirmed ring continuous real-edge recovery beyond fragment lease",
+    "Bounded 60 percent cruise request during qualified ring recovery",
+    "Entry and speed settings retained from WC5"
+  ],
+  "camera_installation": "Keep current position",
+  "speed_ticks_per_10ms": {
+    "fast": 132,
+    "corner": 104,
+    "edge": 92,
+    "base": 50
+  },
+  "code": 89136,
+  "ro": 13452,
+  "rw": 212,
+  "zi": 220032,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300852,
+    "turn": 378884,
+    "ring": 258,
+    "exit": 207,
+    "commit": 18,
+    "projection": 802149,
+    "projection_cases": 40,
+    "guided_projection_frames": 4820,
+    "asan": true,
+    "generic_host": "WC6 switch ASAN passed",
+    "protocol": 61,
+    "parser": 3,
+    "project_references": 379
+  },
+  "video": "e002ecdb9187b2f5be03f8ef6d01360f.mp4",
+  "notes": [
+    "Image qualification does not measure actual yaw or full orbit distance",
+    "Physical ring entry/exit acceptance is pending"
+  ]
+}

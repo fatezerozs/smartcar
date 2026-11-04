@@ -1,0 +1,24 @@
+{
+  "base_commit": "845367268f435068b286422ed692b362ad994336",
+  "latest_experimental_firmware": "MIDTERM_C26_28_WC7",
+  "physical_ring_acceptance": "failed_or_unresolved",
+  "original_wc2_recovered": true,
+  "wc2_recovery_flashed_by_assistant": false,
+  "synchronized_wireless_bytes_in_last_wc6_capture": 0,
+  "wc7_checks": {
+    "c26": 300852,
+    "turn": 379985,
+    "ring": 258,
+    "exit": 207,
+    "commit": 18,
+    "projection": 771477,
+    "projection_cases": 40,
+    "protocol": 63,
+    "parser": 3,
+    "project_references": 379
+  },
+  "keil_errors": 0,
+  "keil_warnings": 0,
+  "software_success_is_not_track_acceptance": true,
+  "main_c32_control_sources_modified": false
+}

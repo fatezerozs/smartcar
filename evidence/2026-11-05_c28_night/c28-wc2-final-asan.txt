@@ -1,0 +1,100 @@
+test_route_switch.c
+vision_speed.c
+wheel_speed.c
+vision_motion.c
+vision_drive.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+vision_control.c
+midterm_open_loop.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+C26 LEVEL PASS: 300852 checks; zero-output loss, five-frame recovery, retained stop reason; simulated IO.
+test_switch_runtime.c
+midterm_boot.c
+vision_speed.c
+wheel_speed.c
+app_link.c
+app_transport.c
+app_runtime.c
+vision_debug.c
+vision_frame.c
+vision_telemetry.c
+vision_midterm.c
+track_bayes.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+正在生成代码...
+正在编译...
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+C26 LEVEL RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery resumes, C27 ignored, no UART heartbeat; trace automatically exported while stopped.
+test_turn_route.c
+vision_midterm.c
+vision_speed.c
+wheel_speed.c
+vision_motion.c
+vision_drive.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+vision_control.c
+midterm_open_loop.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+HEIGHT width90=43 dir=-1 steer=-0.105
+HEIGHT width90=43 dir=1 steer=0.183
+HEIGHT width90=61 dir=-1 steer=-0.111
+HEIGHT width90=61 dir=1 steer=0.223
+HEIGHT width90=79 dir=-1 steer=-0.100
+HEIGHT width90=79 dir=1 steer=0.192
+RING SPEED state=2 mode=1 target=121/123
+RING SPEED state=3 mode=1 target=121/123
+RING SPEED state=4 mode=1 target=121/123
+PROJECTED CROSS offset=-8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.04 missing=0 crawl=0
+PERIPHERAL bridge dir=-1 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.109 targets=123/120
+PERIPHERAL bridge dir=0 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.002 targets=123/123
+PERIPHERAL bridge dir=1 rows=4 anchors=8 both=83 duty=0.1287 mode=1 heading=0.105 targets=88/92
+TANGENT CONTROL side=-1 guided=128 peak_turn=0.932 width90=151
+TANGENT CONTROL side=1 guided=124 peak_turn=0.924 width90=151
+CLOSED PLANTS stage=0 target_R/L=122/123 measured_R/L=122/123 pwm_R/L=175/410
+CLOSED PLANTS stage=1 target_R/L=47/73 measured_R/L=47/73 pwm_R/L=67/242
+FIELD edge dir=-1 both=0 inferred=87 mode=3 duty=0.1013 u=-1.000 targets=32/51 pwm=369/603
+FIELD edge dir=1 both=0 inferred=87 mode=3 duty=0.0995 u=1.000 targets=48/31 pwm=565/349
+PAIRED corner dir=-1 target_outer/inner=73/47 duty=0.1283
+PAIRED corner dir=1 target_outer/inner=73/47 duty=0.1279
+TURN PATH PASS: 370539 checks; straight/left/right grayscale through actual vision and servo PWM; no physical bend claim.
+test_roundabout.c
+vision_midterm.c
+正在生成代码...
+roundabout: 258 checks, 0 failures
+test_roundabout_projection.c
+vision_midterm.c
+正在生成代码...
+MAP ENTRY: 40 perspective/mirror cases; 771477 checks, 0 failures, 12 current-road fallbacks, 4650 guided frames; no orbit claim

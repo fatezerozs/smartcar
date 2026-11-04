@@ -1,0 +1,49 @@
+{
+  "version": "MIDTERM_C26_28_WC7",
+  "base_commit": "845367268f435068b286422ed692b362ad994336",
+  "previous_local_version": "MIDTERM_C26_28_WC6",
+  "sha256": "3234DE1827BB5E375B603A8A9887CC52E00ABB6DE6E9BA5DA7227EAE29E8DCF6",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "built_not_flashed": true,
+  "real_track_validated": false,
+  "changes": [
+    "Restore WC2 forward-only ENTER guide and actual near-road center",
+    "Remove repeated island detection and entry bias in FOLLOW",
+    "Restore WC2 path rejection phase handling",
+    "Retain qualified exit and curved bridge fixes"
+  ],
+  "camera_installation": "Keep current position",
+  "speed_ticks_per_10ms": {
+    "fast": 132,
+    "corner": 104,
+    "edge": 92,
+    "base": 50
+  },
+  "code": 88960,
+  "ro": 13452,
+  "rw": 212,
+  "zi": 220032,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300852,
+    "turn": 379985,
+    "ring": 258,
+    "exit": 207,
+    "commit": 18,
+    "projection": 771477,
+    "projection_cases": 40,
+    "guided_projection_frames": 4650,
+    "asan": true,
+    "generic_host": "WC7 switch ASAN passed",
+    "protocol": 63,
+    "parser": 3,
+    "project_references": 379
+  },
+  "video": "cb5ca2929e8a10f4a0c68c4aa2415221.mp4",
+  "notes": [
+    "Image qualification does not measure actual yaw or full orbit distance",
+    "Physical ring entry/exit acceptance is pending"
+  ]
+}

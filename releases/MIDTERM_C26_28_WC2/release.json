@@ -1,0 +1,42 @@
+{
+  "version": "MIDTERM_C26_28_WC2",
+  "base_commit": "845367268f435068b286422ed692b362ad994336",
+  "previous_local_version": "MIDTERM_C26_28_WC1",
+  "sha256": "37402F1A84FB0883C6713D43333945791FA68AD3089DDE48281606EF863DBD4C",
+  "project": "demo/mdk/midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "built_not_flashed": true,
+  "real_track_validated": false,
+  "camera": "Keep current operator-adjusted installation",
+  "changes": [
+    "Fresh confirmed same-side bottom-clipped island continuation",
+    "Fresh current near corridor supports renewable low-speed centering; source4",
+    "Previous centering and width-adaptive preview retained"
+  ],
+  "code": 87320,
+  "ro": 13420,
+  "rw": 212,
+  "zi": 196600,
+  "errors": 0,
+  "warnings": 0,
+  "checks": {
+    "c26": 300852,
+    "turn": 370539,
+    "ring": 258,
+    "projection": 771477,
+    "projection_cases": 40,
+    "guided_projection_frames": 4650,
+    "asan": true,
+    "protocol": 53,
+    "project_references": 379
+  },
+  "videos": {
+    "after_camera_adjustment": "7b1cd483507cb2c6527a794b883e4bce.mp4",
+    "before_camera_adjustment": "fbe774843419e984aec7c9b62c87dbea.mp4"
+  },
+  "notes": [
+    "External videos are not synchronized onboard imagery",
+    "No physical ring completion or universal stall fix is claimed",
+    "No frequency or normal speed scale change"
+  ]
+}
