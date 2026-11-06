@@ -67,6 +67,10 @@ RecorderTrain、B2和B3的生成Keil工程引用私有适配源或绝对run路�
 
 第二次推送`ad215e5`的[Host regression #5](https://github.com/fatezerozs/smartcar/actions/runs/42213381153)继续执行后，optimized为47 PASS、1 ERROR、1 FAIL、1 SKIPPED：auto-track及基础规划已通过，Recorder的reviewed变体出现C4389有符号/无符号比较，组合回放进入后出现C4996 CRT `fopen`告警。再次更正仅涉及测试：将运行标志先转换为逻辑表达式，MSVC下使用`fopen_s`、其他编译器保留`fopen`，继续检查打开失败。没有屏蔽告警、减少场景或更改固件；专项Host及依赖`20261106T115628-c46e55a1e3`为8 PASS。完整PreFlash所覆盖的生产代码未再次变化，两份测试程序以该专项输入哈希补充覆盖。
 
+**最终远端复核通过：** 提交`7d2ff6d3e4bdf593072c7a0c5e6b4144bf7a903e`的[Host regression #6](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)，MSVC optimized和ASan各49 PASS、1 SKIPPED，均完成并上传结构化报告。唯一跳过项为缺数据的performance-host。第二轮ASan与optimized的失败分布一致，也保留在机器证据中。最终归档更新仅修改文档，功能验证对应本段明确列出的提交及输入哈希。
+
+远端MSVC Host报告中的`releaseEligible=true`是现有框架对工具链/软件Profile的字段，含义见[测试手册8.3](../TESTING_FRAMEWORK_GUIDE.md#83-softwarepassed-与-releaseeligible)；它不签发烧录许可，也不关闭预算集成、标定和整车验收。CI附件按工作流保留30天；版本化机器证据长期保留结果、输入哈希和附件ID/digest，不宣称永久保存完整CI ZIP。
+
 ## 3. 实际软件验证
 
 | 检查 | 本轮实际结果 |
@@ -78,7 +82,7 @@ RecorderTrain、B2和B3的生成Keil工程引用私有适配源或绝对run路�
 | 标定证据 | 原始工作区、暂存导出副本均通过70文件哈希、9窗口、4500采样、7组比值核对 |
 | 文件/文档审查 | 凭证模式检查、发布文件范围、工程引用、活动文档链接、冻结字节和增量空白检查；摘要见机器证据 |
 
-两个完整计划均为`softwarePassed=true`、`releaseEligible=false`：本机选择GCC14.2，不能把它写成已完成本批MSVC/ASan CI或正式放行。SKIPPED均为缺数据的`performance-host`，不阻塞其他模块；不生成虚假的准确率或性能改善值。
+上述两个本地完整计划均为`softwarePassed=true`、`releaseEligible=false`：本机选择GCC14.2，其本身不能证明MSVC/ASan CI或正式放行；后续独立远端结果见2.4。SKIPPED均为缺数据的`performance-host`，不阻塞其他模块；不生成虚假的准确率或性能改善值。
 
 验证使用提交前dirty工作区/暂存导出副本，记录中的Git SHA属于当时父提交，具体测试输入由源码哈希界定。原Phase 3的46 PASS/3 FAIL/1 SKIPPED保留为此前状态；本页是其后更正结果，不能把两个运行记录混为一次。
 
@@ -87,7 +91,7 @@ RecorderTrain、B2和B3的生成Keil工程引用私有适配源或绝对run路�
 1. Phase 2：左右负载滚动周长、实际轮角、相机地面映射/盲区、动态响应/制动/总延迟，以及同步、可审核的运动Session。CPR已采用，不重复写成未知。
 2. Phase 3：将同一MPC预算规划/监督接口接入MPC、AUTO_TRACK和RecorderTrain各自的授权/调度入口，完成一致快照、候选复核、短提交区和受控停止。保留C26主构型与独立启动器的职责边界。
 3. 联合静止、正常运行到OFF的实测切断、控制与SD并行时序、真实A/B、误停/圈时及整车赛道验收。
-4. 远端MSVC optimized/ASan是推送后独立结果；在远端任务实际完成前，本页不预先宣称其通过。PreFlash自托管工作流与任何硬件验收也不因push自动放行。
+4. 远端MSVC optimized/ASan已按2.4完成独立复核；PreFlash自托管工作流与任何硬件验收仍不因push或Host CI通过自动放行。
 
 这些是明确未完成的集成/实测门，不以猜测数据补齐；它们与本轮已修正的软件/文档失配分别记录。
 

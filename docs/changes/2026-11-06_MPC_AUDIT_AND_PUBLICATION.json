@@ -4,7 +4,7 @@
   "branch": "feat/vision-recorder-training",
   "hardwareAccessed": false,
   "releaseEligible": false,
-  "remoteCi": "Not asserted here; verify workflow results for the actual pushed commit",
+  "remoteCi": "Final functional commit 7d2ff6d: optimized and ASan each 49 PASS / 1 SKIPPED; see follow-up evidence and workflow 42214055736",
   "readingLayers": [
     "native C/Markdown",
     "structured_parsed JSON/XML/CSV/B3T1",
@@ -6845,7 +6845,8 @@
     "Loaded rolling circumference, actual steering angles, ground mapping, brake/latency/dynamic and synchronized motion sessions",
     "MPC budget planner/supervisor integration into MPC, AUTO_TRACK and RecorderTrain; zero-output recovery is interim behavior",
     "Coherent snapshots, candidate revalidation, shortened commit region and controlled stopping",
-    "Joint static, physical RUNNING-to-OFF timing, Camera/SD concurrency, A/B and track acceptance",
-    "Remote MSVC optimized and ASan independently verified after push"
-  ]
+    "Joint static, physical RUNNING-to-OFF timing, Camera/SD concurrency, A/B and track acceptance"
+  ],
+  "snapshotScope": "The validation and index-export review below preserve the pre-first-push audit; subsequent strict MSVC fixes and final remote CI are recorded in followUpEvidence.",
+  "followUpEvidence": "docs/changes/2026-11-06_MPC_CI_COMPATIBILITY.json"
 }

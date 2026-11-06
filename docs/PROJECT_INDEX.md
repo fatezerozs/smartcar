@@ -95,7 +95,7 @@ flowchart TB
 
 **本轮核定后：PreFlash为63 PASS / 1 SKIPPED；仅含Git发布文件的副本Host为49 PASS / 1 SKIPPED。** 原Phase 3的46 PASS / 3 FAIL / 1 SKIPPED保留为历史记录，本轮已修正源码锁和过渡策略测试失配。跳过项仍是缺数据的`performance-host`；GCC软件通过不等于MSVC/ASan、预算规划或实车放行。[本轮审核与证据](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md) · [原Phase 3历史证据](changes/c31-speed-planning-20261105/phase3-boundaries-evidence.json)
 
-首次推送的MSVC optimized/ASan均发现两类严格编译告警，已更正；更正后本地PreFlash再次63 PASS / 1 SKIPPED。失败与更正记录见[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)，后续远端运行须按实际提交核对。
+首次两轮MSVC严格编译发现的问题已更正；本地PreFlash再次63 PASS / 1 SKIPPED，测试后续修正专项8 PASS。最终功能提交`7d2ff6d`的[远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)已完成，optimized和ASan各49 PASS / 1 SKIPPED。失败、更正与最终输入见[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)；随后文档归档不改变被测功能代码。
 
 ## 3. 待解决问题与关闭条件
 

@@ -7,6 +7,8 @@
 
 2026-11-06扩展：当前为72个定义，包含Recorder与速度规划专项。上面的main远程CI结论仅对应原C32提交，不覆盖本批新增实现；本轮软件检查和待验范围见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
 
+本批最终功能提交`7d2ff6d`已通过[MSVC optimized与ASan远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)，各49 PASS / 1 SKIPPED；此前失败与更正逐轮保留在[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。该结论不覆盖硬件与赛道验收。
+
 [返回仓库主页](../README.md) · [文档目录](INDEX.md) ·
 [架构概要](TESTING_ARCHITECTURE.md) · [C32 提交说明](changes/2026-11-02_C32_TESTING_FRAMEWORK.md) ·
 [精确验收记录](testing/VALIDATION.md)

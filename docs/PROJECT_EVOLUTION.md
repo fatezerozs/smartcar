@@ -7,6 +7,8 @@
 
 2026-11-06 [MPC审核更正与开发分支归档](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)：核对生产CPR、9个原始窗口/4500采样、7组手转比值及标称/估算几何。AUTO_TRACK与RecorderTrain后续统一MPC预算降级；当前预算未接入时明确过渡零动力保护，并修正旧测试的无预算持续驱动期待。Recorder源码锁已对照原冻结字节后更新。完整PreFlash 63 PASS/1 SKIPPED，发布文件副本Host 49 PASS/1 SKIPPED；3项原失败已关闭，历史报告不改写。参数实测缺项、联合板端及运动验收仍待完成，GCC证据不等于正式实车发布。
 
+后续MSVC兼容性修正已完成：最终功能提交`7d2ff6d`的[远端optimized/ASan](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)各49 PASS/1 SKIPPED，首次两轮失败及更正保留在[机器证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。该结论不关闭Phase 2/3剩余实测与集成门。
+
 2026-11-06 [工程更名为MPC_20261106](changes/2026-11-06_MPC_PROJECT_RENAME.md)：主Keil入口改为`demo/mdk/competition/MPC_20261106.uvprojx`，同步构建/审计/生成工具与文档入口。本次为命名与路径调整，不新增控制算法或标定/实车结论；历史C31固件标识与既有Phase完成状态仍按各阶段证据区分。
 
 2026-11-06 [Phase 3首批不依赖标定的安全边界改动](changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)：主构型源码已封住near-invalid/partial的非零电机输出，清目标与PI缓存；视觉/帧故障需C26 OFF→ON，严重/混合/未知故障不被普通OFF清除，UART清故障不能替代物理准入，旧帧不计入重新准入。最终专项回归与隔离Keil构建通过；完整Host仍保留auto-track、recorder-startup与Recorder源码锁的既存失败，未宣称整体通过。Phase 2数据仍未齐，规划器/标定参数与短临界区尚未完成接入；未操作设备或提交。
