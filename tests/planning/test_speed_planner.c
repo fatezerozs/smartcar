@@ -205,7 +205,7 @@ int main(void)
     CHECK(csv!=NULL);fprintf(csv,"track,case,index,coordinate,feature,speed,reason\n");
     geometry_tests();planner_tests(csv);trajectory_tests(csv);supervisor_tests();actuator_model_tests();fclose(csv);
     memset(&p,0,sizeof(p));p.units=SP_METRES;p.count=SP_CAPACITY;
-    for(unsigned j=0;j<SP_CAPACITY;++j){p.distance[j]=(float)j*.25f;p.curvature[j]=j<8?0:2;}
+    for(unsigned j=0;j<SP_CAPACITY;++j){p.distance[j]=(float)j*.25f;p.curvature[j]=j<8?0.0f:2.0f;}
     start=clock();for(unsigned j=0;j<100000;++j)CHECK(sp_plan(&p,&c,1,0,0,&plan));
     printf("HOST SIMULATION PASS: %u checks; planner 100000 calls CPU %.6f s; sizeof preview=%zu history=%zu plan=%zu trajectory=%zu supervisor=%zu bytes.\n",
         checks,(double)(clock()-start)/CLOCKS_PER_SEC,sizeof(p),sizeof(sp_geometry_history_t),sizeof(plan),sizeof(sp_trajectory_t),sizeof(sp_supervisor_t));

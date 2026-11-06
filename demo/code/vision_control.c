@@ -497,8 +497,12 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         }
 #endif
 #endif
+#if !VISION_MIDTERM_C31_AUTONOMOUS
+        /* C31 already returns after c31_zero_wait above. Compile this legacy
+         * fallback only for variants that can reach it (MSVC /W4 /WX). */
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_VISION);
         return;
+#endif
     }
 #if !VISION_ROUTE_SWITCH
     if (absolute(near_error) > c->config.max_lateral) {
