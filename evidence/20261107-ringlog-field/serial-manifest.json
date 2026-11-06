@@ -1,0 +1,90 @@
+{
+  "started_at": "2026-11-07T02:26:31.446613+08:00",
+  "method": "Per-file bounded byte snapshot, active receivers remain running. Files are not an atomic synchronized snapshot. Raw serial may include corruption, resets and multiple firmware versions.",
+  "files": [
+    {
+      "path": "serial-COM15-20261107-004159-166417/000000.rx.bin",
+      "bytes": 5386614,
+      "sha256": "81515f024077a2502671014cd7e7af9151958a7bb0d2b23cdfea02ed06c0c1f8",
+      "snapshot_at": "2026-11-07T02:26:31.496990+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/000001.rx.bin",
+      "bytes": 5056784,
+      "sha256": "a985817d1a94b6d085762253732eda2e49175ed19c21de292f89e75d2b8173ad",
+      "snapshot_at": "2026-11-07T02:26:31.544315+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/000002.rx.bin",
+      "bytes": 4173895,
+      "sha256": "8de0fbe45ad8e8d826a7580866a6c4d1f3207780d0c0114681610ebb39ad1dbd",
+      "snapshot_at": "2026-11-07T02:26:31.576954+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/chunks.csv",
+      "bytes": 8193926,
+      "sha256": "641b38ec6156724dadf8ea9de898cba27cb638fbb1b8e238db486388f555d7f5",
+      "snapshot_at": "2026-11-07T02:26:31.899387+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/events.jsonl",
+      "bytes": 1040,
+      "sha256": "9e6e5ea4a29ff8a8ea1068669badce1242212a8d79317232ea2707bf2b113b9c",
+      "snapshot_at": "2026-11-07T02:26:31.901941+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/listener-source.ps1",
+      "bytes": 5962,
+      "sha256": "5615c1f134fa43256d5f009a01e9dfde557931ce5657876fd6910e535ab1249e",
+      "snapshot_at": "2026-11-07T02:26:31.901941+08:00"
+    },
+    {
+      "path": "serial-COM15-20261107-004159-166417/session.json",
+      "bytes": 600,
+      "sha256": "20cb54aa533d341f7720ba41d2e8419acb0fe49404b80e8edeed9d6fbf5257f0",
+      "snapshot_at": "2026-11-07T02:26:31.902939+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/000000.rx.bin",
+      "bytes": 576133,
+      "sha256": "9f966800e81ec77550fd916c842654c2690219e249b9fa61f7e69b25017109fb",
+      "snapshot_at": "2026-11-07T02:26:31.908442+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/000001.rx.bin",
+      "bytes": 569866,
+      "sha256": "a7a7abf73d027b2adc639e8994cfe427a47211bbf709efccf311116b6b820da2",
+      "snapshot_at": "2026-11-07T02:26:31.915040+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/000002.rx.bin",
+      "bytes": 365460,
+      "sha256": "ae048b94067959a5b87465a83bd3728a02e3768f8a3716e46028a996747c8910",
+      "snapshot_at": "2026-11-07T02:26:31.918701+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/chunks.csv",
+      "bytes": 1391886,
+      "sha256": "d213d5a301cf89d00def951b1b90d54e1406704dbe1cdee61a56af04ab789cfe",
+      "snapshot_at": "2026-11-07T02:26:31.976316+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/events.jsonl",
+      "bytes": 1038,
+      "sha256": "5e3c38372dd4b82e77789fa37f2a8ddf4d417deee7a3114bf07d608fb00d96b0",
+      "snapshot_at": "2026-11-07T02:26:31.977880+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/listener-source.ps1",
+      "bytes": 5962,
+      "sha256": "5615c1f134fa43256d5f009a01e9dfde557931ce5657876fd6910e535ab1249e",
+      "snapshot_at": "2026-11-07T02:26:31.978516+08:00"
+    },
+    {
+      "path": "serial-COM17-20261107-004243-421588/session.json",
+      "bytes": 599,
+      "sha256": "3958ee8fa37d0424838f68d3b3ebdf84ee4a98180da44b5bb67c9df76f61e5fb",
+      "snapshot_at": "2026-11-07T02:26:31.978516+08:00"
+    }
+  ]
+}
