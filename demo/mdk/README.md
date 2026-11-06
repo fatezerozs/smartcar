@@ -2,6 +2,8 @@
 
 主工程、采集/静止测量工程与各自说明统一见[主要工程索引](../../docs/PROJECT_INDEX.md)。本页补充Keil变体目录和生成方式。
 
+维护：2026-11-07。以上工程源码及生成工具已合入main（`00bb7a4`）；进入同一仓库分支不改变各构型的任务、宏、启动授权或验收范围。[主线合并与CI](../../docs/changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
+
 当前主工程名为 **MPC_20261106**，入口为 [competition/MPC_20261106.uvprojx](competition/MPC_20261106.uvprojx)。2026-11-06由`midterm_switch.uvprojx`更名，日期后缀为本次改动日期，见[更名记录](../../docs/changes/2026-11-06_MPC_PROJECT_RENAME.md)。
 采集训练构型包含连续1秒新鲜道路准入、UART损坏字节过滤及SD单数据线/引脚隔离修正；默认运动审核为0、蜂鸣器静音。AUTO_TRACK和RecorderTrain后续统一接入MPC预算降级；当前共享C31实验路径仍是预算未接入前的零动力恢复保护，旧rev5“近场有效可持续驱动”说明不是当前源码保证。
 先通过`tools/build_recorder.ps1`生成`training/recorder_train.uvprojx`及私有适配源，该生成工程不随Git提交。产物位于`.build/recorder-train/Objects/recorder_train.axf`；运动中持续记录仍待验收，不构成烧录放行。

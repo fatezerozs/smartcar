@@ -1,5 +1,7 @@
 # Phase 3 首批安全边界改动：不依赖物理标定的子集
 
+2026-11-07入口说明：本页正文与JSON保留Phase 3当时的工作区身份及46 PASS/3 FAIL/1 SKIPPED，不是当前main结果。后续测试/源码锁失配及MSVC告警已修正，main `00bb7a4`的optimized/ASan各49 PASS / 1 SKIPPED，见[主线同步记录](../2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。该更新不把规划器接入、标定或Phase 3整体状态改为已完成。
+
 日期：2026-11-06，Asia/Shanghai。用户询问是否可以在Phase 2未完成时推进独立内容，本轮据此完成以下软件子集。**Phase 2与Phase 3并行推进；不是Phase 2已通过，也不是Phase 3全部完成。**
 
 ## 1. 范围、构型和实际变化

@@ -1,6 +1,6 @@
 # MPC_20261106：RT1064 视觉循迹小车
 
-当前维护分支为 `main`，仓库工程版本为 **C32（测试体系重构）**。
+当前维护分支为 `main`；C32测试体系、MPC阶段成果、Recorder与标定资料已合入主线，合并基准为`00bb7a4`（2026-11-06）。
 当前工程名为 **MPC_20261106**（MPC + 改动日期2026-11-06），见[工程更名记录](docs/changes/2026-11-06_MPC_PROJECT_RENAME.md)。
 生产固件标识保持 C31：switch 为 `MIDTERM_C26_31`，独立 auto-track 为
 `MIDTERM_C31_AUTO_TRACK_1`；本次工程归档不等同于正式烧录或实车发布。
@@ -14,7 +14,8 @@
 - **[测试框架与流程详细手册](docs/TESTING_FRAMEWORK_GUIDE.md)**：环境、架构、套件开发、执行流程、报告判读、CI、数据集接入与完整套件索引。
 - [C31 连续速度规划与降级控制阶段交付](docs/changes/c31-speed-planning-20261105/README.md)：[v0.3数据接入](docs/changes/c31-speed-planning-20261105/DATA_INPUTS.md)已消费实测CPR；[Phase 3首批安全边界改动](docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)已进入源码并构建，速度规划器仍未接入生产控制路径。
 - [项目设计与演进档案](docs/PROJECT_EVOLUTION.md)：成品目标、模型、实现与验证状态、任务、技术取舍和每次提交的简略索引。
-- [本次详细提交说明：2026-11-02 / C32](docs/changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：测试架构、兼容迁移、本地/远程证据及未关闭项。
+- [主线合并与文档同步（2026-11-07）](docs/changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)：main合并身份、远端CI、当前与历史记录的适用范围。
+- [C32测试体系重构原始交付](docs/changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：测试架构、兼容迁移及该版本验收快照。
 - [文档目录](docs/INDEX.md)：当前参考、提交记录和历史归档。
 - [构建与测试](tests/vision/README.md)、[版本固件与校验](releases/README.md)。
 
@@ -34,7 +35,7 @@ Keil 打开 [MPC_20261106.uvprojx](demo/mdk/competition/MPC_20261106.uvprojx)，
 **switch 固件保留 C26 启停：** ON 且连续五帧有效道路等条件满足后运行，OFF 停止。
 独立 auto-track 当前为连续 1000ms 新鲜有效道路准入，默认 review=0 锁止；
 板端/实车启动验收仍待完成。两种构型的差异见演进档案，不混用启动条件。
-图像调试模式会撤销运行输出；行驶中图文同时采集尚未实现。
+主工程图像调试模式会撤销运行输出。RecorderTrain另有行驶中持续采集的软件实现，稳定运动写卡、同步图文与完整收尾仍未验收。
 
 AUTO_TRACK与RecorderTrain后续统一接入MPC预算降级；预算规划未集成前，当前C31实验路径仍采用零动力恢复保护，不把该过渡行为视为最终规划策略。[本轮审核与发布边界](docs/changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)
 
@@ -53,6 +54,6 @@ AUTO_TRACK与RecorderTrain后续统一接入MPC预算降级；预算规划未集
 原始串口、外部视频、临时构建和个人 IDE 状态保留本地；发布目录只归档明确选定的版本。
 测试统一入口为 `tools/testing/Invoke-TestPlan.ps1`；使用说明及证据见
 [测试体系](docs/TESTING_ARCHITECTURE.md) 和 [验收记录](docs/testing/VALIDATION.md)。
-本地 PreFlash、远程 MSVC/ASan 已通过的软件范围与正式烧录放行状态分别记录。
+main合并提交的[MSVC optimized/ASan CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)各49 PASS / 1 SKIPPED；此前完整本地PreFlash为63 PASS / 1 SKIPPED。跳过项是缺数据的`performance-host`，正式烧录放行仍单独判定。
 主机通过不等于实车不出界、入环或完整覆盖验收。
 第三方许可证保持原样，见 [libraries/LICENSE](libraries/LICENSE) 和各文件头。

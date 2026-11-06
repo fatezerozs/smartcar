@@ -1,11 +1,13 @@
 # SmartCar 测试体系
 
-日期：2026-11-02。统一入口位于 `tools/testing/`，套件定义位于
+维护：2026-11-07；原始C32架构交付：2026-11-02。统一入口位于 `tools/testing/`，套件定义位于
 `tests/suites/catalog.json`。普通执行只做 Host 模拟、离线协议/工具测试、
 静态检查和目标纯构建，不烧录，不打开串口，不连接车辆或执行器。
 
 完整使用、开发、维护和排障流程见 [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md)。
 本页保留架构概要，精确运行事实仍以验收记录为准。
+
+当前清单72个定义，Host/PreFlash/Diagnostic依赖闭包分别50/64/48个；Recorder与规划扩展已合入main。合并提交`00bb7a4`的远端optimized/ASan各49 PASS / 1 SKIPPED，缺数据的performance-host保留接口。[当前验收](testing/VALIDATION.md) · [主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
 
 ## 使用
 
@@ -164,15 +166,10 @@ GCC 补充验证、单套件和 Diagnostic 均不会给出 `releaseEligible=true
 
 ## CI 与人工证据
 
-`host-tests.yml` 在 Windows runner 上调用同一清单和入口，分别执行 optimized
-与 MSVC ASan。2026-11-02 已在独立验证分支完成两组远程执行，各为 43 PASS、
-1 个数据集占位 SKIPPED；结构化报告和归档摘要已复核。运行链接、精确提交和
-范围见 `testing/VALIDATION.md`。
+`host-tests.yml`在Windows runner上调用同一清单和入口，分别执行MSVC optimized与ASan。当前main合并基准`00bb7a4`的两模式各49 PASS / 1 SKIPPED；原C32的43 PASS / 1 SKIPPED按其历史SHA保留。运行链接、精确提交和范围见[验收入口](testing/VALIDATION.md)。
 
 `preflash-tests.yml` 仅人工触发，使用有正确设备包/许可的 `smartcar-keil` 专用
-Windows runner。该远程任务尚未执行；本地主机的 ARM/Keil 结果不算远程 CI
-结果。上述独立验证分支用于固定被测代码身份；C32 工程归档及 main 推送记录见
-`changes/2026-11-02_C32_TESTING_FRAMEWORK.md`，不把归档当作正式烧录放行。
+Windows runner。本次文档维护没有执行该远程任务，本地主机的ARM/Keil结果也不算远程CI。C32原始交付与当前MPC合并分别按各自SHA归档，见[主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)；代码归档不签发烧录放行。
 
 自动静态检查覆盖工程引用、遗留入口约束、PWM 写入归属、fixture 内容及测试间
 源码包含。完整 ISR/DMA 所有权、临界区正确性仍需要人工审查。相机、DMA、编码器、

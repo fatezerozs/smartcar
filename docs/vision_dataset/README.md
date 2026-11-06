@@ -1,14 +1,14 @@
 # PC 视觉数据处理链条
 
-更新：2026-11-04。入口：`python tools/vision_data.py --help`。Python 3.10+ 标准库；
+更新：2026-11-07。入口：`python tools/vision_data.py --help`。Python 3.10+ 标准库；
 C31 离线评测另需 GCC C11（当前使用 GCC），无需修改 Label Studio/Conda 环境。
-PC 链条使用 synthetic/mock 验证，已增加 SCRAW-1 训练版 adapter；真实数据试点和最终格式冻结未完成。
+PC主链已有synthetic/mock验证及SCRAW-1训练版adapter，源码已合入main。B2另有[真实静止短窗导出与PC重建](../changes/recorder-camera-stages-20261106/B2_CAMERA_SESSION_VALIDATION.md)，它不替代本主链的真人审核、Dataset Release、真实运动留出数据集或A/B评测。当前main软件验证见[主线同步记录](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。
 
 接手入口：[2026-11-04 架构交接](ARCHITECTURE_HANDOFF_2026-11-04.md)，重点列出
 已完成的模块和仍需完成的上下游架构、实施顺序与验收条件。
 
 后续车载工作见 [采集训练版实施说明](../vision_recorder/IMPLEMENTATION.md)：独立训练
-分支已完成最小 RTOS、原始帧/SD 持续写入与收尾软件；实卡和稳定行驶仍待验收。
+构型已完成最小RTOS、原始帧/SD持续写入与收尾软件；源码随main发布，稳定运动中的并行记录仍待验收。
 SCRAW-1 可直接 `import`，旧 SCRAW-DRAFT-1 继续要求 `--allow-draft`；缺失/损坏最终
 清单可从有效段头只读恢复，结果为 incomplete，源文件不改写。
 
@@ -44,12 +44,11 @@ python tools/vision_data.py demo --output C:/shengchanli/smartCar/vision-data-de
 ## 常规使用
 
 `$Data` 必须独立于 `smartcar` Git 仓库。`--source` 是已经导出到 PC 的目录，
-工具不搜索磁盘、不读取块设备、不格式化或删除源数据。正式车载数据尚不能直接用
-暂定格式解释；`--allow-draft` 只是显式接受 draft，不代表格式已获批准。
+工具不搜索磁盘、不读取块设备、不格式化或删除源数据。先核对源Session声明的格式：SCRAW-1按对应adapter导入；只有旧SCRAW-DRAFT-1示例才显式增加`--allow-draft`，该选项不授权解释未知格式，也不批准数据质量或硬件验收。
 
 ```powershell
 $Data = 'C:/shengchanli/smartCar/vision-dataset'
-python tools/vision_data.py import --source C:/local-export/session-001 --data-root $Data --allow-draft
+python tools/vision_data.py import --source C:/local-export/session-001 --data-root $Data
 python tools/vision_data.py verify-session --data-root $Data --session-id session-001
 python tools/vision_data.py view --data-root $Data --view-id uniform-v1 --sessions session-001 --every 5
 ```

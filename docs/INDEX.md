@@ -4,12 +4,14 @@
 
 选择工程与查找对应说明，请先看[主要工程索引](PROJECT_INDEX.md)；其中列出MPC主工程、采集训练、B2/B3与联合静止候选、Host规划及诊断工程。
 
-本轮核定、更正和发布边界见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)，最新结果优先于各阶段早期快照；原始数据与历史失败保持原样。
+当前维护日期为2026-11-07。MPC/Recorder/标定成果已合入main；主线合并身份、CI及文档口径见[主线合并与文档同步](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。此前核定和更正见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)；原始数据与历史失败保持原样。
 
-## 维护中的两类主文档
+## 持续维护入口与阶段交付
 
 - [项目设计与演进档案](PROJECT_EVOLUTION.md)：持续更新，含每次提交简略索引、目标、模型、现状与决策。
-- [2026-11-02 / C32 测试体系重构](changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：当前工程提交、接口延期、本地/远程验收与烧录放行边界。
+- [2026-11-07 / 主线合并与文档同步](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)：当前main身份、CI、各主文档维护范围和后续工作。
+- [2026-11-06 / MPC工程核定](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)：参数事实、软件更正、历史失败与发布边界。
+- [2026-11-02 / C32 测试体系重构](changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：C32原始工程交付、接口延期、本地/远程验收与烧录放行边界。
 - [2026-10-28 / C31 软件架构硬化（pre-flash）](changes/2026-10-28_C31_SOFTWARE_HARDENING.md)：此前软件提交差异、验收摘要与继续保留的硬件风险。
 - [2026-10-23 / C31 详细提交说明](changes/2026-10-23_C31.md)：此前提交快照，冻结历史结论。
 - [2026-10-22 / C28 详细总结](changes/2026-10-22_C28.md)：上次提交快照，冻结历史结论。
@@ -28,12 +30,12 @@
 | [采集版内存与时序预算](vision_recorder/MEMORY_BUDGET.md) | 两级缓冲、SD 长尾和控制期限的候选计算，非实测 |
 | [采集版未决事项与实施门禁](vision_recorder/OPEN_ISSUES.md) | 调度/所有权/协议/SD/取卡的待关闭问题和用户已定边界 |
 | [2026-11-04 视觉数据架构交接](vision_dataset/ARCHITECTURE_HANDOFF_2026-11-04.md) | 已完成模块、尚缺架构、职责边界、接手顺序和验收条件 |
-| [PC 视觉数据处理链条](vision_dataset/README.md) | 原始会话归档、抽样、文件标注、审核、Release 和 C31 离线评测；当前为 draft/synthetic 软件验证 |
+| [PC 视觉数据处理链条](vision_dataset/README.md) | SCRAW-1 adapter、归档/抽样/审核/Release与C31离线评测；区分主链synthetic验证、B2真实短窗回读与仍缺的审核数据集 |
 | [数据链条软件验证](vision_dataset/SOFTWARE_VALIDATION.md) | 本轮真实执行、模拟审核、已测范围及正式格式/实例/真实数据未验项 |
 | [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md) | 完整使用/开发/维护流程、接口示例、排障与套件索引；主页 README 有直接入口 |
 | [C31 连续速度规划与降级控制阶段交付](changes/c31-speed-planning-20261105/README.md) | [当前数据接入](changes/c31-speed-planning-20261105/DATA_INPUTS.md)与[Phase 3安全边界](changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)；近场失效清零/故障重新准入已改源码，规划器与标定门仍待完成 |
 | [TESTING_ARCHITECTURE.md](TESTING_ARCHITECTURE.md) | 统一测试入口、套件分层、隔离执行、报告和数据集待接入接口 |
-| [测试重构验收记录](testing/VALIDATION.md) | 本轮源码/夹具前后对照、Host/ARM/Keil 证据与未执行范围 |
+| [测试验收记录](testing/VALIDATION.md) | 当前main CI和MPC软件验收入口，以及保留的C32原始源码/夹具前后对照 |
 | [ENCODER_SPEED.md](reference/ENCODER_SPEED.md) | 编码器3左/4右与速度环；区分赛道和历史诊断参数 |
 | [C1车模暂定几何与编码器/舵机核对](reference/C1_VEHICLE_MODEL.md) | 用户原图参数、名义周长、估算轴距/轮距、已有静态端点及Host模型；最新轮端CPR见当前参数交付，实际前轮角仍缺测 |
 | [DUAL_UART.md](reference/DUAL_UART.md) | 链路、队列、所有权和诊断基线 |

@@ -1,5 +1,7 @@
 # PC 数据链条软件验证（2026-11-04）
 
+2026-11-07维护说明：下文保留2026-11-04的synthetic/mock软件验收时点，33项与66定义不能替代当前数字。工具现已实现SCRAW-1 adapter并合入main；当前清单72个定义，main `00bb7a4`的optimized/ASan各49 PASS / 1 SKIPPED。B2另有[真实静止短窗PC回读链](../changes/recorder-camera-stages-20261106/B2_CAMERA_SESSION_VALIDATION.md)，但本PC主链的真人审核、运动数据Release与批准基线仍待完成。[当前流程](README.md) · [主线证据](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
+
 基准：`main` / `de1415743b004160f520d385c9e3e63008f52007`，工作区 dirty。
 本轮用户授权 PC 软件实现及 synthetic/mock 验证；没有真实硬件或 Label Studio 写入。
 工具入口和使用流程见 [README](README.md)。本页记录本轮实际执行，不借用历史通过数。
@@ -68,7 +70,7 @@ python tools/vision_data.py demo --output C:/shengchanli/smartCar/vision-data-ac
 规范、源代码、Schema、小型测试代码进 Git；原始帧、演示图片、可执行文件、完整运行
 产物位于仓库外或忽略目录。当前任务没有 commit/push；此前用户未提交资料均保留。
 
-## 未关闭事项
+## 2026-11-04时点未关闭事项（历史）
 
 1. **正式 Recorder 格式未冻结**：当前仅 SCRAW-DRAFT-1；不能宣称已兼容真实车载导出。
 2. **真实采集尚未实现**：无固件 Recorder、SD 写入、Sensor/Capture FPS、DMA 所有权、

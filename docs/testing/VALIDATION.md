@@ -1,11 +1,24 @@
-# 测试体系重构验收记录
+# 测试验收入口与C32原始记录
+
+维护：2026-11-07。当前main合并基准`00bb7a4`的[远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)已完成：MSVC optimized与ASan各49 PASS / 1 SKIPPED。唯一跳过项为缺数据的performance-host，不代表性能实测通过。
+
+| 证据 | 实际运行与范围 |
+| --- | --- |
+| 当前main Host | `00bb7a4` / workflow `42243602219`；两种MSVC模式分别运行，均49 PASS / 1 SKIPPED |
+| MPC更正后的本地PreFlash | `20261106T114440-8e894432c2`；GCC补充Host、ARM编译、九种Keil构型，63 PASS / 1 SKIPPED |
+| 随后两份测试的兼容性修正 | `20261106T115628-c46e55a1e3`；8项Host及依赖通过，生产源码未再变化；最终完整MSVC范围由分支与main CI覆盖 |
+| C32原始框架交付 | 下文2026-11-02记录及[validation.json](validation.json)，数字仅适用于该时点 |
+
+当前身份、数据和归档边界见[主线同步记录](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)，更正过程见[MPC审核](../changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)和[CI兼容性证据](../changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。main Host的框架`releaseEligible`字段不替代完整PreFlash、动态标定、烧录审签或板端/赛道验收。
+
+## C32原始验收快照（以下保留2026-11-02时点）
 
 日期：2026-11-02（Asia/Shanghai）。本页记录本轮工作区执行，历史验收不计入
 通过数。任务书授权的性能数据集延期按接口处理，没有生成替代数据或批准基线。
 各条 Git SHA、dirty 和“main 未变”均对应实际运行/验证当时，不是对后续 HEAD 的声明。
 C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTING_FRAMEWORK.md)。
 
-## 最终执行
+### 最终执行
 
 ```powershell
 ./tools/testing/Invoke-TestPlan.ps1 -Profile PreFlash -Compiler gcc -Jobs 2
@@ -26,7 +39,7 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 可提交的精简索引为 [validation.json](validation.json)，包括结果文件哈希、套件
 结果和九个 AXF 的 SHA-256。生成目录本身不提交；CI 按 artifact 归档。
 
-## 已验证内容
+### 已验证内容
 
 | 内容 | 本轮证据 |
 | --- | --- |
@@ -49,7 +62,7 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 新加框架/配置探针当时仍在调试，因此基线整轮汇总不是验收通过。本页只使用
 其中实际 PASS 的 29 个原始 C 套件作前后对照，整体验收以最终 Run ID 为准。
 
-## 状态与环境边界的反例验证
+### 状态与环境边界的反例验证
 
 | 场景 | 结果 |
 | --- | --- |
@@ -68,7 +81,7 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 `../../.test-results/20261101T175448-22d0d65f36/summary.md`、
 `../../.test-results/20261101T175512-60215ae2ad/summary.md`。
 
-## 验收标准对应
+### 验收标准对应
 
 | 编号 | 结论 |
 | --- | --- |
@@ -87,7 +100,7 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 | A13 | Host CI 已验：同一入口在远程 MSVC optimized/ASan 均通过；远程 PreFlash 与专用 Keil Runner 仍待验证 |
 | A14 | 完成软件边界：自动计划无 L5，全部目标动作限纯编译/链接，硬件证据单独待验收 |
 
-## 保留范围和未验项
+### 保留范围和未验项
 
 生产控制/视觉算法、既有安全断言、运行参数和部署标定没有因本次重构改写。
 原有未提交工程与 `docs/changes/` 工作记录保留；Keil 构建只修改套件私有副本。
@@ -102,7 +115,7 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 栈/WCET、相机/DMA/编码器、PWM/LDOK、中断/闭环时序和实车赛道行为没有验证；
 完整 ISR/DMA/临界区审查仍须独立人工证据。
 
-## 远程 Host CI 补充验收（2026-11-02）
+### 远程 Host CI 补充验收（2026-11-02）
 
 用户明确授权将本轮 65 个文件发布到公开仓库的独立验证分支后，使用隔离副本
 创建并推送提交。原工作区的 main、已有未提交工程及历史工作记录没有提交或
@@ -133,7 +146,7 @@ runner 和人工触发。本轮通过结论只覆盖远程 Host optimized/ASan�
 目标构建、真实数据性能、硬件验收或合并 main。随后补充的验收文档不改变上述
 被测代码提交。
 
-## C32 main 提交的后续 CI
+### C32 main 提交的后续 CI
 
 C32 代码提交 `d78eb9d0bf59a434276e7191f8c04b478aebaab9` 推送到 main 后，
 [Host regression 41406605613](https://github.com/fatezerozs/smartcar/actions/runs/41406605613)
@@ -146,7 +159,7 @@ main 的 Job 状态、完整日志和归档元数据已复核；optimized ZIP/JS
 [C32 提交说明第 10 节](../changes/2026-11-02_C32_TESTING_FRAMEWORK.md#10-c32-提交后的-main-ci补充证据)，
 机器可读索引为 `validation.json.mainCI`。正式烧录放行与硬件未验项保持原状态。
 
-## 阅读和证据层级
+### 阅读和证据层级
 
 - 原任务书：直接读取原始 Markdown；当前无 MarkItDown MCP，未使用 Markdown 转换结果冒充版面证据。
 - `md_extracted`：没有仅据此最终认定的公式、表格数值、单位或测试结果。

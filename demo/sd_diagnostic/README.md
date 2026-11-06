@@ -3,12 +3,14 @@
 独立 Keil / ARMCLANG 工程：`mdk/sd_diagnostic.uvprojx`，目标 `SD_Diagnostic`。
 工程只引用本目录源码与现有 SDK/FatFs；无 Recorder、C31 或车辆业务源码依赖。
 
+维护：2026-11-07。独立实板的卡初始化、FAT32、64KiB BASIC和16MiB STRESS已通过，[实板报告](evidence/hardware-20261105T162039Z/HARDWARE_REPORT.md)保留具体配置与观测范围。后续5个文件另有[断电后PC回读校验](../sd_performance/evidence/readback-20261105T183635Z-9052/PERSISTENCE_REPORT.md)。这些结果不覆盖RecorderTrain运动并行或任意写入时刻掉电安全。
+
 ## 当前交付
 
 已独立构建，0 Error(s), 0 Warning(s)。最终构建目录：`artifacts/run-20261106T001438910-29796/`。
 其中 `Objects/sd_diagnostic.axf`、`Objects/sd_diagnostic.bin`、`Listings/sd_diagnostic.map`、`keil-build.log`、`verification.json` 为同次构建证据。
 BIN 基地址为 **0x70000000**，长度 36032 字节；本说明不构成烧录授权。
-本阶段未烧录、未复位、未打开串口，实际 SD 硬件尚未验证。
+上述构建阶段本身未烧录、复位或打开串口；后续独立实板验证已执行，见页首报告。原报告未通过调试器逐字节读回Flash，镜像身份限制仍保留。
 
 ## 重新构建（只构建）
 
@@ -25,12 +27,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File C:\shengchanli\smartCar\smar
 历史失败日志和中间构建保留以便追溯，以 `evidence/latest-build.txt` 指向的验证成功目录为准。
 项目依赖仓库内原 SDK 路径，不是脱离仓库的自包含 SDK 包。
 
-## 后续板端操作（须先取得人工烧录批准）
+## 再次板端测试的操作规程
 
 人工确认诊断固件替换当前运行镜像的范围，保存当前生产固件并核对 AXF/BIN 哈希；避免整片擦除及触及末尾配置页。
-板端测试应拆为烧录/复位和串口读写授权后的步骤，当前一项也未执行。
+历史板端步骤已经执行；再次测试须按当前授权范围区分烧录/复位与串口读写，不能把本文当成自动重跑指令。
 串口为 **UART1，B12 TX / B13 RX，115200、8N1，无流控**。COM14 为有线、COM10 为无线（用户确认）；固件只初始化 UART1，不能据此推断无线 UART8 可用。
-优先在下一阶段人工核对 COM14 到 UART1 的接线。启动后只输出 ready，不自动初始化 SD 或创建文件。
+历史实测使用COM14到UART1；再次测试先核对当前端口和接线。启动后只输出ready，不自动初始化SD或创建文件。
 依次手动输入：
 
 ```text

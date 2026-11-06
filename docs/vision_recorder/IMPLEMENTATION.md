@@ -1,8 +1,12 @@
 # RECORDER_TRAIN_1：实施、使用与验收
 
+维护：2026-11-07。Recorder源码、构建工具和相关证据已随`00bb7a4`合入main；它仍是独立RTOS采集构型，主C26赛道工程没有因此改为Recorder调度。main完整Host的optimized/ASan各49 PASS / 1 SKIPPED。[主线同步记录](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
+
+当前板端范围：B2独立静止Camera/SD短窗已验收，B3已有实际输出强制零的静止逻辑记录，联合候选已构建、上板待验。RecorderTrain稳定运动写卡、长时与控制期限仍未验收；独立工程的结果不能互相替代。[工程导航](../PROJECT_INDEX.md)
+
 2026-11-06审核更正：AUTO_TRACK与RecorderTrain的后续统一目标为MPC预算降级。预算尚未集成前，当前共享C31源码采用零动力恢复窗口；本文较早rev5“远场失效继续驱动”的开发描述不再作为现行保证。源码锁已对照原冻结字节审查，Encoder方向宏替换已纳入新锁；默认构建仍`review=0`。最新测试与发布范围见[本轮审核](../changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。下文保留各次实施时点及其证据，不能拼接为一次完整验收。
 
-更新：2026-11-04。分支 `feat/vision-recorder-training`，基线 `de14157`，当前未提交。
+首版记录日期：2026-11-04。当时分支`feat/vision-recorder-training`、基线`de14157`且工作区未提交；以下按各节日期保留历史实施记录。当前代码已合入main。
 用户已批准仅采集训练分支引入最小 RTOS；最终目标是稳定行驶时持续采集并写 SD，
 车速可降低。**本次完成首版软件和纯构建，尚未证明实车持续记录或循迹稳定。**
 

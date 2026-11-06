@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "smartcar.main-documentation-sync/1",
+  "maintenanceDate": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "baseMainCommit": "00bb7a47ee5b15fe845137895316d54ef24f6a1d",
+  "baseTree": "375fc0f87d8883ddee6521b61fd0f4ae580e3f50",
+  "contentEquivalentAuditCommit": "16baa6bb86f8cc714bbaeed2762d843462c84190",
+  "sourceBranchHead": "6b285d3fbef058f29c6890e16ee277e327aeb2f7",
+  "ignoredFile": "1103",
+  "mainCi": {
+    "workflowRun": 42243602219,
+    "url": "https://github.com/fatezerozs/smartcar/actions/runs/42243602219",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "00bb7a47ee5b15fe845137895316d54ef24f6a1d",
+    "createdAtUtc": "2026-11-06T15:30:03Z",
+    "updatedAtUtc": "2026-11-06T15:34:56Z",
+    "jobs": [
+      {
+        "id": 127979965194,
+        "name": "host (optimized)",
+        "status": "completed",
+        "conclusion": "success",
+        "counts": {
+          "PASS": 49,
+          "SKIPPED": 1
+        }
+      },
+      {
+        "id": 127979966183,
+        "name": "host (asan)",
+        "status": "completed",
+        "conclusion": "success",
+        "counts": {
+          "PASS": 49,
+          "SKIPPED": 1
+        }
+      }
+    ],
+    "countsSource": "Previously retrieved job logs and local main-merge-ci-result.json; fresh GitHub run/job state reconfirmed for this maintenance"
+  },
+  "hardwareAccessed": false,
+  "projectHardwareReleaseApproved": false,
+  "readLayers": [
+    "native Markdown",
+    "structured_parsed Git/JSON/XML/B3T1",
+    "computed CI counts/catalog selection/CRC/SHA256"
+  ],
+  "onlyMdExtractedConclusions": [],
+  "newPdfVerified": false,
+  "globalConfigurationChanged": false,
+  "validation": {
+    "status": "PASS",
+    "documentPaths": [
+      "README.md",
+      "demo/mdk/README.md",
+      "demo/sd_diagnostic/README.md",
+      "demo/sd_performance/README.md",
+      "docs/INDEX.md",
+      "docs/PROJECT_EVOLUTION.md",
+      "docs/PROJECT_INDEX.md",
+      "docs/TESTING_ARCHITECTURE.md",
+      "docs/TESTING_FRAMEWORK_GUIDE.md",
+      "docs/changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.json",
+      "docs/changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md",
+      "docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md",
+      "docs/changes/c31-speed-planning-20261105/README.md",
+      "docs/reference/ENCODER_SPEED.md",
+      "docs/testing/VALIDATION.md",
+      "docs/vision_dataset/README.md",
+      "docs/vision_dataset/SOFTWARE_VALIDATION.md",
+      "docs/vision_recorder/ACCEPTANCE_PLAN.md",
+      "docs/vision_recorder/ARCHITECTURE.md",
+      "docs/vision_recorder/IMPLEMENTATION.md",
+      "docs/vision_recorder/OPEN_ISSUES.md",
+      "tests/vision/README.md"
+    ],
+    "changedFileCount": 22,
+    "activeRelativeLinksChecked": 719,
+    "missingLinks": [],
+    "changedDocumentAnchorIssues": [],
+    "changedDocumentTableIssues": [],
+    "catalogDefinitions": 72,
+    "profileClosureCounts": {
+      "Host": 50,
+      "PreFlash": 64,
+      "Diagnostic": 48
+    },
+    "guideSuiteRows": 72,
+    "dataAudit": {
+      "manifestFilesVerified": 70,
+      "manifestSha256": "120c4358f10840500bd5d3977e61c1e05c887990d63cbc66fe10ed274f019165",
+      "encoderProfileSha256": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
+      "verifiedNativeSamples": 4500,
+      "operatorTurnTrialsRecomputed": 7,
+      "encoderWindowsVerified": 9
+    },
+    "frozenEvidenceAndProfilesChanged": false,
+    "functionalSourceChanged": false,
+    "commandInterfaceChecked": "python tools/vision_data.py import --help",
+    "manifestValidation": "Test-Manifest.ps1 PASS: 72 suites"
+  },
+  "dataAuditSha256": "91d39d77a9edbc0d42eb89d1ddf58ce8f57285fdd8238b9de629494c2d7c3ffc"
+}

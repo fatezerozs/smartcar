@@ -1,8 +1,10 @@
 # 工程导航与交接索引
 
-**主工程：MPC_20261106** · 更新：2026-11-06（北京时间） · [返回主页](../README.md) · [项目现状档案](PROJECT_EVOLUTION.md)
+**主工程：MPC_20261106** · 更新：2026-11-07（北京时间） · **维护分支：main** · [返回主页](../README.md) · [项目现状档案](PROJECT_EVOLUTION.md)
 
 供新成员选择工程、核对进度、定位阻塞项与安排下一步。进度按下列阶段证据整理，不是板上当前固件身份的确认，也不是烧录或实车放行记录。
+
+`feat/vision-recorder-training`成果已合入`main`，合并提交`00bb7a4`的文件树与审核归档`16baa6b`一致，空文件`1103`未保留。工程名称仍为MPC_20261106，文档维护日期不改变工程名。[合并与同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
 
 导航：[工程关系](#1-工程关系) · [进度总览](#2-进度总览) · [待解决问题](#3-待解决问题与关闭条件) · [工程入口](#4-工程与说明入口) · [接手路线](#5-新成员从哪里接手) · [维护方式](#6-如何维护这份索引)
 
@@ -81,7 +83,7 @@ flowchart TB
 
 | 工程 / 能力 | 当前证据 | 尚不能证明 |
 | --- | --- | --- |
-| **MPC主工程** | 安全边界专项与Keil纯构建通过；保留C26入口 | 新规划已运行、完整Host通过或整车通过 |
+| **MPC主工程** | 安全边界专项、完整Host及Keil纯构建通过；保留C26入口，已合入main | 新规划已运行、物理预算已定标或整车通过 |
 | **Host规划** | 23项Python测试、36组场景/分辨率组合，各两种遥测消费模式通过 | 实测制动能力、物理速度精度或生产阈值有效 |
 | **auto-track** | 当前过渡保护的软件回归通过；后续统一MPC预算降级 | 预算规划已接入、实车整体通过或可替代MPC主线 |
 | **RecorderTrain** | 采集链软件及启动回归通过；源码锁已审查更正 | 预算规划已接入，或稳定运动写入/收尾/控制时序已实测验收 |
@@ -96,6 +98,8 @@ flowchart TB
 **本轮核定后：PreFlash为63 PASS / 1 SKIPPED；仅含Git发布文件的副本Host为49 PASS / 1 SKIPPED。** 原Phase 3的46 PASS / 3 FAIL / 1 SKIPPED保留为历史记录，本轮已修正源码锁和过渡策略测试失配。跳过项仍是缺数据的`performance-host`；GCC软件通过不等于MSVC/ASan、预算规划或实车放行。[本轮审核与证据](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md) · [原Phase 3历史证据](changes/c31-speed-planning-20261105/phase3-boundaries-evidence.json)
 
 首次两轮MSVC严格编译发现的问题已更正；本地PreFlash再次63 PASS / 1 SKIPPED，测试后续修正专项8 PASS。最终功能提交`7d2ff6d`的[远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)已完成，optimized和ASan各49 PASS / 1 SKIPPED。失败、更正与最终输入见[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)；随后文档归档不改变被测功能代码。
+
+main合并提交`00bb7a4`另行通过[主线CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)，optimized和ASan各49 PASS / 1 SKIPPED。它与上面的分支运行是两次独立记录；Phase 2/3缺项和硬件验收没有因此关闭。
 
 ## 3. 待解决问题与关闭条件
 
@@ -134,7 +138,7 @@ CPR不是新的待测阻塞项：**左2335.8、右2358.6 counts/轮已按用户�
 
 公共入口：[当前参数与实测数据](changes/vehicle-parameters-20261106/README.md) · [测试框架与执行流程](TESTING_FRAMEWORK_GUIDE.md) · [PC视觉数据链](vision_dataset/README.md)。
 
-SD操作说明保留了较早“待上板”文字；最新实板与持久性结论以第2节后续报告为准。固定候选位于本机`.build/`，GitHub上的位置清单用于定位，不等于仓库内保存了一份通用可烧录项目。
+SD操作说明现已链接独立实板与持久性结果，具体测试配置和窗口以第2节报告为准。固定联合候选位于本机`.build/`，GitHub上的位置清单用于定位，不等于仓库内保存了一份通用可烧录项目。
 
 RecorderTrain、B2和B3的Keil工程引用生成适配源或本机run目录，不作为可移植源码直接提交；先运行表内脚本，再打开输出提示的工程。MPC主工程是直接维护的仓库入口。AUTO_TRACK与RecorderTrain后续均以MPC预算降级为目标；预算未集成时现有零动力恢复仅是过渡保护。[本轮审核更正](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)
 

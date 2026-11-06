@@ -1,17 +1,17 @@
 # SD Performance 独立性能测试固件
 
-日期：2026-11-06。状态：构建完成，硬件性能测试待换烧后执行。
+原交付：2026-11-06；维护：2026-11-07。状态：独立实板的24.75MHz、49.5MHz两档16MiB写入与全量回读均已通过，见[性能实测报告](evidence/performance-hardware-20261105T163728Z/PERFORMANCE_REPORT.md)。后续5文件另有[断电后PC校验](evidence/readback-20261105T183635Z-9052/PERSISTENCE_REPORT.md)。
 
 目的：测量现有 1-bit / 3.3V 接线上 24.75MHz 与标准 High Speed 49.5MHz 两档的文件写入性能。此前 185KiB/s 来自 CPU 24MHz、4KiB 底层传输且包含模式/CRC 处理的诊断工程，不能代表 SD 卡上限。
 
-## 烧录对象
+## 工程与原构建记录
 
 - 工程：`mdk/sd_performance.uvprojx`，目标 `SD_Performance`。
 - 最终 AXF：`artifacts/run-20261106T003457153-37440/Objects/sd_performance.axf`。
 - 最终 BIN：`artifacts/run-20261106T003457153-37440/Objects/sd_performance.bin`，基址 0x70000000，39168 字节。
 - MAP、构建日志与校验：同 run 目录下 `Listings/sd_performance.map`、`keil-build.log`、`verification.json`。
 
-本阶段没有下载、烧录、复位或打开串口。请人工使用该独立工程烧录，并运行/复位；旧版固件不具备 BENCH25/BENCH50 命令。
+以上为原构建产物路径；构建阶段没有下载、烧录、复位或打开串口。后续用户已烧录并授权执行独立测试，实际结果见页首报告；不以这些本地产物路径自动授权再次烧录。旧版固件不具备BENCH25/BENCH50命令。
 原 `demo/sd_diagnostic/` 中用户打开过的工程、源码、实板证据和全部旧产物未修改。
 
 ## 变更及边界
@@ -65,6 +65,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File C:\shengchanli\smartCar\smar
 每次使用独立 run 输出，不覆盖旧 AXF/BIN。Keil ARMCLANG 6.21：零错误零警告；17 个对象严格匹配 MAP 白名单；两个 64KiB 缓冲和卡/host/描述符均位于片内 OCRAM，64 字节对齐。Code 26580、RO 4880、RW 16、ZI 192804 字节（含保留栈/堆），Flash 镜像结束低于保留配置页。
 
 主机测试：`evidence/host-core.log`（16 项）、`evidence/host-bench.log`（16 项），GCC -O2 -Wall -Wextra -Werror。覆盖原诊断故障、命令门控、预分配失败、拒绝调时钟、空间不足、名称冲突、短写/短读、CRC、大小、同步/关闭/重开错误、有界次数、计时/百分位和结果输出完整性。寄存器级时钟/电压及真实 FatFs 连续簇分配未被替身模拟验证。
-证据层：XML/JSON 为 structured_parsed；编译、主机执行、MAP/内存与哈希检查及比特率换算为 computed。无 md_extracted/pdf_verified；新固件还没有任何实板性能结果。
+证据层：XML/JSON为structured_parsed；编译、主机执行、MAP/内存与哈希检查及比特率换算为computed。以上构建记录本身不包含实板测量；后续实板性能及PC回读结果独立链接于页首，无新增md_extracted/pdf_verified结论。
 
 变更仅在新增 `demo/sd_performance/`。基线 1219 文件（含原 C31、Recorder、既有 SD Diagnostic）复核 0 变化；没有修改全局配置、技能或持久代理行为。详见 `evidence/preservation-final.json`。

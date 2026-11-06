@@ -1,13 +1,11 @@
 # SmartCar 测试框架与流程详细手册
 
-维护日期：2026-11-06；基础C32归档日期2026-11-02。适用范围：C32 测试体系，Manifest/Result/Benchmark 契约 1.0。
-实现依据为 C32 代码提交 `d78eb9d0bf59a434276e7191f8c04b478aebaab9`；
-该代码已完成 main 上的 MSVC optimized/ASan CI。本文是持续维护的操作与开发手册，
-不是新增测试结果或烧录授权。
+维护日期：2026-11-07；基础C32归档日期2026-11-02。适用范围：main上的C32测试框架及Recorder/规划扩展，Manifest/Result/Benchmark契约1.0。
+框架最初交付为`d78eb9d`，当前主线合并基准为`00bb7a4`。本文是持续维护的操作与开发手册，引用已有实际运行，不签发烧录授权。
 
-2026-11-06扩展：当前为72个定义，包含Recorder与速度规划专项。上面的main远程CI结论仅对应原C32提交，不覆盖本批新增实现；本轮软件检查和待验范围见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
+当前为72个定义，包含Recorder与速度规划专项。main合并提交`00bb7a4`的[MSVC optimized/ASan CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)各49 PASS / 1 SKIPPED；完整本地PreFlash为63 PASS / 1 SKIPPED，后续测试专属修正以8项Host补充覆盖。身份和范围见[主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。
 
-本批最终功能提交`7d2ff6d`已通过[MSVC optimized与ASan远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)，各49 PASS / 1 SKIPPED；此前失败与更正逐轮保留在[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。该结论不覆盖硬件与赛道验收。
+合并前功能提交`7d2ff6d`的[分支CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)与主线运行分别记录；此前失败与更正保留在[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。Host通过不覆盖硬件与赛道验收。
 
 [返回仓库主页](../README.md) · [文档目录](INDEX.md) ·
 [架构概要](TESTING_ARCHITECTURE.md) · [C32 提交说明](changes/2026-11-02_C32_TESTING_FRAMEWORK.md) ·
@@ -855,6 +853,6 @@ Required 是清单默认值，显式选择的目标在该次执行中会提升�
 计数、命令检查与统计示例为 `computed`，没有 PDF 版面或硬件实测声明。
 
 2026-11-02原手册交付只增加文档入口和流程说明，原C32证据按其代码SHA引用。
-2026-11-06本次维护补充72项索引和当前发布边界；本批源码/断言更正及实际业务
-测试另见MPC审核记录，不把原C32远端CI当成本批验证。文档自身校验包括链接、
+2026-11-06维护补充72项索引和发布边界；2026-11-07同步main合并与独立CI结果。
+源码/断言更正及实际业务测试另见MPC审核记录，不把原C32远端CI当成本批验证。文档自身校验包括链接、
 锚点、清单索引、真实suite示例Schema和命令参数。
