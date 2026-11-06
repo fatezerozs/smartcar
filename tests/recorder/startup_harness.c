@@ -121,7 +121,7 @@ static void run_case(unsigned which)
         CHECK(!saw_running && !saw_pwm && d.boot==MT_BOOT_WAIT);
     } else {
         CHECK(d.boot==MT_BOOT_STOPPED && !pwm[0] && !pwm[1]);
-        CHECK(saw_running==(which==4 || which==10 || which==18 || which==19 || which==20 || which==21));
+        CHECK((saw_running!=0U)==(which==4 || which==10 || which==18 || which==19 || which==20 || which==21));
         if(which==19){
             /* Preserve the near-only input. Before MPC budgets are integrated,
              * current shared C31 protection waits at zero then latches. */

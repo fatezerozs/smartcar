@@ -65,6 +65,8 @@ RecorderTrain、B2和B3的生成Keil工程引用私有适配源或绝对run路�
 
 更正后本地完整PreFlash重新执行：`20261106T114440-8e894432c2`，63 PASS、1 SKIPPED、382.413秒，九种Keil构型和ARM编译再次通过，所测源码SHA与更正文件一致。该记录不替代后续推送的远端MSVC结果；远端结果必须按实际提交SHA核对。
 
+第二次推送`ad215e5`的[Host regression #5](https://github.com/fatezerozs/smartcar/actions/runs/42213381153)继续执行后，optimized为47 PASS、1 ERROR、1 FAIL、1 SKIPPED：auto-track及基础规划已通过，Recorder的reviewed变体出现C4389有符号/无符号比较，组合回放进入后出现C4996 CRT `fopen`告警。再次更正仅涉及测试：将运行标志先转换为逻辑表达式，MSVC下使用`fopen_s`、其他编译器保留`fopen`，继续检查打开失败。没有屏蔽告警、减少场景或更改固件；专项Host及依赖`20261106T115628-c46e55a1e3`为8 PASS。完整PreFlash所覆盖的生产代码未再次变化，两份测试程序以该专项输入哈希补充覆盖。
+
 ## 3. 实际软件验证
 
 | 检查 | 本轮实际结果 |

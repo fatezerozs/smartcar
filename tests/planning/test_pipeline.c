@@ -6,6 +6,16 @@
 #include <string.h>
 static unsigned checks;
 #define CHECK(x) do{++checks;if(!(x)){fprintf(stderr,"pipeline:%d %s\n",__LINE__,#x);exit(1);}}while(0)
+static FILE *open_csv(const char *name)
+{
+    FILE *stream=NULL;
+#ifdef _MSC_VER
+    if(fopen_s(&stream,name,"w")!=0)return NULL;
+#else
+    stream=fopen(name,"w");
+#endif
+    return stream;
+}
 static sp_pipeline_config_t config(float factor)
 {
     sp_pipeline_config_t c;memset(&c,0,sizeof(c));
@@ -167,9 +177,9 @@ int main(int argc,char **argv)
 {
     float factor=argc==2?(float)strtod(argv[1],NULL):1;FILE *csv,*queue_csv;char name[80];
     CHECK(factor==.5f||factor==1||factor==2);
-    snprintf(name,sizeof(name),"pipeline-replay-%.1f.csv",(double)factor);csv=fopen(name,"w");CHECK(csv!=NULL);
+    snprintf(name,sizeof(name),"pipeline-replay-%.1f.csv",(double)factor);csv=open_csv(name);CHECK(csv!=NULL);
     fprintf(csv,"case,timeMs,mode,generation,commitSequence,nearValid,farValid,speedRefMps,accelRefMps2,measuredMps,odometerM,leftTargetTicks10ms,rightTargetTicks10ms,leftPwmPermille,rightPwmPermille,leftIntegralQ8,rightIntegralQ8,queueDrops,faults,farStartedMs,brakeOverride,currentCapMps,frameSequence,captureMs,encoderSequence,rawNearValid,rawFarValid\n");
-    snprintf(name,sizeof(name),"pipeline-queue-%.1f.csv",(double)factor);queue_csv=fopen(name,"w");CHECK(queue_csv!=NULL);
+    snprintf(name,sizeof(name),"pipeline-queue-%.1f.csv",(double)factor);queue_csv=open_csv(name);CHECK(queue_csv!=NULL);
     fprintf(queue_csv,"case,slowStorage,dropped,highWater,controlHash\n");
     for(unsigned scenario=0;scenario<12;++scenario){uint32_t fast=run(scenario,factor,0,csv,queue_csv),slow=run(scenario,factor,1,NULL,queue_csv);CHECK(fast==slow);}
     interleaving();fclose(csv);fclose(queue_csv);printf("PIPELINE SIMULATION PASS: %u checks; sensor resolution factor=%.1f; 12 scenarios; queue backpressure leaves all control snapshots identical.\n",checks,(double)factor);return 0;
