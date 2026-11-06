@@ -17,11 +17,17 @@ typedef enum {UART_1=1,UART_8=8} uart_index_enum;
 #define kLPUART_NoiseErrorFlag 4U
 #define kLPUART_FramingErrorFlag 8U
 #define kLPUART_ParityErrorFlag 16U
+#define LPUART_DATA_RXEMPT_MASK 0x1000U
+#define LPUART_DATA_FRETSC_MASK 0x2000U
+#define LPUART_DATA_PARITYE_MASK 0x4000U
+#define LPUART_DATA_NOISY_MASK 0x8000U
 void gpio_init(int pin,int direction,int level,int mode);
 int gpio_get_level(int pin);
 void uart_init(uart_index_enum index,uint32_t baud,int tx,int rx);
 void uart_rx_interrupt(uart_index_enum index,uint32_t enabled);
 int uart_query_byte(uart_index_enum index,uint8_t *byte);
+uint8_t LPUART_GetRxFifoCount(LPUART_Type *uart);
+uintptr_t LPUART_GetDataRegisterAddress(LPUART_Type *uart);
 uint32_t LPUART_GetStatusFlags(LPUART_Type *uart);
 void LPUART_ClearStatusFlags(LPUART_Type *uart,uint32_t flags);
 void LPUART_WriteByte(LPUART_Type *uart,uint8_t byte);

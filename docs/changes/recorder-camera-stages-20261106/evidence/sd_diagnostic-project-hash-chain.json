@@ -1,0 +1,16 @@
+[
+  {
+    "record": "demo\\sd_diagnostic\\artifacts\\run-20261106T001331304-43688\\verification.json",
+    "project": "demo\\sd_diagnostic\\mdk\\sd_diagnostic.uvprojx",
+    "recorded_sha256": "cc3301358365cd66a4f8902330fe3b4793c2ba0142be349a985b025c6a8af7f9",
+    "current_sha256": "57032588b76bec4e63c916699a52750ce973ac30d62478aeabe59360098f1540",
+    "match": false
+  },
+  {
+    "record": "demo\\sd_diagnostic\\artifacts\\run-20261106T001438910-29796\\verification.json",
+    "project": "demo\\sd_diagnostic\\mdk\\sd_diagnostic.uvprojx",
+    "recorded_sha256": "feae7867a512f726d6ac0409e26823d181d8b942ef60b6cbc7b31cc30972e0fb",
+    "current_sha256": "57032588b76bec4e63c916699a52750ce973ac30d62478aeabe59360098f1540",
+    "match": false
+  }
+]

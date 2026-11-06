@@ -1,0 +1,23 @@
+--cpu Cortex-M7.fp.dp
+"..\artifacts\run-20261106t003457153-37440\objects\board.o"
+"..\artifacts\run-20261106t003457153-37440\objects\diag_core.o"
+"..\artifacts\run-20261106t003457153-37440\objects\osa.o"
+"..\artifacts\run-20261106t003457153-37440\objects\sd_policy.o"
+"..\artifacts\run-20261106t003457153-37440\objects\host_policy.o"
+"..\artifacts\run-20261106t003457153-37440\objects\startup_mimxrt1064.o"
+"..\artifacts\run-20261106t003457153-37440\objects\diag_system.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_common.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_clock.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_gpio.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_lpuart.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_usdhc.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_cache.o"
+"..\artifacts\run-20261106t003457153-37440\objects\evkmimxrt1064_flexspi_nor_config.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_flexspi_nor_boot.o"
+"..\artifacts\run-20261106t003457153-37440\objects\fsl_sdmmc_common.o"
+"..\artifacts\run-20261106t003457153-37440\objects\ff.o"
+"..\artifacts\run-20261106t003457153-37440\objects\bench.o"
+--library_type=microlib --diag_suppress 6314,6329 --strict --scatter "sd_performance.scf"
+--remove --entry=Reset_Handler --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "C:\shengchanli\smartCar\smartcar\demo\sd_performance\evidence\export-preflight-20261105T164657Z\map-recovery\recovered.map" -o "C:\shengchanli\smartCar\smartcar\demo\sd_performance\evidence\export-preflight-20261105T164657Z\map-recovery\recovered.axf"

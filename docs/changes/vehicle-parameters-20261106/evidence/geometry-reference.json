@@ -1,0 +1,99 @@
+{
+  "version": "reference_geometry_v0.1",
+  "scope": "Host geometry simulations and provisional engineering reference only",
+  "source_image": "docs\\changes\\recorder-b3-20261106\\evidence\\user-reference-geometry-v0.1.png",
+  "source_image_sha256": "f38b3df8deb9d34df13585f1f2f7585fbe98770642ff920afae0c2cda948e858",
+  "parameters": {
+    "overall_length_mm": {
+      "value": 280,
+      "unit": "mm",
+      "status": "nominal_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "overall_width_mm": {
+      "value": 180,
+      "unit": "mm",
+      "status": "nominal_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "tire_diameter_mm": {
+      "value": 64,
+      "unit": "mm",
+      "status": "nominal_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "tire_width_mm": {
+      "value": 27,
+      "unit": "mm",
+      "status": "nominal_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "wheelbase_mm": {
+      "value": 205,
+      "unit": "mm",
+      "status": "image_estimate_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "rear_track_mm": {
+      "value": 152,
+      "unit": "mm",
+      "status": "image_estimate_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    },
+    "front_track_mm": {
+      "value": 150,
+      "unit": "mm",
+      "status": "image_estimate_as_labeled_in_user_screenshot",
+      "measured_on_this_vehicle": false
+    }
+  },
+  "derived": {
+    "theoretical_rolling_circumference_mm": {
+      "value": 201.06192982974676,
+      "display_rounded_mm": 201.06,
+      "formula": "pi * nominal tire diameter",
+      "status": "computed_from_nominal_unloaded_geometry",
+      "loaded_rolling_circumference_measured": false
+    }
+  },
+  "still_unknown": {
+    "left_loaded_rolling_circumference_mm": null,
+    "right_loaded_rolling_circumference_mm": null,
+    "encoder_counts_per_wheel_revolution_left": null,
+    "encoder_counts_per_wheel_revolution_right": null,
+    "encoder_direction_confirmed": null,
+    "measured_servo_command_to_wheel_angle": null,
+    "approved_low_speed_mps": null
+  },
+  "use_for_motion_limit_or_production_parameters": false,
+  "evidence_layers": [
+    "original_image_visual_verified",
+    "computed"
+  ],
+  "source_limitations": [
+    "Manufacturer nominal labels are transcribed from user screenshot; original manufacturer specification not independently verified",
+    "Wheelbase and track estimates are not measurements",
+    "No measurement uncertainty or load/pressure condition was supplied"
+  ],
+  "canonical_host_profile_reference": {
+    "path": "profiles/c1-host-geometry-v0.1.json",
+    "sha256_at_read": "16058875dfbf45443f59b9746e682d0e0d143066f2d51f8690b2f19a682dc897",
+    "document": "docs/reference/C1_VEHICLE_MODEL.md",
+    "scope": "separate Host reference, not written by this B3 work"
+  },
+  "historical_commands_reference": {
+    "servo_right_center_left_us": [
+      1430,
+      1550,
+      1670
+    ],
+    "condition": "operator-confirmed unloaded static endpoints 2026-10-22; not current loaded wheel angles",
+    "source": "docs/archive/history/SERVO_ENDPOINT_TEST_20261022.md",
+    "current_route_source_agrees": true,
+    "encoder_signs_as_documented": {
+      "left": -1,
+      "right": 1
+    },
+    "counts_per_wheel_revolution_still_unknown": true
+  }
+}

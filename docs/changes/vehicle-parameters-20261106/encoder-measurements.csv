@@ -1,0 +1,8 @@
+﻿wheel,direction,operator_turns,raw_left_delta,raw_right_delta,counts_per_turn,status,before_window,after_window
+left,forward,3,-6574,-22,2191.3333333333335,rejected_operator_other_wheel_may_have_moved,221522823,221704177
+left,forward,3,-7023,-5,2341.0,repeat_window_other_wheel_jitter,221808520,221953478
+left,reverse,3,7118,7,2372.6666666666665,opposite_wheel_net_change,221953478,222127961
+right,forward,3,5,7129,2376.3333333333335,opposite_wheel_jitter,222127961,222252414
+right,reverse,3,273,-7044,2348.0,opposite_wheel_net_change_273,222252414,222431442
+left,forward,10,-23358,-2,2335.8,user_adopted_for_production_with_opposite_wheel_net_minus2,222431442,222609519
+right,forward,10,0,23586,2358.6,user_adopted_for_production_isolated_stable_windows,222609519,222829502

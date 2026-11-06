@@ -1,0 +1,12 @@
+{
+  "demo/code/midterm_route_profile.h": {
+    "before_sha256": "d29e4892952be29a4f0f5df12c951308146cfb81a6bb896bdd6d9f71a58e30b4",
+    "after_sha256": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a",
+    "preexisting_dirty_state_preserved_except_explicit_encoder_configuration_change": true
+  },
+  "demo/code/vision_drive.c": {
+    "before_sha256": "572d1a38d35eff1911db3c7fa8ce809051459f56eee5e732918d3a7b87dcd2c6",
+    "after_sha256": "d7c62227d2f27a37d6510d1a3e58e020b98c92a2aec50fa885e0746576ee1280",
+    "preexisting_dirty_state_preserved_except_explicit_encoder_configuration_change": true
+  }
+}

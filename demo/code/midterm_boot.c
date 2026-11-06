@@ -65,6 +65,15 @@ void midterm_boot_cancel(uint32_t now)
 {
     if(state==MT_BOOT_WAIT || state==MT_BOOT_RUNNING)terminal(MT_BOOT_STOPPED,now);
 }
+void midterm_boot_link_error(uint32_t now)
+{
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    if(state==MT_BOOT_WAIT)track_reset();
+    else if(state==MT_BOOT_RUNNING)terminal(MT_BOOT_STOPPED,now);
+#else
+    midterm_boot_cancel(now);
+#endif
+}
 mt_boot_state_t midterm_boot_state(void){return state;}
 void midterm_boot_poll(uint32_t now)
 {
@@ -114,9 +123,10 @@ void midterm_boot_poll(uint32_t now)
                 vd.control.output.state==VC_DISARMED &&
 #endif
                 vd_output_arm(now,1);
-            if(accepted){state=MT_BOOT_RUNNING;signal_time=now;vd_output_apply();}
+            if(accepted){state=MT_BOOT_RUNNING;signal_time=now;}
             else terminal(MT_BOOT_BLOCKED,now);
             __set_PRIMASK(mask);
+            if(accepted)vd_output_apply(); /* Preparation must be preemptible. */
         }
     }
     if(state==MT_BOOT_WAIT)board_buzzer_set(elapsed%1000U<100U);

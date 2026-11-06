@@ -125,34 +125,57 @@ int vision_drive_speed_enable(int enable)
 #endif
 }
 #if VISION_ENCODER_ENABLE
-static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
+typedef struct {
+    vd_speed_info_t speed;
+    ws_pi_t pi[2];
+    uint32_t consumed,last_control,sample_interval;
+    uint8_t active,reset_pending;
+    unsigned backwards[2],stalled[2];
+#if VISION_ROUTE_SWITCH
+    unsigned slow_backwards[2];
+#endif
+} speed_work_t;
+static void work_trip(speed_work_t *w,unsigned detail,uint32_t now)
+{
+    if(!w->speed.faults) {
+        w->speed.fault_detail=(uint8_t)detail;
+        w->speed.fault_control_age_ms=now-w->last_control;
+        w->speed.fault_sample_age_ms=now-w->speed.sample_ms;
+        w->speed.fault_interval_ms=w->sample_interval;
+        w->speed.fault_raw3=w->speed.raw3;w->speed.fault_raw4=w->speed.raw4;
+        w->speed.fault_target_right=w->speed.target_right;w->speed.fault_target_left=w->speed.target_left;
+        w->speed.fault_pwm_right=w->speed.pwm_right;w->speed.fault_pwm_left=w->speed.pwm_left;
+    }
+    w->speed.faults|=VC_FAULT_ENCODER;
+}
+static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
 {
     *out_right=right;*out_left=left;
 #if VISION_ENCODER_ENABLE
-    if(speed.enabled) {
-        uint32_t now=timer_get(GPT_TIM_1),seq=speed.samples,periods=seq-consumed;
+    if(w->speed.enabled) {
+        uint32_t now=timer_get(GPT_TIM_1),seq=w->speed.samples,periods=seq-w->consumed;
         uint16_t pwm_cap=cap;
 #if VISION_ROUTE_SWITCH
         if(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active)
             pwm_cap=MT_ROUTE_PWM_FULL_SCALE;
 #endif
         *out_right=*out_left=0;
-        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){trip(VS_FAULT_OUTPUT,now);return 0;}
-        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
-        if(reset_pending){ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]);memset(backwards,0,sizeof(backwards));
-            memset(stalled,0,sizeof(stalled));
+        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
+        if((uint32_t)(now-w->speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){work_trip(w,VS_FAULT_STALE,now);return 0;}
+        if(w->reset_pending){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);memset(w->backwards,0,sizeof(w->backwards));
+            memset(w->stalled,0,sizeof(w->stalled));
 #if VISION_ROUTE_SWITCH
-            memset(slow_backwards,0,sizeof(slow_backwards));
+            memset(w->slow_backwards,0,sizeof(w->slow_backwards));
 #endif
-            reset_pending=0;consumed=seq;periods=0;last_control=now;}
-        if(!right&&!left){ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]);active=0;consumed=seq;last_control=now;return 1;}
-        /* Arming the speed-output lease is distinct from steering settle.
+            w->reset_pending=0;w->consumed=seq;periods=0;w->last_control=now;}
+        if(!right&&!left){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);w->active=0;w->consumed=seq;w->last_control=now;return 1;}
+        /* Arming the w->speed-output lease is distinct from steering settle.
          * The next hardware sample may be up to 10ms away. Do not let its
          * ISR compare against a timestamp from the zero-output interval. */
-        if(!active){last_control=now;consumed=seq;periods=0;}
-        active=1;
+        if(!w->active){w->last_control=now;w->consumed=seq;periods=0;}
+        w->active=1;
         if(periods) {
-            unsigned target_ticks=speed.max_ticks;
+            unsigned target_ticks=w->speed.max_ticks;
 #if VISION_ROUTE_SWITCH
             int track=vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active;
             if(track)target_ticks=vt_route_ticks(target_ticks,
@@ -160,10 +183,10 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
                 vd.control.output.paired_support,vd.control.output.edge_support);
 #endif
             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
-            int32_t measured[2]={(int32_t)speed.raw4*speed.sign4,(int32_t)speed.raw3*speed.sign3};
+            int32_t measured[2]={(int32_t)w->speed.raw4*w->speed.sign4,(int32_t)w->speed.raw3*w->speed.sign3};
             /* No queue: the latest count cannot stand in for missed measurements. */
-            if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){trip(VS_FAULT_BACKLOG,now);return 0;}
-            if(sample_interval<VD_SPEED_SAMPLE_MIN_INTERVAL_MS || sample_interval>VD_SPEED_SAMPLE_MAX_INTERVAL_MS){trip(VS_FAULT_SAMPLE_GAP,now);return 0;}
+            if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){work_trip(w,VS_FAULT_BACKLOG,now);return 0;}
+            if(w->sample_interval<VD_SPEED_SAMPLE_MIN_INTERVAL_MS || w->sample_interval>VD_SPEED_SAMPLE_MAX_INTERVAL_MS){work_trip(w,VS_FAULT_SAMPLE_GAP,now);return 0;}
             if(reverse){measured[0]=-measured[0];measured[1]=-measured[1];}
 #if VISION_ROUTE_SWITCH
             if(track){
@@ -171,24 +194,24 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
                 if(vd.control.output.speed_boost==1&&vd.control.straight_tracking&&
                    (uint32_t)(now-vd.control.straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
                     rise=MT_ROUTE_STRAIGHT_TARGET_RISE;
-                vt_ramp_targets(targets,speed.target_right,speed.target_left,periods*rise);
+                vt_ramp_targets(targets,w->speed.target_right,w->speed.target_left,periods*rise);
             }
 #endif
             for(unsigned i=0;i<2;++i) {
 #if VISION_ROUTE_SWITCH
-                /* The shared speed envelope above retains differential even
+                /* The shared w->speed envelope above retains differential even
                  * during launch. Steering geometry may change the inner target
                  * at the controller's bounded steering rate. */
-                int32_t before=i?speed.target_left:speed.target_right;
-                /* Do not carry straight-speed integral into a lower target
+                int32_t before=i?w->speed.target_left:w->speed.target_right;
+                /* Do not carry straight-w->speed integral into a lower target
                  * at a junction / sharp turn. The new PI error still handles
                  * measured overspeed; no reverse torque is requested. */
                 /* Do not erode torque on every one-count target fluctuation.
                  * Track only a substantial drop (>=25%, at least 3 counts). */
                 if(track&&before>0&&before-targets[i]>=3&&targets[i]*4<=before*3)
-                    pi[i].integral_q8=(int32_t)((int64_t)pi[i].integral_q8*targets[i]/before);
+                    w->pi[i].integral_q8=(int32_t)((int64_t)w->pi[i].integral_q8*targets[i]/before);
 #endif
-                if(targets[i]>speed.max_ticks){trip(VS_FAULT_TARGET,now);return 0;}
+                if(targets[i]>w->speed.max_ticks){work_trip(w,VS_FAULT_TARGET,now);return 0;}
 #if VISION_ROUTE_SWITCH
                 /* Small counts during take-up are not proof of a driven reverse.
                  * Require meaningful drive for the fast path; persistent small
@@ -196,30 +219,30 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
                 /* C26_16 field starts tripped at just 3 reverse counts.
                  * Keep the 200ms persistent-reverse path, but do not turn a
                  * 30ms pulse/gear take-up transient into a latched start fault. */
-                backwards[i]=(targets[i]>=3&&pi[i].output>=cap/4U&&measured[i]<-4)?backwards[i]+periods:0;
-                slow_backwards[i]=(targets[i]>=3&&pi[i].output>=cap/2U&&measured[i]<0)?slow_backwards[i]+periods:0;
-                if(slow_backwards[i]>=20){trip(i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
+                w->backwards[i]=(targets[i]>=3&&w->pi[i].output>=cap/4U&&measured[i]<-4)?w->backwards[i]+periods:0;
+                w->slow_backwards[i]=(targets[i]>=3&&w->pi[i].output>=cap/2U&&measured[i]<0)?w->slow_backwards[i]+periods:0;
+                if(w->slow_backwards[i]>=20){work_trip(w,i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
 #else
-                backwards[i]=(targets[i]>0&&measured[i]<0)?backwards[i]+periods:0;
+                w->backwards[i]=(targets[i]>0&&measured[i]<0)?w->backwards[i]+periods:0;
 #endif
-                if(backwards[i]>=3){trip(i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
+                if(w->backwards[i]>=3){work_trip(w,i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
 #if VISION_ROUTE_SWITCH
-                {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:speed.max_ticks));
-                 uint16_t effort=track?vp_effort_limit(pi[i].output,periods):pwm_cap;
-                 ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,effort,sample_interval,ff);}
+                {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:w->speed.max_ticks));
+                 uint16_t effort=track?vp_effort_limit(w->pi[i].output,periods):pwm_cap;
+                 ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,effort,w->sample_interval,ff);}
 #else
-                ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,pwm_cap,sample_interval,0);
+                ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,pwm_cap,w->sample_interval,0);
 #endif
                 /* Keep the old no-count threshold independent of the larger
-                 * PWM headroom: a stalled motor must not wait for full duty. */
-                stalled[i]=(targets[i]>0&&pi[i].output>=(unsigned)cap*9U/10U&&measured[i]==0)?stalled[i]+periods:0;
-                if(stalled[i]>=50){trip(i?VS_FAULT_NOCOUNT_LEFT:VS_FAULT_NOCOUNT_RIGHT,now);return 0;}
+                 * PWM headroom: a w->stalled motor must not wait for full duty. */
+                w->stalled[i]=(targets[i]>0&&w->pi[i].output>=(unsigned)cap*9U/10U&&measured[i]==0)?w->stalled[i]+periods:0;
+                if(w->stalled[i]>=50){work_trip(w,i?VS_FAULT_NOCOUNT_LEFT:VS_FAULT_NOCOUNT_RIGHT,now);return 0;}
             }
-            speed.target_right=(int16_t)targets[0];speed.target_left=(int16_t)targets[1];
-            speed.measured_right=(int16_t)measured[0];speed.measured_left=(int16_t)measured[1];
-            consumed=seq;last_control=now;
+            w->speed.target_right=(int16_t)targets[0];w->speed.target_left=(int16_t)targets[1];
+            w->speed.measured_right=(int16_t)measured[0];w->speed.measured_left=(int16_t)measured[1];
+            w->consumed=seq;w->last_control=now;
         }
-        speed.pwm_right=*out_right=pi[0].output;speed.pwm_left=*out_left=pi[1].output;
+        w->speed.pwm_right=*out_right=w->pi[0].output;w->speed.pwm_left=*out_left=w->pi[1].output;
     }
 #else
     (void)reverse;(void)cap;
@@ -231,7 +254,7 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
 
 /* Target publication never consumes a sample or advances PI. All three APIs
  * below are called with interrupts masked by the foreground/output facade. */
-int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
+static int speed_publish(uint16_t right,uint16_t left,int reverse,uint16_t cap,
                     uint16_t *out_right,uint16_t *out_left)
 {
     *out_right=right;*out_left=left;
@@ -256,13 +279,52 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
 #endif
     return 1;
 }
+int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
+                    uint16_t *out_right,uint16_t *out_left)
+{
+    uint32_t mask=__get_PRIMASK();int ok;__disable_irq();
+    ok=speed_publish(right,left,reverse,cap,out_right,out_left);
+    __DMB();__set_PRIMASK(mask);return ok;
+}
 void vd_speed_control_poll(uint32_t now)
 {
 #if VISION_ENCODER_ENABLE
-    uint32_t mask=__get_PRIMASK();uint16_t right,left;__disable_irq();
-    if(speed.enabled && request_cap && !speed.faults && !vd.guard_faults) {
-        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS)trip(VS_FAULT_STALE,now);
-        else (void)speed_control_output(request_right,request_left,request_reverse,request_cap,&right,&left);
+    uint32_t mask=__get_PRIMASK(),epoch,seq;uint16_t right,left,cap,req_r,req_l;
+    int reverse;speed_work_t w;
+    __disable_irq();
+    if(!speed.enabled || !request_cap || speed.faults || vd.guard_faults){__set_PRIMASK(mask);return;}
+    if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
+        trip(VS_FAULT_STALE,now);__set_PRIMASK(mask);return;
+    }
+    epoch=vd.output_epoch;seq=speed.samples;
+    w.speed=speed;memcpy(w.pi,pi,sizeof(pi));w.consumed=consumed;w.last_control=last_control;
+    w.sample_interval=sample_interval;w.active=active;w.reset_pending=reset_pending;
+    memcpy(w.backwards,backwards,sizeof(backwards));memcpy(w.stalled,stalled,sizeof(stalled));
+#if VISION_ROUTE_SWITCH
+    memcpy(w.slow_backwards,slow_backwards,sizeof(slow_backwards));
+#endif
+    req_r=request_right;req_l=request_left;cap=request_cap;reverse=request_reverse;
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    __set_PRIMASK(mask);
+#endif
+    (void)speed_control_output(&w,req_r,req_l,reverse,cap,&right,&left);
+#if VISION_MIDTERM_C31_AUTONOMOUS
+#ifdef VISION_HOST_OUTPUT_HOOK
+    {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(2);}
+#endif
+    __disable_irq();
+#endif
+    /* A stop/reset or a newer sample invalidates all speculative PI state.
+     * Never overwrite an ISR's newer counts or resurrect its cleared PI. */
+    if(epoch==vd.output_epoch && seq==speed.samples && cap==request_cap &&
+       req_r==request_right && req_l==request_left && !vd.guard_faults) {
+        speed=w.speed;memcpy(pi,w.pi,sizeof(pi));consumed=w.consumed;last_control=w.last_control;
+        active=w.active;reset_pending=w.reset_pending;
+        memcpy(backwards,w.backwards,sizeof(backwards));memcpy(stalled,w.stalled,sizeof(stalled));
+#if VISION_ROUTE_SWITCH
+        memcpy(slow_backwards,w.slow_backwards,sizeof(slow_backwards));
+#endif
+        if(w.speed.faults){vd.guard_faults|=w.speed.faults;vd_output_zero();}
     }
     __DMB();__set_PRIMASK(mask);
 #else

@@ -1,0 +1,14 @@
+﻿{
+    "port":  "COM14",
+    "baud":  115200,
+    "flashed_by_user":  true,
+    "reset_by_agent":  false,
+    "started_utc":  "2026-11-05T16:19:47.1236323Z",
+    "help":  null,
+    "status":  null,
+    "basic":  null,
+    "stress":  null,
+    "outcome":  "stopped",
+    "error":  "Timeout waiting for SDDIAG HELP after 10s; no further command will be sent",
+    "finished_utc":  "2026-11-05T16:19:58.9583329Z"
+}

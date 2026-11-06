@@ -1,0 +1,32 @@
+--- before-this-task/demo/code/midterm_route_profile.h
++++ demo/code/midterm_route_profile.h
+@@ -1,5 +1,18 @@
+ #ifndef MIDTERM_ROUTE_PROFILE_H
+ #define MIDTERM_ROUTE_PROFILE_H
++/* Adopted for production configuration by the operator on 2026-11-06.
++ * Wheel-end effective counts in the current A-rising/B-direction mode:
++ * LEFT: -23358 raw counts / 10 forward wheel turns; RIGHT: +23586 / 10.
++ * Preserve fractional CPR from the measured ratio; do not assume 1024/4096.
++ * Evidence and repeat/drift limits: docs/changes/recorder-b3-20261106/
++ * encoder-joint-static-20261106. This is not a rolling-distance calibration.
++ */
++#define MT_ROUTE_ENCODER_LEFT_FORWARD_SIGN (-1)
++#define MT_ROUTE_ENCODER_RIGHT_FORWARD_SIGN 1
++#define MT_ROUTE_ENCODER_LEFT_CPR_X10 23358U
++#define MT_ROUTE_ENCODER_RIGHT_CPR_X10 23586U
++#define MT_ROUTE_ENCODER_LEFT_CPR (MT_ROUTE_ENCODER_LEFT_CPR_X10 / 10.0f)
++#define MT_ROUTE_ENCODER_RIGHT_CPR (MT_ROUTE_ENCODER_RIGHT_CPR_X10 / 10.0f)
+ /* Route profiles: manual A-to-B training and C26 continuous-track variant.
+  * Camera axis is from the current raised camera mount; recompile if moved.
+  * Successful speed baseline and measured servo window are applied in drive_init.
+--- before-this-task/demo/code/vision_drive.c
++++ demo/code/vision_drive.c
+@@ -195,7 +195,7 @@
+         vd_speed_info_t s;vision_drive_speed_get(&s);
+         if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+             route_speed_pending=0;
+-            if(!(vision_drive_encoder_signs(-1,1) &&
++            if(!(vision_drive_encoder_signs(MT_ROUTE_ENCODER_LEFT_FORWARD_SIGN,MT_ROUTE_ENCODER_RIGHT_FORWARD_SIGN) &&
+                  vision_drive_speed_config(VISION_ROUTE_SWITCH?MT_ROUTE_FAST_TICKS:40,1.0f,0.05f) && vision_drive_speed_enable(1)))
+                 vision_drive_trip(VC_FAULT_CONFIG);
+         }

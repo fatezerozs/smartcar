@@ -1,0 +1,139 @@
+{
+  "schema": "smartcar.b2-combined-acceptance/1",
+  "checks": {
+    "board_identity_closed_and_final_sync": true,
+    "actual_metrics_report_complete": true,
+    "board_session_matches_download": true,
+    "capture_source_fingerprint_matches_build": true,
+    "frozen_build_and_map_isolated": true,
+    "real_camera_data": true,
+    "full_raw_source_preserved": true,
+    "crc_png_and_manifest_complete": true,
+    "complete_observed_sequence": true,
+    "timestamp_monotonic": true,
+    "reported_io_bytes_match_downloaded_files": true,
+    "zero_recorded_errors_and_losses": true,
+    "bounded_observed_window_normal_stop": true
+  },
+  "b2_stage_accepted": true,
+  "scope": "approved stationary Camera+SD bounded short window; standalone B2 profile",
+  "session_id": "rec-599e5b78342531d7-0f162f3f-00000003",
+  "card_directory": "2:/R0000003",
+  "frames": 101,
+  "first_sequence": 37,
+  "last_sequence": 137,
+  "observed_timestamp_span_us": 1999000,
+  "observed_record_fps": 50.02501250625313,
+  "geometry": {
+    "height": 120,
+    "pixel_format": "GRAY8",
+    "stride": 188,
+    "width": 188
+  },
+  "sd_clock_hz": 23408866,
+  "sd_bus_bits": 1,
+  "cpu_nonidle_estimate_percent": 39.9,
+  "queue_high_water": 33,
+  "capture_copy_max_us": 2217,
+  "write_io_KiBps": 1129.7338478524969,
+  "write_plus_sync_call_KiBps": 909.1647054827807,
+  "io": [
+    {
+      "io": "write",
+      "count": 309,
+      "sample_overflow": 0,
+      "errors": 0,
+      "bytes": 2285410,
+      "total_us": 1975550,
+      "p50_us": 0,
+      "p95_us": 21583,
+      "p99_us": 25322,
+      "max_us": 36939
+    },
+    {
+      "io": "sync",
+      "count": 4,
+      "sample_overflow": 0,
+      "errors": 0,
+      "bytes": 0,
+      "total_us": 479281,
+      "p50_us": 154859,
+      "p95_us": 157008,
+      "p99_us": 157008,
+      "max_us": 157008
+    },
+    {
+      "io": "close",
+      "count": 2,
+      "sample_overflow": 0,
+      "errors": 0,
+      "bytes": 0,
+      "total_us": 0,
+      "p50_us": 0,
+      "p95_us": 0,
+      "p99_us": 0,
+      "max_us": 0
+    }
+  ],
+  "irq": {
+    "runtime_total_us": 4171466,
+    "idle_attributed_us": 2507125,
+    "nonidle_permille": 399,
+    "csi_irq_count": 208,
+    "csi_irq_max_us": 3,
+    "sd_irq_count": 1193,
+    "sd_irq_max_us": 7
+  },
+  "tasks": [
+    {
+      "task": "Monitor",
+      "runtime_us": 45651,
+      "stack_free_words": 868
+    },
+    {
+      "task": "Capture",
+      "runtime_us": 312866,
+      "stack_free_words": 996
+    },
+    {
+      "task": "IDLE",
+      "runtime_us": 2507125,
+      "stack_free_words": 246
+    },
+    {
+      "task": "Writer",
+      "runtime_us": 1296361,
+      "stack_free_words": 3540
+    }
+  ],
+  "source_sha256": {
+    "session.json": "ac2b921abd263922c4d6ef24bafa724103932956caf924f773f55a1dc46c120d",
+    "000000.scraw": "a247d29894144a475ae7eacc51d27c539d07e8ecdf087b8a7f520bc7a0318ccc"
+  },
+  "capture_axf_sha256": "4b90048d93a1e277159f65226e01bf88fd06690a5171bd3da2779dbecb9b10af",
+  "capture_input_fingerprint": "387c02af29aecbf25671296420e9f3e6b39028a5a8abdea60188499431c221e3",
+  "board_evidence": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-hardware-20261105T202845487Z",
+  "download_evidence": "C:\\shengchanli\\smartCar\\b2_real_session_20261105T202916265Z",
+  "build_evidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\recorder-camera-stages-20261106\\run-20261105T202447-47412-final",
+  "b1": "SKIPPED_BY_USER_NOT_PASSED",
+  "production_ready": false,
+  "control_parallel_validated": false,
+  "long_duration_validated": false,
+  "b3_authorized": false,
+  "limitations": [
+    "task runtime attributes interrupt time to the interrupted task; nonidle share is a CPU load estimate, not cycle-accurate total utilization",
+    "IRQ maxima inclusive of any higher-priority preemption; not WCET",
+    "I/O latencies include task preemption and filesystem processing; no pure device latency claim",
+    "CSI geometry is peripheral register configuration, not sensor exposure register readback",
+    "bounded short window does not establish long-duration stability or control deadlines",
+    "101 vs 100 events is permitted by the documented soft stop; no strict frame-count claim",
+    "exposure/gain sensor-register readback unavailable; reported geometry is the captured output contract and verified CSI DMA byte grouping",
+    "historical SD-only tests use different bus clocks, I/O sizes and software; no matched-load causal comparison or long-duration guarantee",
+    "first/final SD bytes were downloaded using onboard FatFs+USDHC, not a separate PC card reader"
+  ],
+  "evidence_layers": [
+    "structured_parsed",
+    "computed",
+    "visual_sample_review_required_separately"
+  ]
+}

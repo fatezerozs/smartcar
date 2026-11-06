@@ -1,0 +1,31 @@
+{
+  "status": "UNCONFIGURED_WAITING_STATIC_AND_MEASUREMENTS",
+  "applies_to_firmware": false,
+  "motion_enabled": false,
+  "static_candidate_actuator_duty": 0,
+  "geometry_reference": "REFERENCE_GEOMETRY_V0_1.json",
+  "left_counts_per_wheel_turn": null,
+  "right_counts_per_wheel_turn": null,
+  "left_loaded_circumference_mm": null,
+  "right_loaded_circumference_mm": null,
+  "encoder_forward_directions_verified": false,
+  "motor_safe_pwm_cap_permille": null,
+  "servo_measured_center_min_max_us": null,
+  "approved_speed_mps": null,
+  "approved_distance_mm": null,
+  "approved_duration_ms": null,
+  "control_parallel_sd_static_passed": false,
+  "C26_OFF_hardware_regression_passed": false,
+  "operator_context": {
+    "closed_low_speed_area_ready": true,
+    "manual_emergency_power_cut_ready": true,
+    "current_instruction": "static validation first; no actuator power restoration"
+  },
+  "note": "Audit placeholder only. Editing this JSON cannot enable motion in forced-zero candidate. No example physical values installed.",
+  "historical_servo_pulse_reference_us": [
+    1430,
+    1550,
+    1670
+  ],
+  "historical_servo_pulse_reference_scope": "unloaded static command endpoints; actual wheel angles/loaded response not measured"
+}

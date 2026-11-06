@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "smartcar.project-rename/1",
+  "dateLocal": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "projectName": "MPC_20261106",
+  "oldPath": "demo/mdk/competition/midterm_switch.uvprojx",
+  "newPath": "demo/mdk/competition/MPC_20261106.uvprojx",
+  "originalProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+  "newProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+  "projectXmlUnchanged": true,
+  "targetName": "nor_sdram_zf_dtcm",
+  "outputName": "rt1064",
+  "hardwareAccessed": false,
+  "controlSourceOrParametersChanged": false,
+  "committedOrPushed": false,
+  "staticRun": {
+    "runId": "20261106T103644-267678a078",
+    "passedNodes": 2,
+    "mdkSourceReferencesResolved": 4162
+  },
+  "isolatedActualBuild": {
+    "buildOnly": true,
+    "sourceProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+    "target": "nor_sdram_zf_dtcm",
+    "processes": [
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\UV4\\UV4.exe",
+          "-r",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\workspace\\demo\\mdk\\competition\\MPC_20261106.uvprojx",
+          "-t",
+          "nor_sdram_zf_dtcm",
+          "-j0",
+          "-o",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\build.log"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 18.821511
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--bincombined",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\rt1064.bin",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.088423
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--text",
+          "-c",
+          "-s",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\disassembly.txt",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.261701
+      }
+    ],
+    "zeroErrorsWarnings": true,
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1210624,
+        "sha256": "ae52b4b67ee08a5160d77c7585aa0f7b035a58e2649bcbfe71de0780de96bfb2"
+      },
+      "rt1064.bin": {
+        "bytes": 110272,
+        "sha256": "ede3aecf8368f8b281b119b25a7ce4a3886a36dbc2379702040a897c9799323a"
+      },
+      "disassembly.txt": {
+        "bytes": 2549245,
+        "sha256": "26291e10cf0458b2b756b5af5095f370f2fd46f5d7f934c9567bf069541bf674"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2061797,
+        "sha256": "38f5cfa620dd0340426004a8831a18ec490cbfc5955850d8926da3a793e8caf9"
+      }
+    }
+  },
+  "generatorBuild": {
+    "variant": "switch",
+    "projectPath": "C:\\shengchanli\\smartCar\\smartcar\\.build\\project-rename-mpc-20261106\\actual-project\\workspace\\demo\\mdk\\competition\\MPC_20261106.uvprojx",
+    "generatedProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "canonicalXmlPreserved": true,
+    "zeroErrorsWarnings": true,
+    "logSha256": "ab3f7fccc0b998b347f35ec86cb3e055a711b7ace8e36756b0e63f4f242fdcf9",
+    "axfSha256": "591c350b4603b2d0e36e87b36bf11a25bd0da0fd37e3e0c958fbc308faa496c7",
+    "builtOnly": true,
+    "privateWorkspace": true
+  },
+  "localIdeSettings": {
+    "MPC_20261106.uvguix.zfn19": "dac7a01113e249b3327c71d8e1242258afb33321ff13815f8788d18e25b806c9",
+    "MPC_20261106.uvoptx": "a25f8669a33fd15d02c42025dbae1c24a3609e2d343257ba34d3feef18a23654"
+  },
+  "modifiedExistingFiles": [
+    "tools/build_midterm.ps1",
+    "README.md",
+    "tools/recorder_stage_audit.py",
+    "tools/prepare_recorder_joint.py",
+    "tools/prepare_recorder_b3_static.py",
+    "tools/verify_recorder_b3_static.py",
+    "tools/verify_recorder_joint.py",
+    "tools/speed_planning/audit_build.py",
+    "docs/INDEX.md",
+    "docs/PROJECT_EVOLUTION.md",
+    "demo/mdk/README.md",
+    "docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md"
+  ],
+  "removedByRename": [
+    "demo/mdk/competition/midterm_switch.uvprojx"
+  ],
+  "newFiles": [
+    "demo/mdk/competition/MPC_20261106.uvprojx",
+    "docs/changes/2026-11-06_MPC_PROJECT_RENAME.md",
+    "docs/changes/2026-11-06_MPC_PROJECT_RENAME.json"
+  ],
+  "sourceHashes": {
+    "tools/build_midterm.ps1": "52be35259055bdb0bdf6a115a18e4be14e000471cb0ced482162376dcbb0d447",
+    "README.md": "c4e16b4dd809a56b181cc5ef1488947efc7a1a6bd328de56baf6fb252f534ce9",
+    "tools/recorder_stage_audit.py": "8c01d8da51c1868c8fa15644d4932a1ab20a750370a0270536970557353d017f",
+    "tools/prepare_recorder_joint.py": "7d9bcb9f5298f89893ff771f4918842bfa5242023116d626b5b6e37f6a02f21a",
+    "tools/prepare_recorder_b3_static.py": "03f570e9e2adfe1d1bfe3183e1fb8ff41f0f673a434162c7f2fe7a7fcb6d955e",
+    "tools/verify_recorder_b3_static.py": "b3ca58a2b48cd87657d8806149ce646daf4fd120d4dab571df05ec5f2b99cc57",
+    "tools/verify_recorder_joint.py": "0e90eea70b244145c12c3a1c5bcd540c363dfe06f9860a21635e8232cf49a260",
+    "tools/speed_planning/audit_build.py": "574eb8a526d1f2e919781e77d9ac4406de96b2984d1294970fac3fcfac8907d8",
+    "docs/INDEX.md": "a7235004913896f279a5e5e5fe0f6c7f2b6a5d28f8f6d67203f00f85c2f144d8",
+    "docs/PROJECT_EVOLUTION.md": "48e74e003edcfa324b29e8e8aeb7ad2cc40690003180e82d819bc9c0abcd2406",
+    "demo/mdk/README.md": "9bcef8fedecd587028274f6f3bfe1bf945cc991f537a04eecc57e7957c179464",
+    "docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md": "50dd5bf1a0b24a954cc11ad7652c93de99632553a55f673a8c1e9664f748e08b",
+    "demo/mdk/competition/MPC_20261106.uvprojx": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "docs/changes/2026-11-06_MPC_PROJECT_RENAME.md": "5961d7ea75395a04ec96a3bd69dfd9fed44679ef0cbebbdde4f68556929e0edf"
+  },
+  "otherExistingInputsUnchanged": true,
+  "unchangedOtherExistingFiles": 1555,
+  "evidenceLayers": [
+    "structured_parsed",
+    "computed"
+  ],
+  "scope": "Project identity/path rename only; firmware IDs, build outputs and implementation acceptance retain their original meaning."
+}

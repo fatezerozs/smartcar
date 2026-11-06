@@ -1,0 +1,10 @@
+FF PLANT gain=0.30 target=40 measured=40.50 pwm=135
+FF PLANT gain=0.30 target=20 measured=19.50 pwm=65
+FF PLANT gain=0.30 target=50 measured=50.40 pwm=168
+FF PLANT gain=0.50 target=40 measured=40.50 pwm=81
+FF PLANT gain=0.50 target=20 measured=19.50 pwm=39
+FF PLANT gain=0.50 target=50 measured=50.50 pwm=101
+FF PLANT gain=0.70 target=40 measured=39.90 pwm=57
+FF PLANT gain=0.70 target=20 measured=19.60 pwm=28
+FF PLANT gain=0.70 target=50 measured=50.40 pwm=72
+SPEED PASS 13284 checks; synthetic IO only

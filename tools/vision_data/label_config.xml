@@ -1,0 +1,21 @@
+<View>
+  <Header value="SmartCar: annotate current image observations; machine candidates are not ground truth"/>
+  <Image name="image" value="$image"/>
+  <Choices name="scene" toName="image" choice="single" required="true">
+    <Choice value="straight"/><Choice value="curve_left"/><Choice value="curve_right"/>
+    <Choice value="roundabout"/><Choice value="tangent_entry"/><Choice value="intersection"/>
+    <Choice value="line_loss"/><Choice value="occlusion"/><Choice value="complex"/><Choice value="unknown"/>
+  </Choices>
+  <Choices name="environment" toName="image" choice="multiple">
+    <Choice value="lighting_normal"/><Choice value="lighting_bright"/><Choice value="lighting_dim"/>
+    <Choice value="shadow_none"/><Choice value="shadow_partial"/><Choice value="shadow_strong"/>
+    <Choice value="contrast_high"/><Choice value="contrast_medium"/><Choice value="contrast_low"/>
+    <Choice value="surface_clean"/><Choice value="surface_worn"/><Choice value="surface_reflective"/>
+    <Choice value="blur_none"/><Choice value="blur_mild"/><Choice value="blur_severe"/>
+  </Choices>
+  <KeyPointLabels name="geometry" toName="image">
+    <Label value="left_boundary"/><Label value="right_boundary"/><Label value="centerline"/>
+    <Label value="inner_island"/><Label value="outer_boundary"/><Label value="entry_boundary"/>
+    <Label value="exit_boundary"/><Label value="junction_branch"/><Label value="custom"/>
+  </KeyPointLabels>
+</View>

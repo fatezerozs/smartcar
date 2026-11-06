@@ -1,0 +1,13 @@
+﻿{
+    "board_closed":  false,
+    "stop_sent":  true,
+    "start_sent":  true,
+    "hardware_accepted":  false,
+    "baud":  115200,
+    "port":  "COM14",
+    "reason":  "Timed out without closed/fault result; no repeat START",
+    "pc_session_verified":  false,
+    "out":  "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-hardware-20261105T201919543Z",
+    "agent_flash_or_reset":  false,
+    "identity_verified":  true
+}

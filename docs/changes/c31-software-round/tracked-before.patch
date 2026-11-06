@@ -1,0 +1,469 @@
+﻿diff --git a/demo/code/app_mode.c b/demo/code/app_mode.c
+index 71f329f..a77575d 100644
+--- a/demo/code/app_mode.c
++++ b/demo/code/app_mode.c
+@@ -9,7 +9,9 @@ static uint8_t off_seen;
+ #endif
+ static uint8_t decode(int a, int b)
+ {
+-#if VISION_ROUTE_SWITCH
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    (void)a;(void)b;return APP_MODE_DRIVE;
++#elif VISION_ROUTE_SWITCH
+     (void)b;return a?APP_MODE_OBSERVE:APP_MODE_DRIVE;
+ #else
+     return (uint8_t)((a ? 0U:1U) | (b ? 0U:2U));
+diff --git a/demo/code/app_runtime.c b/demo/code/app_runtime.c
+index 8380a0d..4951ecf 100644
+--- a/demo/code/app_runtime.c
++++ b/demo/code/app_runtime.c
+@@ -257,7 +257,8 @@ void app_runtime_run(void)
+ #endif
+ #endif
+         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {
+-            if (!vision_frame_copy(&gray_frame[0][0])) {
++            vision_frame_stamp_t stamp;
++            if (!vision_frame_copy(&gray_frame[0][0], &stamp)) {
+                 ++dropped_copies;
+             } else {
+                 uint32_t process_start = timer_get(GPT_TIM_1);
+@@ -276,7 +277,8 @@ void app_runtime_run(void)
+                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
+                 if (track.configured) {
+                     tb_extract(&track.model, &image_two_value[0][0], &result, &track_observation);
+-                    (void)tb_update(&track, &track_observation, frames + 1U, process_start);
++                    if(stamp.time_valid)
++                        (void)tb_update(&track, &track_observation, stamp.sequence, stamp.capture_ms);
+                 }
+                 process_ms = (uint32_t)(timer_get(GPT_TIM_1) - process_start);
+ #if VISION_ROUTE_SWITCH
+@@ -286,9 +288,13 @@ void app_runtime_run(void)
+                 memcpy(Right_Line, result.right, sizeof(Right_Line));
+                 memcpy(Mid_Line, result.center, sizeof(Mid_Line));
+                 ++frames;
+-                last_frame = process_start;
++                last_frame = stamp.time_valid?stamp.capture_ms:last_frame;
+ #if VISION_DRIVE_ENABLE
+-                if (midterm_mode) vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
++                if (midterm_mode) {
++                    if(stamp.time_valid)
++                        vision_drive_observe(&result, stamp.sequence, stamp.capture_ms, timer_get(GPT_TIM_1));
++                    else vision_drive_trip(VC_FAULT_FRAME); /* Missing clock is fail-closed. */
++                }
+ #endif
+                 fresh = 1;
+                 timeout_reset = 0;
+diff --git a/demo/code/board_camera.c b/demo/code/board_camera.c
+index 890e8aa..d3ccf2e 100644
+--- a/demo/code/board_camera.c
++++ b/demo/code/board_camera.c
+@@ -3,6 +3,9 @@
+ #include "board_camera.h"
+ static uint8_t ready,attempted;
+ static uint32_t last_attempt;
++/* GPT1 is initialized and started before board_init/camera service. The CSI
++ * completion ISR reads this same boot-relative millisecond clock. */
++static uint32_t capture_clock_ms(void){return timer_get(GPT_TIM_1);}
+ void board_camera_reset(void) {ready=attempted=0;last_attempt=0;}
+ int board_camera_poll(int requested,uint32_t now)
+ {
+@@ -10,6 +13,7 @@ int board_camera_poll(int requested,uint32_t now)
+     if(ready)return 1;
+     if(attempted && (uint32_t)(now-last_attempt)<VISION_CAMERA_RETRY_MS)return 0;
+     attempted=1;last_attempt=now;
++    mt9v03x_capture_clock_ms=capture_clock_ms;
+     ready=(uint8_t)(mt9v03x_init()==0);
+     return ready;
+ }
+diff --git a/demo/code/board_io.c b/demo/code/board_io.c
+index 3fda9ab..b2b63ec 100644
+--- a/demo/code/board_io.c
++++ b/demo/code/board_io.c
+@@ -10,17 +10,30 @@ void board_io_init(void)
+ {
+     board_io_hw_claim();
+     gpio_init(BOARD_BUZZER_PIN,GPO,GPIO_LOW,GPO_PUSH_PULL);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* C26/C27 are not initialized or sampled in the automatic C31 build. */
++    app_mode_init(1,1,timer_get(GPT_TIM_1));
++#else
+     gpio_init(BOARD_MODE_BIT0,GPI,GPIO_HIGH,GPI_PULL_UP);
+     gpio_init(BOARD_MODE_BIT1,GPI,GPIO_HIGH,GPI_PULL_UP);
+     app_mode_init(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));
++#endif
+ }
+ void board_mode_sample(void)
+-{app_mode_sample(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));}
++{
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++    app_mode_sample(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));
++#endif
++}
+ void board_io_read(board_io_state_t *s)
+ {
+     uint32_t mask=__get_PRIMASK();__disable_irq();
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    s->dip26=s->dip27=1; /* Selector pins deliberately not read. */
++#else
+     s->dip26=(uint8_t)gpio_get_level(BOARD_MODE_BIT0);
+     s->dip27=(uint8_t)gpio_get_level(BOARD_MODE_BIT1);
++#endif
+     s->buzzer_level=(uint8_t)gpio_get_level(BOARD_BUZZER_PIN);
+     board_io_hw_capture(s);__set_PRIMASK(mask);
+ }
+diff --git a/demo/code/midterm_boot.c b/demo/code/midterm_boot.c
+index 30d2124..4239011 100644
+--- a/demo/code/midterm_boot.c
++++ b/demo/code/midterm_boot.c
+@@ -7,16 +7,59 @@
+ static mt_boot_state_t state;
+ static uint32_t boot_time, signal_time;
+ static uint8_t speed_prepared;
++#if VISION_MIDTERM_C31_AUTONOMOUS
++static uint8_t track_active,track_seen;
++static uint32_t track_start,track_start_frame,track_frame,track_sequence,track_now;
++static void track_reset(void)
++{
++    track_active=0;
++    track_start=track_start_frame=track_frame=track_now=0;
++    /* Keep the sequence: a poll of the same frame cannot begin a new wait. */
++}
++/* Only distinct, fresh, stable control observations advance this clock.
++ * Both capture-time and foreground-time gaps revoke continuity. */
++static int track_ready(uint32_t now)
++{
++    vc_controller_t *c=&vd.control;
++    uint32_t timeout=c->config.frame_timeout_ms;
++    if(!c->have_frame || !c->output.observation_valid || !c->output.far_valid ||
++       c->stable_frames<c->config.arm_frames ||
++       (uint32_t)(now-c->last_frame_ms)>=timeout) {
++        track_reset();return 0;
++    }
++    if(track_seen && c->last_sequence==track_sequence)return 0;
++    if(!track_active || (uint32_t)(c->last_frame_ms-track_frame)>=timeout ||
++       (uint32_t)(now-track_now)>=timeout) {
++        track_reset();
++        track_start=now;track_start_frame=c->last_frame_ms;track_active=1;
++    }
++    track_seen=1;track_sequence=c->last_sequence;track_frame=c->last_frame_ms;track_now=now;
++    /* Processing latency must not substitute for time covered by new frames. */
++    return (uint32_t)(now-track_start)>=MIDTERM_BOOT_DELAY_MS &&
++        (uint32_t)(c->last_frame_ms-track_start_frame)>=MIDTERM_BOOT_DELAY_MS;
++}
++#endif
+ static void terminal(mt_boot_state_t next, uint32_t now)
+ {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    track_reset();
++#endif
+     state=next;signal_time=now;vision_drive_stop();board_buzzer_set(0);
+ }
+ void midterm_boot_init(uint32_t boot_ms,uint32_t now)
+ {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* Called exactly once by app_runtime on MCU boot; host tests simulate resets. */
++#endif
+     boot_time=boot_ms;signal_time=now;speed_prepared=0;state=MT_BOOT_WAIT;
+     board_buzzer_set(0);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    track_reset();track_seen=0;track_sequence=0;
++    (void)boot_ms;
++#else
+     if((uint32_t)(now-boot_ms)>=MIDTERM_BOOT_DELAY_MS)
+         terminal(MT_BOOT_BLOCKED,now);
++#endif
+ }
+ void midterm_boot_cancel(uint32_t now)
+ {
+@@ -27,24 +70,47 @@ void midterm_boot_poll(uint32_t now)
+ {
+     vd_speed_info_t s;
+     uint32_t elapsed=(uint32_t)(now-boot_time);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(state==MT_BOOT_WAIT || state==MT_BOOT_RUNNING) {
++        vision_drive_speed_get(&s);
++        if(vd.guard_faults || vd.control.output.faults || s.faults ||
++           vd.control.output.state==VC_FAULT) {
++            terminal(state==MT_BOOT_RUNNING?MT_BOOT_STOPPED:MT_BOOT_BLOCKED,now);return;
++        }
++    }
++#endif
+     if(state==MT_BOOT_RUNNING &&
+        (vd.control.output.state!=VC_RUNNING || vd.guard_faults))
+         terminal(MT_BOOT_STOPPED,now);
+     if(state==MT_BOOT_WAIT) {
+         vision_drive_speed_get(&s);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        /* route_speed_pending owns C31 signs, 132 ticks and PI setup. */
++        speed_prepared=(uint8_t)(MIDTERM_SPEED_CONFIRMED && s.samples && s.enabled && !s.faults);
++#else
+         if(!speed_prepared && MIDTERM_SPEED_CONFIRMED && s.samples && !s.faults &&
+            (uint32_t)(now-s.sample_ms)<=20U) {
+             speed_prepared=(uint8_t)(vision_drive_encoder_signs(MIDTERM_ENCODER_LEFT_SIGN,MIDTERM_ENCODER_RIGHT_SIGN) &&
+                 vision_drive_speed_config(MIDTERM_SPEED_MAX_TICKS,MIDTERM_SPEED_KP,MIDTERM_SPEED_KI) &&
+                 vision_drive_speed_enable(1));
+         }
++#endif
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        if(track_ready(now)) {
++#else
+         if(elapsed>=MIDTERM_BOOT_DELAY_MS) {
++#endif
+             uint32_t mask=__get_PRIMASK();int accepted;
+             __disable_irq();vision_drive_speed_get(&s);
+             accepted=MIDTERM_VISUAL_REVIEWED && speed_prepared && s.enabled && !s.faults &&
+                 (uint32_t)(now-s.sample_ms)<=20U && app_mode_allows(APP_MODE_DRIVE) &&
+                 vd.local_permitted && !vd.guard_faults && !vd.probe_active && !vd.motion.phase &&
+-                vd.hardware_ready && vc_arm_local(&vd.control,now,vd.hardware_ready);
++                vd.hardware_ready &&
++#if VISION_MIDTERM_C31_AUTONOMOUS
++                !vd.control.output.faults && vd.control.output.far_valid &&
++                vd.control.output.state==VC_DISARMED &&
++#endif
++                vc_arm_local(&vd.control,now,vd.hardware_ready);
+             if(accepted){state=MT_BOOT_RUNNING;signal_time=now;vd_output_apply();}
+             else terminal(MT_BOOT_BLOCKED,now);
+             __set_PRIMASK(mask);
+diff --git a/demo/code/midterm_route_profile.h b/demo/code/midterm_route_profile.h
+index 2129f2f..449f8b7 100644
+--- a/demo/code/midterm_route_profile.h
++++ b/demo/code/midterm_route_profile.h
+@@ -5,7 +5,9 @@
+  * Successful speed baseline and measured servo window are applied in drive_init.
+  * Existing steering controller and frame/heartbeat/encoder protections remain.
+  * Manual route target never starts on power-up. C26 switch target can start
+- * with ON at boot after five valid frames. Neither loads a saved profile.
++ * with ON at boot after five valid frames. Autonomous C31 instead requires
++ * continuous valid track for 3000ms and the visual review gate; C26/C27 have
++ * no start/stop authority. No route variant loads a saved profile.
+  */
+ #define MT_ROUTE_AXIS_NEAR_X 0.49733f
+ #define MT_ROUTE_AXIS_FAR_X 0.49833f
+@@ -36,7 +38,7 @@
+ #if !defined(VISION_ENCODER_ENABLE) || !VISION_ENCODER_ENABLE || !defined(VISION_MIDTERM_TRAINING) || !VISION_MIDTERM_TRAINING
+ #error "Route training requires explicit training and encoder build flags."
+ #endif
+-#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS
++#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS && !(VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
+ #error "Route training must not enable autonomous boot."
+ #endif
+ #endif
+diff --git a/demo/code/vision_drive.c b/demo/code/vision_drive.c
+index 88fd012..a37134a 100644
+--- a/demo/code/vision_drive.c
++++ b/demo/code/vision_drive.c
+@@ -210,7 +210,7 @@ void vision_drive_poll(uint32_t now)
+     route_record_fault(); /* Save before stable OFF acknowledges/clears faults. */
+ #endif
+     vd_startup_poll_deadline(now);
+-#if VISION_ROUTE_SWITCH
++#if VISION_ROUTE_SWITCH && !VISION_MIDTERM_AUTONOMOUS
+     vd_route_switch_poll(now);
+ #endif
+     if ((vd.control.output.state != VC_RUNNING && vd.guard_running)
+@@ -218,6 +218,11 @@ void vision_drive_poll(uint32_t now)
+         || vd.control.output.state==VC_RUNNING /* Consume encoder samples between camera frames. */
+ #endif
+        ) vd_output_apply();
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* Latch guard/controller/PI faults even when no new camera frame arrives.
++     * This also revokes a waiting continuity clock on frame timeout. */
++    midterm_boot_poll(now);
++#endif
+ #else
+     (void)now;
+ #endif
+@@ -237,6 +242,13 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t
+     trace_visual.entry_guide_rows=r->entry_guide_rows;
+ #endif
+     vc_observe(&vd.control, r, sequence, frame_ms, now);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* No C26 vision reacquisition/recovery authority in autonomous mode. */
++    if(vd.control.output.state==VC_RUNNING &&
++       (!vd.control.output.observation_valid || !vd.control.output.far_valid))
++        vc_trip(&vd.control,VC_FAULT_VISION);
++    midterm_boot_poll(now); /* Account for EVERY processed control frame. */
++#endif
+ #if VISION_ROUTE_SWITCH
+     route_record_fault();
+ #endif
+diff --git a/demo/code/vision_frame.c b/demo/code/vision_frame.c
+index dfbe19e..a184f81 100644
+--- a/demo/code/vision_frame.c
++++ b/demo/code/vision_frame.c
+@@ -6,12 +6,21 @@ static const uint8_t *camera_buffer(void)
+     uint8_t (* volatile *shared)[MT9V03X_W]=&mt9v03x_image;
+     return (const uint8_t *)*shared;
+ }
+-int vision_frame_copy(uint8_t *destination)
++int vision_frame_copy(uint8_t *destination, vision_frame_stamp_t *stamp)
+ {
+     const uint8_t *completed;uint32_t mask=__get_PRIMASK();
+-    __disable_irq();completed=camera_buffer();mt9v03x_finish_flag=0;
++    __disable_irq();
++    if(!destination || !stamp || !mt9v03x_finish_flag){__set_PRIMASK(mask);return 0;}
++    completed=camera_buffer();
++    stamp->sequence=mt9v03x_capture_sequence;
++    stamp->capture_ms=mt9v03x_capture_ms;
++    stamp->time_valid=mt9v03x_capture_time_valid;
++    mt9v03x_finish_flag=0;
+     __DMB();__set_PRIMASK(mask);
+     if(completed)memcpy(destination,completed,VISION_WIDTH*VISION_HEIGHT);
+     __DMB();
+-    return completed && !mt9v03x_finish_flag && completed==camera_buffer();
++    mask=__get_PRIMASK();__disable_irq();
++    int stable=completed && !mt9v03x_finish_flag && completed==camera_buffer() &&
++        stamp->sequence==mt9v03x_capture_sequence;
++    __set_PRIMASK(mask);return stable;
+ }
+diff --git a/demo/code/vision_frame.h b/demo/code/vision_frame.h
+index c14e26e..1e56022 100644
+--- a/demo/code/vision_frame.h
++++ b/demo/code/vision_frame.h
+@@ -3,5 +3,11 @@
+ #include <stdint.h>
+ /* Destination holds VISION_WIDTH*VISION_HEIGHT bytes. Return 1 only when
+  * the completed buffer stayed stable throughout the copy. */
+-int vision_frame_copy(uint8_t *destination);
++typedef struct {
++    uint32_t sequence, capture_ms;
++    uint8_t time_valid;
++} vision_frame_stamp_t;
++/* Stamp belongs to the completed capture, never foreground processing time.
++ * An image without a trusted capture clock may be displayed, never driven. */
++int vision_frame_copy(uint8_t *destination, vision_frame_stamp_t *stamp);
+ #endif
+diff --git a/demo/code/vision_profile.h b/demo/code/vision_profile.h
+index f303c58..7f1bc35 100644
+--- a/demo/code/vision_profile.h
++++ b/demo/code/vision_profile.h
+@@ -7,6 +7,18 @@
+ #ifndef VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_MIDTERM_ROUTE_TRIAL 0
+ #endif
++#ifndef VISION_MIDTERM_AUTO_TRACK
++#define VISION_MIDTERM_AUTO_TRACK 0
++#endif
++/* Derived source mode: the three C31 flags are sufficient. The older
++ * AUTO_TRACK flag remains a compatibility assertion, never start authority. */
++#define VISION_MIDTERM_C31_AUTONOMOUS (VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
++#if VISION_MIDTERM_AUTO_TRACK && !VISION_MIDTERM_C31_AUTONOMOUS
++#error "Auto-track requires autonomous + C31 route switch/trial algorithms."
++#endif
++#if VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && !VISION_MIDTERM_ROUTE_TRIAL
++#error "Autonomous route switch requires the C31 route trial profile."
++#endif
+ #if VISION_MIDTERM_ROUTE_TRIAL
+ #include "midterm_route_profile.h"
+ #endif
+@@ -154,7 +166,9 @@
+ #if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+-#if VISION_ROUTE_SWITCH
++#if VISION_MIDTERM_C31_AUTONOMOUS
++#define VISION_FIELD_BUILD "MIDTERM_C31_AUTO_TRACK_1"
++#elif VISION_ROUTE_SWITCH
+ #define VISION_FIELD_BUILD "MIDTERM_C26_31"
+ #elif VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+diff --git a/demo/code/vision_startup.c b/demo/code/vision_startup.c
+index b157cb1..c50b854 100644
+--- a/demo/code/vision_startup.c
++++ b/demo/code/vision_startup.c
+@@ -69,6 +69,9 @@ void vd_startup_poll_switch(uint32_t now)
+ }
+ void vd_startup_poll_deadline(uint32_t now)
+ {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    (void)now; /* Only midterm_boot owns the C31 continuous-track launch. */
++#else
+     if (vd.auto_info.state==VD_AUTO_WAITING &&
+         (uint32_t)(now-vd.auto_info.boot_ms)>=vd.auto_info.delay_ms) {
+         /* A blocked deadline is terminal for this boot: never creep into
+@@ -82,6 +85,7 @@ void vd_startup_poll_deadline(uint32_t now)
+         vd.auto_info.state=accepted?VD_AUTO_STARTED:VD_AUTO_BLOCKED;
+         vd_output_apply(); /* First command is zero duty; next fresh frame ramps. */
+     }
++#endif
+ }
+ #endif
+ 
+@@ -98,6 +102,9 @@ void vd_route_switch_mode_stop(void)
+ }
+ void vd_route_switch_poll(uint32_t now)
+ {
++#if VISION_MIDTERM_AUTONOMOUS
++    (void)now; /* Defense in depth: no clear, arm or restart through C26. */
++#else
+     vd_speed_info_t s;
+     if(!app_mode_allows(APP_MODE_DRIVE)) {
+         /* STOP/query while already OFF must not inhibit the next ON. */
+@@ -137,5 +144,6 @@ void vd_route_switch_poll(uint32_t now)
+         if(accepted)vd_output_apply();
+         __set_PRIMASK(mask);
+     }
++#endif
+ }
+ #endif
+diff --git a/tests/vision/test_field_protocol.ps1 b/tests/vision/test_field_protocol.ps1
+index 77d140a..d35a7a5 100644
+--- a/tests/vision/test_field_protocol.ps1
++++ b/tests/vision/test_field_protocol.ps1
+@@ -24,10 +24,10 @@ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_16 ready
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_17 ready=1')
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_18 ready=1')
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_19 ready=1')
+-foreach($fieldVersion in 20..28) {
++foreach($fieldVersion in 20..31) {
+     Assert-Protocol (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldVersion ready=1")
+ }
+-foreach($fieldUnknown in @('29','280','28_extra','0')) {
++foreach($fieldUnknown in @('32','320','31_extra','0')) {
+     Assert-Protocol (-not (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldUnknown ready=1"))
+ }
+ Write-Output "FIELD PROTOCOL PASS: $fieldChecks checks; no COM opened."
+diff --git a/tools/build_midterm.ps1 b/tools/build_midterm.ps1
+index dc0547e..6cb7588 100644
+--- a/tools/build_midterm.ps1
++++ b/tools/build_midterm.ps1
+@@ -1,13 +1,15 @@
+ param([string]$UV4='E:\ElecTronic\Keil\UV4\UV4.exe',
+-      [ValidateSet('train','auto','route','switch')][string]$Variant='train')
++      [ValidateSet('train','auto','route','switch','auto-track','auto_track')][string]$Variant='train')
+ $ErrorActionPreference='Stop'
++if($Variant -eq 'auto_track'){$Variant='auto-track'}
+ $taskRoot=Split-Path $PSScriptRoot -Parent
+ $taskMdk=Join-Path $taskRoot 'demo\mdk\base'
+ $taskBuildName='midterm-'+$Variant
+ $taskProjectName='midterm_'+$Variant+'.uvprojx'
+-$taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -eq 'auto'){'1'}else{'0'})+','
+-if($Variant -in @('route','switch')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
+-if($Variant -eq 'switch'){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
++$taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -in @('auto','auto-track')){'1'}else{'0'})+','
++if($Variant -in @('route','switch','auto-track')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
++if($Variant -in @('switch','auto-track')){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
++if($Variant -eq 'auto-track'){$taskExtraDefine+='VISION_MIDTERM_AUTO_TRACK=1,'}
+ $taskOutput=Join-Path $taskRoot ('.build\'+$taskBuildName)
+ New-Item -ItemType Directory -Force -Path (Join-Path $taskOutput 'Objects'),(Join-Path $taskOutput 'Listings'),(Join-Path $taskOutput 'tmp') | Out-Null
+ if(-not(Test-Path -LiteralPath $UV4)){throw 'UV4 executable not found; supply -UV4.'}
+@@ -21,7 +23,7 @@ if($taskDefines -match 'VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_EN
+ $taskSource=$taskSource.Replace('<Define>'+$taskDefines+'</Define>','<Define>'+$taskExtraDefine+$taskDefines+'</Define>')
+ $taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')
+ $taskSource=$taskSource.Replace('<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>','<ListingPath>..\..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>')
+-$taskProjectDir=Join-Path (Split-Path $taskMdk -Parent) $(if($Variant -eq 'switch'){'competition'}else{'training'})
++$taskProjectDir=Join-Path (Split-Path $taskMdk -Parent) $(if($Variant -in @('switch','auto-track')){'competition'}else{'training'})
+ New-Item -ItemType Directory -Force -Path $taskProjectDir | Out-Null
+ $taskProject=Join-Path $taskProjectDir $taskProjectName
+ # Windows PowerShell's Set-Content -Encoding utf8 adds a BOM rejected by UV4.
+diff --git a/tools/field_protocol.ps1 b/tools/field_protocol.ps1
+index b9d46e1..971dff3 100644
+--- a/tools/field_protocol.ps1
++++ b/tools/field_protocol.ps1
+@@ -1,5 +1,5 @@
+ # Protocol helpers only: no port access or vehicle commands on import.
+-$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1|MIDTERM_ROUTE_TRAIN_1|MIDTERM_C26_(?:[1-9]|1[0-9]|2[0-8]))'
++$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1|MIDTERM_ROUTE_TRAIN_1|MIDTERM_C26_(?:[1-9]|[12][0-9]|3[01]))'
+ function Test-FieldCommand([string]$Value) {
+     if($Value -cin @('@status','@save','@load','@encoder_status','@speed_status','@encoder_hw')){return $true}
+     $fieldNumber='[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?'

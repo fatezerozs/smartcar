@@ -1,0 +1,9 @@
+C:\shengchanli\smartCar\smartcar\demo\recorder_b3\mdk\recorder_b3_static.uvprojx
+Keil failed: C:\shengchanli\smartCar\smartcar\.build\recorder-b3-20261106\run-20261105T210447-40852-seed\keil-build.log
+At C:\shengchanli\smartCar\smartcar\tools\build_recorder_b3_static.ps1:14 char:110
++ ... otmatch '0 Error\(s\), 0 Warning\(s\)'){throw ('Keil failed: '+$log)}
++                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Keil failed: C:...\keil-build.log:String) [], RuntimeException
+    + FullyQualifiedErrorId : Keil failed: C:\shengchanli\smartCar\smartcar\.build\recorder-b3-20261106\run-20261105T2 
+   10447-40852-seed\keil-build.log
+ 

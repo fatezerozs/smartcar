@@ -1,0 +1,20 @@
+{
+  "original_bin_sha256": "e0cda95329893320a9454b3769921442767f79d6521e915e05a35826c59bb86b",
+  "tested_axf_sha256": "4b90048d93a1e277159f65226e01bf88fd06690a5171bd3da2779dbecb9b10af",
+  "tested_load_image_sha256": "0772b2f7db1b676d92027a59097794cf97ca3a03fbfdc9f2561b33c81c70b21a",
+  "image_size_bytes": 68096,
+  "differing_load_bytes": 2,
+  "differing_offsets": [
+    50928,
+    50931
+  ],
+  "compile_time_offset": 50924,
+  "original_compilation_time": "04:25:03",
+  "observed_compilation_time": "04:28:01",
+  "session_firmware_compiled": "Nov  6 2026 04:28:01",
+  "all_other_load_bytes_identical": true,
+  "frozen_source_inputs_unchanged": true,
+  "source_input_count": 196,
+  "snapshot": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-tested-image-20261106",
+  "interpretation": "same-source rebuild is consistent with these observations; user build operation itself was not captured; device Flash bytes were not read independently"
+}

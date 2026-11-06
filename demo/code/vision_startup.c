@@ -98,8 +98,9 @@ void vd_startup_poll_deadline(uint32_t now)
 #endif
 
 #if VISION_ROUTE_SWITCH
-/* C26 level authority: valid lane starts/restarts; OFF always revokes drive.
- * Explicit UART STOP/pause still inhibits until a deliberate OFF cycle. */
+/* C26 owns admission. A fault is never acknowledged by a held ON level.
+ * Stable physical OFF may acknowledge ONLY visual/frame faults; severe faults
+ * retain the explicit clear/configuration procedure. No output is restored. */
 static uint8_t route_operator_stop,route_released;
 void vd_route_switch_init(void){route_operator_stop=route_released=0;}
 void vd_route_switch_cancel(void){route_operator_stop=1;}
@@ -121,26 +122,37 @@ void vd_route_switch_poll(uint32_t now)
             vision_drive_speed_get(&s);
             if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
                 uint32_t mask=__get_PRIMASK();__disable_irq();
-                vd.guard_running=0;vd.probe_active=0;vd_output_zero();vd.guard_faults=0;
-                vc_clear_fault(&vd.control);__set_PRIMASK(mask);
-                (void)vision_drive_speed_enable(1);
+                uint32_t recoverable=VC_FAULT_VISION|VC_FAULT_FRAME;
+                uint32_t faults=vd.guard_faults|vd.control.output.faults|s.faults;
+                vd.guard_running=0;vd.probe_active=0;vd_output_zero();
+                /* Recheck live ISR faults under the mask. Never clear an
+                 * encoder/numeric/config/external/unknown bit as a side effect
+                 * of switching OFF, including a mixed visual+severe fault. */
+                if(!(faults&~recoverable)) {
+                    uint32_t sequence=vd.control.last_sequence,frame_ms=vd.control.last_frame_ms;
+                    uint8_t have_frame=vd.control.have_frame;
+                    vd.guard_faults&=~recoverable;
+                    vc_clear_fault(&vd.control);
+                    /* Reset admission/history, but keep the publication
+                     * watermark: replayed pre-OFF frames are not new evidence. */
+                    vd.control.last_sequence=sequence;vd.control.last_frame_ms=frame_ms;
+                    vd.control.have_frame=have_frame;
+                }
+                __set_PRIMASK(mask);
+                if(!(faults&~recoverable))(void)vision_drive_speed_enable(1);
                 route_released=1;route_operator_stop=0;
             }
         }
         return;
     }
     route_released=0;
+    /* Remember the fault even if an explicit UART clear later clears its
+     * status bits. That command cannot substitute for physical OFF->ON. */
+    if(vd.guard_faults || vd.control.output.faults)route_operator_stop=1;
     if(app_mode_change_pending() || route_operator_stop)return;
-    /* Missing vision is a zero-output wait, not a permanent start lock.
-     * Do not auto-clear numeric/configuration/encoder/offset/runtime faults. */
-    if(vd.control.output.state==VC_FAULT && vd.control.output.faults &&
-       !(vd.control.output.faults&~(VC_FAULT_VISION|VC_FAULT_FRAME))) {
-        uint32_t mask=__get_PRIMASK();__disable_irq();
-        vd.guard_running=0;vd_output_zero();
-        vd.guard_faults&=~(uint32_t)(VC_FAULT_VISION|VC_FAULT_FRAME);
-        vc_clear_fault(&vd.control);__set_PRIMASK(mask);
-        return; /* Reacquire five new valid frames before starting. */
-    }
+    /* Fresh vision while ON cannot acknowledge a latched fault. Stable OFF
+     * above clears only the allowed class and discards old visual history;
+     * subsequent admission still needs fresh frames and every existing gate. */
     if(vd.control.output.state!=VC_DISARMED)return;
     vision_drive_speed_get(&s);
     if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||

@@ -1734,6 +1734,51 @@
               "VISION_DRIVE_ENABLE=1",
               "VISION_START_SWITCH_ENABLE=0"
             ]
+          },
+          {
+            "id": "runtime-reviewed",
+            "sources": [
+              "tests/vision/test_midterm_runtime.c",
+              "demo/code/midterm_boot.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/app_link.c",
+              "demo/code/app_transport.c",
+              "demo/code/app_runtime.c",
+              "demo/code/vision_debug.c",
+              "demo/code/vision_frame.c",
+              "demo/code/vision_telemetry.c",
+              "demo/code/vision_midterm.c",
+              "demo/code/track_bayes.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c"
+            ],
+            "includeDirectories": [
+              "tests/vision/stubs",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=1",
+              "VISION_MIDTERM_AUTO_TRACK=1",
+              "MIDTERM_VISUAL_REVIEWED=1",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_DUAL_UART_ENABLE=1"
+            ]
           }
         ]
       },
@@ -2939,6 +2984,67 @@
     },
     {
       "schemaVersion": "1.0",
+      "id": "recorder-tools",
+      "name": "Recorder incremental generation contracts",
+      "layer": "contract",
+      "category": "build-contract",
+      "evidenceClass": "host",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/recorder/test_build_tools.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 60,
+      "required": true,
+      "dependsOn": [
+        "environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Isolated generated-byte/mtime and build-mode contracts only; no Keil or C compiler"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "recorder",
+      "name": "Recorder ownership, storage and SCRAW integration",
+      "layer": "integration",
+      "category": "data-capture",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/recorder/test_recorder.py",
+        "arguments": [
+          "-v"
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [
+        "recorder-host-tests"
+      ],
+      "profiles": [
+        "Host",
+        "PreFlash"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "17 synthetic/mock tests; selected Host compiler/mode, no Keil, SD card, vehicle or hard real-time acceptance"
+    },
+    {
+      "schemaVersion": "1.0",
       "id": "framework",
       "name": "Framework",
       "layer": "unit",
@@ -3146,6 +3252,259 @@
       "artifacts": [
         "artifacts/**"
       ]
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "recorder-startup",
+      "name": "Recorder Startup",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "unreviewed",
+            "sources": [
+              "tests/recorder/startup_harness.c",
+              "demo/code/midterm_boot.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c",
+              "demo/recorder/recorder_control.c",
+              "demo/recorder/recorder_link.c",
+              "demo/code/app_link.c",
+              "demo/code/vision_midterm.c"
+            ],
+            "includeDirectories": [
+              "tests/recorder/startup_mocks",
+              "tests/recorder/mocks",
+              "tests/vision/stubs",
+              "demo/recorder/include",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=1",
+              "VISION_MIDTERM_AUTO_TRACK=1",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_DUAL_UART_ENABLE=1"
+            ]
+          },
+          {
+            "id": "reviewed",
+            "sources": [
+              "tests/recorder/startup_harness.c",
+              "demo/code/midterm_boot.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c",
+              "demo/recorder/recorder_control.c",
+              "demo/recorder/recorder_link.c",
+              "demo/code/app_link.c",
+              "demo/code/vision_midterm.c"
+            ],
+            "includeDirectories": [
+              "tests/recorder/startup_mocks",
+              "tests/recorder/mocks",
+              "tests/vision/stubs",
+              "demo/recorder/include",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=1",
+              "VISION_MIDTERM_AUTO_TRACK=1",
+              "MIDTERM_VISUAL_REVIEWED=1",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_DUAL_UART_ENABLE=1"
+            ]
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 300,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment",
+        "vision",
+        "control",
+        "speed",
+        "link-board"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ]
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "recorder-sd-pins",
+      "name": "Recorder SD Pins",
+      "layer": "unit",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/recorder/sd_pins_harness.c",
+              "demo/recorder/recorder_sd_pins.c"
+            ],
+            "includeDirectories": [
+              "tests/recorder/sd_pins_mocks",
+              "demo/recorder/include"
+            ],
+            "defines": []
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 60,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ]
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "speed-planning-host",
+      "name": "C31 offline speed planning prototype",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_offline.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Synthetic SI model and strict offline sidecar tests only; no MCU integration or calibration claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "c26-baseline-characterization",
+      "name": "C26 admission and motor-inhibit boundary regression",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/planning/test_c26_baseline.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c"
+            ],
+            "includeDirectories": [
+              "tests/vision/stubs",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=0",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0"
+            ]
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 300,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "C26 startup, physical fault acknowledgement, severe-fault retention and near-invalid zero-output boundaries; historical id retained, not full calibrated planner acceptance"
     }
   ]
 }

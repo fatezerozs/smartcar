@@ -1,0 +1,31 @@
+Recorder harnesses: compiler=gcc mode=optimized; compiled 3 executables once
+test_actual_sd_osa_deadlines_wake_wrap_and_quarantine (test_continuous.ContinuousTests.test_actual_sd_osa_deadlines_wake_wrap_and_quarantine) ... ok
+test_actual_storage_task_complete_output_imports (test_continuous.ContinuousTests.test_actual_storage_task_complete_output_imports) ... ok
+test_actual_storage_task_errors_rotation_and_export_isolation (test_continuous.ContinuousTests.test_actual_storage_task_errors_rotation_and_export_isolation) ... ok
+test_actual_storage_task_gap_record_not_silently_complete (test_continuous.ContinuousTests.test_actual_storage_task_gap_record_not_silently_complete) ... ok
+test_actual_storage_task_sync_failure_recovery_not_clean_session (test_continuous.ContinuousTests.test_actual_storage_task_sync_failure_recovery_not_clean_session) ... ok
+test_b2_complete_keeps_all_raw_frames_and_sampling_is_separate (test_continuous.ContinuousTests.test_b2_complete_keeps_all_raw_frames_and_sampling_is_separate) ... ok
+test_b2_crc_valid_ending_wrong_first_not_complete (test_continuous.ContinuousTests.test_b2_crc_valid_ending_wrong_first_not_complete) ... ok
+test_b2_crc_valid_ending_wrong_last_not_complete (test_continuous.ContinuousTests.test_b2_crc_valid_ending_wrong_last_not_complete) ... ok
+test_b2_missing_final_manifest_never_claims_complete (test_continuous.ContinuousTests.test_b2_missing_final_manifest_never_claims_complete) ... ok
+test_b2_missing_middle_has_exact_range_not_zero_filled (test_continuous.ContinuousTests.test_b2_missing_middle_has_exact_range_not_zero_filled) ... ok
+test_b2_nonmonotonic_time_not_complete (test_continuous.ContinuousTests.test_b2_nonmonotonic_time_not_complete) ... ok
+test_b2_output_collision_refuses_overwrite (test_continuous.ContinuousTests.test_b2_output_collision_refuses_overwrite) ... ok
+test_b2_real_metadata_flag_alone_not_hardware_acceptance (test_continuous.ContinuousTests.test_b2_real_metadata_flag_alone_not_hardware_acceptance) ... ok
+test_capture_ownership_pressure_and_crc_c_harness (test_continuous.ContinuousTests.test_capture_ownership_pressure_and_crc_c_harness) ... ok
+test_corruption_resynchronizes_without_invented_frame (test_continuous.ContinuousTests.test_corruption_resynchronizes_without_invented_frame) ... ok
+test_data_after_end_is_rejected (test_continuous.ContinuousTests.test_data_after_end_is_rejected) ... ok
+test_header_crc_geometry_uuid_and_unknown_version_fail_closed (test_continuous.ContinuousTests.test_header_crc_geometry_uuid_and_unknown_version_fail_closed) ... ok
+test_identity_mix_is_rejected_before_recovery (test_continuous.ContinuousTests.test_identity_mix_is_rejected_before_recovery) ... ok
+test_independent_c_producer_python_parser_and_64bit_times (test_continuous.ContinuousTests.test_independent_c_producer_python_parser_and_64bit_times) ... ok
+test_missing_segment_index_is_preserved_as_incomplete (test_continuous.ContinuousTests.test_missing_segment_index_is_preserved_as_incomplete) ... ok
+test_partial_final_json_is_archived_and_recovers_incomplete (test_continuous.ContinuousTests.test_partial_final_json_is_archived_and_recovers_incomplete) ... ok
+test_power_loss_no_manifest_read_only_recovery_is_incomplete (test_continuous.ContinuousTests.test_power_loss_no_manifest_read_only_recovery_is_incomplete) ... ok
+test_truncation_keeps_only_completed_records (test_continuous.ContinuousTests.test_truncation_keeps_only_completed_records) ... ok
+test_unknown_loss_not_promoted_to_exact_capture (test_continuous.ContinuousTests.test_unknown_loss_not_promoted_to_exact_capture) ... ok
+test_v1_import_without_draft_switch_and_pixel_verification (test_continuous.ContinuousTests.test_v1_import_without_draft_switch_and_pixel_verification) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 5.840s
+
+OK

@@ -1,0 +1,123 @@
+[
+  {
+    "root": "C:/shengchanli/smartCar/b3_static_trace_20261105T215219289Z",
+    "states": [
+      {
+        "ms": 140338,
+        "state": 0,
+        "faults": 0
+      }
+    ],
+    "modes": [
+      {
+        "ms": 140339,
+        "c26": 1,
+        "raw": 0,
+        "selected": 0,
+        "settled": 1
+      }
+    ],
+    "register_zero_width_at_observed_writes": true,
+    "all_applied_zero": true,
+    "max_requested_native_duty": {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    "pi_work_records": 0,
+    "unique_positive_consumed_sequences": 0,
+    "pi_sample_age_max_ms": null,
+    "raw_counter_ranges": {
+      "0": [
+        64318,
+        64318
+      ],
+      "1": [
+        799,
+        799
+      ]
+    },
+    "retained_stop_detail_codes_seen": [
+      0
+    ]
+  },
+  {
+    "root": "C:/shengchanli/smartCar/b3_static_trace_20261105T215450693Z",
+    "states": [
+      {
+        "ms": 318409,
+        "state": 0,
+        "faults": 0
+      },
+      {
+        "ms": 318538,
+        "state": 1,
+        "faults": 0
+      },
+      {
+        "ms": 319349,
+        "state": 2,
+        "faults": 256
+      },
+      {
+        "ms": 323159,
+        "state": 0,
+        "faults": 0
+      }
+    ],
+    "modes": [
+      {
+        "ms": 318409,
+        "c26": 0,
+        "raw": 3,
+        "selected": 0,
+        "settled": 0
+      },
+      {
+        "ms": 318439,
+        "c26": 0,
+        "raw": 3,
+        "selected": 3,
+        "settled": 1
+      },
+      {
+        "ms": 323129,
+        "c26": 1,
+        "raw": 0,
+        "selected": 3,
+        "settled": 0
+      },
+      {
+        "ms": 323159,
+        "c26": 1,
+        "raw": 0,
+        "selected": 0,
+        "settled": 1
+      }
+    ],
+    "register_zero_width_at_observed_writes": true,
+    "all_applied_zero": true,
+    "max_requested_native_duty": {
+      "0": 5110,
+      "1": 4540,
+      "2": 794
+    },
+    "pi_work_records": 81,
+    "unique_positive_consumed_sequences": 80,
+    "pi_sample_age_max_ms": 9,
+    "raw_counter_ranges": {
+      "0": [
+        64287,
+        64305
+      ],
+      "1": [
+        806,
+        823
+      ]
+    },
+    "retained_stop_detail_codes_seen": [
+      0,
+      10
+    ]
+  }
+]

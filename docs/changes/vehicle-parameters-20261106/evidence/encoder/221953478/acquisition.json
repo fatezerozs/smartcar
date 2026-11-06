@@ -1,0 +1,11 @@
+﻿{
+    "flash_reset":  false,
+    "build":  "C:\\shengchanli\\smartCar\\smartcar\\.build\\recorder-b3-20261106\\run-20261105T213819-31128-final",
+    "pc_verified":  true,
+    "role":  "B3 prerequisite stationary primary baseline",
+    "port":  "COM14",
+    "out":  "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221953478Z",
+    "motion_accepted":  false,
+    "downloaded":  true,
+    "motor_servo_power_changed":  false
+}

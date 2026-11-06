@@ -9,6 +9,7 @@ $taskRoot=Split-Path $PSScriptRoot -Parent
 $taskMdk=Join-Path $taskRoot 'demo\mdk\base'
 $taskBuildName='midterm-'+$Variant
 $taskProjectName='midterm_'+$Variant+'.uvprojx'
+if($Variant -eq 'switch'){$taskProjectName='MPC_20261106.uvprojx'}
 $taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -in @('auto','auto-track')){'1'}else{'0'})+','
 if($Variant -in @('route','switch','auto-track')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
 if($Variant -in @('switch','auto-track')){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}

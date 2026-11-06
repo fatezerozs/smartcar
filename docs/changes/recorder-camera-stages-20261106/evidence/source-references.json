@@ -1,0 +1,13 @@
+{
+  "demo/recorder/recorder_capture.c void recorder_capture_irq": "[demo/recorder/recorder_capture.c:39](C:/shengchanli/smartCar/smartcar/demo/recorder/recorder_capture.c:39)",
+  "demo/recorder/recorder_capture.c void recorder_capture_task": "[demo/recorder/recorder_capture.c:84](C:/shengchanli/smartCar/smartcar/demo/recorder/recorder_capture.c:84)",
+  "demo/recorder/recorder_storage.c void recorder_storage_task": "[demo/recorder/recorder_storage.c:180](C:/shengchanli/smartCar/smartcar/demo/recorder/recorder_storage.c:180)",
+  "demo/recorder/recorder_main.c int main": "[demo/recorder/recorder_main.c:31](C:/shengchanli/smartCar/smartcar/demo/recorder/recorder_main.c:31)",
+  "demo/recorder/recorder_control.c void recorder_control_poll": "[demo/recorder/recorder_control.c:44](C:/shengchanli/smartCar/smartcar/demo/recorder/recorder_control.c:44)",
+  "demo/code/board_encoder.c void board_encoder_read": "[demo/code/board_encoder.c:28](C:/shengchanli/smartCar/smartcar/demo/code/board_encoder.c:28)",
+  "demo/code/vision_speed.c void vd_speed_sample_tick": "[demo/code/vision_speed.c:68](C:/shengchanli/smartCar/smartcar/demo/code/vision_speed.c:68)",
+  "demo/code/vision_actuator.c pwm_set_duty": "[demo/code/vision_actuator.c:15](C:/shengchanli/smartCar/smartcar/demo/code/vision_actuator.c:15)",
+  "libraries/zf_device/zf_device_mt9v03x.h #define MT9V03X_W": "[libraries/zf_device/zf_device_mt9v03x.h:77](C:/shengchanli/smartCar/smartcar/libraries/zf_device/zf_device_mt9v03x.h:77)",
+  "libraries/zf_driver/zf_driver_csi.c csi_config.bytesPerPixel": "[libraries/zf_driver/zf_driver_csi.c:193](C:/shengchanli/smartCar/smartcar/libraries/zf_driver/zf_driver_csi.c:193)",
+  "demo/code/vision_speed.h #define VD_SPEED_SAMPLE_MIN_INTERVAL_MS": "[demo/code/vision_speed.h:9](C:/shengchanli/smartCar/smartcar/demo/code/vision_speed.h:9)"
+}

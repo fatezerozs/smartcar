@@ -1,0 +1,12 @@
+﻿{
+    "port":  "COM14",
+    "baud":  921600,
+    "user_power_cycle_confirmed_in_chat":  true,
+    "agent_reset":  false,
+    "agent_flashed":  false,
+    "sd_write_test_sent":  false,
+    "downloaded":  true,
+    "pc_verified":  true,
+    "started_utc":  "2026-11-05T18:36:35.2489227Z",
+    "finished_utc":  "2026-11-05T18:46:18.5834200Z"
+}

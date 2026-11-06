@@ -28,6 +28,14 @@ void app_link_error_isr(unsigned channel)
 {
     if(channel<APP_LINK_COUNT){++links[channel].stats.rx_errors;++links[channel].errors;}
 }
+void app_link_uart_error_isr(unsigned channel,uint32_t flags)
+{
+    if(channel<APP_LINK_COUNT){links[channel].stats.last_uart_error=flags;app_link_error_isr(channel);}
+}
+void app_link_reject_rx_isr(unsigned channel,uint32_t word)
+{
+    if(channel<APP_LINK_COUNT){++links[channel].stats.rx_corrupt;links[channel].stats.last_bad_word=word;}
+}
 int app_link_take_error(unsigned channel)
 {
     uint32_t errors;

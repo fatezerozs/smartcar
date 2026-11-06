@@ -5,6 +5,7 @@
 #include "midterm_open_loop.h"
 
 typedef enum { VC_DISARMED = 0, VC_RUNNING, VC_FAULT } vc_state_t;
+typedef enum { VC_VISION_NORMAL = 0, VC_VISION_FAR_LOSS, VC_VISION_NO_LANE } vc_vision_state_t;
 enum {
     VC_FAULT_CONFIG = 1U, VC_FAULT_VISION = 2U, VC_FAULT_FRAME = 4U,
     VC_FAULT_COMMAND = 8U, VC_FAULT_NUMERIC = 16U,
@@ -26,9 +27,10 @@ typedef struct {
     float near_center_x, far_center_x; /* 双边实测中点 / (W-1)，供居中直道标定。 */
     float paired_support, edge_support; /* Current geometry weights [0,1], not probabilities. */
     uint8_t observation_valid, far_valid;
-    uint8_t recovering; /* Fresh images, temporarily missing lane, bounded turn search. */
+    uint8_t recovering; /* Fresh images: current partial guidance or bounded zero-demand wait. */
     uint8_t search_source; /* 0:none, 1:history, 2:current partial, 3:current edge + curvature. */
     uint8_t speed_boost; /* 0:base, 1:paired road, 2:paired corner, 3:current single edge. */
+    uint8_t vision_state; /* C31 exception state; nonzero inhibits actual motor PWM. */
 } vc_output_t;
 typedef struct {
     vc_config_t config;
@@ -42,6 +44,8 @@ typedef struct {
     uint32_t last_partial_ms,straight_since_ms;
     uint8_t have_partial,straight_tracking;
     uint8_t local_run; /* Volatile authority: never serialized as configuration. */
+    uint8_t loss_active, reacquire_frames;
+    uint32_t loss_frame_ms; /* First failed capture, never refreshed by partial/new frames. */
 } vc_controller_t;
 
 void vc_default_config(vc_config_t *config);

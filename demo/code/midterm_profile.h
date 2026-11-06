@@ -31,7 +31,13 @@
 #ifndef MIDTERM_VISUAL_REVIEWED
 #define MIDTERM_VISUAL_REVIEWED 0
 #endif
+#if VISION_MIDTERM_C31_AUTONOMOUS
+/* User-requested qualification window, counted over distinct fresh track
+ * observations, not merely time since power-on. Legacy bench boot is separate. */
+#define MIDTERM_BOOT_DELAY_MS 1000U
+#else
 #define MIDTERM_BOOT_DELAY_MS 3000U
+#endif
 #if VISION_MIDTERM_AUTONOMOUS && (!VISION_ENCODER_ENABLE || !VISION_DRIVE_ENABLE || VISION_MOTOR_THRESHOLD_DIAG || VISION_START_SWITCH_ENABLE)
 #error "Autonomous midterm requires encoders/control, without bench or C12 startup."
 #endif

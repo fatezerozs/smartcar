@@ -1,0 +1,2 @@
+PASS B2 client CRC vector, namespace and all chunk identity guards; no COM opened
+PASS B3 client header size and fingerprint guards; no COM opened

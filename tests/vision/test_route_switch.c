@@ -13,10 +13,12 @@ int main(void)
     route_lane.valid=0;switch_wait(100,1);CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);
     vision_drive_last_stop(&before);CHECK(before.sequence&&(before.faults&VC_FAULT_VISION));
     set_lane(0);switch_wait(6,1);CHECK(!vision_drive_is_local()); /* fewer than five new frames */
-    switch_wait(30,1);CHECK(vision_drive_is_local()); /* No OFF->ON needed. */
+    switch_wait(30,1);CHECK(!vision_drive_is_local()); /* Held ON cannot acknowledge a fault. */
+    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());
     vision_drive_last_stop(&after);CHECK(after.sequence==before.sequence&&after.faults==before.faults);
     switch_wait(12,0);CHECK(!pwm[0]&&!pwm[1]);
-    switch_wait(30,1);CHECK(vision_drive_is_local()); /* Recovered camera stream. */
+    switch_wait(30,1);CHECK(!vision_drive_is_local()); /* Camera recovery alone cannot rearm. */
+    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());
     switch_b=1;switch_wait(10,1);CHECK(vision_drive_is_local());
     switch_a=1;switch_step(1);CHECK(!pwm[0]&&!pwm[1]);switch_wait(100,1);CHECK(!vision_drive_is_local());
     vision_drive_last_stop(&after);CHECK(after.sequence>before.sequence);

@@ -1,0 +1,14 @@
+﻿{
+    "port":  "COM14",
+    "baud":  115200,
+    "flashed_by_user":  true,
+    "reset_by_agent":  false,
+    "started_utc":  "2026-11-05T16:37:28.7077015Z",
+    "help":  "SDPERF v1: SDDIAG HELP | STATUS | RUN BASIC | RUN STRESS | RUN BENCH25 | RUN BENCH50 | PERF RESULT | RESULT\r\n",
+    "status":  "FS mounted=1 type=3 cluster_sectors=64 free_bytes=15910731776\r\nSD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=24750000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300\r\n",
+    "basic":  "RESULT pass=1 errors=0 stage=done file=2:/S0000002.BIN written=65536 read=65536 write_ms=63 read_ms=40 sync_close_ms=9 total_ms=116 max_ms=7 p95_ms=7 p99_ms=7 write_KiBps=1015 read_KiBps=1600\r\n",
+    "bench25":  "SD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=24750000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300\r\nPERF phase=preallocate bytes=16777216\r\nPERF phase=write chunk_bytes=65536\r\nPERF phase=read-verify\r\nPERF RESULT pass=1 errors=0 stage=done fatfs=0 file=2:/P0000000.BIN requested_hz=25000000 chunk_bytes=65536 written=16777216 read=16777216 prealloc_us=30115 write_io_us=11577273 write_sync_us=12841148 read_io_us=5895008 read_verified_us=8470032 sync_us=32604 total_ms=21370 max_us=1082646 p95_us=41634 p99_us=946940 write_io_KiBps=1415 write_sync_KiBps=1275 read_io_KiBps=2779 read_verified_KiBps=1934\r\n",
+    "bench50":  "SD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=49500000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300\r\nPERF phase=preallocate bytes=16777216\r\nPERF phase=write chunk_bytes=65536\r\nPERF phase=read-verify\r\nPERF RESULT pass=1 errors=0 stage=done fatfs=0 file=2:/P0000001.BIN requested_hz=50000000 chunk_bytes=65536 written=16777216 read=16777216 prealloc_us=42294 write_io_us=7818183 write_sync_us=9053631 read_io_us=3158830 read_verified_us=5733832 sync_us=4205 total_ms=14858 max_us=1040451 p95_us=28357 p99_us=44135 write_io_KiBps=2095 write_sync_KiBps=1809 read_io_KiBps=5186 read_verified_KiBps=2857\r\n",
+    "outcome":  "passed",
+    "finished_utc":  "2026-11-05T16:38:07.8103613Z"
+}

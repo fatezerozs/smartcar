@@ -195,7 +195,7 @@ void vision_drive_poll(uint32_t now)
         vd_speed_info_t s;vision_drive_speed_get(&s);
         if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
             route_speed_pending=0;
-            if(!(vision_drive_encoder_signs(-1,1) &&
+            if(!(vision_drive_encoder_signs(MT_ROUTE_ENCODER_LEFT_FORWARD_SIGN,MT_ROUTE_ENCODER_RIGHT_FORWARD_SIGN) &&
                  vision_drive_speed_config(VISION_ROUTE_SWITCH?MT_ROUTE_FAST_TICKS:40,1.0f,0.05f) && vision_drive_speed_enable(1)))
                 vision_drive_trip(VC_FAULT_CONFIG);
         }
@@ -240,12 +240,9 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t 
     trace_visual.entry_guide_rows=r->entry_guide_rows;
 #endif
     vc_observe(&vd.control, r, sequence, frame_ms, now);
-#if VISION_MIDTERM_C31_AUTONOMOUS
-    /* No C26 vision reacquisition/recovery authority in autonomous mode. */
-    if(vd.control.output.state==VC_RUNNING &&
-       (!vd.control.output.observation_valid || !vd.control.output.far_valid))
-        vc_trip(&vd.control,VC_FAULT_VISION);
-#endif
+    /* The controller owns bounded visual recovery. Missing far preview or a
+     * recoverable observation does not revoke the existing driving lease.
+     * This grants no new arm/clear authority to C26, UART or old frames. */
 #if VISION_ROUTE_SWITCH
     route_record_fault();
 #endif

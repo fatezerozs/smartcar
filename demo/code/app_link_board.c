@@ -16,12 +16,22 @@ int app_link_board_try_tx(unsigned channel,uint8_t byte)
 }
 void app_link_board_irq(unsigned channel)
 {
-    uint8_t byte;unsigned budget=32U;
-    uart_index_enum index=channel==APP_LINK_USB?UART_1:UART_8;
+    unsigned budget=32U;
     LPUART_Type *uart=channel==APP_LINK_USB?LPUART1:LPUART8;
     uint32_t errors=LPUART_GetStatusFlags(uart)&
         (kLPUART_RxOverrunFlag|kLPUART_NoiseErrorFlag|kLPUART_FramingErrorFlag|kLPUART_ParityErrorFlag);
-    if(errors){app_link_error_isr(channel);LPUART_ClearStatusFlags(uart,errors);}
-    while(budget-- && uart_query_byte(index,&byte))app_link_rx_isr(channel,byte);
+    while(budget-- && LPUART_GetRxFifoCount(uart)) {
+        /* Read DATA once with the NXP per-character error tags intact.
+         * uart_query_byte / LPUART_ReadByte truncate these tags to uint8_t. */
+        uint32_t word=*(volatile uint32_t *)(uintptr_t)LPUART_GetDataRegisterAddress(uart);
+        if(word&LPUART_DATA_RXEMPT_MASK)break;
+        if(word&(LPUART_DATA_FRETSC_MASK|LPUART_DATA_PARITYE_MASK|LPUART_DATA_NOISY_MASK)) {
+            if(word&LPUART_DATA_FRETSC_MASK)errors|=kLPUART_FramingErrorFlag;
+            if(word&LPUART_DATA_PARITYE_MASK)errors|=kLPUART_ParityErrorFlag;
+            if(word&LPUART_DATA_NOISY_MASK)errors|=kLPUART_NoiseErrorFlag;
+            app_link_reject_rx_isr(channel,word);
+        } else app_link_rx_isr(channel,(uint8_t)word);
+    }
+    if(errors){app_link_uart_error_isr(channel,errors);LPUART_ClearStatusFlags(uart,errors);}
     __DSB();
 }

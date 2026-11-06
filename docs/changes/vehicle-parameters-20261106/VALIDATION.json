@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-06",
+  "layers_used": [
+    "structured_parsed: native C/JSON and CSV",
+    "computed: binary decoding, CRC32, SHA256 and counts-per-turn"
+  ],
+  "md_extracted_only_items": [],
+  "raw_windows_reverified": 9,
+  "encoder_samples": 4500,
+  "operator_turn_records": 7,
+  "local_links_verified": 21,
+  "adopted_production_CPR_left_right": [
+    2335.8,
+    2358.6
+  ],
+  "document_only_hardware_actions": false,
+  "accuracy_limits": [
+    "Operator turn count is human supplied",
+    "CPR repeated trials and other-wheel count changes remain recorded",
+    "Nominal circumference is not measured loaded circumference",
+    "Standalone B2 results do not establish joint hardware acceptance"
+  ],
+  "main_documents_updated": [
+    "README.md",
+    "docs/INDEX.md",
+    "docs/PROJECT_EVOLUTION.md"
+  ]
+}

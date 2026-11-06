@@ -1,0 +1,61 @@
+{
+  "status": "STATIC_PREREQUISITE_SOFTWARE_READY_NOT_B3_MOTION_COMPLETE",
+  "source_files_sha256": {
+    "demo/recorder_b3/b3_trace.c": "7c419160de5c05fc60e6770edc09f7070344f46cf5a0102dba748fb3194d9de0",
+    "demo/recorder_b3/include/b3_wire.h": "af9d030a5a2e825922a2b2efee9dfbebeb479499ef9a30481f4d4f4cd1029bf3",
+    "demo/recorder_b3/include/b3_trace.h": "28eba6f93db46d302725a5c2c4596c08858d932ef9a11c757fd14c941b47975f",
+    "demo/recorder_b3/include/b3_build.h": "d4a0e2f3b291ef173db875342ea15586998c0b4edb5eb30f784e002289c2de82",
+    "demo/recorder_b3/mdk/recorder_b3_static.uvprojx": "613defd09ed9a9342609a0423c135f4d33fc3327c080634e8b192215e639001a",
+    "tools/prepare_recorder_b3_static.py": "9f33d7b7fb4d57ea925478fa098b59c33aacafa87fc01fcedcbe9eb266cb6b13",
+    "tools/build_recorder_b3_static.ps1": "c2e3d378c883cca5db5d0dfad5bd7eb6ba7fff6682c8e2899edc0101df8277be",
+    "tools/verify_recorder_b3_static.py": "5f974572302ec6c076c27ebd761e3a600b33e046ab5e521f930e12beb2d2020c",
+    "tools/test_recorder_b3_static.ps1": "e2b475b77b0056b5650026534979013ec8f69280e5882c2e4cb3d67d94485a16",
+    "tools/B3StaticTrace.cs": "8e39720b2eb32452c116e9753e7784e83e3fc8eb5a96f0ceb93dadc7cc2504dd",
+    "tools/verify_b3_static.py": "f70d0980a18c8dea09ed379bc3c77ac278fcd8ae74bd5fc9bf5f7991134883b7",
+    "tools/test_recorder_b3_host.py": "1ee59ac919d7b2fa9cfdc5bfd5be8b4e155b80a975cd4117a8d78bfd7b1013f2",
+    "tests/recorder/b3/test_static_trace.c": "68cfb115991a7c29884f83b423901a1f48c8f042911fe46a6e2f938a4d480e17",
+    "tests/recorder/b3/test_static_decoder.py": "d43207c3ad84f3b7188fee43c704a10761a6736e99f34f3af7670652ef52a72f",
+    "tests/recorder/b3/hook_probe.c": "d1c42756b17d8921a79b7e2ec14622684e29d4e5b7839031733742c02c226310",
+    "tests/recorder/b3/hook_probe.h": "f4218901a68988cc04ba938bf6315f3ac9abdb192235f2f82bbdd77817f4512c",
+    "tests\\recorder\\b3\\mocks\\app_mode.h": "f9e4f79fd1a61022828ea93139b4195b8fe55fbaa992174e1071aec0d2fd9ed3",
+    "tests\\recorder\\b3\\mocks\\b3_identity.h": "4de4682ff65905e2c3d42c909c4c105c3add3aa9f826e3cca28fcc441bb77ba9",
+    "tests\\recorder\\b3\\mocks\\main.h": "7d7c86d0949175b36c2ee7999391fae512bde949fc7d2b3a2493328080fd2403",
+    "tests\\recorder\\b3\\mocks\\vision_drive.h": "e263a4bc266c8100f3b906f921af72ce8c5451b155f6cc39d0d3caec5f521318",
+    "tests\\recorder\\b3\\mocks\\vision_speed.h": "27a7cdb9db646b7279621f8333775b029d1ec200cd161d7f40132bef74e835f2"
+  },
+  "docs_sha256": {
+    "README.md": "c6acf33e08395af358682482c40d7e0ed2616ecb5c4906ff9525c96a5943325b",
+    "STATIC_TEST_PROTOCOL.md": "27dff71c824640325911eb79597ca473c1870bcd9165f9c4e2c84fd4525be61e",
+    "STATIC_SOURCE_AUDIT.md": "ee93978181b29399d821a6a0a65bf25a815b7f5292ba24a77a65bdbd43778e45",
+    "B3T1_FORMAT.md": "014816837208773cbbe90f106113b861e916fe6b5f07777591a5daf3f3422f7a",
+    "REFERENCE_GEOMETRY.md": "3d9aa67a3680ce7bf1c3ff8bdb80f929e2eabd9e39ac6f951d7c46c857ea82fd",
+    "REFERENCE_GEOMETRY_V0_1.json": "f7efe6a07c3c1105b3f677d28a2df49c8d6b97b667d28af9e1b3132834edb5ba",
+    "MOTION_PROFILE_PENDING.json": "49da6992244c234b079399139d8549ee2ef5a5e9b50d38b18136534c82ec6c62"
+  },
+  "build_directory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\recorder-b3-20261106\\run-20261105T213819-31128-final",
+  "build_artifact_sha256": {
+    ".build\\recorder-b3-20261106\\run-20261105T213819-31128-final\\Objects\\recorder_b3_static.axf": "e26258594f262e590e75598c267e1a3046f5eca75a0d6cca079b9393de32baa1",
+    ".build\\recorder-b3-20261106\\run-20261105T213819-31128-final\\Objects\\recorder_b3_static.bin": "94c8d0f55534e0ea980efef064821977625e95db575a8dd1d420b3b22d0c1ce3",
+    ".build\\recorder-b3-20261106\\run-20261105T213819-31128-final\\Listings\\recorder_b3_static.map": "f020c05fd6a3371b1dd5ec189023781c967cdc38116a473eb79e6ac2557da9d4",
+    ".build\\recorder-b3-20261106\\run-20261105T213819-31128-final\\keil-build.log": "72157d4b989f50f4c687a61e4d8153501de8d97af502f59ea598d52afbc19283",
+    ".build\\recorder-b3-20261106\\run-20261105T213819-31128-final\\inputs.json": "ff19500c37e5c9fefc6ff8a7bd7bb58407a99d77b7ea0bc9d26513242f9702b3"
+  },
+  "host": {
+    "c26_baseline_checks": 300940,
+    "speed_baseline_checks": 13284,
+    "encoder_board_baseline": "PASS",
+    "c26_private_snapshot_hooks_checks": 300940,
+    "actual_trace_C_host": "PASS, includes locked-snapshot/PIT update consistency, C26 trigger and bounded buffers",
+    "decoder_tests": 8,
+    "client_check_only": "PASS; no COM opened"
+  },
+  "hardware_static": "NOT_RUN",
+  "B3_motion": "NOT_STARTED",
+  "production_ready": false,
+  "production_changes": [],
+  "unrelated_document_index_change_retained": [
+    "docs\\INDEX.md"
+  ],
+  "global_agent_config_changes": [],
+  "next": "User manually flash/run static candidate with actuator power isolated and C26 OFF, then actual static validation; movement gated by prerequisites and physical scale"
+}

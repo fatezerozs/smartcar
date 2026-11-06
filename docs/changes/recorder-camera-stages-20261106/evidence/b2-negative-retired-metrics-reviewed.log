@@ -1,0 +1,161 @@
+{
+  "schema": "smartcar.b2-combined-acceptance/1",
+  "checks": {
+    "board_identity_closed_and_final_sync": false,
+    "actual_metrics_report_complete": false,
+    "board_session_matches_download": true,
+    "capture_source_fingerprint_matches_build": false,
+    "frozen_build_and_map_isolated": true,
+    "frozen_source_inputs_still_match": true,
+    "tested_image_provenance_verified": false,
+    "real_camera_data": true,
+    "full_raw_source_preserved": true,
+    "crc_png_and_manifest_complete": true,
+    "complete_observed_sequence": true,
+    "timestamp_monotonic": true,
+    "reported_io_bytes_match_downloaded_files": true,
+    "zero_recorded_errors_and_losses": true,
+    "bounded_observed_window_normal_stop": true
+  },
+  "b2_stage_accepted": false,
+  "scope": "approved stationary Camera+SD bounded short window; standalone B2 profile",
+  "session_id": "rec-599e5b78342531d7-0f162f3f-00000002",
+  "card_directory": "2:/R0000002",
+  "frames": 100,
+  "first_sequence": 36,
+  "last_sequence": 135,
+  "observed_timestamp_span_us": 1979000,
+  "observed_record_fps": 50.025265285497724,
+  "geometry": {
+    "height": 120,
+    "pixel_format": "GRAY8",
+    "stride": 188,
+    "width": 188
+  },
+  "sd_clock_hz": 23408866,
+  "sd_bus_bits": 1,
+  "cpu_nonidle_estimate_percent": 43.4,
+  "queue_high_water": 34,
+  "capture_copy_max_us": 2282,
+  "write_io_KiBps": 1120.5822987370593,
+  "write_plus_sync_call_KiBps": 2.395837621045291e-10,
+  "io": [
+    {
+      "io": "write",
+      "count": 306,
+      "sample_overflow": 0,
+      "errors": 0,
+      "bytes": 2262806,
+      "total_us": 1971985,
+      "p50_us": 0,
+      "p95_us": 21846,
+      "p99_us": 24932,
+      "max_us": 42522
+    },
+    {
+      "io": "sync",
+      "count": 4,
+      "sample_overflow": 4294967295,
+      "errors": 536929088,
+      "bytes": 17179869184,
+      "total_us": 9223377515085585321,
+      "p50_us": 10676,
+      "p95_us": 18698,
+      "p99_us": 18698,
+      "max_us": 11
+    },
+    {
+      "io": "close",
+      "count": 4,
+      "sample_overflow": 4294967295,
+      "errors": 536928916,
+      "bytes": 17179869184,
+      "total_us": 9223377515085585321,
+      "p50_us": 4,
+      "p95_us": 4294967295,
+      "p99_us": 4294967295,
+      "max_us": 66
+    }
+  ],
+  "irq": {
+    "runtime_total_us": 3723162,
+    "idle_attributed_us": 2110805,
+    "nonidle_permille": 434,
+    "csi_irq_count": 186,
+    "csi_irq_max_us": 3,
+    "sd_irq_count": 1214,
+    "sd_irq_max_us": 8
+  },
+  "tasks": [
+    {
+      "task": "Monitor",
+      "runtime_us": 36258,
+      "stack_free_words": 874
+    },
+    {
+      "task": "Capture",
+      "runtime_us": 294740,
+      "stack_free_words": 996
+    },
+    {
+      "task": "IDLE",
+      "runtime_us": 2110805,
+      "stack_free_words": 246
+    },
+    {
+      "task": "Writer",
+      "runtime_us": 1281200,
+      "stack_free_words": 3540
+    }
+  ],
+  "source_sha256": {
+    "session.json": "cc09df847eb40aa87f2c25a149a21d9e1b0778fafa089cc1ab39f82fb6f4d999",
+    "000000.scraw": "74a7389ba8dade634dd46213de541d60520e9a6d0d8012dfbfe49ac4f29136c2"
+  },
+  "capture_axf_sha256": "4b90048d93a1e277159f65226e01bf88fd06690a5171bd3da2779dbecb9b10af",
+  "capture_input_fingerprint": "387c02af29aecbf25671296420e9f3e6b39028a5a8abdea60188499431c221e3",
+  "tested_image_provenance": {
+    "original_bin_sha256": "e0cda95329893320a9454b3769921442767f79d6521e915e05a35826c59bb86b",
+    "tested_axf_sha256": "4b90048d93a1e277159f65226e01bf88fd06690a5171bd3da2779dbecb9b10af",
+    "tested_load_image_sha256": "0772b2f7db1b676d92027a59097794cf97ca3a03fbfdc9f2561b33c81c70b21a",
+    "image_size_bytes": 68096,
+    "differing_load_bytes": 2,
+    "differing_offsets": [
+      50928,
+      50931
+    ],
+    "compile_time_offset": 50924,
+    "original_compilation_time": "04:25:03",
+    "observed_compilation_time": "04:28:01",
+    "session_firmware_compiled": "Nov  6 2026 04:28:01",
+    "all_other_load_bytes_identical": true,
+    "frozen_source_inputs_unchanged": true,
+    "source_input_count": 196,
+    "snapshot": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-tested-image-20261106",
+    "interpretation": "same-source rebuild is consistent with these observations; user build operation itself was not captured; device Flash bytes were not read independently"
+  },
+  "board_evidence": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-hardware-20261105T201919543Z",
+  "download_evidence": "C:\\shengchanli\\smartCar\\b2_real_session_20261105T203027653Z",
+  "build_evidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\recorder-camera-stages-20261106\\run-20261105T202447-47412-final",
+  "b1": "SKIPPED_BY_USER_NOT_PASSED",
+  "production_ready": false,
+  "control_parallel_validated": false,
+  "long_duration_validated": false,
+  "b3_authorized": false,
+  "limitations": [
+    "task runtime attributes interrupt time to the interrupted task; nonidle share is a CPU load estimate, not cycle-accurate total utilization",
+    "IRQ maxima inclusive of any higher-priority preemption; not WCET",
+    "I/O latencies include task preemption and filesystem processing; no pure device latency claim",
+    "CSI geometry is peripheral register configuration, not sensor exposure register readback",
+    "bounded short window does not establish long-duration stability or control deadlines",
+    "101 vs 100 events is permitted by the documented soft stop; no strict frame-count claim",
+    "exposure/gain sensor-register readback unavailable; reported geometry is the captured output contract and verified CSI DMA byte grouping",
+    "historical SD-only tests use different bus clocks, I/O sizes and software; no matched-load causal comparison or long-duration guarantee",
+    "first/final SD bytes were downloaded using onboard FatFs+USDHC, not a separate PC card reader"
+  ],
+  "evidence_layers": [
+    "structured_parsed",
+    "computed",
+    "visual_sample_review_required_separately"
+  ]
+}

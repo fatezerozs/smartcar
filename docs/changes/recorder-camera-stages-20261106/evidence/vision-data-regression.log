@@ -1,0 +1,38 @@
+test_annotation_conversion_does_not_approve_and_is_idempotent (test_pipeline.PipelineTests.test_annotation_conversion_does_not_approve_and_is_idempotent) ... ok
+test_asset_server_has_only_selected_read_only_images (test_pipeline.PipelineTests.test_asset_server_has_only_selected_read_only_images) ... ok
+test_c31_self_evaluation_is_rejected_before_compile (test_pipeline.PipelineTests.test_c31_self_evaluation_is_rejected_before_compile) ... ok
+test_cancelled_and_unsupported_export_are_not_silent_truth (test_pipeline.PipelineTests.test_cancelled_and_unsupported_export_are_not_silent_truth) ... ok
+test_canonical_native_fallback_and_direct_approval_rejection (test_pipeline.PipelineTests.test_canonical_native_fallback_and_direct_approval_rejection) ... ok
+test_cli_offline_import_chain_and_explicit_exit_codes (test_pipeline.PipelineTests.test_cli_offline_import_chain_and_explicit_exit_codes) ... ok
+test_continuous_segments_and_unlisted_segment_rejection (test_pipeline.PipelineTests.test_continuous_segments_and_unlisted_segment_rejection) ... ok
+test_corrupt_record_recovers_later_frame_without_zero_fill (test_pipeline.PipelineTests.test_corrupt_record_recovers_later_frame_without_zero_fill) ... ok
+test_crc_known_vector_and_literal_record_layout (test_pipeline.PipelineTests.test_crc_known_vector_and_literal_record_layout) ... ok
+test_draft_format_requires_explicit_opt_in (test_pipeline.PipelineTests.test_draft_format_requires_explicit_opt_in) ... ok
+test_duplicate_json_keys_cannot_hide_session_split_overlap (test_pipeline.PipelineTests.test_duplicate_json_keys_cannot_hide_session_split_overlap) ... ok
+test_end_to_end_real_production_c31_frame_and_sequence (test_pipeline.PipelineTests.test_end_to_end_real_production_c31_frame_and_sequence) ... ok
+test_external_data_root_and_path_confinement (test_pipeline.PipelineTests.test_external_data_root_and_path_confinement) ... ok
+test_header_geometry_and_identity_are_not_guessed (test_pipeline.PipelineTests.test_header_geometry_and_identity_are_not_guessed) ... ok
+test_holdout_blinded_and_exposure_rejected (test_pipeline.PipelineTests.test_holdout_blinded_and_exposure_rejected) ... ok
+test_import_preserves_source_and_exact_png (test_pipeline.PipelineTests.test_import_preserves_source_and_exact_png) ... ok
+test_incomplete_session_cannot_publish_release (test_pipeline.PipelineTests.test_incomplete_session_cannot_publish_release) ... ok
+test_invalid_geometry_and_unknown_mask_classes_rejected (test_pipeline.PipelineTests.test_invalid_geometry_and_unknown_mask_classes_rejected) ... ok
+test_mask_classes_ignore_and_no_unannotated_mask_fabrication (test_pipeline.PipelineTests.test_mask_classes_ignore_and_no_unannotated_mask_fabrication) ... ok
+test_mock_dry_run_has_no_remote_mutations (test_pipeline.PipelineTests.test_mock_dry_run_has_no_remote_mutations) ... ok
+test_mock_timeout_reconciles_without_duplicate_create (test_pipeline.PipelineTests.test_mock_timeout_reconciles_without_duplicate_create) ... ok
+test_quality_failure_cannot_be_offset_by_faster_runtime (test_pipeline.PipelineTests.test_quality_failure_cannot_be_offset_by_faster_runtime) ... ok
+test_release_lock_and_review_snapshot (test_pipeline.PipelineTests.test_release_lock_and_review_snapshot) ... ok
+test_reordered_duplicate_gap_and_clock_regression_reported (test_pipeline.PipelineTests.test_reordered_duplicate_gap_and_clock_regression_reported) ... ok
+test_review_requires_explicit_separate_actor_and_transition (test_pipeline.PipelineTests.test_review_requires_explicit_separate_actor_and_transition) ... ok
+test_sampling_reproducible_refs_and_event_context (test_pipeline.PipelineTests.test_sampling_reproducible_refs_and_event_context) ... ok
+test_schema_strict_types_and_version (test_pipeline.PipelineTests.test_schema_strict_types_and_version) ... ok
+test_sidecar_cannot_silently_relabel_a_different_frame (test_pipeline.PipelineTests.test_sidecar_cannot_silently_relabel_a_different_frame) ... ok
+test_split_exact_duplicate_leakage_and_near_candidates (test_pipeline.PipelineTests.test_split_exact_duplicate_leakage_and_near_candidates) ... ok
+test_stride_padding_preserved_but_not_drawn (test_pipeline.PipelineTests.test_stride_padding_preserved_but_not_drawn) ... ok
+test_tampered_raw_or_preview_is_rejected (test_pipeline.PipelineTests.test_tampered_raw_or_preview_is_rejected) ... ok
+test_tampered_view_split_and_review_are_rejected (test_pipeline.PipelineTests.test_tampered_view_split_and_review_are_rejected) ... ok
+test_truncated_frame_and_footer_are_incomplete (test_pipeline.PipelineTests.test_truncated_frame_and_footer_are_incomplete) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 14.979s
+
+OK

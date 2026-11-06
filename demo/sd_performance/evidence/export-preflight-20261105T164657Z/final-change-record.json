@@ -1,0 +1,33 @@
+{
+  "modified_files": [
+    "board.c",
+    "diag_core.c",
+    "include/diag.h",
+    "mdk/sd_performance.uvprojx",
+    "mdk/sd_performance.uvoptx",
+    "configure.py",
+    "verify.py",
+    "tests/test_core.c"
+  ],
+  "added_code_tools_docs": [
+    "export.c",
+    "download_existing.ps1",
+    "tools/SerialExport.cs",
+    "tools/verify_download.py",
+    "tests/test_export.c",
+    "tests/test_verify_download.py",
+    "EXPORT.md"
+  ],
+  "prior_build_artifact_hash_matches": {
+    "artifacts\\run-20261106T003457153-37440\\Listings\\sd_performance.map": true,
+    "artifacts\\run-20261106T003457153-37440\\Objects\\sd_performance.bin": true,
+    "artifacts\\run-20261106T003457153-37440\\Objects\\sd_performance.axf": true,
+    "artifacts\\run-20261106T003457153-37440\\keil-build.log": true
+  },
+  "new_build": "C:\\shengchanli\\smartCar\\smartcar\\demo\\sd_performance\\artifacts\\run-20261106T005352591-44312",
+  "new_export_hardware_validated": false,
+  "power_cycle_confirmed_by_user": true,
+  "persistence_verified": false,
+  "baseline_original_files_unchanged": true,
+  "no_agent_flash_reset_or_serial_this_stage": true
+}

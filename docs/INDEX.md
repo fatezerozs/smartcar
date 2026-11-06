@@ -2,6 +2,10 @@
 
 当前现状以 [项目设计与演进档案](PROJECT_EVOLUTION.md) 为准。README 只作工程入口。
 
+选择工程与查找对应说明，请先看[主要工程索引](PROJECT_INDEX.md)；其中列出MPC主工程、采集训练、B2/B3与联合静止候选、Host规划及诊断工程。
+
+本轮核定、更正和发布边界见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)，最新结果优先于各阶段早期快照；原始数据与历史失败保持原样。
+
 ## 维护中的两类主文档
 
 - [项目设计与演进档案](PROJECT_EVOLUTION.md)：持续更新，含每次提交简略索引、目标、模型、现状与决策。
@@ -12,14 +16,26 @@
 
 ## 当前操作与技术参考
 
+当前主工程名为[MPC_20261106](changes/2026-11-06_MPC_PROJECT_RENAME.md)，旧`midterm_switch.uvprojx`路径见更名映射。
+
 参考页可能包含较早变体的实验，按标题提示和适用范围阅读；不能跨工程照搬参数。
 
 | 文档 | 用途 |
 | --- | --- |
+| [当前参数集与实测数据交付（2026-11-06）](changes/vehicle-parameters-20261106/README.md) | 生产 Encoder CPR/方向、控制与舵机配置、几何参考、9个原始窗口、CRC/哈希及独立与联合验收边界 |
+| [采集训练版实施与使用](vision_recorder/IMPLEMENTATION.md) | 独立 RTOS 工程、持续 SD 写入、取卡/PC 导入、软件证据和待上板项 |
+| [车载持续采集存储架构](vision_recorder/ARCHITECTURE.md) | 用户已批准并实施首版的设计依据；板端实时性和稳定性待验收 |
+| [采集版内存与时序预算](vision_recorder/MEMORY_BUDGET.md) | 两级缓冲、SD 长尾和控制期限的候选计算，非实测 |
+| [采集版未决事项与实施门禁](vision_recorder/OPEN_ISSUES.md) | 调度/所有权/协议/SD/取卡的待关闭问题和用户已定边界 |
+| [2026-11-04 视觉数据架构交接](vision_dataset/ARCHITECTURE_HANDOFF_2026-11-04.md) | 已完成模块、尚缺架构、职责边界、接手顺序和验收条件 |
+| [PC 视觉数据处理链条](vision_dataset/README.md) | 原始会话归档、抽样、文件标注、审核、Release 和 C31 离线评测；当前为 draft/synthetic 软件验证 |
+| [数据链条软件验证](vision_dataset/SOFTWARE_VALIDATION.md) | 本轮真实执行、模拟审核、已测范围及正式格式/实例/真实数据未验项 |
 | [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md) | 完整使用/开发/维护流程、接口示例、排障与套件索引；主页 README 有直接入口 |
+| [C31 连续速度规划与降级控制阶段交付](changes/c31-speed-planning-20261105/README.md) | [当前数据接入](changes/c31-speed-planning-20261105/DATA_INPUTS.md)与[Phase 3安全边界](changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)；近场失效清零/故障重新准入已改源码，规划器与标定门仍待完成 |
 | [TESTING_ARCHITECTURE.md](TESTING_ARCHITECTURE.md) | 统一测试入口、套件分层、隔离执行、报告和数据集待接入接口 |
 | [测试重构验收记录](testing/VALIDATION.md) | 本轮源码/夹具前后对照、Host/ARM/Keil 证据与未执行范围 |
 | [ENCODER_SPEED.md](reference/ENCODER_SPEED.md) | 编码器3左/4右与速度环；区分赛道和历史诊断参数 |
+| [C1车模暂定几何与编码器/舵机核对](reference/C1_VEHICLE_MODEL.md) | 用户原图参数、名义周长、估算轴距/轮距、已有静态端点及Host模型；最新轮端CPR见当前参数交付，实际前轮角仍缺测 |
 | [DUAL_UART.md](reference/DUAL_UART.md) | 链路、队列、所有权和诊断基线 |
 | [VISION_DATA_CAPTURE.md](reference/VISION_DATA_CAPTURE.md) | 停车/手推图像采集；不等于运动中图文同步 |
 | [SEEKFREE_RUN_RECORDING.md](reference/SEEKFREE_RUN_RECORDING.md) | 文本导入、记录与解释边界 |

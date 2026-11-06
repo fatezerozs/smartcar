@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "smartcar.host-reference/1",
+  "referenceId": "C1-reference-v0.2-20261106",
+  "purpose": "Offline engineering reference and target object compilation only",
+  "productionApproved": false,
+  "geometryProfile": "profiles/c1-host-geometry-v0.1.json",
+  "parameters": {
+    "maximumSpeedMps": {
+      "value": 0.4,
+      "status": "engineering-reference",
+      "basis": "Below 0.4515 m/s braking bound from the assumed near horizon and 0.4 m/s^2 planning deceleration; not measured."
+    },
+    "lateralAccelerationMps2": {
+      "value": 0.2,
+      "status": "engineering-reference",
+      "basis": "Conservative design scenario: 0.2 m/s at radius 0.2 m; no grip measurement."
+    },
+    "accelerationMps2": {
+      "value": 0.5,
+      "status": "engineering-reference",
+      "basis": "Reference 0 to 0.4 m/s in at least 0.8 s before jerk ramp."
+    },
+    "brakingDecelerationMps2": {
+      "value": 0.8,
+      "status": "engineering-reference",
+      "basis": "Shaper braking limit 0.8; 0.4 m/s constant-deceleration distance 0.1 m, plus delay/jerk distance; no physical brake data."
+    },
+    "jerkAccelerationMps3": {
+      "value": 2.0,
+      "status": "engineering-reference",
+      "basis": "Reference acceleration ramp 0.5/2 = 0.25 s."
+    },
+    "jerkBrakingMps3": {
+      "value": 3.0,
+      "status": "engineering-reference",
+      "basis": "Reference braking ramp 0.8/3 = 0.2667 s."
+    },
+    "latencyS": {
+      "value": 0.1,
+      "status": "engineering-reference",
+      "basis": "Assumed total pipeline design budget, not the measured capture-to-output latency and not certified by the 100 ms frame watchdog."
+    },
+    "nearPreviewM": {
+      "value": 0.35,
+      "status": "simulation-assumption",
+      "basis": "Artificial metric horizon; no ground homography or measured near visibility exists."
+    },
+    "fullPreviewM": {
+      "value": 1.5,
+      "status": "simulation-assumption",
+      "basis": "Artificial metric horizon for the same deterministic scenarios."
+    },
+    "distanceMarginM": {
+      "value": 0.05,
+      "status": "engineering-reference",
+      "basis": "Design reserve for sensitivity tests, not measured localization uncertainty."
+    },
+    "farBudgetMs": {
+      "value": 600,
+      "status": "engineering-reference",
+      "basis": "Finite episode used for software state-transition experiments; no P99 coverage claim."
+    },
+    "farDistanceM": {
+      "value": 0.24,
+      "status": "engineering-reference",
+      "basis": "maximumSpeedMps * farBudgetMs / 1000; must later be replaced by measured session statistics."
+    },
+    "nearWindowMs": {
+      "value": 300,
+      "status": "historical-candidate",
+      "basis": "Taskbook candidate for zero-drive near recovery; not a calibrated production threshold."
+    },
+    "nearFrames": {
+      "value": 5,
+      "status": "historical-candidate",
+      "basis": "Existing startup / taskbook candidate; distinct fresh frames required."
+    },
+    "farFrames": {
+      "value": 3,
+      "status": "engineering-reference",
+      "basis": "Three fresh frame confirmations for the software scenarios; not estimated from error runs."
+    },
+    "stopTimeoutMs": {
+      "value": 2000,
+      "status": "engineering-reference",
+      "basis": "About 0.4/0.8 + 0.8/3 + 0.1 + 1.0 s rounded up to 2 s; the 1 s allowance is synthetic."
+    },
+    "encoderWheelCprHypothesis": {
+      "value": 1024,
+      "status": "conditional-hypothesis",
+      "basis": "Only if the nominal 1024 label means A-rising counts per wheel revolution and mechanical ratio is 1. These assumptions are NOT confirmed."
+    },
+    "piKpQ8": {
+      "value": 256,
+      "status": "existing-project-reference",
+      "basis": "Existing route Kp=1; does not identify a new metric controller."
+    },
+    "piKiQ8": {
+      "value": 12,
+      "status": "existing-project-reference",
+      "basis": "Existing 0.05 input quantized to 12/256 per nominal 10 ms."
+    },
+    "plantFreeSpeedMps": {
+      "value": 3.0,
+      "status": "simulation-assumption",
+      "basis": "Fictitious PWM-to-speed first-order plant, NOT actual motor data."
+    },
+    "plantTimeConstantS": {
+      "value": 0.15,
+      "status": "simulation-assumption",
+      "basis": "Fictitious wheel response / coast model."
+    },
+    "planningDecelerationMps2": {
+      "value": 0.4,
+      "status": "engineering-reference",
+      "basis": "Explicit 0.4 m/s^2 reserve below the 0.8 m/s^2 shaper limit. Coupled replay exposed a boundary failure with equal limits and encoder quantization; reserve is a design experiment, not measured robustness."
+    }
+  },
+  "sensitivityFactors": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "notes": [
+    "Unknown real wheel CPR and rolling circumference remain null in the geometry baseline.",
+    "Reference policy values do not modify MIDTERM_C26_31 or authorize hardware motion.",
+    "All simulated measured speeds, stop distances, PI/PWM and tracking errors must retain simulation provenance."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "synthetic_only": true,
+  "b1_skipped": true,
+  "b2_hardware_accepted": false,
+  "compiler_command": [
+    "gcc",
+    "-O2",
+    "-std=c99",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Idemo/recorder/include",
+    "demo/recorder/recorder_core.c",
+    "tests/recorder/core_harness.c",
+    "-o",
+    "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\support\\core_producer.exe"
+  ],
+  "sources_sha256": {
+    "demo/recorder/recorder_core.c": "cd87f32121ddd96deca490e7ff0d8b3e019dd4879afd5724e221727d5a33ab4e",
+    "tests/recorder/core_harness.c": "95196a154f3fd40d225e5ecd67a6b75cf07ffa16c8c4a03aa033e3d4c7caa2d4"
+  },
+  "cases": [
+    {
+      "fixture": "complete",
+      "source": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\sources\\b2-synthetic-complete",
+      "quality_report": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\reports\\complete\\continuous_report.json",
+      "source_sha256": "77f875c224e9978b8d60637cb1675ae4cd6b2b59be244a206ad475102428d04b",
+      "status": "complete",
+      "frames": 3,
+      "synthetic": true,
+      "hardware_verified": false,
+      "source_unchanged": true
+    },
+    {
+      "fixture": "gap",
+      "source": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\sources\\b2-synthetic-gap",
+      "quality_report": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\reports\\gap\\continuous_report.json",
+      "source_sha256": "f9893eab9c4c5dc7ae9e0f65d57d6a31bc21c3fc64db95b5abba23ceb95941fd",
+      "status": "incomplete",
+      "frames": 2,
+      "synthetic": true,
+      "hardware_verified": false,
+      "source_unchanged": true
+    },
+    {
+      "fixture": "corrupt",
+      "source": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\sources\\b2-synthetic-corrupt",
+      "quality_report": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\reports\\corrupt\\continuous_report.json",
+      "source_sha256": "1f8092558043d75da96b888fe271f434dfa8c84f8f83a12313bec15df10eac26",
+      "status": "incomplete",
+      "frames": 2,
+      "synthetic": true,
+      "hardware_verified": false,
+      "source_unchanged": true
+    },
+    {
+      "fixture": "truncated",
+      "source": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\sources\\b2-synthetic-truncated",
+      "quality_report": "C:\\shengchanli\\smartCar\\recorder_stage_data_20261106\\reports\\truncated\\continuous_report.json",
+      "source_sha256": "b4b5fe70eb7b4955f8a4ad0c8db4817356a847f35063a3cff65dd2d2f4b5a2bf",
+      "status": "incomplete",
+      "frames": 2,
+      "synthetic": true,
+      "hardware_verified": false,
+      "source_unchanged": true
+    }
+  ]
+}

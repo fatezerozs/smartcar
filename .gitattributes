@@ -9,3 +9,10 @@
 *.jpg binary
 releases/**/*.axf binary
 tests/vision/fixtures/**/*.gray binary
+
+# Frozen evidence is hashed as original bytes, including CRLF/BOM where present.
+**/evidence/** -text
+docs/changes/vehicle-parameters-20261106/** -text
+docs/reference/c1-model-sources/** -text
+demo/mdk/competition/MPC_20261106.uvprojx -text
+demo/sd_diagnostic/artifacts/** -text

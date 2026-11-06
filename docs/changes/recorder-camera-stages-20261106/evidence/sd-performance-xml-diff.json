@@ -1,0 +1,44 @@
+{
+  "before_snapshot": "C:\\shengchanli\\smartCar\\smartcar\\demo\\sd_performance\\evidence\\export-preflight-20261105T164657Z\\before\\mdk\\sd_performance.uvprojx",
+  "current": "C:\\shengchanli\\smartCar\\smartcar\\demo\\sd_performance\\mdk\\sd_performance.uvprojx",
+  "before_sha256": "16a387b7c258c3d824123a52110f6705e006d0147188715b7a5e4b16965b10ea",
+  "current_sha256": "91075e8360bf765db6c32f7cdf79e70121780550433cf3bb07d9db5534d234d4",
+  "changes": [
+    {
+      "path": "Project/Targets[1]/Target[1]/Groups[1]/Group[1]/Files[1]/File[19]",
+      "before": null,
+      "after": "",
+      "category": "other_requires_review"
+    },
+    {
+      "path": "Project/Targets[1]/Target[1]/Groups[1]/Group[1]/Files[1]/File[19]/FileName[1]",
+      "before": null,
+      "after": "export.c",
+      "category": "sources"
+    },
+    {
+      "path": "Project/Targets[1]/Target[1]/Groups[1]/Group[1]/Files[1]/File[19]/FilePath[1]",
+      "before": null,
+      "after": "..\\export.c",
+      "category": "sources"
+    },
+    {
+      "path": "Project/Targets[1]/Target[1]/Groups[1]/Group[1]/Files[1]/File[19]/FileType[1]",
+      "before": null,
+      "after": "1",
+      "category": "other_requires_review"
+    },
+    {
+      "path": "Project/Targets[1]/Target[1]/TargetOption[1]/TargetCommonOption[1]/ListingPath[1]",
+      "before": "..\\artifacts\\run-20261106T003457153-37440\\Listings\\",
+      "after": "..\\artifacts\\run-20261106T005352591-44312\\Listings\\",
+      "category": "outputs"
+    },
+    {
+      "path": "Project/Targets[1]/Target[1]/TargetOption[1]/TargetCommonOption[1]/OutputDirectory[1]",
+      "before": "..\\artifacts\\run-20261106T003457153-37440\\Objects\\",
+      "after": "..\\artifacts\\run-20261106T005352591-44312\\Objects\\",
+      "category": "outputs"
+    }
+  ]
+}

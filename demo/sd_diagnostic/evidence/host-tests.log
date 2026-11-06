@@ -1,0 +1,16 @@
+PASS CRC32 IEEE known vector
+PASS STRESS requires BASIC
+PASS scenario 1 mount failure
+PASS scenario 2 short write
+PASS scenario 3 CRC corruption
+PASS scenario 4 sync failure
+PASS scenario 5 close failure
+PASS scenario 6 reopen failure
+PASS scenario 7 short read
+PASS scenario 8 insufficient space
+PASS scenario 9 CREATE_NEW collisions
+PASS scenario 10 write error
+PASS BASIC 64KiB write/sync/close/reopen/verify
+PASS bounded STRESS 16MiB, percentiles, manual gating
+PASS command routing, STATUS no file writes
+ALL 15 CHECKS PASS; MOCK I/O ONLY; HARDWARE UNVERIFIED

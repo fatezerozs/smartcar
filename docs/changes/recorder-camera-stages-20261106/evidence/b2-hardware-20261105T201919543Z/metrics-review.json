@@ -1,0 +1,99 @@
+{
+  "checks": {
+    "csi_programmed_geometry_readback": true,
+    "sd_actual_clock_and_bus_readback": true,
+    "all_task_runtime_and_stack_measurements": true,
+    "runtime_and_irq_measurements": true,
+    "complete_error_free_io_samples": false,
+    "report_finished_without_error": false,
+    "report_stack_margin": false
+  },
+  "measurements_present_and_valid": false,
+  "device": {
+    "session": "2:/R0000002",
+    "csi_width_cycles": 240,
+    "csi_height": 94,
+    "csi_cr1": 1075314946,
+    "csi_cr18": 53296,
+    "sd_hz": 23408866,
+    "sd_bits": 1
+  },
+  "tasks": [
+    {
+      "task": "Monitor",
+      "runtime_us": 36258,
+      "stack_free_words": 874
+    },
+    {
+      "task": "Capture",
+      "runtime_us": 294740,
+      "stack_free_words": 996
+    },
+    {
+      "task": "IDLE",
+      "runtime_us": 2110805,
+      "stack_free_words": 246
+    },
+    {
+      "task": "Writer",
+      "runtime_us": 1281200,
+      "stack_free_words": 3540
+    }
+  ],
+  "runtime": {
+    "runtime_total_us": 3723162,
+    "idle_attributed_us": 2110805,
+    "nonidle_permille": 434,
+    "csi_irq_count": 186,
+    "csi_irq_max_us": 3,
+    "sd_irq_count": 1214,
+    "sd_irq_max_us": 8
+  },
+  "io": [
+    {
+      "io": "write",
+      "count": 306,
+      "sample_overflow": 0,
+      "errors": 0,
+      "bytes": 2262806,
+      "total_us": 1971985,
+      "p50_us": 0,
+      "p95_us": 21846,
+      "p99_us": 24932,
+      "max_us": 42522
+    },
+    {
+      "io": "sync",
+      "count": 4,
+      "sample_overflow": 4294967295,
+      "errors": 536929088,
+      "bytes": 17179869184,
+      "total_us": 9223377515085585321,
+      "p50_us": 10676,
+      "p95_us": 18698,
+      "p99_us": 18698,
+      "max_us": 11
+    },
+    {
+      "io": "close",
+      "count": 4,
+      "sample_overflow": 4294967295,
+      "errors": 536928916,
+      "bytes": 17179869184,
+      "total_us": 9223377515085585321,
+      "p50_us": 4,
+      "p95_us": 4294967295,
+      "p99_us": 4294967295,
+      "max_us": 66
+    }
+  ],
+  "b2_full_accepted": false,
+  "scope": "measurement log only; requires paired Session full PC verification and review",
+  "limitations": [
+    "task runtime attributes interrupt time to the interrupted task; nonidle share is a CPU load estimate, not cycle-accurate total utilization",
+    "IRQ maxima inclusive of any higher-priority preemption; not WCET",
+    "I/O latencies include task preemption and filesystem processing; no pure device latency claim",
+    "CSI geometry is peripheral register configuration, not sensor exposure register readback",
+    "bounded short window does not establish long-duration stability or control deadlines"
+  ]
+}

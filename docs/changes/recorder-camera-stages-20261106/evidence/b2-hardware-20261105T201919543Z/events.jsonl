@@ -1,0 +1,13 @@
+{"utc":"2026-11-05T20:19:19.6547986Z","value":"DTR=false RTS=false; user confirmed flash and physical isolation","kind":"open"}
+{"utc":"2026-11-05T20:19:20.7892735Z","value":"B2 STATUS","kind":"tx"}
+{"utc":"2026-11-05T20:19:20.8471954Z","value":"[B2] ready id=RECORDER_CAMERA_B2_STATIC_1 rx=irq camera_started=0 session_started=0 export=1 metrics=1\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:26.7939191Z","value":"B2 START","kind":"tx"}
+{"utc":"2026-11-05T20:19:27.0850102Z","value":"[B2] state=0 error=0 written=0 synced=0 observed=0 drop=0 pool=0 ambiguous=0 queue=0 dir=\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:28.0901861Z","value":"[B2] state=2 error=0 written=10 synced=0 observed=15 drop=0 pool=0 ambiguous=0 queue=5 dir=2:/R0000002\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:29.1128001Z","value":"[B2] state=2 error=0 written=42 synced=34 observed=65 drop=0 pool=0 ambiguous=0 queue=22 dir=2:/R0000002\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:30.1253827Z","value":"[B2] state=3 error=0 written=76 synced=68 observed=100 drop=0 pool=0 ambiguous=0 queue=34 dir=2:/R0000002\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:30.8045442Z","value":"B2METRIC session=2:/R0000002 csi_width_cycles=240 csi_height=94 csi_cr1=40180102 csi_cr18=0000D030 sd_hz=23408866 sd_bit","kind":"rx"}
+{"utc":"2026-11-05T20:19:30.8345714Z","value":"s=1\r\nB2METRIC task=Monitor runtime_us=36258 stack_free_words=874\r\nB2METRIC task=Capture runtime_us=294740 stack_free_words=996\r\nB2METRIC task=IDLE runtime_us=2110805 stack_free_words=246\r\nB2METRIC task=Writer runtime_us=1281200 stack_free_w","kind":"rx"}
+{"utc":"2026-11-05T20:19:30.8663393Z","value":"ords=3540\r\nB2METRIC runtime_total_us=3723162 idle_attributed_us=2110805 nonidle_permille=434 csi_irq_count=186 csi_irq_max_us=3 sd_irq_count=1214 sd_irq_max_us=8\r\nB2METRIC io=write count=306 sample_overflow=0 errors=0 bytes=2262806 total_us=1971985 p50_us=0 p95_us=21846 p99_us=24932 max_us=42522\r\nB2METRIC io=sync count=4 sample_overflow=4294967295 errors=536","kind":"rx"}
+{"utc":"2026-11-05T20:19:30.8961530Z","value":"929088 bytes=17179869184 total_us=9223377515085585321 p50_us=10676 p95_us=18698 p99_us=18698 max_us=11\r\nB2METRIC io=close count=4 sample_overflow=4294967295 errors=536928916 bytes=17179869184 total_us=9223377515085585321 p50_us=4 p95_us=4294967295 p99_us=4294967295 max_us=66\r\n","kind":"rx"}
+{"utc":"2026-11-05T20:19:47.1149141Z","value":"B2 STOP","kind":"tx"}

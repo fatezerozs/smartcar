@@ -36,7 +36,7 @@ def git_state():
 
 def input_snapshot():
     files = {}
-    for directory in ('demo/code','demo/user','demo/mdk/base','demo/mdk/scf','libraries','tools','tests'):
+    for directory in ('demo/code','demo/user','demo/recorder','demo/mdk/base','demo/mdk/scf','libraries','tools','tests'):
         for path in sorted((ROOT/directory).rglob('*')):
             if path.is_file() and path.suffix.lower() in ('.c','.h','.s','.inc','.lib','.a','.ps1','.psm1','.cmd','.py','.json','.gray','.scf','.sct','.uvprojx'):
                 if any(part in ('output','__pycache__','Objects','Listings') for part in path.relative_to(ROOT).parts):

@@ -1,0 +1,1 @@
+PASS client CRC32 known vector and frame identity guards; no COM opened

@@ -1,0 +1,27 @@
+﻿Opened COM14 115200 8N1; DTR/RTS disabled; no reset requested
+[2026-11-05T16:37:30.3810208Z] TX SDDIAG HELP
+SDPERF v1: SDDIAG HELP | STATUS | RUN BASIC | RUN STRESS | RUN BENCH25 | RUN BENCH50 | PERF RESULT | RESULT
+[2026-11-05T16:37:30.4679285Z] TX SDDIAG STATUS
+FS mounted=1 type=3 cluster_sectors=64 free_bytes=15910731776
+SD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=24750000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300
+[2026-11-05T16:37:31.0909102Z] TX SDDIAG RUN BASIC
+RESULT pass=1 errors=0 stage=done file=2:/S0000002.BIN written=65536 read=65536 write_ms=63 read_ms=40 sync_close_ms=9 total_ms=116 max_ms=7 p95_ms=7 p99_ms=7 write_KiBps=1015 read_KiBps=1600
+[2026-11-05T16:37:31.2749235Z] TX SDDIAG RESULT
+RESULT pass=1 errors=0 stage=done file=2:/S0000002.BIN written=65536 read=65536 write_ms=63 read_ms=40 sync_close_ms=9 total_ms=116 max_ms=7 p95_ms=7 p99_ms=7 write_KiBps=1015 read_KiBps=1600
+BASIC verified; starting bounded preallocated 16MiB BENCH25
+[2026-11-05T16:37:31.3364769Z] TX SDDIAG RUN BENCH25
+SD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=24750000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300
+PERF phase=preallocate bytes=16777216
+PERF phase=write chunk_bytes=65536
+PERF phase=read-verify
+PERF RESULT pass=1 errors=0 stage=done fatfs=0 file=2:/P0000000.BIN requested_hz=25000000 chunk_bytes=65536 written=16777216 read=16777216 prealloc_us=30115 write_io_us=11577273 write_sync_us=12841148 read_io_us=5895008 read_verified_us=8470032 sync_us=32604 total_ms=21370 max_us=1082646 p95_us=41634 p99_us=946940 write_io_KiBps=1415 write_sync_KiBps=1275 read_io_KiBps=2779 read_verified_KiBps=1934
+BENCH25 verified; requesting standard High Speed BENCH50
+[2026-11-05T16:37:52.7796581Z] TX SDDIAG RUN BENCH50
+SD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=49500000 root_hz=198000000 cpu_hz=600000000 timing=1 signal_mV=3300
+PERF phase=preallocate bytes=16777216
+PERF phase=write chunk_bytes=65536
+PERF phase=read-verify
+PERF RESULT pass=1 errors=0 stage=done fatfs=0 file=2:/P0000001.BIN requested_hz=50000000 chunk_bytes=65536 written=16777216 read=16777216 prealloc_us=42294 write_io_us=7818183 write_sync_us=9053631 read_io_us=3158830 read_verified_us=5733832 sync_us=4205 total_ms=14858 max_us=1040451 p95_us=28357 p99_us=44135 write_io_KiBps=2095 write_sync_KiBps=1809 read_io_KiBps=5186 read_verified_KiBps=2857
+[2026-11-05T16:38:07.7206007Z] TX SDDIAG PERF RESULT
+PERF RESULT pass=1 errors=0 stage=done fatfs=0 file=2:/P0000001.BIN requested_hz=50000000 chunk_bytes=65536 written=16777216 read=16777216 prealloc_us=42294 write_io_us=7818183 write_sync_us=9053631 read_io_us=3158830 read_verified_us=5733832 sync_us=4205 total_ms=14858 max_us=1040451 p95_us=28357 p99_us=44135 write_io_KiBps=2095 write_sync_KiBps=1809 read_io_KiBps=5186 read_verified_KiBps=2857
+PASS hardware BASIC, BENCH25 and BENCH50; files retained

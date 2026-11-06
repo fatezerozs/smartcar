@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "method": "PC Python struct + zlib CRC32 + independent pattern derivation",
+  "files": [
+    {
+      "name": "S0000000.BIN",
+      "passed": true,
+      "size": 65536,
+      "expected_size": 65536,
+      "block_bytes": 4096,
+      "blocks": 16,
+      "tag": 23677,
+      "sha256": "301901fac00dcaaa7edffb0976d6a25871c6b4993ea95f7d73c5ed75925d3cb2",
+      "errors": []
+    },
+    {
+      "name": "S0000001.BIN",
+      "passed": true,
+      "size": 16777216,
+      "expected_size": 16777216,
+      "block_bytes": 4096,
+      "blocks": 4096,
+      "tag": 35701,
+      "sha256": "d696378bbe90516d10068498e90c88f219445ab49fd9187dea6a3a003e369486",
+      "errors": []
+    },
+    {
+      "name": "S0000002.BIN",
+      "passed": true,
+      "size": 65536,
+      "expected_size": 65536,
+      "block_bytes": 4096,
+      "blocks": 16,
+      "tag": 13510,
+      "sha256": "e8efa71e0a5e877f3a95cf3df1d9e2663c0c83ca924ce25b07fc96e5b831806e",
+      "errors": []
+    },
+    {
+      "name": "P0000000.BIN",
+      "passed": true,
+      "size": 16777216,
+      "expected_size": 16777216,
+      "block_bytes": 65536,
+      "blocks": 256,
+      "tag": 13771,
+      "sha256": "567214309e3217c3fabaeb95e757392ebc36fef0de4c2f76083a3bb421465699",
+      "errors": []
+    },
+    {
+      "name": "P0000001.BIN",
+      "passed": true,
+      "size": 16777216,
+      "expected_size": 16777216,
+      "block_bytes": 65536,
+      "blocks": 256,
+      "tag": 35199,
+      "sha256": "237c5ab6225b06718254e6b05561ed847113a56cd9a61bc3bf80e20761f636b5",
+      "errors": []
+    }
+  ],
+  "power_cycle": "user confirmed; see acquisition record",
+  "not_pc_reader_independent_disk_path": true
+}

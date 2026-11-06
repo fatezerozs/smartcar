@@ -1,9 +1,11 @@
 # SmartCar 测试框架与流程详细手册
 
-维护日期：2026-11-02。适用范围：C32 测试体系，Manifest/Result/Benchmark 契约 1.0。
+维护日期：2026-11-06；基础C32归档日期2026-11-02。适用范围：C32 测试体系，Manifest/Result/Benchmark 契约 1.0。
 实现依据为 C32 代码提交 `d78eb9d0bf59a434276e7191f8c04b478aebaab9`；
 该代码已完成 main 上的 MSVC optimized/ASan CI。本文是持续维护的操作与开发手册，
 不是新增测试结果或烧录授权。
+
+2026-11-06扩展：当前为72个定义，包含Recorder与速度规划专项。上面的main远程CI结论仅对应原C32提交，不覆盖本批新增实现；本轮软件检查和待验范围见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
 
 [返回仓库主页](../README.md) · [文档目录](INDEX.md) ·
 [架构概要](TESTING_ARCHITECTURE.md) · [C32 提交说明](changes/2026-11-02_C32_TESTING_FRAMEWORK.md) ·
@@ -84,7 +86,7 @@ Suite ID 不区分大小写，示例统一用清单中的小写 ID。Profile、C
 按示例的规范拼写使用，避免 PowerShell 与 Python 参数检查的大小写差异。
 PowerShell 数组及经 `pwsh -File` 传递的逗号分隔 Suite 均由入口拆分处理。
 
-C32 清单共有 66 个定义；默认 Host/Diagnostic 闭包各 44 个，PreFlash 闭包 58 个。
+C32最初清单为66个定义；当前清单为72个定义，Host闭包50个、Diagnostic闭包48个、PreFlash闭包64个。当前结果见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
 这些数量包含环境、可选占位等节点，**不是独立场景数或断言数**。七个 aggregate
 和一个手工硬件节点不因“清单里存在”就自动加入普通 Profile。
 
@@ -834,6 +836,12 @@ Required 是清单默认值，显式选择的目标在该次执行中会提升�
 | `route` | `integration` / `host_simulated` | `aggregate` | 仅显式选择 | 是 |
 | `switch` | `integration` / `host_simulated` | `aggregate` | 仅显式选择 | 是 |
 | `equivalence` | `integration` / `host_simulated` | `aggregate` | 仅显式选择 | 是 |
+| `recorder` | `integration` / `host_simulated` | `python` | H/P/D | 是 |
+| `recorder-tools` | `contract` / `host` | `python` | H/P/D | 是 |
+| `recorder-startup` | `integration` / `host_simulated` | `c` | H/P/D | 是 |
+| `recorder-sd-pins` | `unit` / `host_simulated` | `c` | H/P/D | 是 |
+| `speed-planning-host` | `integration` / `host_simulated` | `python` | H/P/D | 是 |
+| `c26-baseline-characterization` | `integration` / `host_simulated` | `c` | H/P/D | 是 |
 <!-- CATALOG_TABLE_END -->
 
 <a id="provenance"></a>
@@ -844,7 +852,7 @@ Required 是清单默认值，显式选择的目标在该次执行中会提升�
 `md_extracted` 确认的公式、表格数值或运行结论。结构化字段为 `structured_parsed`，
 计数、命令检查与统计示例为 `computed`，没有 PDF 版面或硬件实测声明。
 
-本文发布只增加文档入口和流程说明，不修改执行器、Schema、测试断言或控制代码，
-也不借文档提交声称新跑了一轮业务测试。校验范围为 Markdown 链接/锚点、清单
-索引一致性、真实 suite 示例的 Schema、命令参数和只读入口行为；原 C32 执行
-证据仍按其代码 SHA 引用。
+2026-11-02原手册交付只增加文档入口和流程说明，原C32证据按其代码SHA引用。
+2026-11-06本次维护补充72项索引和当前发布边界；本批源码/断言更正及实际业务
+测试另见MPC审核记录，不把原C32远端CI当成本批验证。文档自身校验包括链接、
+锚点、清单索引、真实suite示例Schema和命令参数。

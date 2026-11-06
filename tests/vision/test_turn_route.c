@@ -342,7 +342,7 @@ int main(void)
         switch_wait(2,1);CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_output()->speed_boost);
     }
     /* Entry widens before an exit is visible: only four real entry rows
-     * remain in the ROI. Keep moving on CURRENT white evidence, honestly
+     * remain in the ROI. Keep steering on CURRENT white evidence, honestly
      * partial, without resetting the full-valid deadline or inventing eight
      * anchors. This same partial image can never start from DISARMED. */
     run_gray(0);gray_short_entry();
@@ -353,7 +353,8 @@ int main(void)
          CHECK(route_lane.junction_rows>=12&&vision_drive_is_local());
          CHECK(vd.control.last_valid_ms==last_valid);
      }
-     CHECK(vision_drive_output()->recovering&&vision_drive_output()->duty>=.08f&&vision_drive_output()->duty<=.088f);
+     CHECK(vision_drive_output()->recovering&&vision_drive_output()->duty==0);
+     CHECK(!info().target_right&&!info().target_left&&!info().pwm_right&&!info().pwm_left&&!pwm[0]&&!pwm[1]);
      gray_crossing(58,110,0);
      for(unsigned i=0;i<30;++i){vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_step(1);}
      CHECK(vision_drive_is_local()&&vision_drive_output()->observation_valid&&!vision_drive_output()->recovering);}
@@ -703,7 +704,9 @@ int main(void)
      vision_drive_trace_info(&before);route_lane.valid=0;switch_wait(40,1);
      vision_drive_trace_info(&loss);CHECK(loss.frozen&&!loss.active);
      set_lane(0);switch_wait(30,1);vision_drive_trace_info(&recovered);
-     CHECK(recovered.active&&recovered.run==before.run&&recovered.count>before.count&&recovered.revision==loss.revision);}
+     CHECK(!recovered.active&&recovered.frozen&&recovered.run==before.run&&recovered.count==loss.count);
+     switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);vision_drive_trace_info(&recovered);
+     CHECK(recovered.active&&recovered.run>before.run&&recovered.count>0&&recovered.revision==loss.revision);}
     /* Retain the latest ~60 seconds of a longer continuous run. Memory stays
      * bounded; crossing the old two-minute deadline must not stop a lap. */
     switch_wait(12100,1);
@@ -813,19 +816,19 @@ int main(void)
     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(25,1);
     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2);
     CHECK(vision_drive_output()->steering>-.08f&&vision_drive_output()->steering<.08f);
-    /* After a zero-demand invalid straight frame, a newly visible current
-     * partial path must ramp low drive back up instead of retaining duty=0. */
+    /* A newly visible partial path may guide steering after a zero-demand
+     * frame, but cannot restore motor power before valid near road returns. */
     run_gray(0);route_lane.valid=0;memset(route_lane.row_flags,0,sizeof(route_lane.row_flags));switch_wait(2,1);
     CHECK(vision_drive_output()->duty==0);
     CHECK(vision_drive_output()->recovering&&vd.output_authorized&&!pwm[0]&&!pwm[1]);
-    /* Slow nonzero counts make positive recovery torque observable. */
+    /* Slow nonzero counts must not make the PI restore partial-path torque. */
     switch_delta_left=-1;switch_delta_right=1;
     memset(turn_gray,30,sizeof(turn_gray));
     for(int y=70;y<=79;++y)for(int x=23;x<=103;++x)turn_gray[y*VISION_WIDTH+x]=210;
     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2&&vision_drive_output()->steering<-.2f);
-    CHECK(vision_drive_output()->duty>.02f&&info().target_right>3);
-    CHECK(vd.output_authorized&&pwm[0]&&pwm[1]);
+    CHECK(vision_drive_output()->duty==0&&!info().target_right&&!info().target_left);
+    CHECK(vd.output_authorized&&!info().pwm_right&&!info().pwm_left&&!pwm[0]&&!pwm[1]);
     switch_boot(0);measured_curve(.4f,0);switch_wait(80,1);
     CHECK(vision_drive_is_local()&&vision_drive_output()->far_valid&&vision_drive_servo_command_us()<=1530);
     measured_curve(.4f,1);switch_wait(30,1);
@@ -938,7 +941,9 @@ int main(void)
         CHECK(!vision_drive_servo_command_us());
         gray_road(direction);
         for(unsigned i=0;i<30;++i){vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_step(1);}
-        CHECK(vision_drive_is_local()); /* Current edge + retained geometry after exposure loss. */
+        CHECK(!vision_drive_is_local()); /* Exposure fault requires physical acknowledgement. */
+        switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);
+        CHECK(vision_drive_is_local()); /* Fresh current edge after OFF->ON. */
     }
     /* Regression: a current, unambiguous lane beyond 1.25 half-widths
      * must steer under bounded output, not fault after ~80ms of take-up. */
@@ -975,11 +980,13 @@ int main(void)
         CHECK(direction>0?vision_drive_servo_command_us()<=1530:vision_drive_servo_command_us()>=1570);
     }
     /* No blind powered search: fresh all-white frames cannot justify motion.
-     * Five valid reacquisition frames can resume without an OFF cycle. */
+     * Valid reacquisition frames cannot acknowledge a fault while C26 is ON. */
     run_gray(1);memset(turn_gray,210,sizeof(turn_gray));
     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(15,1);
     CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]&&!info().target_right);
     gray_road(1);vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
+    CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);
+    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);
     CHECK(!vision_drive_output()->recovering&&vision_drive_output()->observation_valid&&vision_drive_is_local());
     memset(turn_gray,210,sizeof(turn_gray));vision_midterm_process(turn_gray,turn_binary,&route_lane);
     switch_wait(340,1);CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_is_local());

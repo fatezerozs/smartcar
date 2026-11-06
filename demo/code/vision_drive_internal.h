@@ -24,6 +24,7 @@ typedef struct {
     /* Source-bound lease, granted only in vision_actuator under PRIMASK.
      * Every zero revokes it; foreground targets cannot renew it. */
     volatile uint8_t output_authorized;
+    volatile uint32_t output_epoch; /* Revocation invalidates prepared PWM and PI. */
     /* Sticky for this initialized software session; no persistent reset claim. */
     volatile uint8_t autonomous_stopped;
     volatile uint8_t guard_running, guard_local, mode_stop_pending;

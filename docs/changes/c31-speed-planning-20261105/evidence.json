@@ -1,0 +1,783 @@
+{
+  "schemaVersion": "smartcar.planning-stage-evidence/1",
+  "taskVersion": "v1.4-20261105",
+  "completedLocalDate": "2026-11-06",
+  "head": "de1415743b004160f520d385c9e3e63008f52007",
+  "baselineDescription": "working-tree-including-preexisting-uncommitted-work",
+  "taskAccepted": false,
+  "productionIntegrated": false,
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "dataAvailable": false,
+  "sourceReadingLayers": [
+    "native-text",
+    "structured_parsed",
+    "computed"
+  ],
+  "productionFilesChangedByThisTask": 0,
+  "originalSnapshotFiles": 1015,
+  "existingFilesChanged": [
+    "README.md",
+    "docs/INDEX.md",
+    "docs/PROJECT_EVOLUTION.md",
+    "tests/suites/README.md",
+    "tests/suites/catalog.json"
+  ],
+  "baseline": {
+    "runId": "20261105T153030-32177ad296",
+    "status": "FAIL",
+    "softwarePassed": false,
+    "releaseEligible": false,
+    "durationSeconds": 84.04943,
+    "counts": {
+      "PASS": 45,
+      "FAIL": 2,
+      "SKIPPED": 1
+    },
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "control",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "bayes",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "field",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "servo-probe",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "motor-probe",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "startup",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "board-mode",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "drive",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "debug",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "transport",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "dual-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "encoder-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "route-trial",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "route-switch",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "switch-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "turn-route",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout-projection",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "tangent-preview",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "midterm-boot",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "midterm-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "auto-track",
+        "status": "FAIL",
+        "reason": "test exited with code 1"
+      },
+      {
+        "id": "motion",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "motor-threshold",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "capture-vision",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "fit-model",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "restore-training-parameters",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "run-analysis",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "seekfree-import",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "track-trials",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "training-analysis",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "field-protocol",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "configuration-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "invalid-configuration",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "interface-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "performance-host",
+        "status": "SKIPPED",
+        "reason": "Dataset, versioned ground truth, measurement adapter and approved baseline await later integration; other suites remain independent."
+      },
+      {
+        "id": "recorder-tools",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "recorder",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "framework",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "recorder-startup",
+        "status": "FAIL",
+        "reason": "test exited with code 1"
+      },
+      {
+        "id": "recorder-sd-pins",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ],
+    "runJsonSha256": "484dfd4f13f981ab81f9e99553f9b0f60798c99e11fa274643e951735f544468"
+  },
+  "relatedRegression": {
+    "runId": "20261105T155130-5aeb3913f6",
+    "status": "PASS",
+    "softwarePassed": true,
+    "releaseEligible": false,
+    "durationSeconds": 45.011525,
+    "counts": {
+      "PASS": 23
+    },
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed-planning-host",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "c26-baseline-characterization",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "encoder-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed-group",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "equivalence",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "route-switch",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "switch-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "turn-route",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout-projection",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "tangent-preview",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "switch",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "framework",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "project-structure",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "static-safety",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "configuration-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "invalid-configuration",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ],
+    "runJsonSha256": "660b6e2ae3935ad398d29986bc97df6c26b40d8b821be27fc7df35dbd473e73b"
+  },
+  "finalPrototypeAndC26": {
+    "runId": "20261105T160128-6d11e04b6a",
+    "status": "PASS",
+    "softwarePassed": true,
+    "releaseEligible": false,
+    "durationSeconds": 4.11126,
+    "counts": {
+      "PASS": 4
+    },
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed-planning-host",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "c26-baseline-characterization",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ],
+    "runJsonSha256": "c2bfa02b0d1d8a2dc66f4ab3aed060821f55362793caec1db75d1822b5b4e684"
+  },
+  "normalPerformance": {
+    "schemaVersion": "smartcar.host-planning/1",
+    "evidence": "synthetic-simulation",
+    "productionApproved": false,
+    "spatialCases": 6,
+    "spatialSamples": 96,
+    "temporalSamples": 500,
+    "periodS": 0.02,
+    "speedUnit": "m/s",
+    "accelerationUnit": "m/s^2",
+    "jerkUnit": "m/s^3",
+    "minimumReference": 0.00159999973,
+    "maximumReference": 2.5,
+    "maxAbsAccel": 2.0,
+    "maxAbsJerk": 6.000000250000004,
+    "trackingRmse": null,
+    "measuredBrakeDistanceM": null,
+    "oracleMaxToleranceMps": 2e-05,
+    "csvSha256": "37869bf7bb5ee089b027fdddcfca275ca2d70928cbbad8f8d6e1ffc8d0cd685d"
+  },
+  "actualPrimaryBuild": {
+    "sourceProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "buildOnly": true,
+    "target": "nor_sdram_zf_dtcm",
+    "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+    "processes": [
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\UV4\\UV4.exe",
+          "-r",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\workspace\\demo\\mdk\\competition\\midterm_switch.uvprojx",
+          "-t",
+          "nor_sdram_zf_dtcm",
+          "-j0",
+          "-o",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\build.log"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 17.394404
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--bincombined",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\rt1064.bin",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.07073
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--text",
+          "-c",
+          "-s",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\disassembly.txt",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\actual-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.253225
+      }
+    ],
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1209152,
+        "sha256": "b36d635e4371de54d2eac667261e4ee03a62e165bdf11c797c9341ce37bf40d9"
+      },
+      "rt1064.bin": {
+        "bytes": 110336,
+        "sha256": "d7f1bb403f0d30cabd107ca276a419db78ccb0ecf99d982c336779bb9f4f7c82"
+      },
+      "disassembly.txt": {
+        "bytes": 2549766,
+        "sha256": "2dffc9e5a517c8ce732681d2e772a4517810fc3195ad797e8b98cea762036b0e"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2061579,
+        "sha256": "88f822fda063a5e0ea024ebdc155dbe16a5420def32df2fb84a5668ceec43638"
+      }
+    },
+    "zeroErrorsWarnings": true,
+    "instructionAudit": {
+      "vd_output_apply": {
+        "firstInstruction": "0x8000e250:    e92d4ff8    -..O    PUSH     {r3-r11,lr}",
+        "instructions": 317,
+        "cpsid": 1,
+        "primaskRestore": 6,
+        "floatingInstructions": 21
+      },
+      "output_commit": {
+        "firstInstruction": "0x80009e38:    e92d41f0    -..A    PUSH     {r4-r8,lr}",
+        "instructions": 62,
+        "cpsid": 0,
+        "primaskRestore": 0,
+        "floatingInstructions": 2
+      },
+      "vd_output_zero": {
+        "firstInstruction": "0x8000e880:    b5b0        ..      PUSH     {r4,r5,r7,lr}",
+        "instructions": 26,
+        "cpsid": 1,
+        "primaskRestore": 1,
+        "floatingInstructions": 0
+      },
+      "vd_speed_control_poll": {
+        "firstInstruction": "0x8000ea64:    e92d4ff0    -..O    PUSH     {r4-r11,lr}",
+        "instructions": 650,
+        "cpsid": 1,
+        "primaskRestore": 3,
+        "floatingInstructions": 18
+      },
+      "vd_route_switch_poll": {
+        "firstInstruction": "0x8000e920:    b5f0        ..      PUSH     {r4-r7,lr}",
+        "instructions": 119,
+        "cpsid": 3,
+        "primaskRestore": 3,
+        "floatingInstructions": 0
+      },
+      "pwm_set_duty": {
+        "firstInstruction": "0x8000a4f0:    b5f8        ..      PUSH     {r3-r7,lr}",
+        "instructions": 47,
+        "cpsid": 0,
+        "primaskRestore": 0,
+        "floatingInstructions": 0
+      }
+    },
+    "retainedSymbolChecks": {
+      "recorder_storage_task": false,
+      "recorder_control_task": false,
+      "f_write": false,
+      "SD_WriteBlocks": false,
+      "vd_route_switch_poll": true,
+      "midterm_boot_poll": false
+    },
+    "hostBaseline": {
+      "runId": "20261105T153030-32177ad296",
+      "status": "FAIL",
+      "counts": {
+        "PASS": 45,
+        "FAIL": 2,
+        "SKIPPED": 1
+      },
+      "durationSeconds": 84.04943,
+      "failures": [
+        {
+          "id": "auto-track",
+          "status": "FAIL",
+          "reason": "test exited with code 1"
+        },
+        {
+          "id": "recorder-startup",
+          "status": "FAIL",
+          "reason": "test exited with code 1"
+        }
+      ]
+    }
+  },
+  "reproducibleBuildScriptRun": {
+    "buildOnly": true,
+    "sourceProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+    "target": "nor_sdram_zf_dtcm",
+    "processes": [
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\UV4\\UV4.exe",
+          "-r",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\workspace\\demo\\mdk\\competition\\midterm_switch.uvprojx",
+          "-t",
+          "nor_sdram_zf_dtcm",
+          "-j0",
+          "-o",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\build.log"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 15.094153
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--bincombined",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\rt1064.bin",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.087207
+      },
+      {
+        "command": [
+          "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+          "--text",
+          "-c",
+          "-s",
+          "--output",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\disassembly.txt",
+          "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\Objects\\rt1064.axf"
+        ],
+        "exitCode": 0,
+        "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\speed-planning\\repro-switch\\workspace\\demo\\mdk\\competition",
+        "timedOut": false,
+        "cleanupVerified": true,
+        "durationSeconds": 0.273436
+      }
+    ],
+    "zeroErrorsWarnings": true,
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1209072,
+        "sha256": "c43ffa75e557286169b6d1c62f30ced26161c6a7e26e87c69d33c0c92cdf323b"
+      },
+      "rt1064.bin": {
+        "bytes": 110336,
+        "sha256": "93e65e57fe70c9d904ba97968017d191d8b1b726bc8959276274b30e44536737"
+      },
+      "disassembly.txt": {
+        "bytes": 2549765,
+        "sha256": "6456ee210308721a6bbf44ced9d6e16e434e963d6c88196f0d92af92ae841091"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2061579,
+        "sha256": "895b3eead07c3b8d2a44bc29e92b7a37c02edc8bab27a56b9d88851477e4fbf6"
+      }
+    }
+  },
+  "preprocessedMacros": {
+    "command": [
+      "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\armclang.exe",
+      "--target=arm-arm-none-eabi",
+      "-mcpu=cortex-m7",
+      "-mfpu=fpv5-d16",
+      "-mfloat-abi=hard",
+      "-Idemo/code",
+      "-DVISION_MIDTERM_TRAINING=1",
+      "-DVISION_ENCODER_ENABLE=1",
+      "-DVISION_MIDTERM_AUTONOMOUS=0",
+      "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+      "-DVISION_ROUTE_SWITCH=1",
+      "-DCPU_MIMXRT1064DVL6A",
+      "-DSKIP_SYSCLK_INIT",
+      "-DXIP_EXTERNAL_FLASH=1",
+      "-DXIP_BOOT_HEADER_DCD_ENABLE=1",
+      "-DXIP_BOOT_HEADER_ENABLE=1",
+      "-DPRINTF_FLOAT_ENABLE=1",
+      "-DSCANF_FLOAT_ENABLE=1",
+      "-DPRINTF_ADVANCED_ENABLE=1",
+      "-DSCANF_ADVANCED_ENABLE=1",
+      "-DFSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0",
+      "-DUSB_STACK_BM",
+      "-DDEBUG",
+      "-DMCUXPRESSO_SDK",
+      "-DSD_ENABLED",
+      "-E",
+      "-dM",
+      ".build\\speed-planning\\macro-probe.c"
+    ],
+    "macros": {
+      "VISION_MIDTERM_AUTONOMOUS": "0",
+      "VISION_ROUTE_SWITCH": "1",
+      "VISION_MIDTERM_ROUTE_TRIAL": "1",
+      "VISION_ENCODER_ENABLE": "1",
+      "VISION_MIDTERM_TRAINING": "1",
+      "VISION_MIDTERM_C31_AUTONOMOUS": "(VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)",
+      "VISION_AUTO_START_ENABLE": "1U",
+      "VISION_AUTO_START_DELAY_MS": "2000U",
+      "VISION_CONTROL_FRAME_TIMEOUT_MS": "100U",
+      "VISION_RECOVERY_INITIAL_MS": "300U",
+      "VISION_RECOVERY_PARTIAL_FRESH_MS": "100U",
+      "VISION_RECOVERY_MAX_MS": "1200U",
+      "VISION_MOTOR_PWM_HZ": "17000U",
+      "VISION_FIELD_BUILD": "\"MIDTERM_C26_31\"",
+      "SD_ENABLED": "1"
+    }
+  },
+  "armCompilerOwnStackFrames": [
+    "tools/speed_planning/speed_planner.c:12:sp_geometry\t344\tstatic",
+    "tools/speed_planning/speed_planner.c:48:sp_limits_valid\t0\tstatic",
+    "tools/speed_planning/speed_planner.c:64:sp_plan\t216\tstatic",
+    "tools/speed_planning/speed_planner.c:108:sp_shape\t40\tstatic",
+    "tools/speed_planning/speed_planner.c:132:sp_wheel_targets\t0\tstatic",
+    "tools/speed_planning/speed_planner.c:139:sp_servo_map\t8\tstatic",
+    "tools/speed_planning/speed_planner.c:160:sp_supervisor_init\t8\tstatic",
+    "tools/speed_planning/speed_planner.c:163:sp_supervisor_arm\t16\tstatic",
+    "tools/speed_planning/speed_planner.c:174:sp_supervise\t40\tstatic",
+    "tools/speed_planning/speed_planner.c:241:sp_candidate_allowed\t0\tstatic"
+  ],
+  "armPrototypeObject": {
+    "bytes": 10596,
+    "sha256": "83a88c49fdec556ae3d0b34c549e23ab02e7fdb87707dd8cf5e98147f79e1415",
+    "codeBytesIncludingLiteralData": 6350,
+    "roDataBytes": 80,
+    "rwBytes": 0,
+    "ziBytes": 0,
+    "linkedIntoPrimaryAxf": false
+  },
+  "sourceSha256": {
+    "tools/speed_planning/speed_planner.c": "d0d6ee93c03c925cd0d075914b9a7aa9485d25433efc6529316076cf401f64e1",
+    "tools/speed_planning/speed_planner.h": "46c4d9f905fb6971ce22f9fa79e2850f6164869c3463be8c818ad0bb68e8b94d",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "tools/speed_planning/vision_adapter.h": "8ac7e324940ba0bd0476eb6c089c57926b768ef62dcb7590b99910210bd92f0e",
+    "tools/speed_planning/audit_build.py": "5a63552f1bddfa2a2e43578603725adf4ba115517278beab7e957c8f80c54b9d",
+    "tools/speed_planning/plot_replay.py": "e61ca07ce494f9f72f2b10145bbe6b1917052a37f8c89ef33137e9f11223ad77",
+    "tools/speed_planning/sessions.py": "da81eb6ac71d6a9e411b1150ab56cba610b2fa46a905a049c3faf4e703ecf5ba",
+    "tests/planning/test_c26_baseline.c": "df057927448c975075678c0fdba3cd4d624367f6569be592ceb1a2885e00b1ae",
+    "tests/planning/test_speed_planner.c": "d6e21004dff483896f4351db14a88a57af1a093e1d338ec25de50d98e0a62b2c",
+    "tests/planning/test_offline.py": "6dc83666b50d50fdc3729cec4e52ac2d17ec0790e5cb441ce16f5435cf278ed9"
+  },
+  "pending": [
+    "real-calibration-and-session-validation",
+    "production-MCU-integration",
+    "production-final-PWM-and-PI-interleaving",
+    "C26-visual-fault-OFF-ON-policy",
+    "C26-severe-fault-retention",
+    "Recorder-sidecar-queue-and-writer",
+    "real-main-vs-candidate-AB",
+    "MSVC-and-ASan",
+    "physical-validation"
+  ],
+  "notes": [
+    "Source baselines and artifact hashes identify this working tree, not a clean committed main build.",
+    "ASan/MSVC not executed; final GCC suite PASS is scoped and releaseEligible=false.",
+    "Static stack sizes omit callees/libm/interrupt/task overhead; CPU batch timing is not WCET.",
+    "No true false-stop rate, tracking RMSE, braking distance or lap-time measurement exists."
+  ]
+}

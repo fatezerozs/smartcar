@@ -1,0 +1,53 @@
+{
+  "status": "STATIC_OFF_AND_LOGICAL_ON_REARM_OBSERVED_NOT_B3_MOTION_COMPLETE",
+  "B3_motion_accepted": false,
+  "report_sha256": "cc70d9a20d57c397d030c1e090a0d22c807c7211219883b9021c7fc3ef56284d",
+  "review_sha256": "b860295c219ab5ffd783924d627b2dcc7d9c358555043a05a9c3544ecf4cb4a4",
+  "client_sha256": "aeec8dfe0b96576e27167ded6533334fbc67413b4806671f301bb0e1e68604b1",
+  "client_changes": "mixed-line prefix extraction; bounded empty-only wait renewal; no firmware change",
+  "cases": [
+    {
+      "phase": "OFF",
+      "root": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T215219289Z",
+      "sha256": {
+        "serial.log": "25efb2f33e6546bcbd794e3ca215efde23ac1f9ff64ee988801e5b32045089b7",
+        "identity.txt": "72703f44f1c4abea76fa0b55714bcdfe2b93a70f15ba421cb1c91f06c035939c",
+        "header.txt": "eb94428ff7b7c77397c9827df76479cef7a3c70f4b912b308b662bc26fc9d892",
+        "trace.b3t": "d92ed043dbf4f1144303cd2f0a3860f9ae4f0a810faebae920cd4d2e7e661ab9",
+        "events.csv": "bfa44dee571a44ac0fb49e703d4f83de4f0aea481fe9cbd44f23d8b3cf1165d3",
+        "static-review.json": "6d749d796254e9fe6035ffb92bfaa77a985d4a5cfa3df911b707d340f64b063f",
+        "acquisition.json": "273a6e39ada6f13cfcf014078e7ebae612732d9e74dfc0bf3935bef6e34e921c"
+      }
+    },
+    {
+      "phase": "ON_OFF_1",
+      "root": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T215450693Z",
+      "sha256": {
+        "serial.log": "6da8ffe29048bc2462875a209e6c9b0e492fed2181fbb54c7dc7c75f086ceba5",
+        "identity.txt": "573f1eab9956c411e3cab6ca0dc33c0bbcc3214ada60a32af4d51cd75e6c8198",
+        "header.txt": "a15b3d2d73a61d1790da3e28d4794dccb8265c935ca705d5a981dbd12a654e11",
+        "trace.b3t": "4fb2b0eee84f80e3e2b7be4214619306f9c4ef2ff0b8dcf29de6acab42e997aa",
+        "events.csv": "20432eff85d828651e75735ed3cf83d2d8799b5ed8f8ec4b6982e26fead258ce",
+        "static-review.json": "315cd60fa8daaa125af343de1e011e029cdcebff10397bae01b767b82b7fc6ca",
+        "acquisition.json": "ff792b421ca3325d9e8095ca824a8e3d0808effaa1c6f8d0539d7f26e945fabf"
+      }
+    },
+    {
+      "phase": "REARM_ON_OFF_2",
+      "root": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T220024618Z",
+      "sha256": {
+        "serial.log": "3d9bfa51946a9d75dcb98dbf034da8479edaa9cf4c1bd5801a8cf8e6899369b1",
+        "identity.txt": "d3190b49c6d2fb971f088ace3814bf65339b1eec7b9d0a98c94c73869821eb5b",
+        "header.txt": "b1ccd6d6ab3713ee8986a03f0b195121ae350df1f35de5fe5830ba7c387f5c72",
+        "trace.b3t": "7579167c7bb9caa24f4e15b91877f19efbcac070c9d4de13a9781cec2b27f680",
+        "events.csv": "6435b5aff79c980754a988662382e42235835d0534c42f823ef7b1b9697da69c",
+        "static-review.json": "008666678d611589add366a018c7484f33df21d9379538969a7265aa42262854",
+        "acquisition.json": "e08dbe76725c3d87ab1bab339721e6149d58a9daf22c5fb6aaa5830cc56a2756"
+      }
+    }
+  ],
+  "user_latest_boundary": "last authorization group; no additional hardware requests/actions",
+  "com14_closed": true,
+  "actuator_power_restored": false,
+  "flashed_or_reset_by_agent": false
+}

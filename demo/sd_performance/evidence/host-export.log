@@ -1,0 +1,15 @@
+PASS unrelated commands not intercepted
+PASS whitelist rejects paths
+PASS INFO FA_READ only
+PASS raw framing and independent known CRC
+PASS failure path 1
+PASS failure path 2
+PASS failure path 3
+PASS failure path 4
+PASS failure path 5
+PASS read API error
+PASS length/range/trailing input bounds
+PASS explicit high baud switch
+PASS unsupported baud rejected
+PASS baud switch failure reported
+EXPORT TESTS PASS; no write/format/delete API linked into this fixture

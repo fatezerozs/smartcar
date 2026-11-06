@@ -1,0 +1,1813 @@
+diff --git a/demo/code/app_mode.c b/demo/code/app_mode.c
+index 71f329f..2f347e7 100644
+--- a/demo/code/app_mode.c
++++ b/demo/code/app_mode.c
+@@ -3,13 +3,11 @@
+ static volatile uint8_t raw_mode, selected_mode, settled;
+ static volatile uint32_t changed_ms, revision;
+ static uint32_t consumed;
+-#if VISION_ROUTE_SWITCH
+-static volatile uint32_t start_request;
+-static uint8_t off_seen;
+-#endif
+ static uint8_t decode(int a, int b)
+ {
+-#if VISION_ROUTE_SWITCH
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    (void)a;(void)b;return APP_MODE_DRIVE;
++#elif VISION_ROUTE_SWITCH
+     (void)b;return a?APP_MODE_OBSERVE:APP_MODE_DRIVE;
+ #else
+     return (uint8_t)((a ? 0U:1U) | (b ? 0U:2U));
+@@ -17,9 +15,6 @@ static uint8_t decode(int a, int b)
+ }
+ void app_mode_init(int a,int b,uint32_t now)
+ {
+-#if VISION_ROUTE_SWITCH
+-    start_request=0;off_seen=0;
+-#endif
+     raw_mode=decode(a,b);selected_mode=APP_MODE_OBSERVE;
+     changed_ms=now;settled=0;++revision;
+ }
+@@ -29,10 +24,6 @@ void app_mode_sample(int a,int b,uint32_t now)
+     if(value!=raw_mode) {raw_mode=value;changed_ms=now;settled=0;++revision;}
+     if(!settled && (uint32_t)(now-changed_ms)>=30U) {
+         selected_mode=raw_mode;settled=1;++revision;
+-#if VISION_ROUTE_SWITCH
+-        if(selected_mode==APP_MODE_OBSERVE)off_seen=1;
+-        else if(off_seen){++start_request;off_seen=0;}
+-#endif
+     }
+ }
+ app_mode_t app_mode_current(void) {
+@@ -63,13 +54,4 @@ const char *app_mode_name(app_mode_t mode)
+     return (unsigned)mode<4U?names[mode]:"INVALID";
+ }
+ 
+-uint32_t app_mode_start_request(void)
+-{
+-#if VISION_ROUTE_SWITCH
+-    return start_request;
+-#else
+-    return 0;
+-#endif
+-}
+-
+ int app_mode_change_pending(void){return revision!=consumed;}
+diff --git a/demo/code/app_mode.h b/demo/code/app_mode.h
+index c6cd4bd..9bf1f24 100644
+--- a/demo/code/app_mode.h
++++ b/demo/code/app_mode.h
+@@ -3,16 +3,15 @@
+ #include <stdint.h>
+ typedef enum { APP_MODE_OBSERVE=0, APP_MODE_SERVO=1,
+                APP_MODE_MOTOR=2, APP_MODE_DRIVE=3 } app_mode_t;
+-/* Inputs are electrical levels: open=1, ON/ground=0. C26 is bit 0.
+- * Any raw change immediately inhibits motion. Stable 30ms commits a mode;
+- * callers must stop/reset foreground state on every transition. */
++/* Legacy selector builds: input levels are open=1, ON/ground=0;
++ * C26 is bit 0. A raw change inhibits drive, and 30ms stability commits
++ * a new mode. In C31 auto-track these pins are not sampled and the input
++ * selector has no start, stop, or fault-clear authority. */
+ void app_mode_init(int c26_high, int c27_high, uint32_t now);
+ void app_mode_sample(int c26_high, int c27_high, uint32_t now);
+ app_mode_t app_mode_current(void);
+ int app_mode_allows(app_mode_t requested);
+ int app_mode_take_change(void);
+-/* C26-only target: one request per stable OFF -> ON; boot ON is inhibited. */
+-uint32_t app_mode_start_request(void);
+ int app_mode_change_pending(void);
+ const char *app_mode_name(app_mode_t mode);
+ #endif
+diff --git a/demo/code/app_runtime.c b/demo/code/app_runtime.c
+index 8380a0d..4951ecf 100644
+--- a/demo/code/app_runtime.c
++++ b/demo/code/app_runtime.c
+@@ -257,7 +257,8 @@ void app_runtime_run(void)
+ #endif
+ #endif
+         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {
+-            if (!vision_frame_copy(&gray_frame[0][0])) {
++            vision_frame_stamp_t stamp;
++            if (!vision_frame_copy(&gray_frame[0][0], &stamp)) {
+                 ++dropped_copies;
+             } else {
+                 uint32_t process_start = timer_get(GPT_TIM_1);
+@@ -276,7 +277,8 @@ void app_runtime_run(void)
+                 vision_midterm_process(&gray_frame[0][0], &image_two_value[0][0], &result);
+                 if (track.configured) {
+                     tb_extract(&track.model, &image_two_value[0][0], &result, &track_observation);
+-                    (void)tb_update(&track, &track_observation, frames + 1U, process_start);
++                    if(stamp.time_valid)
++                        (void)tb_update(&track, &track_observation, stamp.sequence, stamp.capture_ms);
+                 }
+                 process_ms = (uint32_t)(timer_get(GPT_TIM_1) - process_start);
+ #if VISION_ROUTE_SWITCH
+@@ -286,9 +288,13 @@ void app_runtime_run(void)
+                 memcpy(Right_Line, result.right, sizeof(Right_Line));
+                 memcpy(Mid_Line, result.center, sizeof(Mid_Line));
+                 ++frames;
+-                last_frame = process_start;
++                last_frame = stamp.time_valid?stamp.capture_ms:last_frame;
+ #if VISION_DRIVE_ENABLE
+-                if (midterm_mode) vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
++                if (midterm_mode) {
++                    if(stamp.time_valid)
++                        vision_drive_observe(&result, stamp.sequence, stamp.capture_ms, timer_get(GPT_TIM_1));
++                    else vision_drive_trip(VC_FAULT_FRAME); /* Missing clock is fail-closed. */
++                }
+ #endif
+                 fresh = 1;
+                 timeout_reset = 0;
+diff --git a/demo/code/board_camera.c b/demo/code/board_camera.c
+index 890e8aa..d3ccf2e 100644
+--- a/demo/code/board_camera.c
++++ b/demo/code/board_camera.c
+@@ -3,6 +3,9 @@
+ #include "board_camera.h"
+ static uint8_t ready,attempted;
+ static uint32_t last_attempt;
++/* GPT1 is initialized and started before board_init/camera service. The CSI
++ * completion ISR reads this same boot-relative millisecond clock. */
++static uint32_t capture_clock_ms(void){return timer_get(GPT_TIM_1);}
+ void board_camera_reset(void) {ready=attempted=0;last_attempt=0;}
+ int board_camera_poll(int requested,uint32_t now)
+ {
+@@ -10,6 +13,7 @@ int board_camera_poll(int requested,uint32_t now)
+     if(ready)return 1;
+     if(attempted && (uint32_t)(now-last_attempt)<VISION_CAMERA_RETRY_MS)return 0;
+     attempted=1;last_attempt=now;
++    mt9v03x_capture_clock_ms=capture_clock_ms;
+     ready=(uint8_t)(mt9v03x_init()==0);
+     return ready;
+ }
+diff --git a/demo/code/board_io.c b/demo/code/board_io.c
+index 3fda9ab..682e809 100644
+--- a/demo/code/board_io.c
++++ b/demo/code/board_io.c
+@@ -10,17 +10,30 @@ void board_io_init(void)
+ {
+     board_io_hw_claim();
+     gpio_init(BOARD_BUZZER_PIN,GPO,GPIO_LOW,GPO_PUSH_PULL);
++#if VISION_MIDTERM_AUTONOMOUS
++    /* C26/C27 are not initialized or sampled in the automatic C31 build. */
++    app_mode_init(1,1,timer_get(GPT_TIM_1));
++#else
+     gpio_init(BOARD_MODE_BIT0,GPI,GPIO_HIGH,GPI_PULL_UP);
+     gpio_init(BOARD_MODE_BIT1,GPI,GPIO_HIGH,GPI_PULL_UP);
+     app_mode_init(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));
++#endif
+ }
+ void board_mode_sample(void)
+-{app_mode_sample(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));}
++{
++#if !VISION_MIDTERM_AUTONOMOUS
++    app_mode_sample(gpio_get_level(BOARD_MODE_BIT0),gpio_get_level(BOARD_MODE_BIT1),timer_get(GPT_TIM_1));
++#endif
++}
+ void board_io_read(board_io_state_t *s)
+ {
+     uint32_t mask=__get_PRIMASK();__disable_irq();
++#if VISION_MIDTERM_AUTONOMOUS
++    s->dip26=s->dip27=1; /* Selector pins deliberately not read. */
++#else
+     s->dip26=(uint8_t)gpio_get_level(BOARD_MODE_BIT0);
+     s->dip27=(uint8_t)gpio_get_level(BOARD_MODE_BIT1);
++#endif
+     s->buzzer_level=(uint8_t)gpio_get_level(BOARD_BUZZER_PIN);
+     board_io_hw_capture(s);__set_PRIMASK(mask);
+ }
+diff --git a/demo/code/midterm_boot.c b/demo/code/midterm_boot.c
+index 30d2124..bea9f11 100644
+--- a/demo/code/midterm_boot.c
++++ b/demo/code/midterm_boot.c
+@@ -7,16 +7,59 @@
+ static mt_boot_state_t state;
+ static uint32_t boot_time, signal_time;
+ static uint8_t speed_prepared;
++#if VISION_MIDTERM_C31_AUTONOMOUS
++static uint8_t track_active,track_seen;
++static uint32_t track_start,track_start_frame,track_frame,track_sequence,track_now;
++static void track_reset(void)
++{
++    track_active=0;
++    track_start=track_start_frame=track_frame=track_now=0;
++    /* Keep the sequence: a poll of the same frame cannot begin a new wait. */
++}
++/* Only distinct, fresh, stable control observations advance this clock.
++ * Both capture-time and foreground-time gaps revoke continuity. */
++static int track_ready(uint32_t now)
++{
++    vc_controller_t *c=&vd.control;
++    uint32_t timeout=c->config.frame_timeout_ms;
++    if(!c->have_frame || !c->output.observation_valid || !c->output.far_valid ||
++       c->stable_frames<c->config.arm_frames ||
++       (uint32_t)(now-c->last_frame_ms)>=timeout) {
++        track_reset();return 0;
++    }
++    if(track_seen && c->last_sequence==track_sequence)return 0;
++    if(!track_active || (uint32_t)(c->last_frame_ms-track_frame)>=timeout ||
++       (uint32_t)(now-track_now)>=timeout) {
++        track_reset();
++        track_start=now;track_start_frame=c->last_frame_ms;track_active=1;
++    }
++    track_seen=1;track_sequence=c->last_sequence;track_frame=c->last_frame_ms;track_now=now;
++    /* Processing latency must not substitute for time covered by new frames. */
++    return (uint32_t)(now-track_start)>=MIDTERM_BOOT_DELAY_MS &&
++        (uint32_t)(c->last_frame_ms-track_start_frame)>=MIDTERM_BOOT_DELAY_MS;
++}
++#endif
+ static void terminal(mt_boot_state_t next, uint32_t now)
+ {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    track_reset();
++#endif
+     state=next;signal_time=now;vision_drive_stop();board_buzzer_set(0);
+ }
+ void midterm_boot_init(uint32_t boot_ms,uint32_t now)
+ {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* Called exactly once by app_runtime on MCU boot; host tests simulate resets. */
++#endif
+     boot_time=boot_ms;signal_time=now;speed_prepared=0;state=MT_BOOT_WAIT;
+     board_buzzer_set(0);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    track_reset();track_seen=0;track_sequence=0;
++    (void)boot_ms;
++#else
+     if((uint32_t)(now-boot_ms)>=MIDTERM_BOOT_DELAY_MS)
+         terminal(MT_BOOT_BLOCKED,now);
++#endif
+ }
+ void midterm_boot_cancel(uint32_t now)
+ {
+@@ -27,24 +70,50 @@ void midterm_boot_poll(uint32_t now)
+ {
+     vd_speed_info_t s;
+     uint32_t elapsed=(uint32_t)(now-boot_time);
++    if(vd.autonomous_stopped && (state==MT_BOOT_WAIT || state==MT_BOOT_RUNNING)) {
++        terminal(MT_BOOT_STOPPED,now);return;
++    }
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(state==MT_BOOT_WAIT || state==MT_BOOT_RUNNING) {
++        vision_drive_speed_get(&s);
++        if(vd.guard_faults || vd.control.output.faults || s.faults ||
++           vd.control.output.state==VC_FAULT) {
++            terminal(state==MT_BOOT_RUNNING?MT_BOOT_STOPPED:MT_BOOT_BLOCKED,now);return;
++        }
++    }
++#endif
+     if(state==MT_BOOT_RUNNING &&
+        (vd.control.output.state!=VC_RUNNING || vd.guard_faults))
+         terminal(MT_BOOT_STOPPED,now);
+     if(state==MT_BOOT_WAIT) {
+         vision_drive_speed_get(&s);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        /* route_speed_pending owns C31 signs, 132 ticks and PI setup. */
++        speed_prepared=(uint8_t)(MIDTERM_SPEED_CONFIRMED && s.samples && s.enabled && !s.faults);
++#else
+         if(!speed_prepared && MIDTERM_SPEED_CONFIRMED && s.samples && !s.faults &&
+-           (uint32_t)(now-s.sample_ms)<=20U) {
++           (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+             speed_prepared=(uint8_t)(vision_drive_encoder_signs(MIDTERM_ENCODER_LEFT_SIGN,MIDTERM_ENCODER_RIGHT_SIGN) &&
+                 vision_drive_speed_config(MIDTERM_SPEED_MAX_TICKS,MIDTERM_SPEED_KP,MIDTERM_SPEED_KI) &&
+                 vision_drive_speed_enable(1));
+         }
++#endif
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        if(track_ready(now)) {
++#else
+         if(elapsed>=MIDTERM_BOOT_DELAY_MS) {
++#endif
+             uint32_t mask=__get_PRIMASK();int accepted;
+             __disable_irq();vision_drive_speed_get(&s);
+             accepted=MIDTERM_VISUAL_REVIEWED && speed_prepared && s.enabled && !s.faults &&
+-                (uint32_t)(now-s.sample_ms)<=20U && app_mode_allows(APP_MODE_DRIVE) &&
++                (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS && app_mode_allows(APP_MODE_DRIVE) &&
+                 vd.local_permitted && !vd.guard_faults && !vd.probe_active && !vd.motion.phase &&
+-                vd.hardware_ready && vc_arm_local(&vd.control,now,vd.hardware_ready);
++                vd.hardware_ready &&
++#if VISION_MIDTERM_C31_AUTONOMOUS
++                !vd.control.output.faults && vd.control.output.far_valid &&
++                vd.control.output.state==VC_DISARMED &&
++#endif
++                vd_output_arm(now,1);
+             if(accepted){state=MT_BOOT_RUNNING;signal_time=now;vd_output_apply();}
+             else terminal(MT_BOOT_BLOCKED,now);
+             __set_PRIMASK(mask);
+diff --git a/demo/code/midterm_route_profile.h b/demo/code/midterm_route_profile.h
+index 2129f2f..449f8b7 100644
+--- a/demo/code/midterm_route_profile.h
++++ b/demo/code/midterm_route_profile.h
+@@ -5,7 +5,9 @@
+  * Successful speed baseline and measured servo window are applied in drive_init.
+  * Existing steering controller and frame/heartbeat/encoder protections remain.
+  * Manual route target never starts on power-up. C26 switch target can start
+- * with ON at boot after five valid frames. Neither loads a saved profile.
++ * with ON at boot after five valid frames. Autonomous C31 instead requires
++ * continuous valid track for 3000ms and the visual review gate; C26/C27 have
++ * no start/stop authority. No route variant loads a saved profile.
+  */
+ #define MT_ROUTE_AXIS_NEAR_X 0.49733f
+ #define MT_ROUTE_AXIS_FAR_X 0.49833f
+@@ -36,7 +38,7 @@
+ #if !defined(VISION_ENCODER_ENABLE) || !VISION_ENCODER_ENABLE || !defined(VISION_MIDTERM_TRAINING) || !VISION_MIDTERM_TRAINING
+ #error "Route training requires explicit training and encoder build flags."
+ #endif
+-#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS
++#if defined(VISION_MIDTERM_AUTONOMOUS) && VISION_MIDTERM_AUTONOMOUS && !(VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
+ #error "Route training must not enable autonomous boot."
+ #endif
+ #endif
+diff --git a/demo/code/vision_actuator.c b/demo/code/vision_actuator.c
+index 24b12a5..f6fbc04 100644
+--- a/demo/code/vision_actuator.c
++++ b/demo/code/vision_actuator.c
+@@ -4,6 +4,8 @@
+ #if VISION_DRIVE_ENABLE
+ void vd_output_zero(void)
+ {
++    uint32_t mask=__get_PRIMASK();__disable_irq();
++    vd.output_authorized=0;vd.guard_running=0;
+     /* Stops always write hardware. Invalidate the motion write cache so a
+      * later explicit start cannot mistake cleared outputs for held PWM. */
+     vd.motion_written_mask=0;
+@@ -13,6 +15,7 @@ void vd_output_zero(void)
+     pwm_set_duty(MOTOR1_PWM, 0);
+     pwm_set_duty(MOTOR2_PWM, 0);
+     pwm_set_duty(SERVO_MOTOR_PWM, 0);
++    __DMB();__set_PRIMASK(mask);
+     /* Never reverse a moving motor as a substitute for braking. Direction
+      * stays fixed while armed. PWM=0 is not a guaranteed stopping distance. */
+ }
+@@ -34,6 +37,164 @@ static void write_changed(unsigned index,int channel,uint32_t duty)
+     }
+ }
+ 
++/* All callers hold PRIMASK from target inspection through the last LDOK.
++ * PIT may revoke a lease, but it never grants one. Foreground observation cannot
++ * recreate a revoked lease even if its controller still says RUNNING. */
++enum { VD_OUTPUT_DRIVE=1, VD_OUTPUT_MOTION, VD_OUTPUT_PROBE };
++static int output_allowed(unsigned source,uint32_t now)
++{
++#if VISION_MIDTERM_AUTONOMOUS
++    if(vd.autonomous_stopped)return 0;
++#endif
++    if(!vd.initialized || vd.output_authorized!=source || vd.guard_faults ||
++       vd.control.output.faults || vd.mode_stop_pending ||
++       app_mode_change_pending())return 0;
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++    /* C31 autonomous has no legacy C26/C27 output interlock. */
++    if(vd.switch_stop_pending || vd.switch_inhibit ||
++       (vd.switch_seen && !vd.switch_closed))return 0;
++#endif
++    if(source==VD_OUTPUT_DRIVE) {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        if(!vd.control.have_frame ||
++           (uint32_t)(now-vd.control.last_frame_ms)>=VISION_CONTROL_FRAME_TIMEOUT_MS) {
++            /* Latch before zeroing clears guard_running and hides this from PIT. */
++            vd.autonomous_stopped=1;vd.guard_faults|=VC_FAULT_FRAME;
++            return 0;
++        }
++#endif
++        if(!app_mode_allows(APP_MODE_DRIVE) || app_mode_change_pending() ||
++           !vd.hardware_ready || !vd.control.configured ||
++           !vision_drive_profile_ready(&vd.profile) || vd.probe_active || vd.motion.phase ||
++           vd.control.output.state!=VC_RUNNING ||
++           (vd.control.local_run && !vd.local_permitted) || !vd.control.have_frame ||
++           (uint32_t)(now-vd.control.last_frame_ms)>=VISION_CONTROL_FRAME_TIMEOUT_MS ||
++           (!vd.control.local_run && (uint32_t)(now-vd.control.last_command_ms)>=VISION_CONTROL_COMMAND_TIMEOUT_MS) ||
++           (vd.guard_max_run_ms && (uint32_t)(now-vd.control.armed_ms)>=vd.guard_max_run_ms))return 0;
++#if VISION_MIDTERM_AUTONOMOUS
++        if(!vd.control.output.observation_valid || !vd.control.output.far_valid)return 0;
++#else
++        /* Switch retains its existing bounded visual recovery controller. */
++        if(!vd.control.output.observation_valid && !vd.control.output.recovering)return 0;
++#endif
++        return 1;
++    }
++#if VISION_MIDTERM_AUTONOMOUS
++    return 0; /* No diagnostic output authority in autonomous firmware. */
++#else
++    if(vd.control.output.state!=VC_DISARMED)return 0;
++    if(source==VD_OUTPUT_PROBE) {
++        /* Calibration probes deliberately precede profile hardware confirmation.
++         * Readiness here is an explicit bounded bench request, never drive-ready. */
++        uint32_t minimum=vd.probe_active==1?VISION_SERVO_PROBE_MIN_MS:VISION_MOTOR_PROBE_MIN_MS;
++        uint32_t maximum=vd.probe_active==1?VISION_SERVO_PROBE_MAX_MS:VISION_MOTOR_PROBE_MAX_MS;
++        return !vd.motion.phase && vd.probe_active>=1 && vd.probe_active<=3 &&
++            app_mode_allows(vd.probe_active==1?APP_MODE_SERVO:APP_MODE_MOTOR) &&
++            vd.control.config.cruise_duty==0 && vd.control.config.duty_cap==0 &&
++            vd.probe_hold_ms>=minimum && vd.probe_hold_ms<=maximum &&
++            vd.probe_duty>0 &&
++            (vd.probe_active!=1 ||
++             (vd.probe_duty>=(uint32_t)VISION_SERVO_PROBE_MIN_US*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U &&
++              vd.probe_duty<=(uint32_t)VISION_SERVO_PROBE_MAX_US*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U)) &&
++            (uint32_t)(now-vd.probe_started_ms)<vd.probe_hold_ms;
++    }
++    return source==VD_OUTPUT_MOTION && app_mode_allows(APP_MODE_DRIVE) && !vd.probe_active &&
++        (vd.motion.phase==VD_MOTION_SETTLE || vd.motion.phase==VD_MOTION_FORWARD ||
++         vd.motion.phase==VD_MOTION_REVERSE_SETTLE || vd.motion.phase==VD_MOTION_REVERSE) &&
++        vd.profile.hardware_confirmed && vd.profile.motor_direction_confirmed &&
++        vision_drive_profile_valid(&vd.profile) &&
++        vd.profile.control.cruise_duty==0 && vd.profile.control.duty_cap>0 &&
++        vd.motion.kind>=VD_MOTION_LINE && vd.motion.kind<=VD_MOTION_CIRCLE &&
++        vd.motion.requested_permille>0 && vd.motion.requested_permille<=VISION_MOTION_MAX_PERMILLE &&
++        vd.motion.requested_permille<=(uint32_t)(vd.profile.control.duty_cap*1000.0f+0.001f) &&
++        vd.motion.actual_permille<=vd.motion.requested_permille &&
++        vd.motion_scale1>0 && vd.motion_scale1<=1000 && vd.motion_scale2>0 && vd.motion_scale2<=1000 &&
++        vd.motion.servo_us>=vd.profile.servo_min_us && vd.motion.servo_us<=vd.profile.servo_max_us &&
++        vd.motion.duration_ms>=VISION_MOTION_MIN_MS &&
++        vd.motion.duration_ms<=(vd.motion.kind==VD_MOTION_LINE?VISION_MOTION_LINE_MAX_MS:VISION_MOTION_MAX_MS) &&
++        (uint32_t)(now-vd.motion.heartbeat_ms)<VISION_CONTROL_COMMAND_TIMEOUT_MS;
++#endif
++}
++int vd_output_arm(uint32_t now,int local)
++{
++    uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
++#if VISION_MIDTERM_AUTONOMOUS
++    if(vd.autonomous_stopped || !local){__set_PRIMASK(mask);return 0;}
++#endif
++    if(vd.initialized && !vd.guard_faults && !vd.control.output.faults &&
++       !vd.mode_stop_pending &&
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++       !vd.switch_stop_pending && !vd.switch_inhibit &&
++       !(vd.switch_seen && !vd.switch_closed) &&
++#endif
++       !vd.probe_active && !vd.motion.phase &&
++       app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
++       vd.hardware_ready && vision_drive_profile_ready(&vd.profile) &&
++       (!local || vd.local_permitted)) {
++        accepted=local?vc_arm_local(&vd.control,now,vd.hardware_ready):
++            vc_arm(&vd.control,now,vd.hardware_ready);
++        if(accepted)vd.output_authorized=VD_OUTPUT_DRIVE;
++    }
++    __DMB();__set_PRIMASK(mask);return accepted;
++}
++#if !VISION_MIDTERM_AUTONOMOUS
++int vd_output_bench_start(void)
++{
++    uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
++    /* Only explicit probe/start/reverse requests call this, never poll or ISR. */
++    vd.output_authorized=vd.motion.phase?VD_OUTPUT_MOTION:VD_OUTPUT_PROBE;
++    if(output_allowed(vd.output_authorized,timer_get(GPT_TIM_1))) {
++        vd_output_apply();accepted=vd.output_authorized!=0;
++    } else vd_output_zero();
++    __DMB();__set_PRIMASK(mask);return accepted;
++}
++#endif
++static void output_commit(unsigned source,uint32_t right,uint32_t left,uint32_t servo)
++{
++    uint32_t cap=PWM_DUTY_MAX; /* Independent actual PWM hard limit: 100%. */
++    if(!output_allowed(source,timer_get(GPT_TIM_1))) {vd_output_zero();return;}
++    if(source==VD_OUTPUT_PROBE)cap=(uint32_t)VISION_MOTOR_PROBE_MAX_PERMILLE*PWM_DUTY_MAX/1000U;
++    if(source==VD_OUTPUT_MOTION)cap=(uint32_t)(vd.profile.control.duty_cap*PWM_DUTY_MAX);
++#if !VISION_ROUTE_SWITCH
++    if(source==VD_OUTPUT_DRIVE)cap=(uint32_t)(vd.profile.control.duty_cap*PWM_DUTY_MAX);
++#endif
++    if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
++    /* Bound PI's actual result independently of its target/speed cap. C31
++     * deliberately retains its existing full physical PWM headroom. */
++    if(right>cap)right=cap;if(left>cap)left=cap;
++    if(servo>PWM_DUTY_MAX) {vd.guard_faults|=VC_FAULT_NUMERIC;vd_output_zero();return;}
++    write_changed(2,SERVO_MOTOR_PWM,servo);
++    write_changed(0,MOTOR1_PWM,right);write_changed(1,MOTOR2_PWM,left);
++}
++static void motion_apply(void)
++{
++    uint8_t phase=vd.motion.phase;
++    uint32_t duty=vd.motion.actual_permille;
++    int reverse=phase==VD_MOTION_REVERSE_SETTLE || phase==VD_MOTION_REVERSE;
++    if(!phase || phase==VD_MOTION_WAIT_REVERSE){vd_output_zero();return;}
++    if(!output_allowed(VD_OUTPUT_MOTION,timer_get(GPT_TIM_1))){vd_output_zero();return;}
++    /* A new direction is selected only from zero PWM after the coast gate. */
++    gpio_set_level(MOTOR1_DIR,vd.profile.motor1_forward_level^(uint8_t)reverse);
++    gpio_set_level(MOTOR2_DIR,vd.profile.motor2_forward_level^(uint8_t)reverse);
++    /* pwm_set_duty clears LDOK before updating buffered registers, then
++     * requests a full-cycle reload. Do not cancel/requeue identical values
++     * at foreground-loop frequency. In particular the 50Hz servo must keep
++     * its pending pulse while the motor ramp changes every ~10ms.
++     * Caller masks IRQs; every stop invalidates this per-channel cache. */
++    {
++        uint32_t values[3]={duty*vd.motion_scale1/1000U*PWM_DUTY_MAX/1000U,
++            duty*vd.motion_scale2/1000U*PWM_DUTY_MAX/1000U,
++            (uint32_t)vd.motion.servo_us*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U};
++#if VISION_ENCODER_ENABLE
++        uint16_t right,left;
++        if(!vd_speed_output((uint16_t)(duty*vd.motion_scale1/1000U),(uint16_t)(duty*vd.motion_scale2/1000U),reverse,
++            (uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left))return;
++        values[0]=(uint32_t)right*PWM_DUTY_MAX/1000U;values[1]=(uint32_t)left*PWM_DUTY_MAX/1000U;
++#endif
++        output_commit(VD_OUTPUT_MOTION,values[0],values[1],values[2]);
++    }
++}
++
+ void vd_output_apply(void)
+ {
+     if (!vd.initialized) return;
+@@ -41,24 +202,42 @@ void vd_output_apply(void)
+     __disable_irq();
+     if(vd.motion.phase) {
+         vd_motion_tick(timer_get(GPT_TIM_1));
+-        if(vd.motion.phase)vd_motion_output();else vd_output_zero();
++        if(vd.motion.phase)motion_apply();else vd_output_zero();
+         __DMB();__set_PRIMASK(mask);return;
+     }
+     if (((vd.probe_active==1 && app_mode_allows(APP_MODE_SERVO)) ||
+-         (vd.probe_active>=2 && app_mode_allows(APP_MODE_MOTOR))) && !vd.guard_faults && !vd.switch_inhibit &&
+-        !(vd.switch_seen && !vd.switch_closed) && vd.control.output.state == VC_DISARMED) {
++         (vd.probe_active>=2 && app_mode_allows(APP_MODE_MOTOR))) && !vd.guard_faults &&
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++        !vd.switch_inhibit && !(vd.switch_seen && !vd.switch_closed) &&
++#endif
++        vd.control.output.state == VC_DISARMED) {
+         /* Separate bounded bench path: at most one actuator. Camera frames
+          * cannot arm driving or overwrite this explicitly requested pulse. */
+         vd.guard_running = 0;
+-        pwm_set_duty(MOTOR1_PWM, vd.probe_active == 2 ? vd.probe_duty : 0);
+-        pwm_set_duty(MOTOR2_PWM, vd.probe_active == 3 ? vd.probe_duty : 0);
+-        pwm_set_duty(SERVO_MOTOR_PWM, vd.probe_active == 1 ? vd.probe_duty : 0);
+-    } else if (vd.guard_faults || vd.switch_inhibit || (vd.switch_seen && !vd.switch_closed) ||
++        output_commit(VD_OUTPUT_PROBE,vd.probe_active==2?vd.probe_duty:0,
++            vd.probe_active==3?vd.probe_duty:0,vd.probe_active==1?vd.probe_duty:0);
++    } else if (vd.guard_faults ||
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++               vd.switch_inhibit || (vd.switch_seen && !vd.switch_closed) ||
++#endif
+                !app_mode_allows(APP_MODE_DRIVE) || !vd.hardware_ready || vd.control.output.state != VC_RUNNING) {
+         vd.probe_active = 0;
+         vd.guard_running = 0;
+         vd_output_zero();
+     } else {
++        if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
++            vd_output_zero();__set_PRIMASK(mask);return;
++        }
++        if(!(vd.control.output.steering>=-1 && vd.control.output.steering<=1) ||
++           !(vd.control.output.duty>=0 && vd.control.output.duty<=vd.profile.control.duty_cap) ||
++           !(vd.control.output.lateral>=-3 && vd.control.output.lateral<=3) ||
++           !(vd.control.output.heading>=-10 && vd.control.output.heading<=10) ||
++           !(vd.control.recovery_steer>=-1 && vd.control.recovery_steer<=1) ||
++           !(vd.control.output.paired_support>=0 && vd.control.output.paired_support<=1) ||
++           !(vd.control.output.edge_support>=0 && vd.control.output.edge_support<=1)) {
++            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
++            vd_output_zero();__set_PRIMASK(mask);return;
++        }
+         float steer = vd.control.output.steering * vd.profile.right_sign;
+ #if VISION_ROUTE_SWITCH
+         /* Keep about the previous center slope while adding bend authority:
+@@ -93,27 +272,34 @@ void vd_output_apply(void)
+          }
+          vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
+ #endif
++        /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
++        if(!(pulse>=vd.profile.servo_min_us && pulse<=vd.profile.servo_max_us) ||
++           !(motor1>=0 && motor1<=vd.profile.control.duty_cap) ||
++           !(motor2>=0 && motor2<=vd.profile.control.duty_cap)) {
++            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
++            vd_output_zero();__set_PRIMASK(mask);return;
++        }
+         uint32_t servo_duty = (uint32_t)(pulse * SERVO_MOTOR_FREQ * PWM_DUTY_MAX / 1000000.0f);
+-        uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
++        uint32_t right_duty,left_duty;
+ #if VISION_ENCODER_ENABLE
++        uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
+         if(!vd_speed_output(right,left,0,(uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left)) {
+             __DMB();__set_PRIMASK(mask);return;
+         }
++        right_duty=(uint32_t)right*PWM_DUTY_MAX/1000U;
++        left_duty=(uint32_t)left*PWM_DUTY_MAX/1000U;
++#else
++        /* Open-loop duty maps directly to PWM without permille quantization. */
++        right_duty=(uint32_t)(motor1*PWM_DUTY_MAX);
++        left_duty=(uint32_t)(motor2*PWM_DUTY_MAX);
+ #endif
+         /* Controller outputs are bounded; vd.profile validates pulse range first.
+          * This short critical section prevents foreground from re-enabling
+          * PWM after a safety ISR has latched a stop. No UART/float in ISR. */
+         gpio_set_level(MOTOR1_DIR, vd.profile.motor1_forward_level);
+         gpio_set_level(MOTOR2_DIR, vd.profile.motor2_forward_level);
+-        write_changed(2,SERVO_MOTOR_PWM,servo_duty);
+-#if VISION_ENCODER_ENABLE
+-        write_changed(0,MOTOR1_PWM,(uint32_t)right*PWM_DUTY_MAX/1000U);
+-        write_changed(1,MOTOR2_PWM,(uint32_t)left*PWM_DUTY_MAX/1000U);
+-#else
+-        (void)right;(void)left;
+-        write_changed(0,MOTOR1_PWM,(uint32_t)(motor1 * PWM_DUTY_MAX));
+-        write_changed(1,MOTOR2_PWM,(uint32_t)(motor2 * PWM_DUTY_MAX));
+-#endif
++        output_commit(VD_OUTPUT_DRIVE,right_duty,left_duty,servo_duty);
++        if(!vd.output_authorized){__set_PRIMASK(mask);return;}
+         vd.guard_frame_ms = vd.control.last_frame_ms;
+         vd.guard_command_ms = vd.control.last_command_ms;
+         vd.guard_armed_ms = vd.control.armed_ms;
+diff --git a/demo/code/vision_drive.c b/demo/code/vision_drive.c
+index 88fd012..7d469c9 100644
+--- a/demo/code/vision_drive.c
++++ b/demo/code/vision_drive.c
+@@ -1,5 +1,4 @@
+ #include "vision_drive_internal.h"
+-#include "midterm_boot.h"
+ 
+ /* Lifecycle and command facade; IO, guard, startup, probing and profile
+  * validation live in their own implementation units. */
+@@ -121,6 +120,7 @@ void vision_drive_init(uint32_t now)
+     vd.switch_seen=0;vd.switch_closed=0;vd.switch_inhibit=VISION_START_SWITCH_ENABLE;vd.switch_stop_pending=0;
+     vd.switch_rearm=0;vd.switch_boot_pending=0;vd.switch_changed_ms=now;
+     vd.local_permitted=0;
++    vd.autonomous_stopped=0;
+     vd.probe_active = 0; vd.probe_last_us = 0;
+     memset(vd.motor_last_permille,0,sizeof(vd.motor_last_permille)); vd.have_motor_probe = 0;
+     vd.guard_max_run_ms = cfg.max_run_ms;
+@@ -193,13 +193,16 @@ void vision_drive_poll(uint32_t now)
+      * later STOP/config changes/faults must not silently re-enable PI. */
+     if(route_speed_pending) {
+         vd_speed_info_t s;vision_drive_speed_get(&s);
+-        if(s.samples && (uint32_t)(now-s.sample_ms)<=20U) {
++        if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+             route_speed_pending=0;
+             if(!(vision_drive_encoder_signs(-1,1) &&
+                  vision_drive_speed_config(VISION_ROUTE_SWITCH?MT_ROUTE_FAST_TICKS:40,1.0f,0.05f) && vision_drive_speed_enable(1)))
+                 vision_drive_trip(VC_FAULT_CONFIG);
+         }
+     }
++#endif
++#if VISION_ENCODER_ENABLE
++    vd_speed_control_poll(now); /* Independent of visual-frame publication. */
+ #endif
+     vd_startup_poll_switch(now);
+     vd_probe_poll(now);
+@@ -210,7 +213,7 @@ void vision_drive_poll(uint32_t now)
+     route_record_fault(); /* Save before stable OFF acknowledges/clears faults. */
+ #endif
+     vd_startup_poll_deadline(now);
+-#if VISION_ROUTE_SWITCH
++#if VISION_ROUTE_SWITCH && !VISION_MIDTERM_AUTONOMOUS
+     vd_route_switch_poll(now);
+ #endif
+     if ((vd.control.output.state != VC_RUNNING && vd.guard_running)
+@@ -237,6 +240,12 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t
+     trace_visual.entry_guide_rows=r->entry_guide_rows;
+ #endif
+     vc_observe(&vd.control, r, sequence, frame_ms, now);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* No C26 vision reacquisition/recovery authority in autonomous mode. */
++    if(vd.control.output.state==VC_RUNNING &&
++       (!vd.control.output.observation_valid || !vd.control.output.far_valid))
++        vc_trip(&vd.control,VC_FAULT_VISION);
++#endif
+ #if VISION_ROUTE_SWITCH
+     route_record_fault();
+ #endif
+@@ -257,14 +266,17 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t
+ 
+ void vision_drive_stop(void)
+ {
++#if VISION_DRIVE_ENABLE
++#if VISION_MIDTERM_AUTONOMOUS
++    vd.autonomous_stopped=1;
++#endif
++    vd_output_zero(); /* Revoke before telemetry, boot cancellation or controller updates. */
++#endif
+ #if VISION_ROUTE_SWITCH
+     route_record_fault();
+     if(vd.control.output.state==VC_RUNNING)
+         route_record_stop(vd.guard_faults?2:1,vd.guard_faults);
+     vd_route_switch_cancel();
+-#endif
+-#if VISION_MIDTERM_AUTONOMOUS
+-    midterm_boot_cancel(timer_get(GPT_TIM_1));
+ #endif
+     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
+     vc_stop(&vd.control);
+@@ -281,11 +293,16 @@ void vision_drive_stop(void)
+ 
+ void vision_drive_trip(uint32_t reason)
+ {
++#if VISION_DRIVE_ENABLE
++    uint32_t fault_mask=__get_PRIMASK();__disable_irq();
++#if VISION_MIDTERM_AUTONOMOUS
++    vd.autonomous_stopped=1;
++#endif
++    vd.guard_faults|=reason|VC_FAULT_EXTERNAL;vd_output_zero();
++    __set_PRIMASK(fault_mask);
++#endif
+ #if VISION_ROUTE_SWITCH
+     vd_route_switch_cancel();
+-#endif
+-#if VISION_MIDTERM_AUTONOMOUS
+-    midterm_boot_cancel(timer_get(GPT_TIM_1));
+ #endif
+     if (vd.auto_info.state==VD_AUTO_WAITING) vd.auto_info.state=VD_AUTO_CANCELLED;
+     vc_trip(&vd.control, reason | VC_FAULT_EXTERNAL);
+@@ -332,7 +349,7 @@ int vision_drive_command(char command, uint32_t now, int text_mode)
+         !vd.switch_inhibit &&
+         !(vd.switch_seen && (!vd.switch_closed || vd.switch_inhibit)) &&
+         (!vd.have_motor_probe || (uint32_t)(now-vd.motor_probe_started_ms) >= vd.motor_probe_hold_ms+VISION_MOTOR_PROBE_COAST_MS))
+-        return vc_arm(&vd.control, now, vd.hardware_ready);
++        return vd_output_arm(now,0);
+ #else
+     (void)command; (void)now; (void)text_mode;
+ #endif
+diff --git a/demo/code/vision_drive.h b/demo/code/vision_drive.h
+index ccc070a..f418e8d 100644
+--- a/demo/code/vision_drive.h
++++ b/demo/code/vision_drive.h
+@@ -3,9 +3,10 @@
+ #include "vision_profile.h"
+ #include "vision_control.h"
+ 
+-/* çŽ°åœºé…ç½®ï¼šè°ƒå‚å…ˆä½œç”¨äºŽ RAMï¼›åªæœ‰æ˜¾å¼ @save æ‰æŒä¹…åŒ–ã€‚
+- * å¯åŠ¨å…ˆå°è¯•æ¢å¤æœ‰æ•ˆè®°å½•ï¼Œå¦åˆ™ä¿ç•™é›¶ PWM é»˜è®¤å€¼ã€‚C12 æœ¬åœ°å¯åŠ¨å’Œ
+- * ä¸²å£ a çš„æŽˆæƒæºç‹¬ç«‹ï¼›èˆµæœº right_sign å¿…é¡»ç¡®è®¤ï¼Œä¸èƒ½ä»Žè½®é€ŸæŽ¨æ–­ã€‚ */
++/* Runtime profile: tuning stays in RAM until explicit @save.
++ * Restoring a valid profile never grants output authority. Legacy C12/UART
++ * arm paths are build-specific; C31 auto-track uses track-gated boot and
++ * rejects UART/probe/motion arming. Servo right_sign requires calibration. */
+ typedef struct {
+     vc_config_t control;
+     uint16_t servo_center_us, servo_min_us, servo_max_us;
+@@ -27,9 +28,9 @@ typedef struct {
+ } vd_auto_info_t;
+ int vision_drive_profile_valid(const vd_profile_t *profile);
+ int vision_drive_profile_ready(const vd_profile_t *profile);
+-/* Called once by startup after persistent restore, NEVER by UART commands.
+- * One attempt per boot/C12 enable edge; rejected deadlines never retry until
+- * an explicit new OFF>=300ms/ON cycle. MODE/RST are not application keys. */
++/* Legacy delayed-start scheduler, called once after profile restore.
++ * C31 auto-track does not use this deadline path; it waits for fresh, valid
++ * track observations and performs a separate startup qualification check. */
+ void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now_ms);
+ /* Logical C12 toggle enable sampled by PIT1. OFF cuts PWM immediately;
+  * foreground handles debounce/countdown. No floating point/UART in ISR. */
+diff --git a/demo/code/vision_drive_internal.h b/demo/code/vision_drive_internal.h
+index 6842ea8..37f5887 100644
+--- a/demo/code/vision_drive_internal.h
++++ b/demo/code/vision_drive_internal.h
+@@ -21,6 +21,11 @@ typedef struct {
+     uint8_t initialized, hardware_ready;
+     volatile uint32_t guard_faults, guard_frame_ms, guard_command_ms, guard_armed_ms;
+     volatile uint32_t guard_max_run_ms;
++    /* Source-bound lease, granted only in vision_actuator under PRIMASK.
++     * Every zero revokes it; foreground targets cannot renew it. */
++    volatile uint8_t output_authorized;
++    /* Sticky for this initialized software session; no persistent reset claim. */
++    volatile uint8_t autonomous_stopped;
+     volatile uint8_t guard_running, guard_local, mode_stop_pending;
+     volatile uint8_t switch_seen, switch_closed, switch_inhibit, switch_stop_pending;
+     volatile uint32_t switch_changed_ms;
+@@ -36,6 +41,10 @@ extern vd_context_t vd;
+ #if VISION_DRIVE_ENABLE
+ void vd_output_zero(void);
+ void vd_output_apply(void);
++int vd_output_arm(uint32_t now,int local);
++#if !VISION_MIDTERM_AUTONOMOUS
++int vd_output_bench_start(void);
++#endif
+ void vd_startup_poll_switch(uint32_t now);
+ #if VISION_ROUTE_SWITCH
+ void vd_route_switch_init(void);
+@@ -48,6 +57,5 @@ void vd_probe_poll(uint32_t now);
+ void vd_motion_cancel(unsigned reason,uint32_t now);
+ void vd_motion_tick(uint32_t now);
+ void vd_motion_poll(uint32_t now);
+-void vd_motion_output(void);
+ #endif
+ #endif
+diff --git a/demo/code/vision_frame.c b/demo/code/vision_frame.c
+index dfbe19e..a184f81 100644
+--- a/demo/code/vision_frame.c
++++ b/demo/code/vision_frame.c
+@@ -6,12 +6,21 @@ static const uint8_t *camera_buffer(void)
+     uint8_t (* volatile *shared)[MT9V03X_W]=&mt9v03x_image;
+     return (const uint8_t *)*shared;
+ }
+-int vision_frame_copy(uint8_t *destination)
++int vision_frame_copy(uint8_t *destination, vision_frame_stamp_t *stamp)
+ {
+     const uint8_t *completed;uint32_t mask=__get_PRIMASK();
+-    __disable_irq();completed=camera_buffer();mt9v03x_finish_flag=0;
++    __disable_irq();
++    if(!destination || !stamp || !mt9v03x_finish_flag){__set_PRIMASK(mask);return 0;}
++    completed=camera_buffer();
++    stamp->sequence=mt9v03x_capture_sequence;
++    stamp->capture_ms=mt9v03x_capture_ms;
++    stamp->time_valid=mt9v03x_capture_time_valid;
++    mt9v03x_finish_flag=0;
+     __DMB();__set_PRIMASK(mask);
+     if(completed)memcpy(destination,completed,VISION_WIDTH*VISION_HEIGHT);
+     __DMB();
+-    return completed && !mt9v03x_finish_flag && completed==camera_buffer();
++    mask=__get_PRIMASK();__disable_irq();
++    int stable=completed && !mt9v03x_finish_flag && completed==camera_buffer() &&
++        stamp->sequence==mt9v03x_capture_sequence;
++    __set_PRIMASK(mask);return stable;
+ }
+diff --git a/demo/code/vision_frame.h b/demo/code/vision_frame.h
+index c14e26e..1e56022 100644
+--- a/demo/code/vision_frame.h
++++ b/demo/code/vision_frame.h
+@@ -3,5 +3,11 @@
+ #include <stdint.h>
+ /* Destination holds VISION_WIDTH*VISION_HEIGHT bytes. Return 1 only when
+  * the completed buffer stayed stable throughout the copy. */
+-int vision_frame_copy(uint8_t *destination);
++typedef struct {
++    uint32_t sequence, capture_ms;
++    uint8_t time_valid;
++} vision_frame_stamp_t;
++/* Stamp belongs to the completed capture, never foreground processing time.
++ * An image without a trusted capture clock may be displayed, never driven. */
++int vision_frame_copy(uint8_t *destination, vision_frame_stamp_t *stamp);
+ #endif
+diff --git a/demo/code/vision_guard.c b/demo/code/vision_guard.c
+index 7e7cafe..576cf8a 100644
+--- a/demo/code/vision_guard.c
++++ b/demo/code/vision_guard.c
+@@ -33,7 +33,7 @@ void vision_drive_safety_tick(void)
+ 
+ void vision_drive_switch_sample(int closed)
+ {
+-#if VISION_DRIVE_ENABLE
++#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_C31_AUTONOMOUS
+     uint32_t now;int changed;
+     if(!vd.initialized)return;
+     now=timer_get(GPT_TIM_1);
+diff --git a/demo/code/vision_motion.c b/demo/code/vision_motion.c
+index 1a42730..2ffb366 100644
+--- a/demo/code/vision_motion.c
++++ b/demo/code/vision_motion.c
+@@ -46,40 +46,6 @@ void vd_motion_tick(uint32_t now)
+         } else vd_motion_cancel(VD_MOTION_DONE,now);
+     }
+ }
+-void vd_motion_output(void)
+-{
+-    uint8_t phase=vd.motion.phase;
+-    uint32_t duty=vd.motion.actual_permille;
+-    int reverse=phase==VD_MOTION_REVERSE_SETTLE || phase==VD_MOTION_REVERSE;
+-    if(!phase || phase==VD_MOTION_WAIT_REVERSE){vd_output_zero();return;}
+-    /* A new direction is selected only from zero PWM after the coast gate. */
+-    gpio_set_level(MOTOR1_DIR,vd.profile.motor1_forward_level^(uint8_t)reverse);
+-    gpio_set_level(MOTOR2_DIR,vd.profile.motor2_forward_level^(uint8_t)reverse);
+-    /* pwm_set_duty clears LDOK before updating buffered registers, then
+-     * requests a full-cycle reload. Do not cancel/requeue identical values
+-     * at foreground-loop frequency. In particular the 50Hz servo must keep
+-     * its pending pulse while the motor ramp changes every ~10ms.
+-     * Caller masks IRQs; every stop invalidates this per-channel cache. */
+-    {
+-        uint32_t values[3]={duty*vd.motion_scale1/1000U*PWM_DUTY_MAX/1000U,
+-            duty*vd.motion_scale2/1000U*PWM_DUTY_MAX/1000U,
+-            (uint32_t)vd.motion.servo_us*SERVO_MOTOR_FREQ*PWM_DUTY_MAX/1000000U};
+-#if VISION_ENCODER_ENABLE
+-        uint16_t right,left;
+-        if(!vd_speed_output((uint16_t)(duty*vd.motion_scale1/1000U),(uint16_t)(duty*vd.motion_scale2/1000U),reverse,
+-            (uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left))return;
+-        values[0]=(uint32_t)right*PWM_DUTY_MAX/1000U;values[1]=(uint32_t)left*PWM_DUTY_MAX/1000U;
+-#endif
+-        const int channels[3]={MOTOR1_PWM,MOTOR2_PWM,SERVO_MOTOR_PWM};
+-        for(unsigned i=0;i<3;++i) {
+-            uint8_t bit=(uint8_t)(1U<<i);
+-            if(!(vd.motion_written_mask&bit) || vd.motion_written_pwm[i]!=values[i]) {
+-                pwm_set_duty(channels[i],values[i]);
+-                vd.motion_written_pwm[i]=values[i];vd.motion_written_mask|=bit;
+-            }
+-        }
+-    }
+-}
+ void vd_motion_poll(uint32_t now)
+ {
+     uint32_t mask=__get_PRIMASK();__disable_irq();
+@@ -94,14 +60,14 @@ void vd_motion_poll(uint32_t now)
+         uint32_t ramp=(uint32_t)(now-vd.motion.phase_ms)*VISION_MOTION_RISE_PERMILLE_S/1000U;
+         vd.motion.actual_permille=(uint16_t)(ramp>vd.motion.requested_permille?vd.motion.requested_permille:ramp);
+     }
+-    if(vd.motion.phase)vd_motion_output();
++    if(vd.motion.phase)vd_output_apply();
+     __DMB();__set_PRIMASK(mask);
+ }
+ #endif
+ int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration,uint16_t pulse,uint32_t now)
+ {
+-#if VISION_DRIVE_ENABLE
+-    uint32_t mask;unsigned delta;
++#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
++    uint32_t mask;unsigned delta;int accepted;
+     vision_drive_poll(now);
+     delta=pulse>vd.profile.servo_center_us?pulse-vd.profile.servo_center_us:vd.profile.servo_center_us-pulse;
+     if(!vd.initialized || !app_mode_allows(APP_MODE_DRIVE) || vd.motion.phase || vd.probe_active ||
+@@ -133,21 +99,24 @@ int vision_drive_motion_start(unsigned kind,uint16_t permille,uint16_t duration,
+     vd.motion.reason=VD_MOTION_NONE;vd.motion.actual_permille=0;vd.motion.requested_permille=permille;
+     vd.motion.servo_us=pulse;vd.motion.duration_ms=duration;
+     vd.motion.phase_ms=vd.motion.heartbeat_ms=timer_get(GPT_TIM_1);
+-    vd.motion_last_permille=permille;vd_motion_output();
+-    __DMB();__set_PRIMASK(mask);return 1;
++    vd.motion_last_permille=permille;accepted=vd_output_bench_start();
++    if(!accepted)vd_motion_cancel(VD_MOTION_FAULT,timer_get(GPT_TIM_1));
++    __DMB();__set_PRIMASK(mask);return accepted;
+ #else
+     (void)kind;(void)permille;(void)duration;(void)pulse;(void)now;return 0;
+ #endif
+ }
+ int vision_drive_motion_reverse(uint32_t now,int allowed)
+ {
+-#if VISION_DRIVE_ENABLE
+-    uint32_t mask;
++#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
++    uint32_t mask;int accepted;
+     vision_drive_poll(now);mask=__get_PRIMASK();__disable_irq();
+     if(!allowed || !app_mode_allows(APP_MODE_DRIVE) || vd.motion.phase!=VD_MOTION_WAIT_REVERSE ||
+        (uint32_t)(now-vd.motion.phase_ms)<VISION_MOTION_COAST_MS) {__set_PRIMASK(mask);return 0;}
+     vd_output_zero();vd.motion.phase=VD_MOTION_REVERSE_SETTLE;vd.motion.phase_ms=timer_get(GPT_TIM_1);
+-    vd_motion_output();__DMB();__set_PRIMASK(mask);return 1;
++    accepted=vd_output_bench_start();
++    if(!accepted)vd_motion_cancel(VD_MOTION_FAULT,timer_get(GPT_TIM_1));
++    __DMB();__set_PRIMASK(mask);return accepted;
+ #else
+     (void)now;(void)allowed;return 0;
+ #endif
+diff --git a/demo/code/vision_probe.c b/demo/code/vision_probe.c
+index d9727ef..5e69d65 100644
+--- a/demo/code/vision_probe.c
++++ b/demo/code/vision_probe.c
+@@ -2,8 +2,8 @@
+ 
+ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
+ {
+-#if VISION_DRIVE_ENABLE
+-    uint32_t mask;
++#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
++    uint32_t mask;int accepted;
+     unsigned difference = pulse_us > vd.probe_last_us ? pulse_us - vd.probe_last_us : vd.probe_last_us - pulse_us;
+     vision_drive_poll(now);
+     if (!app_mode_allows(APP_MODE_SERVO) || !vd.initialized || vd.motion.phase || vd.guard_faults || vd.control.output.state != VC_DISARMED ||
+@@ -23,9 +23,10 @@ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
+     vd.probe_last_us = pulse_us; vd.probe_active = 1;
+     ++vd.probe_info.sequence;vd.probe_info.kind=1;vd.probe_info.channel=0;vd.probe_info.level=0;
+     vd.probe_info.value=pulse_us;vd.probe_info.hold_ms=hold_ms;
+-    pwm_set_duty(SERVO_MOTOR_PWM, vd.probe_duty);
++    accepted=vd_output_bench_start();
++    if(!accepted)vd.probe_active=0;
+     __DMB(); __set_PRIMASK(mask);
+-    return 1;
++    return accepted;
+ #else
+     (void)pulse_us; (void)hold_ms; (void)now;
+     return 0;
+@@ -35,8 +36,8 @@ int vision_drive_servo_probe(uint16_t pulse_us, uint16_t hold_ms, uint32_t now)
+ int vision_drive_motor_probe(uint8_t channel, uint16_t duty_permille, uint8_t level,
+                              uint16_t hold_ms, uint32_t now)
+ {
+-#if VISION_DRIVE_ENABLE
+-    uint32_t mask;uint16_t last;
++#if VISION_DRIVE_ENABLE && !VISION_MIDTERM_AUTONOMOUS
++    uint32_t mask;uint16_t last;int accepted;
+     vision_drive_poll(now);
+     if (!app_mode_allows(APP_MODE_MOTOR) || !vd.initialized || vd.motion.phase || channel<1 || channel>2 || level>1 || vd.guard_faults ||
+         (vd.motion_have_stopped && (uint32_t)(now-vd.motion.stopped_ms)<VISION_MOTION_COAST_MS) ||
+@@ -62,8 +63,9 @@ int vision_drive_motor_probe(uint8_t channel, uint16_t duty_permille, uint8_t le
+     vd.motor_last_permille[channel-1]=duty_permille;vd.probe_active=(uint8_t)(channel+1);
+     ++vd.probe_info.sequence;vd.probe_info.kind=2;vd.probe_info.channel=channel;vd.probe_info.level=level;
+     vd.probe_info.value=duty_permille;vd.probe_info.hold_ms=hold_ms;
+-    pwm_set_duty(channel==1?MOTOR1_PWM:MOTOR2_PWM,vd.probe_duty);
+-    __DMB();__set_PRIMASK(mask);return 1;
++    accepted=vd_output_bench_start();
++    if(!accepted)vd.probe_active=0;
++    __DMB();__set_PRIMASK(mask);return accepted;
+ #else
+     (void)channel;(void)duty_permille;(void)level;(void)hold_ms;(void)now;return 0;
+ #endif
+diff --git a/demo/code/vision_profile.h b/demo/code/vision_profile.h
+index f303c58..c5c97c5 100644
+--- a/demo/code/vision_profile.h
++++ b/demo/code/vision_profile.h
+@@ -7,6 +7,18 @@
+ #ifndef VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_MIDTERM_ROUTE_TRIAL 0
+ #endif
++#ifndef VISION_MIDTERM_AUTO_TRACK
++#define VISION_MIDTERM_AUTO_TRACK 0
++#endif
++/* Derived source mode: the three C31 flags are sufficient. The older
++ * AUTO_TRACK flag remains a compatibility assertion, never start authority. */
++#define VISION_MIDTERM_C31_AUTONOMOUS (VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && VISION_MIDTERM_ROUTE_TRIAL)
++#if VISION_MIDTERM_AUTO_TRACK && !VISION_MIDTERM_C31_AUTONOMOUS
++#error "Auto-track requires autonomous + C31 route switch/trial algorithms."
++#endif
++#if VISION_MIDTERM_AUTONOMOUS && VISION_ROUTE_SWITCH && !VISION_MIDTERM_ROUTE_TRIAL
++#error "Autonomous route switch requires the C31 route trial profile."
++#endif
+ #if VISION_MIDTERM_ROUTE_TRIAL
+ #include "midterm_route_profile.h"
+ #endif
+@@ -154,7 +166,9 @@
+ #if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+-#if VISION_ROUTE_SWITCH
++#if VISION_MIDTERM_C31_AUTONOMOUS
++#define VISION_FIELD_BUILD "MIDTERM_C31_AUTO_TRACK_1"
++#elif VISION_ROUTE_SWITCH
+ #define VISION_FIELD_BUILD "MIDTERM_C26_31"
+ #elif VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+@@ -178,7 +192,7 @@
+ #define VISION_AUTO_START_DELAY_MS 2000U
+ #define VISION_START_SWITCH_ACTIVE_LEVEL 0U /* C12 -> GND enables; open stops. */
+ #ifndef VISION_START_SWITCH_ENABLE
+-#define VISION_START_SWITCH_ENABLE 0U /* Physical key control removed; UART arm remains explicit. */
++#define VISION_START_SWITCH_ENABLE 0U /* Legacy C12 gate only; C31 auto-track rejects switch/command arming. */
+ #endif
+ #define VISION_START_SWITCH_DEBOUNCE_MS 30U
+ #define VISION_START_SWITCH_REARM_MS 300U
+diff --git a/demo/code/vision_speed.c b/demo/code/vision_speed.c
+index 16aa70c..464fc7b 100644
+--- a/demo/code/vision_speed.c
++++ b/demo/code/vision_speed.c
+@@ -16,7 +16,7 @@ const char *vision_drive_speed_fault_name(unsigned detail)
+     return detail<sizeof(names)/sizeof(names[0])?names[detail]:"unknown";
+ }
+ #if VISION_ENCODER_ENABLE
+-/* Only the output layer runs PI (under its IRQ mask). The 10ms ISR samples
++/* Foreground control service runs PI under an IRQ mask. The 10ms ISR samples
+  * modular counters and may cut output; it never starts motors or parses UART. */
+ static ws_pi_t pi[2];
+ static uint16_t previous[2];
+@@ -24,6 +24,8 @@ static uint32_t consumed,last_control;
+ static uint32_t sample_interval;
+ static volatile uint8_t active,reset_pending;
+ static unsigned backwards[2],stalled[2];
++static uint16_t request_right,request_left,request_cap;
++static int request_reverse;
+ #if VISION_ROUTE_SWITCH
+ static unsigned slow_backwards[2];
+ #endif
+@@ -58,7 +60,7 @@ void vd_speed_init(uint32_t now)
+ void vd_speed_stop(void)
+ {
+ #if VISION_ENCODER_ENABLE
+-    active=0;reset_pending=1;
++    active=0;reset_pending=1;request_right=request_left=request_cap=0;
+     ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]); /* Integer-only, including from PIT1 STOP. */
+     speed.target_right=speed.target_left=0;speed.pwm_right=speed.pwm_left=0;
+ #endif
+@@ -67,7 +69,7 @@ void vd_speed_sample_tick(uint32_t now)
+ {
+ #if VISION_ENCODER_ENABLE
+     uint16_t current[2];uint32_t elapsed=now-speed.sample_ms;
+-    if(elapsed<10U)return;
++    if(elapsed<VD_SPEED_SAMPLE_MIN_INTERVAL_MS)return;
+     board_encoder_read(&current[0],&current[1]);
+     {int32_t d3=(uint16_t)(current[0]-previous[0]);int32_t d4=(uint16_t)(current[1]-previous[1]);
+      if(d3>=32768)d3-=65536;if(d4>=32768)d4-=65536;
+@@ -75,8 +77,8 @@ void vd_speed_sample_tick(uint32_t now)
+      speed.total3=total_add(speed.total3,d3);speed.total4=total_add(speed.total4,d4);}
+     previous[0]=current[0];previous[1]=current[1];speed.sample_ms=now;sample_interval=elapsed;++speed.samples;
+     if(speed.enabled&&active) {
+-        if(elapsed>20U)trip(VS_FAULT_SAMPLE_GAP,now);
+-        else if((uint32_t)(now-last_control)>=50U)trip(VS_FAULT_CONTROL_GAP,now);
++        if(elapsed>VD_SPEED_SAMPLE_MAX_INTERVAL_MS)trip(VS_FAULT_SAMPLE_GAP,now);
++        else if((uint32_t)(now-last_control)>=VD_SPEED_CONTROL_STALL_TIMEOUT_MS)trip(VS_FAULT_CONTROL_GAP,now);
+         else if(speed.raw3<=-30000||speed.raw3>=30000||speed.raw4<=-30000||speed.raw4>=30000)trip(VS_FAULT_DELTA,now);
+     }
+ #else
+@@ -114,7 +116,7 @@ int vision_drive_speed_enable(int enable)
+         !vd.profile.hardware_confirmed||!vd.profile.motor_direction_confirmed||
+         vd.control.config.duty_cap<=0||vd.control.config.duty_cap>(VISION_ROUTE_SWITCH?.18f:.15f)||
+         vd.profile.motor1_scale!=1.0f||vd.profile.motor2_scale!=1.0f||
+-        !speed.samples||(uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)>30U))return 0;
++        !speed.samples||(uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS))return 0;
+     speed.enabled=(uint8_t)enable;speed.faults=0;speed.fault_detail=0;
+     speed.fault_control_age_ms=speed.fault_sample_age_ms=speed.fault_interval_ms=0;
+     vd_speed_stop();return 1;
+@@ -122,7 +124,8 @@ int vision_drive_speed_enable(int enable)
+     return enable==0;
+ #endif
+ }
+-int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
++#if VISION_ENCODER_ENABLE
++static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
+ {
+     *out_right=right;*out_left=left;
+ #if VISION_ENCODER_ENABLE
+@@ -135,7 +138,7 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16
+ #endif
+         *out_right=*out_left=0;
+         if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){trip(VS_FAULT_OUTPUT,now);return 0;}
+-        if((uint32_t)(now-speed.sample_ms)>30U){trip(VS_FAULT_STALE,now);return 0;}
++        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
+         if(reset_pending){ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]);memset(backwards,0,sizeof(backwards));
+             memset(stalled,0,sizeof(stalled));
+ #if VISION_ROUTE_SWITCH
+@@ -158,7 +161,9 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16
+ #endif
+             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
+             int32_t measured[2]={(int32_t)speed.raw4*speed.sign4,(int32_t)speed.raw3*speed.sign3};
+-            if(periods>5){trip(VS_FAULT_BACKLOG,now);return 0;}
++            /* No queue: the latest count cannot stand in for missed measurements. */
++            if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){trip(VS_FAULT_BACKLOG,now);return 0;}
++            if(sample_interval<VD_SPEED_SAMPLE_MIN_INTERVAL_MS || sample_interval>VD_SPEED_SAMPLE_MAX_INTERVAL_MS){trip(VS_FAULT_SAMPLE_GAP,now);return 0;}
+             if(reverse){measured[0]=-measured[0];measured[1]=-measured[1];}
+ #if VISION_ROUTE_SWITCH
+             if(track){
+@@ -201,9 +206,9 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16
+ #if VISION_ROUTE_SWITCH
+                 {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:speed.max_ticks));
+                  uint16_t effort=track?vp_effort_limit(pi[i].output,periods):pwm_cap;
+-                 ws_pi_step_ff(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,effort,periods,ff);}
++                 ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,effort,sample_interval,ff);}
+ #else
+-                ws_pi_step(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,pwm_cap,periods);
++                ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,pwm_cap,sample_interval,0);
+ #endif
+                 /* Keep the old no-count threshold independent of the larger
+                  * PWM headroom: a stalled motor must not wait for full duty. */
+@@ -221,3 +226,46 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16
+ #endif
+     return 1;
+ }
++
++#endif
++
++/* Target publication never consumes a sample or advances PI. All three APIs
++ * below are called with interrupts masked by the foreground/output facade. */
++int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
++                    uint16_t *out_right,uint16_t *out_left)
++{
++    *out_right=right;*out_left=left;
++#if VISION_ENCODER_ENABLE
++    if(speed.enabled) {
++        uint32_t now=timer_get(GPT_TIM_1);
++        *out_right=*out_left=0;
++        if(speed.faults || vd.guard_faults)return 0;
++        if(!cap || cap>(VISION_ROUTE_SWITCH?180U:150U) || right>cap || left>cap) {
++            trip(VS_FAULT_OUTPUT,now);return 0;
++        }
++        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
++        request_right=right;request_left=left;request_reverse=reverse;request_cap=cap;
++        /* Zero targets take effect immediately, without waiting for service. */
++        if(!right&&!left) {
++            vd_speed_stop();return 1;
++        }
++        *out_right=speed.pwm_right;*out_left=speed.pwm_left;
++    }
++#else
++    (void)reverse;(void)cap;
++#endif
++    return 1;
++}
++void vd_speed_control_poll(uint32_t now)
++{
++#if VISION_ENCODER_ENABLE
++    uint32_t mask=__get_PRIMASK();uint16_t right,left;__disable_irq();
++    if(speed.enabled && request_cap && !speed.faults && !vd.guard_faults) {
++        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS)trip(VS_FAULT_STALE,now);
++        else (void)speed_control_output(request_right,request_left,request_reverse,request_cap,&right,&left);
++    }
++    __DMB();__set_PRIMASK(mask);
++#else
++    (void)now;
++#endif
++}
+diff --git a/demo/code/vision_speed.h b/demo/code/vision_speed.h
+index 0328701..8bf8fe6 100644
+--- a/demo/code/vision_speed.h
++++ b/demo/code/vision_speed.h
+@@ -1,6 +1,17 @@
+ #ifndef VISION_SPEED_H
+ #define VISION_SPEED_H
+ #include <stdint.h>
++
++/* Software timing contract for the foreground PI service and PIT sampling.
++ * These are fail-closed limits, not a claim of hard real-time scheduling.
++ * The nominal encoder sample cadence is 10ms; the foreground service must
++ * consume each new sample once and must not replay missed samples. */
++#define VD_SPEED_SAMPLE_MIN_INTERVAL_MS 10U
++#define VD_SPEED_SAMPLE_MAX_INTERVAL_MS 20U
++#define VD_SPEED_SAMPLE_MAX_AGE_MS 30U
++#define VD_SPEED_CONTROL_STALL_TIMEOUT_MS 50U
++#define VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS 20U
++#define VD_SPEED_MAX_UNCONSUMED_SAMPLES 1U
+ typedef struct {
+     uint32_t samples,sample_ms,faults;
+     uint32_t fault_control_age_ms,fault_sample_age_ms,fault_interval_ms;
+@@ -23,9 +34,13 @@ int vision_drive_speed_enable(int enable);
+ void vd_speed_init(uint32_t now);
+ void vd_speed_sample_tick(uint32_t now);
+ void vd_speed_stop(void);
+-/* Called only under output-layer IRQ mask; returns 0 after an interlock trip.
+- * cap scales requests into encoder targets. C26 track driving has a separate
+- * MT_ROUTE_PWM_CAP_PERMILLE output ceiling; other modes use cap for both. */
++/* Publish target and read held PWM under the output IRQ mask. No PI here.
++ * cap is the target-request scale; max_ticks limits count/10ms targets.
++ * C31 PWM hard limit is MT_ROUTE_PWM_FULL_SCALE, independently of this cap. */
+ int vd_speed_output(uint16_t request_right,uint16_t request_left,int reverse,
+                     uint16_t cap,uint16_t *pwm_right,uint16_t *pwm_left);
++/* Foreground service, at most once per distinct encoder sample. Missing samples
++ * fail closed; never replay the latest measurement as multiple PI steps.
++ * Not a guaranteed fixed-period scheduler; PIT1 remains sample/cutoff only. */
++void vd_speed_control_poll(uint32_t now_ms);
+ #endif
+diff --git a/demo/code/vision_startup.c b/demo/code/vision_startup.c
+index b157cb1..7ae7ef3 100644
+--- a/demo/code/vision_startup.c
++++ b/demo/code/vision_startup.c
+@@ -3,6 +3,9 @@
+ void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now)
+ {
+ #if VISION_DRIVE_ENABLE
++#if VISION_MIDTERM_AUTONOMOUS
++    (void)boot_ms;(void)now;return; /* Dedicated startup owner only. */
++#else
+     /* Not re-schedulable within a boot, including after STOP/clear/configure. */
+     if (vd.auto_info.restored) return;
+ #if VISION_MOTOR_THRESHOLD_DIAG
+@@ -16,6 +19,7 @@ void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now)
+     if (vd.profile.autostart_enabled && (uint32_t)(now-boot_ms)>=vd.profile.startup_delay_ms) {
+         vd.switch_boot_pending=0;vd.auto_info.state=VD_AUTO_BLOCKED;
+     }
++#endif
+ #else
+     (void)boot_ms; (void)now;
+ #endif
+@@ -44,6 +48,9 @@ int vision_drive_is_local(void) { return vd.control.output.state==VC_RUNNING &&
+ #if VISION_DRIVE_ENABLE
+ void vd_startup_poll_switch(uint32_t now)
+ {
++#if VISION_MIDTERM_AUTONOMOUS
++    (void)now;return; /* No legacy switch rearm/clear authority. */
++#else
+     if (vd.switch_stop_pending) {
+         uint32_t mask=__get_PRIMASK();__disable_irq();
+         vd.switch_stop_pending=0;__set_PRIMASK(mask);
+@@ -66,9 +73,13 @@ void vd_startup_poll_switch(uint32_t now)
+         }
+ #endif
+     }
++#endif
+ }
+ void vd_startup_poll_deadline(uint32_t now)
+ {
++#if VISION_MIDTERM_AUTONOMOUS
++    (void)now; /* Only midterm_boot owns the C31 continuous-track launch. */
++#else
+     if (vd.auto_info.state==VD_AUTO_WAITING &&
+         (uint32_t)(now-vd.auto_info.boot_ms)>=vd.auto_info.delay_ms) {
+         /* A blocked deadline is terminal for this boot: never creep into
+@@ -77,11 +88,12 @@ void vd_startup_poll_deadline(uint32_t now)
+ #if !VISION_MOTOR_THRESHOLD_DIAG
+         accepted=app_mode_allows(APP_MODE_DRIVE) && vd.local_permitted && vd.switch_seen && vd.switch_closed && !vd.switch_inhibit &&
+             !vd.guard_faults && !vd.probe_active && vd.hardware_ready &&
+-            vc_arm_local(&vd.control,now,vd.hardware_ready);
++            vd_output_arm(now,1);
+ #endif
+         vd.auto_info.state=accepted?VD_AUTO_STARTED:VD_AUTO_BLOCKED;
+         vd_output_apply(); /* First command is zero duty; next fresh frame ramps. */
+     }
++#endif
+ }
+ #endif
+ 
+@@ -98,13 +110,16 @@ void vd_route_switch_mode_stop(void)
+ }
+ void vd_route_switch_poll(uint32_t now)
+ {
++#if VISION_MIDTERM_AUTONOMOUS
++    (void)now; /* Defense in depth: no clear, arm or restart through C26. */
++#else
+     vd_speed_info_t s;
+     if(!app_mode_allows(APP_MODE_DRIVE)) {
+         /* STOP/query while already OFF must not inhibit the next ON. */
+         if(app_mode_allows(APP_MODE_OBSERVE))route_operator_stop=0;
+         if(app_mode_allows(APP_MODE_OBSERVE) && !route_released) {
+             vision_drive_speed_get(&s);
+-            if(s.samples && (uint32_t)(now-s.sample_ms)<=20U) {
++            if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+                 uint32_t mask=__get_PRIMASK();__disable_irq();
+                 vd.guard_running=0;vd.probe_active=0;vd_output_zero();vd.guard_faults=0;
+                 vc_clear_fault(&vd.control);__set_PRIMASK(mask);
+@@ -128,14 +143,15 @@ void vd_route_switch_poll(uint32_t now)
+     }
+     if(vd.control.output.state!=VC_DISARMED)return;
+     vision_drive_speed_get(&s);
+-    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>20U ||
++    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
+        vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
+     {
+         uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
+         accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
+-            vc_arm_local(&vd.control,now,vd.hardware_ready);
++            vd_output_arm(now,1);
+         if(accepted)vd_output_apply();
+         __set_PRIMASK(mask);
+     }
++#endif
+ }
+ #endif
+diff --git a/demo/code/wheel_speed.c b/demo/code/wheel_speed.c
+index a326adf..df33dde 100644
+--- a/demo/code/wheel_speed.c
++++ b/demo/code/wheel_speed.c
+@@ -1,10 +1,10 @@
+ #include "wheel_speed.h"
+ void ws_pi_reset(ws_pi_t *p){p->integral_q8=0;p->output=0;}
+-uint16_t ws_pi_step_ff(ws_pi_t *p,int32_t target,int32_t measured,
+-                    uint16_t kp,uint16_t ki,uint16_t cap,unsigned periods,uint16_t feedforward)
++uint16_t ws_pi_step_ff_ms(ws_pi_t *p,int32_t target,int32_t measured,
++                    uint16_t kp,uint16_t ki,uint16_t cap,unsigned elapsed_ms,uint16_t feedforward)
+ {
+     int64_t error,proportional,candidate,limit=(int64_t)cap*256,output,minimum,maximum,bias;
+-    if(target<=0 || !cap || !periods || periods>5){ws_pi_reset(p);return 0;}
++    if(target<=0 || !cap || !elapsed_ms || elapsed_ms>50U){ws_pi_reset(p);return 0;}
+     if(feedforward>cap)feedforward=cap;
+     bias=(int64_t)feedforward*256;
+     minimum=-bias;maximum=limit-bias;
+@@ -15,12 +15,20 @@ uint16_t ws_pi_step_ff(ws_pi_t *p,int32_t target,int32_t measured,
+     if(p->integral_q8>maximum)p->integral_q8=(int32_t)maximum;
+     if(p->integral_q8<minimum)p->integral_q8=(int32_t)minimum;
+     error=(int64_t)target-measured;proportional=error*kp;
+-    candidate=p->integral_q8+error*ki*periods;
++    candidate=p->integral_q8+error*ki*elapsed_ms/10U;
+     if(candidate>maximum)candidate=maximum;
+     if(candidate<minimum)candidate=minimum;
+     output=bias+proportional+candidate;
+-    /* Integrate only if not pushing further into saturation. */
+-    if(!((output>limit && error>0)||(output<0 && error<0)))p->integral_q8=(int32_t)candidate;
++    /* Accept the part of an increment that reaches the saturation boundary.
++     * Rejecting the entire crossing step leaves a permanent sub-cap gap.
++     * Once saturated, do not integrate further into the limit. */
++    if(output>limit && error>0) {
++        if(bias+proportional+p->integral_q8<limit)
++            p->integral_q8=(int32_t)(limit-bias-proportional);
++    } else if(output<0 && error<0) {
++        if(bias+proportional+p->integral_q8>0)
++            p->integral_q8=(int32_t)(-bias-proportional);
++    } else p->integral_q8=(int32_t)candidate;
+     output=bias+proportional+p->integral_q8;
+     if(output<0)output=0;
+     if(output>limit)output=limit;
+@@ -30,3 +38,11 @@ uint16_t ws_pi_step_ff(ws_pi_t *p,int32_t target,int32_t measured,
+ uint16_t ws_pi_step(ws_pi_t *p,int32_t target,int32_t measured,
+                     uint16_t kp,uint16_t ki,uint16_t cap,unsigned periods)
+ {return ws_pi_step_ff(p,target,measured,kp,ki,cap,periods,0);}
++
++/* Compatibility entry for existing nominal-10ms callers. */
++uint16_t ws_pi_step_ff(ws_pi_t *p,int32_t target,int32_t measured,
++                    uint16_t kp,uint16_t ki,uint16_t cap,unsigned periods,uint16_t feedforward)
++{
++    if(!periods || periods>5){ws_pi_reset(p);return 0;}
++    return ws_pi_step_ff_ms(p,target,measured,kp,ki,cap,periods*10U,feedforward);
++}
+diff --git a/demo/code/wheel_speed.h b/demo/code/wheel_speed.h
+index b3028da..65515d3 100644
+--- a/demo/code/wheel_speed.h
++++ b/demo/code/wheel_speed.h
+@@ -6,6 +6,12 @@ typedef struct { int32_t integral_q8; uint16_t output; } ws_pi_t;
+ void ws_pi_reset(ws_pi_t *p);
+ uint16_t ws_pi_step(ws_pi_t *p,int32_t target,int32_t measured,
+                     uint16_t kp_q8,uint16_t ki_q8,uint16_t cap,unsigned periods);
++/* Measured sample duration; ki retains its confirmed nominal 10ms value.
++ * cap bounds actual PWM and signed integral trim (-feedforward..cap-feedforward)
++ * in Q8; it is neither a target-speed limit nor a target slew limit. */
++uint16_t ws_pi_step_ff_ms(ws_pi_t *p,int32_t target,int32_t measured,
++                    uint16_t kp_q8,uint16_t ki_q8,uint16_t cap,unsigned elapsed_ms,
++                    uint16_t feedforward);
+ /* Add a bounded target-scaled PWM baseline; signed PI trim can remove an
+  * excessive baseline. Physical PWM remains nonnegative: no reverse braking.
+  * A zero target, stale period or STOP still resets the complete output. */
+diff --git a/libraries/zf_device/zf_device_mt9v03x.c b/libraries/zf_device/zf_device_mt9v03x.c
+index 39b31ec..c8cfa9f 100644
+--- a/libraries/zf_device/zf_device_mt9v03x.c
++++ b/libraries/zf_device/zf_device_mt9v03x.c
+@@ -60,6 +60,10 @@
+ 
+ #include "zf_device_mt9v03x.h"
+ 
++uint32 (*mt9v03x_capture_clock_ms)(void) = NULL;
++vuint32 mt9v03x_capture_sequence = 0;
++vuint32 mt9v03x_capture_ms = 0;
++vuint8 mt9v03x_capture_time_valid = 0;
+ vuint8 mt9v03x_finish_flag = 0;                                                  // Ò»³¡Í¼Ïñ²É¼¯Íê³É±êÖ¾Î»
+ // Í¼Ïñ»º³åÇø  Èç¹ûÓÃ»§ÐèÒª·ÃÎÊÍ¼ÏñÊý¾Ý ×îºÃÍ¨¹ýmt9v03x_csi_imageÀ´·ÃÎÊÊý¾Ý£¬×îºÃ²»ÒªÖ±½Ó·ÃÎÊ»º³åÇø
+ AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_image1[MT9V03X_H][MT9V03X_W], 64);
+@@ -401,6 +405,21 @@ void mt9v03x_finished_callback(CSI_Type *base, csi_handle_t *handle, status_t st
+             mt9v03x_image = mt9v03x_image2; // image_csi2²É¼¯Íê³É
+             csi_add_empty_buffer(&csi_handle, mt9v03x_image1[0]);
+         }
++        else
++        {
++            return;
++        }
++        if(mt9v03x_capture_clock_ms != NULL)
++        {
++            mt9v03x_capture_ms = mt9v03x_capture_clock_ms();
++            mt9v03x_capture_time_valid = 1;
++        }
++        else
++        {
++            mt9v03x_capture_ms = 0;
++            mt9v03x_capture_time_valid = 0;
++        }
++        mt9v03x_capture_sequence++;
+         mt9v03x_finish_flag = 1;            // ²É¼¯Íê³É±êÖ¾Î»ÖÃÒ»
+     }
+ }
+@@ -416,6 +435,10 @@ uint8 mt9v03x_init (void)
+ {
+     uint8 return_state = 0;
+     soft_iic_info_struct mt9v03x_iic_struct;
++    mt9v03x_finish_flag = 0;
++    mt9v03x_capture_sequence = 0;
++    mt9v03x_capture_ms = 0;
++    mt9v03x_capture_time_valid = 0;
+     do
+     {
+         system_delay_ms(200);
+diff --git a/libraries/zf_device/zf_device_mt9v03x.h b/libraries/zf_device/zf_device_mt9v03x.h
+index 686b1b2..a17e024 100644
+--- a/libraries/zf_device/zf_device_mt9v03x.h
++++ b/libraries/zf_device/zf_device_mt9v03x.h
+@@ -124,6 +124,10 @@ typedef enum
+     MT9V03X_SCCB,
+ }m9v03x_type_enum;
+ 
++extern uint32   (*mt9v03x_capture_clock_ms)(void);
++extern vuint32  mt9v03x_capture_sequence;
++extern vuint32  mt9v03x_capture_ms;
++extern vuint8   mt9v03x_capture_time_valid;
+ extern vuint8   mt9v03x_finish_flag;                                            // Ò»³¡Í¼Ïñ²É¼¯Íê³É±êÖ¾Î»
+ extern uint8    (*mt9v03x_image)[MT9V03X_W];
+ 
+diff --git a/tests/vision/stubs/main.h b/tests/vision/stubs/main.h
+index e4e59f4..866b265 100644
+--- a/tests/vision/stubs/main.h
++++ b/tests/vision/stubs/main.h
+@@ -44,6 +44,9 @@ void gpio_set_level(int pin, int level);
+ void pit_ms_init(int channel, uint32_t ms);
+ void interrupt_set_priority(int irq, uint8_t priority);
+ extern volatile uint8_t mt9v03x_finish_flag;
++extern uint32_t (*mt9v03x_capture_clock_ms)(void);
++extern volatile uint32_t mt9v03x_capture_sequence, mt9v03x_capture_ms;
++extern volatile uint8_t mt9v03x_capture_time_valid;
+ extern uint8_t (*mt9v03x_image)[MT9V03X_W];
+ extern uint8_t image_two_value[MT9V03X_H][MT9V03X_W];
+ extern uint8_t Left_Line[MT9V03X_H], Right_Line[MT9V03X_H], Mid_Line[MT9V03X_H];
+diff --git a/tests/vision/test_board_mode.c b/tests/vision/test_board_mode.c
+index 65fa66a..89e1e26 100644
+--- a/tests/vision/test_board_mode.c
++++ b/tests/vision/test_board_mode.c
+@@ -15,6 +15,7 @@ void board_io_hw_capture(board_io_state_t *s) {s->buzzer_mux=5;s->buzzer_directi
+ static char diagnostic[2048];
+ int app_console_printf(const char *format,...) {int n;va_list args;size_t used=strlen(diagnostic);va_start(args,format);n=vsnprintf(diagnostic+used,sizeof(diagnostic)-used,format,args);va_end(args);return n;}
+ static int pins[128], init_count, failures, checks, camera_attempts;
++uint32_t (*mt9v03x_capture_clock_ms)(void);
+ int mt9v03x_init(void) {return ++camera_attempts<2;}
+ #define CHECK(x) do { ++checks; if (!(x)) { ++failures; fprintf(stderr,"FAIL mode:%d %s\n",__LINE__,#x); } } while (0)
+ uint32_t timer_get(int c) { (void)c; return now; }
+@@ -91,11 +92,13 @@ int main(void)
+     pins[C26]=1;pins[C27]=0;board_mode_sample();vision_drive_safety_tick();
+     CHECK(!pwm[0] && !pwm[1] && !pwm[2]);vision_drive_poll(now);
+     now+=30;board_mode_sample();CHECK(app_mode_allows(APP_MODE_MOTOR));
++    if(app_mode_take_change())vision_drive_stop();
+     CHECK(!vision_drive_servo_probe(1500,200,now));CHECK(!vision_drive_command('a',now,1));
+     CHECK(vision_drive_motor_probe(1,10,1,200,now));CHECK(pwm[0]>0 && !pwm[1] && !pwm[2]);
+     pins[C26]=0;pins[C27]=0;board_mode_sample();vision_drive_safety_tick();
+     CHECK(!pwm[0] && !pwm[1] && !pwm[2]);vision_drive_poll(now);
+     now+=30;board_mode_sample();CHECK(app_mode_allows(APP_MODE_DRIVE));
++    if(app_mode_take_change())vision_drive_stop();
+     CHECK(!vision_drive_command('a',now,1)); /* Mode selection is not calibration. */
+     CHECK(!vision_drive_motor_probe(1,10,1,200,now));CHECK(!vision_drive_servo_probe(1500,200,now));
+     vision_drive_get_profile(&profile);
+diff --git a/tests/vision/test_debug.c b/tests/vision/test_debug.c
+index 0ce0e3d..4a50bb7 100644
+--- a/tests/vision/test_debug.c
++++ b/tests/vision/test_debug.c
+@@ -16,6 +16,8 @@
+ /* Actual vision_debug.c runs unchanged. Only MCU time, camera delivery,
+  * interrupts and UART transport are simulated; this is not a hardware test. */
+ volatile uint8_t mt9v03x_finish_flag;
++volatile uint32_t mt9v03x_capture_sequence, mt9v03x_capture_ms;
++volatile uint8_t mt9v03x_capture_time_valid;
+ uint8_t (*mt9v03x_image)[VISION_WIDTH];
+ uint8_t image_two_value[VISION_HEIGHT][VISION_WIDTH];
+ uint8_t Left_Line[VISION_HEIGHT], Right_Line[VISION_HEIGHT], Mid_Line[VISION_HEIGHT];
+@@ -60,6 +62,14 @@ static void fill_camera(int id, int shift)
+             camera[id][y][x] = (uint8_t)(x >= center - width / 2 && x <= center + width / 2 ? 210 : 30);
+     }
+ }
++/* Publish the same capture metadata contract as the camera completion ISR. */
++static void finish_camera(uint32_t at)
++{
++    mt9v03x_capture_ms=at;
++    mt9v03x_capture_time_valid=1;
++    ++mt9v03x_capture_sequence;
++    mt9v03x_finish_flag=1;
++}
+ void pwm_set_duty(int channel, uint32_t duty)
+ {
+     check(channel >= 0 && channel < 3 && duty <= 10000, "bounded output");
+@@ -80,7 +90,7 @@ void __DMB(void)
+     if ((current_case == COPY_RACE || current_case == COPY_ABA) && barriers % 2 == 0) {
+         if (current_case == COPY_RACE)
+             mt9v03x_image = mt9v03x_image == camera[0] ? camera[1] : camera[0];
+-        mt9v03x_finish_flag = 1;
++        finish_camera(ticks_base+elapsed);
+     }
+ }
+ void board_diagnostics_report(void) {}
+@@ -99,7 +109,11 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
+     }
+ #if VISION_DRIVE_ENABLE
+     if(current_case>=AUTO_RUN)vision_drive_switch_sample(current_case!=AUTO_OPEN || elapsed<2300);
++#if VISION_TEST_MIDTERM_RUNTIME
++    vision_test_runtime_tick();
++#else
+     vision_drive_safety_tick();
++#endif
+ #endif
+     if (elapsed >= finish_at) longjmp(stop_loop, 1);
+ #if VISION_DRIVE_ENABLE
+@@ -131,7 +145,7 @@ static uint32_t mock_receive(uint8_t *data, uint32_t capacity)
+                         (current_case==AUTO_INVALID && elapsed<2200) ? 70 : 0);
+             mt9v03x_image = camera[id];
+         }
+-        mt9v03x_finish_flag = 1;
++        finish_camera(ticks_base+elapsed);
+     }
+     if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 100) command = 'f';
+     if ((current_case == FULL_MODE || current_case == RETURN_MIDTERM) && elapsed == 200) command = 'a';
+diff --git a/tests/vision/test_dual_runtime.c b/tests/vision/test_dual_runtime.c
+index 9594420..df451be 100644
+--- a/tests/vision/test_dual_runtime.c
++++ b/tests/vision/test_dual_runtime.c
+@@ -19,7 +19,7 @@ uint32_t timer_get(int index)
+     (void)index;++elapsed;
+     if(elapsed>=finish_at)longjmp(stop_loop,1);
+     if(elapsed%10==0) {
+-        fill_camera(0,0);mt9v03x_image=camera[0];mt9v03x_finish_flag=1;
++        fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(elapsed);
+     }
+     if(vision_drive_output()->state==VC_RUNNING)observed_running=1;
+     if(experiment==0) {
+diff --git a/tests/vision/test_field_protocol.ps1 b/tests/vision/test_field_protocol.ps1
+index 77d140a..d35a7a5 100644
+--- a/tests/vision/test_field_protocol.ps1
++++ b/tests/vision/test_field_protocol.ps1
+@@ -24,10 +24,10 @@ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_16 ready
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_17 ready=1')
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_18 ready=1')
+ Assert-Protocol (Test-FieldReply '@status' '[FIELD] version=MIDTERM_C26_19 ready=1')
+-foreach($fieldVersion in 20..28) {
++foreach($fieldVersion in 20..31) {
+     Assert-Protocol (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldVersion ready=1")
+ }
+-foreach($fieldUnknown in @('29','280','28_extra','0')) {
++foreach($fieldUnknown in @('32','320','31_extra','0')) {
+     Assert-Protocol (-not (Test-FieldReply '@status' "[FIELD] version=MIDTERM_C26_$fieldUnknown ready=1"))
+ }
+ Write-Output "FIELD PROTOCOL PASS: $fieldChecks checks; no COM opened."
+diff --git a/tests/vision/test_midterm_boot.c b/tests/vision/test_midterm_boot.c
+index e097bb5..e9229d1 100644
+--- a/tests/vision/test_midterm_boot.c
++++ b/tests/vision/test_midterm_boot.c
+@@ -34,6 +34,7 @@ static void boot(uint32_t start)
+     vd_profile_t p;
+     now=start;raw3=raw4=0;mask=0;sequence=0;
+     vision_drive_init(now);app_mode_init(1,1,now);
++    (void)app_mode_take_change();
+     CHECK(app_mode_allows(APP_MODE_DRIVE)); /* No switch/key needed. */
+     CHECK(app_mode_current()==APP_MODE_DRIVE);
+     vision_drive_get_profile(&p);
+@@ -65,7 +66,7 @@ int main(void)
+     CHECK(vision_drive_is_local()&&!vision_drive_output()->faults);
+     CHECK(pwm[0]>0&&pwm[1]>0);
+     CHECK(!vision_drive_command('a',now,1));
+-    vision_drive_stop();CHECK(midterm_boot_state()==MT_BOOT_STOPPED);
++    midterm_boot_cancel(now);vision_drive_stop();CHECK(midterm_boot_state()==MT_BOOT_STOPPED);
+     for(int i=0;i<80;++i)step(1);
+     CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_is_local());
+     boot(0);for(int i=0;i<310;++i)step(1);
+diff --git a/tests/vision/test_midterm_runtime.c b/tests/vision/test_midterm_runtime.c
+index 1a6818f..5542c2b 100644
+--- a/tests/vision/test_midterm_runtime.c
++++ b/tests/vision/test_midterm_runtime.c
+@@ -1,7 +1,11 @@
+ /* Real scheduler, vision, speed PI and link modules; simulated peripherals only. */
++#define VISION_TEST_MIDTERM_RUNTIME 1
++void vision_test_runtime_tick(void);
+ #define main legacy_scenarios_main
+ #define timer_get legacy_timer_get
++#define board_camera_poll legacy_board_camera_poll
+ #include "test_debug.c"
++#undef board_camera_poll
+ #undef timer_get
+ #undef main
+ #include "app_transport.h"
+@@ -10,34 +14,43 @@
+ #include "board_encoder.h"
+ #include "vision_drive_internal.h"
+ #include <assert.h>
+-static unsigned experiment,observed_running,in_tick;
++static unsigned experiment,observed_running,stop_injected;
+ static uint16_t counter;
+ void board_buzzer_set(int on){(void)on;}
+ void board_encoder_read(uint16_t *l,uint16_t *r){*l=*r=counter;}
+ void board_encoder_capture(board_encoder_diag_t *out){memset(out,0,sizeof(*out));}
+ void app_link_board_init(void){}
+ int app_link_board_try_tx(unsigned ch,uint8_t c){(void)ch;(void)c;return 0;} /* Radio always busy. */
++int board_camera_poll(int requested,uint32_t at)
++{
++    /* Dual UART reads real link queues, so advance the fixture once per loop here. */
++    uint8_t unused;
++    (void)mock_receive(&unused,0);
++    (void)at;return requested;
++}
++void vision_test_runtime_tick(void)
++{
++    /* One encoder sample and safety interrupt per mock_receive 10 ms step. */
++    counter=(uint16_t)(counter+2);
++    vision_drive_safety_tick();
++}
+ uint32_t timer_get(int index)
+ {
+-    (void)index;uint32_t at=++elapsed;
+-    if(elapsed>=finish_at)longjmp(stop_loop,1);
+-    if(at%20U==0 && (experiment!=2 || elapsed<3200)) {
+-        fill_camera(0,0);mt9v03x_image=camera[0];mt9v03x_finish_flag=1;
+-    }
++    (void)index;
+     if(elapsed>100 && vision_drive_is_local()) {
+         assert(elapsed>=3000);observed_running=1;
+     }
+-    if((experiment==1&&at==1000)||(experiment==3&&at==3600))
++    if(!stop_injected && ((experiment==1&&elapsed>=1000)||(experiment==3&&elapsed>=3600))) {
++        stop_injected=1;
+         app_link_rx_isr(1,'!');
+-    if(!in_tick && !irq_mask && at>100 && at%10U==0) {
+-        in_tick=1;counter=(uint16_t)(counter+2);vision_drive_safety_tick();in_tick=0;
+     }
+-    return elapsed;
++    return ticks_base+elapsed;
+ }
+ int main(void)
+ {
+     for(experiment=0;experiment<4;++experiment) {
+-        elapsed=0;counter=0;observed_running=0;in_tick=0;finish_at=4200;
++        elapsed=0;counter=0;observed_running=0;stop_injected=0;finish_at=4200;
++        feed_until=experiment==2 ? 3200U : finish_at;
+         moved=servo_moved=0;irq_mask=0;current_case=TEXT;case_name="autonomous runtime";
+         memset(pwm,0,sizeof(pwm));mt9v03x_finish_flag=0;mt9v03x_image=NULL;
+         app_mode_init(1,1,0);vs_init(NULL);app_transport_init();
+diff --git a/tests/vision/test_speed.c b/tests/vision/test_speed.c
+index 556d5d4..444028c 100644
+--- a/tests/vision/test_speed.c
++++ b/tests/vision/test_speed.c
+@@ -54,6 +54,29 @@ int main(void)
+     CHECK(pi.output>=135&&pi.output<=150);
+     for(unsigned i=0;i<100;++i)CHECK(ws_pi_step(&pi,10,0,100*256,10*256,150,1)==150);
+     CHECK(pi.integral_q8<=150*256);CHECK(ws_pi_step(&pi,0,0,256,256,150,1)==0&&pi.integral_q8==0);
++    /* A crossing PI increment must reach the cap, including with the route
++     * effort ramp. Persistent error must not wind up beyond that boundary. */
++    for(int target=122;target<=123;++target) {
++        ws_pi_reset(&pi);
++        for(unsigned i=0;i<250;++i) {
++            uint16_t before=pi.output,cap=(uint16_t)(before+10);
++            if(cap>1000)cap=1000;
++            CHECK(ws_pi_step_ff_ms(&pi,target,1,256,12,cap,10,246)<=before+10);
++        }
++        CHECK(pi.output==1000);
++        {int32_t held=pi.integral_q8;
++         for(unsigned i=0;i<100;++i)CHECK(ws_pi_step_ff_ms(&pi,target,1,256,12,1000,10,246)==1000);
++         CHECK(pi.integral_q8==held);}
++        CHECK(ws_pi_step_ff_ms(&pi,target,target+10,256,12,1000,10,246)<1000);
++    }
++    /* Mirror the crossing at zero with removable feedforward, then recover. */
++    ws_pi_reset(&pi);
++    for(unsigned i=0;i<250;++i)CHECK(ws_pi_step_ff_ms(&pi,10,23,256,12,150,10,100)<=150);
++    CHECK(pi.output==0);
++    {int32_t held=pi.integral_q8;
++     for(unsigned i=0;i<100;++i)CHECK(ws_pi_step_ff_ms(&pi,10,23,256,12,150,10,100)==0);
++     CHECK(pi.integral_q8==held);}
++    CHECK(ws_pi_step_ff_ms(&pi,10,0,256,12,150,10,100)>0);
+     /* Field C22: target 34/36, measured 88/79, still powered. An excessive
+      * feedforward must be removable by feedback, rather than impose a speed
+      * floor. Test different first-order wheel plants, not internal formulas. */
+diff --git a/tests/vision/test_switch_runtime.c b/tests/vision/test_switch_runtime.c
+index e8b4e5f..8be3007 100644
+--- a/tests/vision/test_switch_runtime.c
++++ b/tests/vision/test_switch_runtime.c
+@@ -30,7 +30,7 @@ uint32_t timer_get(int index)
+     (void)index;uint32_t at=++elapsed;
+     if(at>=finish_at)longjmp(stop_loop,1);
+     if(at%20U==0&&(experiment!=4||at<2800)&&(experiment!=5||at<2800||at>=3200)){
+-        fill_camera(0,0);mt9v03x_image=camera[0];mt9v03x_finish_flag=1;
++        fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(at);
+     }
+     if(at>100&&vision_drive_is_local())observed_running=1;
+     if(experiment==3&&at==2800)app_link_rx_isr(1,'!');
+diff --git a/tests/vision/test_turn_route.c b/tests/vision/test_turn_route.c
+index aaca1f0..b2b819d 100644
+--- a/tests/vision/test_turn_route.c
++++ b/tests/vision/test_turn_route.c
+@@ -473,8 +473,7 @@ int main(void)
+          CHECK(info().pwm_left<=before.pwm_left+MT_ROUTE_PWM_RISE_PER_SAMPLE);
+          CHECK(info().pwm_right<=MT_ROUTE_PWM_FULL_SCALE&&info().pwm_left<=MT_ROUTE_PWM_FULL_SCALE);
+          CHECK(pwm[0]<=PWM_DUTY_MAX&&pwm[1]<=PWM_DUTY_MAX);}
+-     /* Conditional integration can settle just below saturation by one PI
+-      * increment; both channels must use the new headroom, never exceed it. */
++     /* Both channels must use the new headroom, never exceed it. */
+      CHECK(info().pwm_right>=995&&info().pwm_left>=995); /* No hidden 40% ceiling. */
+      CHECK(info().target_right==baseline.target_right&&info().target_left==baseline.target_left);
+      switch_a=1;switch_step(1);CHECK(!pwm[0]&&!pwm[1]);}
+@@ -823,6 +822,7 @@ int main(void)
+     for(int y=70;y<=79;++y)for(int x=23;x<=103;++x)turn_gray[y*VISION_WIDTH+x]=210;
+     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
+     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2&&vision_drive_output()->steering<-.2f);
++    printf("DIAG partial now=%u samples=%u pwm=%u/%u target=%d/%d duty=%.8f faults=%u\n",now,info().samples,info().pwm_right,info().pwm_left,info().target_right,info().target_left,vision_drive_output()->duty,info().faults);
+     CHECK(vision_drive_output()->duty>.02f&&info().target_right>3);
+     switch_boot(0);measured_curve(.4f,0);switch_wait(80,1);
+     CHECK(vision_drive_is_local()&&vision_drive_output()->far_valid&&vision_drive_servo_command_us()<=1530);
+diff --git a/tools/build_midterm.ps1 b/tools/build_midterm.ps1
+index dc0547e..99a4086 100644
+--- a/tools/build_midterm.ps1
++++ b/tools/build_midterm.ps1
+@@ -1,13 +1,22 @@
+ param([string]$UV4='E:\ElecTronic\Keil\UV4\UV4.exe',
+-      [ValidateSet('train','auto','route','switch')][string]$Variant='train')
++      [ValidateSet('train','auto','route','switch','auto-track','auto_track')][string]$Variant='train')
+ $ErrorActionPreference='Stop'
++if($Variant -in @('auto','auto_track')) {
++    if($Variant -eq 'auto'){Write-Warning "Variant 'auto' is deprecated; using track-gated auto-track instead."}
++    $Variant='auto-track'
++}
+ $taskRoot=Split-Path $PSScriptRoot -Parent
+ $taskMdk=Join-Path $taskRoot 'demo\mdk\base'
+ $taskBuildName='midterm-'+$Variant
+ $taskProjectName='midterm_'+$Variant+'.uvprojx'
+-$taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -eq 'auto'){'1'}else{'0'})+','
+-if($Variant -in @('route','switch')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
+-if($Variant -eq 'switch'){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
++$taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -in @('auto','auto-track')){'1'}else{'0'})+','
++if($Variant -in @('route','switch','auto-track')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
++if($Variant -in @('switch','auto-track')){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
++if($Variant -eq 'auto-track'){
++    # Software-only safety configuration: no physical selector authority and
++    # no automatic claim that camera/raised-wheel review has been completed.
++    $taskExtraDefine+='VISION_MIDTERM_AUTO_TRACK=1,VISION_START_SWITCH_ENABLE=0,MIDTERM_VISUAL_REVIEWED=0,'
++}
+ $taskOutput=Join-Path $taskRoot ('.build\'+$taskBuildName)
+ New-Item -ItemType Directory -Force -Path (Join-Path $taskOutput 'Objects'),(Join-Path $taskOutput 'Listings'),(Join-Path $taskOutput 'tmp') | Out-Null
+ if(-not(Test-Path -LiteralPath $UV4)){throw 'UV4 executable not found; supply -UV4.'}
+@@ -16,12 +25,37 @@ $taskSource=Get-Content -LiteralPath (Join-Path $taskMdk 'rt1064.uvprojx') -Raw
+ $taskTarget=@($taskXml.Project.Targets.Target | Where-Object TargetName -eq 'nor_sdram_zf_dtcm')
+ if($taskTarget.Count -ne 1){throw 'Expected one target.'}
+ $taskDefines=[string]$taskTarget[0].TargetOption.TargetArmAds.Cads.VariousControls.Define
+-if($taskDefines -match 'VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_ENCODER_ENABLE|VISION_LINK_MVP'){throw 'Source target must be the normal firmware, without diagnostic/MVP overrides.'}
++# Reject inherited build-policy overrides instead of silently introducing
++# conflicting definitions after the variant-specific prefix.
++$taskReserved='VISION_MIDTERM_TRAINING|VISION_MOTOR_THRESHOLD_DIAG|VISION_MOTION_DIAG|VISION_ENCODER_ENABLE|VISION_LINK_MVP|VISION_MIDTERM_AUTONOMOUS|VISION_MIDTERM_AUTO_TRACK|VISION_MIDTERM_ROUTE_TRIAL|VISION_ROUTE_SWITCH|VISION_START_SWITCH_ENABLE|MIDTERM_VISUAL_REVIEWED'
++if($taskDefines -match ('\b(?:'+$taskReserved+')\b')){
++    throw 'Source target contains build-policy or safety-review overrides; use the base firmware target.'
++}
+ # Preserve Keil project serialization and relative source paths.
+-$taskSource=$taskSource.Replace('<Define>'+$taskDefines+'</Define>','<Define>'+$taskExtraDefine+$taskDefines+'</Define>')
+-$taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')
+-$taskSource=$taskSource.Replace('<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>','<ListingPath>..\..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>')
+-$taskProjectDir=Join-Path (Split-Path $taskMdk -Parent) $(if($Variant -eq 'switch'){'competition'}else{'training'})
++$taskOldDefine='<Define>'+$taskDefines+'</Define>'
++$taskNewDefine='<Define>'+$taskExtraDefine+$taskDefines+'</Define>'
++if(-not $taskSource.Contains($taskOldDefine)){
++    throw 'Base Keil project compile definitions could not be located; refusing to build without variant macros.'
++}
++$taskSource=$taskSource.Replace($taskOldDefine,$taskNewDefine)
++if(-not $taskSource.Contains($taskNewDefine)){
++    throw 'Generated Keil project is missing variant compile definitions.'
++}
++$taskOldOutput='<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>'
++$taskOldListing='<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>'
++# Fail closed if the base project serialization changes; do not accidentally
++# leave an output path pointing into releases or an unspecified directory.
++if(-not $taskSource.Contains($taskOldOutput) -or -not $taskSource.Contains($taskOldListing)){
++    throw 'Base project output/listing paths could not be safely rewritten.'
++}
++$taskNewOutput='<OutputDirectory>..\..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>'
++$taskNewListing='<ListingPath>..\..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>'
++$taskSource=$taskSource.Replace($taskOldOutput,$taskNewOutput)
++$taskSource=$taskSource.Replace($taskOldListing,$taskNewListing)
++if(-not $taskSource.Contains($taskNewOutput) -or -not $taskSource.Contains($taskNewListing)){
++    throw 'Generated Keil project output/listing paths are not confined to .build.'
++}
++$taskProjectDir=Join-Path (Split-Path $taskMdk -Parent) $(if($Variant -in @('switch','auto-track')){'competition'}else{'training'})
+ New-Item -ItemType Directory -Force -Path $taskProjectDir | Out-Null
+ $taskProject=Join-Path $taskProjectDir $taskProjectName
+ # Windows PowerShell's Set-Content -Encoding utf8 adds a BOM rejected by UV4.
+diff --git a/tools/field_protocol.ps1 b/tools/field_protocol.ps1
+index b9d46e1..971dff3 100644
+--- a/tools/field_protocol.ps1
++++ b/tools/field_protocol.ps1
+@@ -1,5 +1,5 @@
+ # Protocol helpers only: no port access or vehicle commands on import.
+-$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1|MIDTERM_ROUTE_TRAIN_1|MIDTERM_C26_(?:[1-9]|1[0-9]|2[0-8]))'
++$fieldVersionPattern='(?:MIDTERM_FIELD_[1234]|MIDTERM_TRAIN_1|MIDTERM_ROUTE_TRAIN_1|MIDTERM_C26_(?:[1-9]|[12][0-9]|3[01]))'
+ function Test-FieldCommand([string]$Value) {
+     if($Value -cin @('@status','@save','@load','@encoder_status','@speed_status','@encoder_hw')){return $true}
+     $fieldNumber='[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?'

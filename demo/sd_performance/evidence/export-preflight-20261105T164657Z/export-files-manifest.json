@@ -1,0 +1,85 @@
+{
+  "files": [
+    {
+      "path": "board.c",
+      "sha256": "fbe0e44cd4544a7b6315f3f1b6cfa8cc633ab851eebc9ff213d000b352d82b2a",
+      "bytes": 8139
+    },
+    {
+      "path": "diag_core.c",
+      "sha256": "2da5f7918ac2e9686a185c2f76eea38fc9039e199d806aa30bffdbb0dcd5755e",
+      "bytes": 6365
+    },
+    {
+      "path": "include/diag.h",
+      "sha256": "3d985813e13a60f4a71bad3d11170cca453389ad14a16eb5d0e9cb19b6cf321f",
+      "bytes": 493
+    },
+    {
+      "path": "mdk/sd_performance.uvprojx",
+      "sha256": "254d64175a01d34556114e320ba7176e8ca1e021e332eb2da135bd1c26784430",
+      "bytes": 18947
+    },
+    {
+      "path": "mdk/sd_performance.uvoptx",
+      "sha256": "11e3c5c4d21c29b572b939197d9d866a97f677f59618872dea4c0f3b188af148",
+      "bytes": 12674
+    },
+    {
+      "path": "configure.py",
+      "sha256": "fb6a53112200d7364e69eea37cea0abbe5e3efad30aa98a71d350e885a3aea20",
+      "bytes": 857
+    },
+    {
+      "path": "verify.py",
+      "sha256": "dbc17d3121d05027ba358845d22cb6a041e2291439dcb8b2febed55b82a78129",
+      "bytes": 4685
+    },
+    {
+      "path": "tests/test_core.c",
+      "sha256": "61e854012037878d0c7f94eb96bea9a748e38567e3ec8d4dc479656b2799d42a",
+      "bytes": 3852
+    },
+    {
+      "path": "export.c",
+      "sha256": "90cd6046efaaa599ffe5acf642d0cb8828a85e48bf60de522450dad0d0e095d9",
+      "bytes": 3212
+    },
+    {
+      "path": "download_existing.ps1",
+      "sha256": "80191254fd13f31df4ff66db71928c8f82df96964fe91b3646ff3fec6103c8d9",
+      "bytes": 1264
+    },
+    {
+      "path": "tools/SerialExport.cs",
+      "sha256": "04c574874a3ec3ddd7596416728c9ed16704cfaa7c64ff71732e61d8ce25dd69",
+      "bytes": 6217
+    },
+    {
+      "path": "tools/verify_download.py",
+      "sha256": "e096967f6116f3ebf06b89b842600c8f12b912002fa9fec65b972aa47cece68a",
+      "bytes": 2949
+    },
+    {
+      "path": "tests/test_export.c",
+      "sha256": "eadadf3a093b4f1a0063d469c17e32e1e257ec84bf12a129dd8745a27b83693a",
+      "bytes": 3399
+    },
+    {
+      "path": "tests/test_verify_download.py",
+      "sha256": "e04fcfd73ad4c0511fb8ca5082ce520c0f9e4b60e95bcd9283e50e204612b282",
+      "bytes": 1894
+    },
+    {
+      "path": "EXPORT.md",
+      "sha256": "92a538a0d7262bc2b5b70356170ca10fd1fdfb493293bb829a0a6e4b6d3697f2",
+      "bytes": 6968
+    }
+  ],
+  "build_hashes": {
+    "artifacts\\run-20261106T005352591-44312\\Listings\\sd_performance.map": "6be1564962e09adc45c2e8f4789fc8a5591a4f14e6d0bf7cd09d3c30b315e3af",
+    "artifacts\\run-20261106T005352591-44312\\Objects\\sd_performance.bin": "6b66a4b9d20dbd4764de23558934dc44b3465a99cc45062a89a450ef27eab093",
+    "artifacts\\run-20261106T005352591-44312\\Objects\\sd_performance.axf": "e4fddbfdbfca07e934c9af8322f81f9e68c3224da778da83da395db1e445b1a9",
+    "artifacts\\run-20261106T005352591-44312\\keil-build.log": "7bb938892462f864af8b7789d6600997ac1962780e79247409d5bb678a0bdd2f"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "state": "REJECTED_FOR_FINAL_CALIBRATION",
+  "operator": "left forward 3 complete revolutions; right may have followed or been touched",
+  "before": {
+    "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221522823Z",
+    "sha256": "0c69011c39d3988c4bc96bc48ec63285f9e2750f570a7d548ce4061e3021cccc",
+    "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+    "samples": 500,
+    "first_ms": 1523779,
+    "last_ms": 1528769,
+    "sample_sequence": 152845,
+    "total_left_right": [
+      599,
+      -2454
+    ],
+    "raw_left_right": [
+      601,
+      63082
+    ]
+  },
+  "after_trace": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221704177Z",
+  "observed_left_total_range": [
+    -5975,
+    -5974
+  ],
+  "observed_right_total": -2476,
+  "left_delta_range": [
+    -6574,
+    -6573
+  ],
+  "right_delta": -22,
+  "within_snapshot_left_change_counts": 1,
+  "reason": "Not an isolated wheel trial and snapshot was not stationary",
+  "effective_wheel_cpr": null,
+  "direction_provisional": "left forward raw negative",
+  "restart_baseline": {
+    "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221808520Z",
+    "sha256": "5d75f2f221e2622f9d70975fc6ed59db222e4efa5201ff4b0cbb3951927f4f00",
+    "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+    "samples": 500,
+    "first_ms": 1689449,
+    "last_ms": 1694439,
+    "sample_sequence": 169412,
+    "total_left_right": [
+      -5992,
+      -2480
+    ],
+    "raw_left_right": [
+      59546,
+      63056
+    ]
+  },
+  "firmware_modified": false,
+  "motor_servo_power_restored": false
+}

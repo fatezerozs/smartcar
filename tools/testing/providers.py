@@ -96,6 +96,27 @@ class Execution:
                             ignore=shutil.ignore_patterns('Objects','Listings','*.uvoptx','*.uvguix.*','*.build_log.htm'))
         return workspace
 
+    def script_environment(self):
+        """Compiler-dependent Python suites use the selected toolchain, not PATH guesses."""
+        if 'compiler-environment' not in self.suite['dependsOn']:
+            return self.env
+        if not self.context.compiler:
+            raise SuiteProblem('BLOCKED', 'Compiler environment has not passed')
+        env = dict(self.context.compiler_env)
+        overrides = dict(self.suite['environment'], TEMP=str(self.work), TMP=str(self.work),
+                         PYTHONDONTWRITEBYTECODE='1', PYTHONUTF8='1',
+                         SMARTCAR_TEST_COMPILER=self.context.options.compiler,
+                         SMARTCAR_TEST_COMPILER_PATH=self.context.compiler,
+                         SMARTCAR_TEST_MODE=self.context.options.mode)
+        for key, value in overrides.items():
+            if os.name == 'nt':
+                for existing in list(env):
+                    if existing.upper() == key.upper(): del env[existing]
+            env[key] = value
+        self.result['details'].update(compilerFamily=self.context.options.compiler,
+                                      compilerMode=self.context.options.mode)
+        return env
+
     def initialize_compiler(self):
         context = self.context
         env = dict(context.compiler_env)
@@ -310,7 +331,7 @@ class Execution:
                 command = [str(path)]
             command += entry.get('arguments',[])
             # Code locates repository files via __file__/$PSScriptRoot. CWD is private and writable.
-            self.process(command)
+            self.process(command, env=self.script_environment() if kind == 'python' else None)
         elif kind == 'aggregate':
             self.log('PASS: all explicit child suite dependencies passed')
         elif kind == 'static':

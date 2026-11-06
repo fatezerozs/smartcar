@@ -1,0 +1,23 @@
+[
+  {
+    "record": "demo\\sd_performance\\artifacts\\run-20261106T003223533-35504\\verification.json",
+    "project": "demo\\sd_performance\\mdk\\sd_performance.uvprojx",
+    "recorded_sha256": "da470b7a3a26a73e206865a5ac2fb8044012c5f9be3b428eb24b33d7a32b3126",
+    "current_sha256": "91075e8360bf765db6c32f7cdf79e70121780550433cf3bb07d9db5534d234d4",
+    "match": false
+  },
+  {
+    "record": "demo\\sd_performance\\artifacts\\run-20261106T003457153-37440\\verification.json",
+    "project": "demo\\sd_performance\\mdk\\sd_performance.uvprojx",
+    "recorded_sha256": "087af1a516bd19ed42857c4b9617974472716143a1788f73db06c283d738d4e2",
+    "current_sha256": "91075e8360bf765db6c32f7cdf79e70121780550433cf3bb07d9db5534d234d4",
+    "match": false
+  },
+  {
+    "record": "demo\\sd_performance\\artifacts\\run-20261106T005352591-44312\\verification.json",
+    "project": "demo\\sd_performance\\mdk\\sd_performance.uvprojx",
+    "recorded_sha256": "254d64175a01d34556114e320ba7176e8ca1e021e332eb2da135bd1c26784430",
+    "current_sha256": "91075e8360bf765db6c32f7cdf79e70121780550433cf3bb07d9db5534d234d4",
+    "match": false
+  }
+]

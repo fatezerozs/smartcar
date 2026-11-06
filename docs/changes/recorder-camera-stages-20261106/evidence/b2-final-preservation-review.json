@@ -1,0 +1,22 @@
+{
+  "baseline_files": 1060,
+  "changed": [
+    "demo/recorder/recorder_storage.c",
+    "demo/sd_diagnostic/mdk/sd_diagnostic.uvoptx",
+    "demo/sd_performance/mdk/sd_performance.uvoptx",
+    "tools/vision_data/archive.py",
+    "tools/vision_data/cli.py"
+  ],
+  "missing": [],
+  "production_source_and_project_unchanged": true,
+  "original_recorder_project_unchanged": true,
+  "expected_task_existing_changes": [
+    "demo/recorder/recorder_storage.c",
+    "tools/vision_data/archive.py",
+    "tools/vision_data/cli.py"
+  ],
+  "other_uvoptx_changes_retained": [
+    "demo/sd_diagnostic/mdk/sd_diagnostic.uvoptx",
+    "demo/sd_performance/mdk/sd_performance.uvoptx"
+  ]
+}

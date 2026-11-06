@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\shengchanli\smartCar\smartcar\tools\finalize_b2_acceptance.py", line 84, in <module>
+    a=p.parse_args();raise SystemExit(0 if finalize(a.board,a.download,a.build,a.output,a.provenance) else 1)
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\shengchanli\smartCar\smartcar\tools\finalize_b2_acceptance.py", line 15, in finalize
+    closed=read(board/'result.json');metrics=read(board/'metrics-review.json')
+                                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\shengchanli\smartCar\smartcar\tools\finalize_b2_acceptance.py", line 10, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8-sig'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zfn19\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zfn19\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-hardware-20261105T201919543Z\\metrics-review.json'

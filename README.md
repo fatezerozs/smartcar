@@ -1,6 +1,7 @@
-# Smartcar：RT1064 视觉循迹小车
+# MPC_20261106：RT1064 视觉循迹小车
 
 当前维护分支为 `main`，仓库工程版本为 **C32（测试体系重构）**。
+当前工程名为 **MPC_20261106**（MPC + 改动日期2026-11-06），见[工程更名记录](docs/changes/2026-11-06_MPC_PROJECT_RENAME.md)。
 生产固件标识保持 C31：switch 为 `MIDTERM_C26_31`，独立 auto-track 为
 `MIDTERM_C31_AUTO_TRACK_1`；本次工程归档不等同于正式烧录或实车发布。
 主程序使用当前白色赛道几何、视觉转向和编码器轮速闭环。
@@ -8,7 +9,10 @@
 
 ## 从哪里阅读
 
+- **[主要工程索引与交接导航](docs/PROJECT_INDEX.md)**：工程关系图、阶段进度、待解决问题、工程入口与接手路线。
+- **[当前参数集与实测数据交付（2026-11-06）](docs/changes/vehicle-parameters-20261106/README.md)**：已采用的左右轮 CPR/方向、控制与舵机配置、几何参考、9 个 Encoder 原始窗口、Camera/SD 证据及联合候选待验状态。
 - **[测试框架与流程详细手册](docs/TESTING_FRAMEWORK_GUIDE.md)**：环境、架构、套件开发、执行流程、报告判读、CI、数据集接入与完整套件索引。
+- [C31 连续速度规划与降级控制阶段交付](docs/changes/c31-speed-planning-20261105/README.md)：[v0.3数据接入](docs/changes/c31-speed-planning-20261105/DATA_INPUTS.md)已消费实测CPR；[Phase 3首批安全边界改动](docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)已进入源码并构建，速度规划器仍未接入生产控制路径。
 - [项目设计与演进档案](docs/PROJECT_EVOLUTION.md)：成品目标、模型、实现与验证状态、任务、技术取舍和每次提交的简略索引。
 - [本次详细提交说明：2026-11-02 / C32](docs/changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：测试架构、兼容迁移、本地/远程证据及未关闭项。
 - [文档目录](docs/INDEX.md)：当前参考、提交记录和历史归档。
@@ -16,9 +20,9 @@
 
 ## 当前运行入口
 
-工程已按用途分目录，见 [Keil 工程目录](demo/mdk/README.md)。旧路径 `demo/mdk/midterm_switch.uvprojx` 已迁移。
+工程已按用途分目录，见 [Keil 工程目录](demo/mdk/README.md)。原`competition/midterm_switch.uvprojx`已更名为`competition/MPC_20261106.uvprojx`。
 
-Keil 打开 [midterm_switch.uvprojx](demo/mdk/competition/midterm_switch.uvprojx)，目标 `nor_sdram_zf_dtcm`。
+Keil 打开 [MPC_20261106.uvprojx](demo/mdk/competition/MPC_20261106.uvprojx)，目标 `nor_sdram_zf_dtcm`。
 在仓库根目录执行：
 
 ```powershell
@@ -28,9 +32,11 @@ Keil 打开 [midterm_switch.uvprojx](demo/mdk/competition/midterm_switch.uvprojx
 此命令只构建，不烧录。工具链与设备包需在本机安装；通用/诊断变体的配置及产物不能混用。
 
 **switch 固件保留 C26 启停：** ON 且连续五帧有效道路等条件满足后运行，OFF 停止。
-独立 auto-track 已实现连续 3000ms 道路准入并通过主机模拟，默认 review=0 锁止；
+独立 auto-track 当前为连续 1000ms 新鲜有效道路准入，默认 review=0 锁止；
 板端/实车启动验收仍待完成。两种构型的差异见演进档案，不混用启动条件。
 图像调试模式会撤销运行输出；行驶中图文同时采集尚未实现。
+
+AUTO_TRACK与RecorderTrain后续统一接入MPC预算降级；预算规划未集成前，当前C31实验路径仍采用零动力恢复保护，不把该过渡行为视为最终规划策略。[本轮审核与发布边界](docs/changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)
 
 ## 目录
 

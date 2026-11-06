@@ -23,7 +23,7 @@ from benchmark import compare, statistic, summarize, validate_benchmark
 from process_runner import ProcessTimeout, resource_locks, run_process
 from providers import Context, Execution, SuiteProblem
 from reporter import write_report
-from run_tests import execute_suite, make_result, schedule, main as plan_main
+from run_tests import execute_suite, make_result, schedule, input_snapshot, main as plan_main
 
 
 class Scratch(unittest.TestCase):
@@ -44,6 +44,18 @@ class ContractTests(Scratch):
         self.assertNotIn('hardware-acceptance',select_suites(catalog,'PreFlash'))
         self.assertNotIn('keil-base',select_suites(catalog,'Host'))
         self.assertIn('performance-host',select_suites(catalog,'Host'))
+        self.assertIn('recorder',select_suites(catalog,'Host'))
+        self.assertIn('recorder',select_suites(catalog,'PreFlash'))
+        self.assertEqual(catalog['recorder']['dependsOn'],['compiler-environment'])
+        self.assertTrue(catalog['recorder']['required'])
+        closure=select_suites(catalog,'Host',['recorder'])
+        self.assertEqual(closure,['environment','compiler-environment','recorder'])
+
+    def test_recorder_sources_are_in_acceptance_snapshot(self):
+        snapshot=input_snapshot()
+        for path in ('demo/recorder/recorder_core.c','demo/recorder/recorder_storage.c',
+                     'demo/recorder/include/recorder_runtime.h','tests/recorder/test_recorder.py'):
+            self.assertIn(path,snapshot)
 
     def bad_catalog(self, mutate):
         catalog=read_json(ROOT/'tests/suites/catalog.json')
@@ -169,6 +181,32 @@ class ProcessTests(Scratch):
         self.assertEqual(result['status'],'TIMEOUT')
         self.assertEqual(result['exitCode'],124)
         self.assertTrue(result['processes'][0]['cleanupVerified'])
+
+    def test_python_compiler_bridge_preserves_selected_environment(self):
+        suite,context=self.execution('pass')
+        suite['dependsOn']=['compiler-environment'];suite['environment']={'FIXTURE_VALUE':'kept'}
+        context.options.compiler='msvc';context.options.mode='asan'
+        context.compiler='C:/fixture/cl.exe';context.compiler_env={'Path':'compiler-bin','LIB':'fixture-lib'}
+        work=self.folder/'bridge';work.mkdir();result=make_result(suite,work)
+        with (work/'stdout.log').open('wb') as out,(work/'stderr.log').open('wb') as err:
+            execution=Execution(suite,work,context,result,out,err)
+            env=execution.script_environment()
+            self.assertEqual(env['Path'],'compiler-bin');self.assertEqual(env['LIB'],'fixture-lib')
+            self.assertEqual(env['SMARTCAR_TEST_COMPILER'],'msvc')
+            self.assertEqual(env['SMARTCAR_TEST_COMPILER_PATH'],context.compiler)
+            self.assertEqual(env['SMARTCAR_TEST_MODE'],'asan');self.assertEqual(env['FIXTURE_VALUE'],'kept')
+            self.assertEqual(env['TMP'],str(execution.work))
+            self.assertEqual(context.compiler_env,{'Path':'compiler-bin','LIB':'fixture-lib'})
+            context.compiler=None
+            with self.assertRaises(SuiteProblem) as raised:execution.script_environment()
+            self.assertEqual(raised.exception.status,'BLOCKED')
+
+    def test_python_without_compiler_dependency_keeps_existing_behavior(self):
+        suite,context=self.execution('pass');work=self.folder/'plain';work.mkdir()
+        with (work/'stdout.log').open('wb') as out,(work/'stderr.log').open('wb') as err:
+            execution=Execution(suite,work,context,make_result(suite,work),out,err)
+            self.assertIs(execution.script_environment(),execution.env)
+            self.assertNotIn('compilerFamily',execution.result['details'])
 
     def test_unrelated_compile_error_is_not_expected_rejection(self):
         suite,context=self.execution('pass')

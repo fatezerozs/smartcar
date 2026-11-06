@@ -1,0 +1,143 @@
+--- demo/recorder/recorder_storage.c (before this task)
++++ demo/recorder/recorder_storage.c (this task)
+@@ -6,6 +6,17 @@
+ #include "task.h"
+ #include <stdio.h>
+ #include <string.h>
++/* Defaults preserve the existing training entry. Isolated capture profiles
++ * must explicitly select their mapped physical FatFs volume and identity. */
++#ifndef RECORDER_VOLUME
++#define RECORDER_VOLUME "0:"
++#endif
++#ifndef RECORDER_FIRMWARE_BUILD
++#define RECORDER_FIRMWARE_BUILD "RECORDER_TRAIN_1"
++#endif
++#ifndef RECORDER_STOP_REASON
++#define RECORDER_STOP_REASON "operator_record_stop"
++#endif
+ #define SEGMENT_BYTES (64UL*1024UL*1024UL)
+ #define MAX_SEGMENTS 256U
+ #ifdef RECORDER_HOST_TEST
+@@ -69,7 +80,7 @@
+     /* Enable reads of existing shadow words only; never reload/program OTP. */
+     CLOCK_EnableClock(kCLOCK_Ocotp);__DSB();a=OCOTP->CFG0;b=OCOTP->CFG1;
+     for(i=1;i<=65535U;++i) {
+-        (void)snprintf(directory,sizeof(directory),"0:/R%07lX",(unsigned long)i);
++        (void)snprintf(directory,sizeof(directory),RECORDER_VOLUME "/R%07lX",(unsigned long)i);
+         recorder_sd_operation_begin(3000U);result=f_mkdir(directory);
+         if(recorder_sd_expired())result=FR_DISK_ERR;recorder_sd_operation_end();
+         if(result==FR_OK)break;
+@@ -85,7 +96,7 @@
+         "\"width\":188,\"height\":120,\"stride\":188,\"pixel_format\":\"GRAY8\",\"timestamp_unit\":\"us\","
+         "\"timestamp_semantics\":\"csi_irq_gpt1_ms_x1000\",\"timestamp_resolution_us\":1000,"
+         "\"sequence_semantics\":\"observed_completion_events_lower_bound_on_ambiguity\","
+-        "\"firmware_build\":\"RECORDER_TRAIN_1\",\"firmware_compiled\":\"%s %s\","
++        "\"firmware_build\":\"" RECORDER_FIRMWARE_BUILD "\",\"firmware_compiled\":\"%s %s\","
+         "\"firmware_git_head\":\"" RECORDER_GIT_SHA "\",\"firmware_input_tree_sha256\":\"" RECORDER_TREE_SHA256 "\","
+         "\"firmware_git_dirty\":%s,\"firmware_binary_sha256\":null,\"motion_reviewed\":%s,"
+         "\"configured_sensor_fps\":%u,\"configured_exposure\":%u,\"configured_gain\":%u,"
+@@ -151,14 +162,14 @@
+         "\"accepted\":%llu,\"recorded_frames\":%lu,\"synced_before_end\":%lu,"
+         "\"base_source_sequence\":%llu,\"first_source_sequence\":%llu,\"last_source_sequence\":%llu,"
+         "\"queue_full\":%llu,\"pool_full\":%llu,\"capture_ambiguous\":%llu,"
+-        "\"unknown_source_loss\":%s,\"storage_errors\":0,\"stop_reason\":\"operator_record_stop\","
++        "\"unknown_source_loss\":%s,\"storage_errors\":0,\"stop_reason\":\"%s\","
+         "\"control_gap_max_ms\":%lu,\"capture_copy_max_us\":%lu,\"vision_max_ms\":%lu,"
+         "\"queue_high_water\":%lu,\"status\":\"%s\"}",
+         (unsigned long long)s.observed,(unsigned long long)s.vision_processed,(unsigned long long)s.accepted,
+         (unsigned long)recorder_written,(unsigned long)recorder_synced,
+         (unsigned long long)s.base_source,(unsigned long long)s.first_source,(unsigned long long)s.last_source,
+         (unsigned long long)s.queue_full,(unsigned long long)s.pool_full,(unsigned long long)s.ambiguous,
+-        s.ambiguous?"true":"false",(unsigned long)s.control_gap_max_ms,(unsigned long)s.capture_copy_max_us,
++        s.ambiguous?"true":"false",RECORDER_STOP_REASON,(unsigned long)s.control_gap_max_ms,(unsigned long)s.capture_copy_max_us,
+         (unsigned long)s.vision_max_ms,(unsigned long)s.queue_high_water,
+         s.queue_full||s.pool_full||s.ambiguous?"incomplete":"complete_observed_window");
+     if(n<=0 || n>=(int)sizeof(text) || !write_record("END1",0,0,text,(uint32_t)n))return 0;
+@@ -170,7 +181,7 @@
+ {
+     FRESULT result;uint32_t last_sync,drain_start=0;uint8_t at;rec_frame_t *frame;(void)unused;
+     recorder_storage_state=1;
+-    recorder_sd_operation_begin(5000U);result=f_mount(&fs,"0:",1);
++    recorder_sd_operation_begin(5000U);result=f_mount(&fs,RECORDER_VOLUME,1);
+     if(recorder_sd_expired())result=FR_DISK_ERR;recorder_sd_operation_end();
+     if(result!=FR_OK){recorder_storage_error=(uint8_t)result;goto fault;}
+     if(!create_session() || !open_segment())goto fault;
+@@ -203,7 +214,7 @@
+         }
+     }
+     if(!write_gaps() || !finish())goto fault;
+-    recorder_sd_operation_begin(3000U);result=f_mount(NULL,"0:",0);recorder_sd_operation_end();
++    recorder_sd_operation_begin(3000U);result=f_mount(NULL,RECORDER_VOLUME,0);recorder_sd_operation_end();
+     if(result!=FR_OK)goto fault;
+     recorder_storage_state=4;
+     for(;;) {
+--- tools/vision_data/archive.py (before this task)
++++ tools/vision_data/archive.py (this task)
+@@ -80,7 +80,8 @@
+             write(staging / 'recovered_session.json', meta)
+         report = {"schema_version": "1.0", "session_id": session_id, "issues": [],
+                   "segments": [], "recovered_frames": 0, "source_gap_count": 0,
+-                  "gap_cause": "unknown unless recorder counters provide independent evidence"}
++                  "gap_cause": "unknown unless recorder counters provide independent evidence",
++                  "first_source_sequence": None, "last_source_sequence": None}
+         if recovered:
+             report['issues'].append({'kind': 'recovered_without_final_session_manifest', 'reason': recovery_reason})
+         if meta['segments'] != [f'{i:06d}.scraw' for i in range(len(meta['segments']))]:
+@@ -124,6 +125,9 @@
+                     frames_out.write(encoded(frame) + b"\n")
+                     csv_writer.writerow(frame)
+                     report["recovered_frames"] += 1
++                    if report["first_source_sequence"] is None:
++                        report["first_source_sequence"] = seq
++                    report["last_source_sequence"] = seq
+                     previous, previous_time = seq, at
+                 if segment_report.get('gaps'):
+                     report['issues'].append({'kind': 'recorder_gap_records', 'segment': actual_index,
+@@ -181,6 +185,15 @@
+             any(final[k] for k in ('queue_full','pool_full','capture_ambiguous','storage_errors')) or
+             final.get('status') != 'complete_observed_window'):
+         report['issues'].append({'kind': 'capture_recording_loss', 'counters': final})
++    # END counters are CRC-protected but still must agree with actual records.
++    # Otherwise a complete-looking END can hide leading/trailing source loss.
++    if report['recovered_frames'] and (
++            final['first_source_sequence'] != report['first_source_sequence'] or
++            final['last_source_sequence'] != report['last_source_sequence'] or
++            final['base_source_sequence'] + 1 != report['first_source_sequence']):
++        report['issues'].append({'kind': 'source_boundary_mismatch',
++                                 'actual_first': report['first_source_sequence'],
++                                 'actual_last': report['last_source_sequence']})
+     require(final['synced_before_end'] <= final['recorded_frames'], 'SCRAW-1 sync counter')
+ 
+ 
+--- tools/vision_data/cli.py (before this task)
++++ tools/vision_data/cli.py (this task)
+@@ -40,6 +40,10 @@
+     c.add_argument("--allow-draft", action="store_true")
+     c = command("verify-session")
+     c.add_argument("--session-id", required=True)
++    c = command("continuous")
++    c.add_argument("--session-id", required=True)
++    c.add_argument("--output", required=True, type=Path)
++    c.add_argument("--every", type=int, default=10)
+     c = command("view")
+     c.add_argument("--view-id", required=True)
+     c.add_argument("--sessions", required=True, nargs="+")
+@@ -129,6 +133,9 @@
+             result = import_session(args.source, root, args.allow_draft)
+         elif cmd == "verify-session":
+             result = verify_session(root, args.session_id)
++        elif cmd == "continuous":
++            from .continuous import build_report
++            result = build_report(root, args.session_id, args.output, args.every)
+         elif cmd == "view":
+             result = make_view(root, args.view_id, args.sessions, args.every,
+                                read(args.events) if args.events else None, args.context)
+@@ -177,7 +184,7 @@
+         print(json.dumps(result, ensure_ascii=False, sort_keys=True, allow_nan=False))
+         if cmd == "compare" and result["status"] != "PASS":
+             return 1
+-        if cmd == "import" and result["status"] != "complete":
++        if cmd in ("import", "continuous") and result["status"] != "complete":
+             return 1
+         if cmd == "verify-session" and result["integrity"] != "complete":
+             return 1

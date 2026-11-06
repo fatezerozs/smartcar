@@ -1,0 +1,3 @@
+PASS route-switch-private-hooks C26 LEVEL PASS: 300940 checks; zero-output loss, five-frame recovery, retained stop reason; simulated IO.
+PASS private hook coverage: PI begin/end=112409 mode=74944
+Evidence: C:\shengchanli\smartCar\smartcar\docs\changes\recorder-b3-20261106\evidence\host-regression-20261105T214044004720Z

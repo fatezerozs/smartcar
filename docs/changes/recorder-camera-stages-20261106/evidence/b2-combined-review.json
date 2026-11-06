@@ -1,0 +1,10 @@
+{
+  "status": "PASS_B2_APPROVED_STATIC_SHORT_WINDOW",
+  "final_acceptance": "b2-final-acceptance.json",
+  "source_session": "2:/R0000003",
+  "frames": 101,
+  "previous_failed_instrumentation": "b2-hardware-20261105T201919543Z",
+  "failed_run_still_failed": true,
+  "production_ready": false,
+  "b3_authorized": false
+}
