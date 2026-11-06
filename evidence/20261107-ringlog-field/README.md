@@ -1,16 +1,16 @@
-# 2026-11-07 实车视频与无线串口证据
+# 2026-11-07 调试策略与串口证据索引
 
-本目录保存用户最后提供的五段原始MP4、COM15/COM17已接收字节快照和抽帧索引。未修改控制代码、未烧录、未发车或复位。
+本目录重点保存调试结论、下一步策略、COM15/COM17串口快照与少量缩略图。原视频仅在本地保留，已从本分支当前目录移除；此前提交历史不改写。未修改控制代码、未烧录、未发车或复位。
 
-## 视频
+## 视频观察索引（原片留在本地）
 
 | 原始文件 | 时长/秒 | 预览 |
 | --- | ---: | --- |
-| [973cce786be2113fec8d7f59eab55105.mp4](videos/973cce786be2113fec8d7f59eab55105.mp4) | 18.07 | [约19帧缩略图](contact-sheets/973cce786be2113fec8d7f59eab55105.jpg) |
-| [e99088012deeea1e26803b4f543ed1d2.mp4](videos/e99088012deeea1e26803b4f543ed1d2.mp4) | 12.07 | [约19帧缩略图](contact-sheets/e99088012deeea1e26803b4f543ed1d2.jpg) |
-| [b461a73c5b82dd759bbd26b49c10821e.mp4](videos/b461a73c5b82dd759bbd26b49c10821e.mp4) | 70.60 | [约19帧缩略图](contact-sheets/b461a73c5b82dd759bbd26b49c10821e.jpg) |
-| [7a5eba0fbe841785060fb6e5b8b68a43.mp4](videos/7a5eba0fbe841785060fb6e5b8b68a43.mp4) | 4.97 | [约19帧缩略图](contact-sheets/7a5eba0fbe841785060fb6e5b8b68a43.jpg) |
-| [00e72352b941c6c913c966a4d24ce313.mp4](videos/00e72352b941c6c913c966a4d24ce313.mp4) | 4.17 | [约19帧缩略图](contact-sheets/00e72352b941c6c913c966a4d24ce313.jpg) |
+| `973cce786be2113fec8d7f59eab55105.mp4`（本地） | 18.07 | [约19帧缩略图](contact-sheets/973cce786be2113fec8d7f59eab55105.jpg) |
+| `e99088012deeea1e26803b4f543ed1d2.mp4`（本地） | 12.07 | [约19帧缩略图](contact-sheets/e99088012deeea1e26803b4f543ed1d2.jpg) |
+| `b461a73c5b82dd759bbd26b49c10821e.mp4`（本地） | 70.60 | [约19帧缩略图](contact-sheets/b461a73c5b82dd759bbd26b49c10821e.jpg) |
+| `7a5eba0fbe841785060fb6e5b8b68a43.mp4`（本地） | 4.97 | [约19帧缩略图](contact-sheets/7a5eba0fbe841785060fb6e5b8b68a43.jpg) |
+| `00e72352b941c6c913c966a4d24ce313.mp4`（本地） | 4.17 | [约19帧缩略图](contact-sheets/00e72352b941c6c913c966a4d24ce313.jpg) |
 
 视频按用户提供顺序排列，不代表严格拍摄时间排序。缩略图是均匀抽帧，不能代替完整视频或逐帧验收。外部拍摄视频不等同车载摄像头原始输入。
 
@@ -24,6 +24,8 @@ COM15已见RINGLOG2和RINGLOG3标记，必须按固件身份、开机epoch、C26
 
 ## 下一次接续位置
 
+**先读[下一轮调试执行方案](../../docs/changes/2026-11-07-night-ringlog/NEXT-STEPS.md)。**
+
 先阅读[今日总结](../../docs/changes/2026-11-07-night-ringlog/README.md)和[上传后复核及改进方案](../../docs/changes/2026-11-07-night-ringlog/FOLLOWUP.md)。RINGLOG1/2/3源码与固件分别保存在releases下，不能混用MAP导出日志。
 
 本次初看：前两段能驶入环形通道，随后停滞/有人搬车；70.6秒段保留连续直弯能力，不能宣称完整环岛通过。后续优先保护发车与普通循迹，分析环内到出口的当前路径连续性、出口资格及停车链路，再考虑提速。
@@ -32,4 +34,4 @@ COM15已见RINGLOG2和RINGLOG3标记，必须按固件身份、开机epoch、C26
 
 ## 校验
 
-[SHA256SUMS.txt](SHA256SUMS.txt) 覆盖本目录除自身之外的文件；serial-manifest另提供压缩包内部文件的字节校验。视频直接复制，未转码。
+[SHA256SUMS.txt](SHA256SUMS.txt) 覆盖本目录除自身之外的文件；serial-manifest另提供压缩包内部文件的字节校验。原视频不再列入当前目录或校验清单。
