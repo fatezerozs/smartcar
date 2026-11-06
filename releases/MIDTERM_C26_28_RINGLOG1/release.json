@@ -1,0 +1,51 @@
+{
+  "version": "MIDTERM_C26_28_RINGLOG1",
+  "previous": "MIDTERM_C26_28_ARC1",
+  "baseline": "user-confirmed-entry-working-20261106",
+  "main_reference": "00bb7a47ee5b15fe845137895316d54ef24f6a1d",
+  "project": "C:\\Users\\dick\\Desktop\\智能车\\c26-28-debug-20261104\\smartcar-8453672\\demo\\mdk\\midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "axf_sha256": "078C2E4CCD8E1EDD468C4249B5E1F9F14A60B946C79A4E5CF7CF52DC3B6681F4",
+  "changed_existing_files": [
+    "demo/code/app_runtime.c",
+    "demo/code/vision_control.c",
+    "demo/code/vision_profile.h",
+    "tools/build_midterm.ps1"
+  ],
+  "new_files": [
+    "demo/code/vision_runlog.c",
+    "demo/code/vision_runlog.h",
+    "demo/runlog/board.c",
+    "demo/runlog/card.c",
+    "demo/runlog/host.c",
+    "demo/runlog/osa.c",
+    "demo/runlog/storage.c"
+  ],
+  "built_not_flashed": true,
+  "real_ring_passed": false,
+  "hardware_sd_logging_validated": false,
+  "debugger_export_hardware_validated": false,
+  "checks": {
+    "keil_errors": 0,
+    "keil_warnings": 0,
+    "asan_full": true,
+    "asan_runtime_log_enabled": true,
+    "asan_core_storage": true,
+    "python_groups": 4,
+    "protocol": 77,
+    "turn": 382878,
+    "ring": 258,
+    "exit": 207,
+    "commit": 22,
+    "projection": 979513
+  },
+  "log": {
+    "ram_bytes": 8388608,
+    "image_hz": 2,
+    "image_width": 94,
+    "image_height": 60,
+    "write_only_parked": true,
+    "wire_format": "RLG1",
+    "capacity_loss_counted": true
+  }
+}

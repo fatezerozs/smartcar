@@ -1,0 +1,25 @@
+{
+  "project_inputs": 378,
+  "buffer": "0x8001da80",
+  "capacity": 8388608,
+  "descriptor": "0x200003ac",
+  "dma": {
+    "g_sd": {
+      "address": "0x81e00000",
+      "bytes": 700
+    },
+    "host": {
+      "address": "0x81e002c0",
+      "bytes": 136
+    },
+    "descriptors": {
+      "address": "0x81e00380",
+      "bytes": 512
+    },
+    "bounce": {
+      "address": "0x81e00580",
+      "bytes": 32768
+    }
+  },
+  "generic_sd_excluded": true
+}

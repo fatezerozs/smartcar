@@ -1,0 +1,12 @@
+test_ring_commit.c
+vision_midterm.c
+正在生成代码...
+COMMIT FAIL 56 ring=1 guide=51
+COMMIT FAIL 57 ring=1 guide=51
+COMMIT FAIL 74 ring=1 guide=51
+COMMIT FAIL 75 ring=1 guide=51
+COMMIT FAIL 56 ring=1 guide=51
+COMMIT FAIL 57 ring=1 guide=51
+COMMIT FAIL 74 ring=1 guide=51
+COMMIT FAIL 75 ring=1 guide=51
+RING COMMIT: 32 checks, 8 failures; measured outer arc required before EXIT

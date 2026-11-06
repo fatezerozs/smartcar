@@ -1,0 +1,6 @@
+test_runlog_core.c
+vision_runlog.c
+正在生成代码...
+RUNLOG CORE PASS: CRC, ON/OFF, new runs, no moving IO, overflow, media fault; simulated storage.
+test_runlog_storage.c
+RUNLOG STORAGE PASS: create-new/append, chunking, 7 IO failures; mocked FatFs, no media operation.

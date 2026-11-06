@@ -1,0 +1,35 @@
+{
+  "version": "MIDTERM_C26_28_RINGLOG2",
+  "previous": "MIDTERM_C26_28_RINGLOG1",
+  "project": "C:\\Users\\dick\\Desktop\\智能车\\c26-28-debug-20261104\\smartcar-8453672\\demo\\mdk\\midterm_switch.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "axf_sha256": "072CEA85BC571A0CAC1D7CE0D12C9A81AC812455E1B4AB1FA88C41F43CB6CC15",
+  "changed_application_files": [
+    "demo/code/vision_profile.h",
+    "demo/code/vision_reference_route.h"
+  ],
+  "built_not_flashed": true,
+  "real_ring_passed": false,
+  "evidence_source_firmware": "MIDTERM_C26_28_RINGLOG1",
+  "captured_bytes": 1422558,
+  "captured_records": 4310,
+  "metrics": 4135,
+  "images": 166,
+  "record_crc_valid": true,
+  "reported_dropped": 0,
+  "sd_reported_closed": true,
+  "sd_file_independently_read": false,
+  "tests": {
+    "asan_full": true,
+    "asan_log_runtime": true,
+    "keil_errors": 0,
+    "keil_warnings": 0,
+    "crop_checks": 32,
+    "baseline_crop_failures": 8,
+    "exit": 207,
+    "turn": 382878,
+    "ring": 258,
+    "projection": 979513,
+    "protocol": 79
+  }
+}

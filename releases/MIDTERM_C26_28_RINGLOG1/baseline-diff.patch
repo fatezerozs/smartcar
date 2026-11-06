@@ -1,0 +1,179 @@
+--- ARC1/demo/code/app_runtime.c
++++ RINGLOG1/demo/code/app_runtime.c
+@@ -11,6 +11,7 @@
+ #include "vision_frame.h"
+ #include "vision_telemetry.h"
+ #include "midterm_boot.h"
++#include "vision_runlog.h"
+ 
+ #if MT9V03X_W != VISION_WIDTH || MT9V03X_H != VISION_HEIGHT
+ #error "Vision module dimensions must match the MT9V03X camera configuration."
+@@ -70,6 +71,9 @@
+     invalidate_result();
+ #if VISION_DRIVE_ENABLE
+     vision_drive_init(now);
++#if VISION_RUNLOG_ENABLE
++    runlog_init();
++#endif
+     {
+         vd_profile_t saved;
+         /* The isolated route target uses its compiled measured profile.
+@@ -249,6 +253,25 @@
+ #if VISION_DRIVE_ENABLE
+         vision_drive_set_local_allowed(app_mode_allows(APP_MODE_DRIVE) && mode=='t' && midterm_mode && !field_parser.active && !app_transport_stopped() && !vision_drive_motion_active());
+         vision_drive_poll(now);
++#if VISION_RUNLOG_ENABLE
++        runlog_poll(now,app_mode_allows(APP_MODE_DRIVE),
++            app_mode_allows(APP_MODE_OBSERVE)&&vision_drive_output()->state!=VC_RUNNING);
++        {static uint32_t log_state=~0U,log_faults=~0U;
++         const vc_output_t *log_control=vision_drive_output();
++         if(g_runlog.recording==1&&(log_state!=(uint32_t)log_control->state||log_faults!=log_control->faults)){
++             vd_speed_info_t log_speed;vision_drive_speed_get(&log_speed);
++             runlog_capture(now,frames,&result,NULL,log_control,&log_speed);
++         }
++         log_state=(uint32_t)log_control->state;log_faults=log_control->faults;}
++        {static uint32_t reported_sd;
++         if(g_runlog.sd_state!=reported_sd){
++             reported_sd=g_runlog.sd_state;
++             app_console_printf("[RUNLOG] sd=%lu error=%lu used=%lu saved=%lu dropped=%lu file=%s\r\n",
++                 (unsigned long)g_runlog.sd_state,(unsigned long)g_runlog.sd_error,
++                 (unsigned long)g_runlog.used,(unsigned long)g_runlog.flushed,
++                 (unsigned long)g_runlog.dropped,(const char *)g_runlog.filename);
++         }}
++#endif
+ #if VISION_MIDTERM_AUTONOMOUS
+         midterm_boot_poll(now);
+ #endif
+@@ -280,6 +303,10 @@
+                 last_frame = process_start;
+ #if VISION_DRIVE_ENABLE
+                 if (midterm_mode) vision_drive_observe(&result, frames, process_start, timer_get(GPT_TIM_1));
++#if VISION_RUNLOG_ENABLE
++                {vd_speed_info_t log_speed;vision_drive_speed_get(&log_speed);
++                 runlog_capture(process_start,frames,&result,&gray_frame[0][0],vision_drive_output(),&log_speed);}
++#endif
+ #endif
+                 fresh = 1;
+                 timeout_reset = 0;
+--- ARC1/demo/code/vision_control.c
++++ RINGLOG1/demo/code/vision_control.c
+@@ -187,10 +187,11 @@
+ #endif
+         else continue;
+ #if VISION_ROUTE_SWITCH
+-        /* Restore WC2 entry control: guide the forward view only; the near
+-         * measurement remains the actual road center. FOLLOW already selects
+-         * the island-side road and must not receive another entry offset. */
+-        if(r->roundabout_state==1&&yf<(c->near_y+c->far_y)*.5f&&
++        /* Only a CURRENT connected entry path may replace the near target.
++         * The independent legacy guide continues to affect the far view only.
++         * Ordinary launch and FOLLOW retain their measured-road behavior. */
++        if(r->roundabout_state==1&&
++           (r->entry_path_valid||yf<(c->near_y+c->far_y)*.5f)&&
+            r->entry_guide_rows>=12&&r->entry_guide[y]<VISION_WIDTH)
+             center=r->entry_guide[y];
+ #endif
+@@ -282,6 +283,26 @@
+     if(n<(ring?16:12)||longest<(ring?16:10)||last-first<(ring?16:12)||
+        last<c->near_y*(VISION_HEIGHT-1)-(ring?12:3))return 0;
+     *target=clamp(c->kp*sum/n,-1,1);return 1;
++}
++
++/* Both planners publish CURRENT white-checked guides. The connected planner
++ * may additionally guide the near band; the legacy guide owns preview only. */
++static int ring_entry_preview(const vision_result_t *r,const vc_config_t *c,float *error,float *center)
++{
++    vc_config_t one=*c;float sum=0,cx=0;int count=0;
++    int limit=(int)(c->near_y*(VISION_HEIGHT-1))-4;
++    if(r->roundabout_state!=1||r->entry_guide_rows<12)return 0;
++    one.band_half_height=.001f;one.min_band_rows=1;
++    for(int row=VISION_ROI_TOP;row<=limit;++row){
++        float e,x,half_width=(r->row_flags[row]==3||r->row_flags[row]==4)?
++            (r->right[row]-r->left[row]+1)*.5f:r->row_width[row]*.5f;
++        if(r->entry_guide[row]>=VISION_WIDTH||half_width<VISION_MIN_WIDTH*.5f||
++           !band_error(r,&one,(float)row/(VISION_HEIGHT-1),&e,&x))continue;
++        e+=((float)r->entry_guide[row]-x*(VISION_WIDTH-1))/half_width;
++        sum+=e;cx+=(float)r->entry_guide[row]/(VISION_WIDTH-1);++count;
++    }
++    if(count<6)return 0;
++    *error=sum/count;*center=cx/count;return finite_value(*error);
+ }
+ 
+ static int reference_preview_error(const vision_result_t *r,const vc_config_t *c,float *error,float *center)
+@@ -516,7 +537,9 @@
+ #endif
+     have_far = control_band_error(r, &view, view.far_y, &far_error, &c->output.far_center_x);
+ #if VISION_ROUTE_SWITCH
+-    have_far=reference_preview_error(r,&view,&far_error,&c->output.far_center_x)||have_far;
++    int entry_target=ring_entry_preview(r,&view,&far_error,&c->output.far_center_x);
++    if(entry_target)have_far=1;
++    else have_far=reference_preview_error(r,&view,&far_error,&c->output.far_center_x)||have_far;
+ #endif
+     if (have_far) heading = far_error - near_error;
+     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
+@@ -545,11 +568,18 @@
+         /* When the near road center has crossed to the other side, prioritize
+          * centering instead of holding the previous bend from far preview.
+          * Continuous taper avoids switching abruptly at a tiny center error. */
+-        if(have_far&&near_error*far_error<0)
++        if(have_far&&near_error*far_error<0&&!entry_target)
+             preview_scale=clamp((.22f-absolute(near_error))/.18f,.05f,1.0f);
+-        target=c->config.kp*clamp(near_error,-c->config.max_lateral,c->config.max_lateral)+
+-            c->config.kd*c->derivative+
+-            (have_far?preview_scale*c->config.heading_gain*clamp(far_error,-c->config.max_lateral,c->config.max_lateral):0);}
++        float centering=c->config.kp*clamp(near_error,-c->config.max_lateral,c->config.max_lateral)+
++            c->config.kd*c->derivative;
++        float preview=have_far?preview_scale*c->config.heading_gain*clamp(far_error,-c->config.max_lateral,c->config.max_lateral):0;
++        /* An explicit current entry path chooses the branch. Opposing tangent
++         * centering may trim this turn, but cannot silently cancel that choice.
++         * No fixed side, timed turn, stale pixels or change to normal centering. */
++        if(entry_target&&centering*preview<0){
++            float trim=absolute(preview)*.25f;centering=clamp(centering,-trim,trim);
++        }
++        target=centering+preview;}
+ #else
+         target = c->config.kp * near_error + c->config.kd * c->derivative + c->config.heading_gain * heading;
+ #endif
+--- ARC1/demo/code/vision_profile.h
++++ RINGLOG1/demo/code/vision_profile.h
+@@ -153,7 +153,7 @@
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+ #if VISION_ROUTE_SWITCH
+-#define VISION_FIELD_BUILD "MIDTERM_C26_28_ARC1"
++#define VISION_FIELD_BUILD "MIDTERM_C26_28_RINGLOG1"
+ #elif VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+ #elif VISION_MIDTERM_AUTONOMOUS
+--- ARC1/tools/build_midterm.ps1
++++ RINGLOG1/tools/build_midterm.ps1
+@@ -7,7 +7,7 @@
+ $taskProjectName='midterm_'+$Variant+'.uvprojx'
+ $taskExtraDefine='VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS='+$(if($Variant -eq 'auto'){'1'}else{'0'})+','
+ if($Variant -in @('route','switch')){$taskExtraDefine+='VISION_MIDTERM_ROUTE_TRIAL=1,'}
+-if($Variant -eq 'switch'){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,'}
++if($Variant -eq 'switch'){$taskExtraDefine+='VISION_ROUTE_SWITCH=1,VISION_RUNLOG_ENABLE=1,'}
+ $taskOutput=Join-Path $taskRoot ('.build\'+$taskBuildName)
+ New-Item -ItemType Directory -Force -Path (Join-Path $taskOutput 'Objects'),(Join-Path $taskOutput 'Listings'),(Join-Path $taskOutput 'tmp') | Out-Null
+ if(-not(Test-Path -LiteralPath $UV4)){throw 'UV4 executable not found; supply -UV4.'}
+@@ -21,6 +21,20 @@
+ $taskSource=$taskSource.Replace('<Define>'+$taskDefines+'</Define>','<Define>'+$taskExtraDefine+$taskDefines+'</Define>')
+ $taskSource=$taskSource.Replace('<OutputDirectory>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.OutputDirectory+'</OutputDirectory>','<OutputDirectory>..\..\.build\'+$taskBuildName+'\Objects\</OutputDirectory>')
+ $taskSource=$taskSource.Replace('<ListingPath>'+[string]$taskTarget[0].TargetOption.TargetCommonOption.ListingPath+'</ListingPath>','<ListingPath>..\..\.build\'+$taskBuildName+'\Listings\</ListingPath>')
++if($Variant -eq 'switch') {
++    # Isolated 1-bit SD policy: never compile the generic 4-bit board/disk/OSA.
++    foreach($taskExcluded in @('zf_driver_sdio.c','diskio.c','fsl_sd_disk.c','sdmmc_config.c','fsl_sdmmc_osa.c','fsl_sdmmc_host.c','fsl_sd.c')) {
++        $taskPattern='(?s)\s*<File>\s*<FileName>'+[regex]::Escape($taskExcluded)+'</FileName>.*?</File>'
++        $taskSource=[regex]::Replace($taskSource,$taskPattern,'')
++    }
++    $taskRunlogFiles=@('..\code\vision_runlog.c','..\runlog\board.c','..\runlog\storage.c','..\runlog\osa.c','..\runlog\host.c','..\runlog\card.c')
++    $taskRunlogGroup='<Group><GroupName>runlog_sd_parked</GroupName><Files>'
++    foreach($taskRunlogFile in $taskRunlogFiles){
++        $taskRunlogGroup+='<File><FileName>'+[IO.Path]::GetFileName($taskRunlogFile)+'</FileName><FileType>1</FileType><FilePath>'+$taskRunlogFile+'</FilePath></File>'
++    }
++    $taskRunlogGroup+='</Files></Group>'
++    $taskSource=$taskSource.Replace('</Groups>',$taskRunlogGroup+'</Groups>')
++}
+ $taskProject=Join-Path $taskMdk $taskProjectName
+ # Windows PowerShell's Set-Content -Encoding utf8 adds a BOM rejected by UV4.
+ [IO.File]::WriteAllText($taskProject,$taskSource,[Text.UTF8Encoding]::new($false))

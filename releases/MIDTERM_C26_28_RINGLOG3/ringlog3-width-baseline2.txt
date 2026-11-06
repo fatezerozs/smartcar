@@ -1,0 +1,7 @@
+test_ring_width_refresh.c
+vision_midterm.c
+正在生成代码...
+WIDTH FAIL 16 width=75 q=100 joined=0
+WIDTH FAIL 27 width=75 q=50 joined=33
+WIDTH FAIL 28 width=75 q=50 joined=33
+WIDTH REFRESH: 13 checks, 3 failures; current straight raw edges only

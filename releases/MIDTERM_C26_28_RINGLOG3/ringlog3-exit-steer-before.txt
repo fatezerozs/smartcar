@@ -1,0 +1,19 @@
+test_turn_route.c
+vision_midterm.c
+vision_speed.c
+wheel_speed.c
+vision_motion.c
+vision_drive.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+vision_control.c
+midterm_open_loop.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+EXIT STEER side=-1 u=0.4263
+speed:149 direction*vision_drive_output()->steering>.03f

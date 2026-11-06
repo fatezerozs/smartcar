@@ -1,0 +1,19 @@
+READ 16384/2157430
+READ 278528/2157430
+READ 540672/2157430
+READ 802816/2157430
+READ 1064960/2157430
+READ 1327104/2157430
+READ 1589248/2157430
+READ 1851392/2157430
+READ 2113536/2157430
+{
+  "folder": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\c26-28-debug-20261104\\smartcar-8453672\\recordings\\dap-export-20261107-013359-174713",
+  "bytes": 2157430,
+  "records": 6578,
+  "metrics": 6316,
+  "images": 251,
+  "dropped": 0,
+  "sd_state": 2,
+  "crc_valid": true
+}

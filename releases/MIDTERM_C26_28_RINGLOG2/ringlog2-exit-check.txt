@@ -1,0 +1,4 @@
+test_ring_exit.c
+vision_midterm.c
+正在生成代码...
+RING EXIT: 8 curved/wide-mouth/oblique/clipped mirror cases; 207 checks, 0 failures; no physical orbit claim

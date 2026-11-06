@@ -1,0 +1,121 @@
+--- RINGLOG1/demo/code/vision_profile.h
++++ RINGLOG2/demo/code/vision_profile.h
+@@ -153,7 +153,7 @@
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+ #if VISION_ROUTE_SWITCH
+-#define VISION_FIELD_BUILD "MIDTERM_C26_28_RINGLOG1"
++#define VISION_FIELD_BUILD "MIDTERM_C26_28_RINGLOG2"
+ #elif VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+ #elif VISION_MIDTERM_AUTONOMOUS
+--- RINGLOG1/demo/code/vision_reference_route.h
++++ RINGLOG2/demo/code/vision_reference_route.h
+@@ -292,7 +292,13 @@
+     for(y=82;y>=VISION_ROI_TOP+7;--y)for(int seed=0;seed<3;++seed) {
+         int l[8],r[8],k,row,opened,good=1,plan=-1;
+         float pos[8],center,slope;
+-        float prediction=axis+(seed==0?0:(seed==1?-.5f:.5f))*learned_width[y];
++        float branch=seed==0?0:(seed==1?-.5f:.5f);
++        /* Before exit qualification, a temporary white-mouth bridge keeps
++         * preferring the locked island branch. Qualified EXIT retains its
++         * original forward-first search. Both need eight real anchors. */
++        if(reference_ring.state==2&&!reference_ring.exit_armed)
++            branch=reference_ring.side*(seed==0?.5f:(seed==1?0:-.5f));
++        float prediction=axis+branch*learned_width[y];
+         if(!reference_exit_edge(binary,y,prediction,&l[0],&r[0],&pos[0]))continue;
+         if(vabs(pos[0]-axis)>learned_width[y]*.9f)continue;
+         for(k=1;k<8;++k) {
+@@ -347,7 +353,7 @@
+                                         const reference_edge_t *right,const uint8_t *joined,
+                                         uint8_t anchors)
+ {
+-    int y,side,clipped=0,bottom=VISION_ROI_BOTTOM,normal=0,inner=0,opening=0,joined_n=0;
++    int y,side,clipped=0,bottom=VISION_ROI_BOTTOM,normal=0,inner=0,opening=0,joined_n=0,inner_white=0;
+     float near=0,far=0;int near_n=0,far_n=0;
+     float arc_near=0,arc_far=0;int arc_near_n=0,arc_far_n=0;
+     (void)anchors;
+@@ -395,6 +401,12 @@
+                 if(at>=0&&at<VISION_WIDTH){++n;white+=binary[y*VISION_WIDTH+at]!=0;}}
+             if(n>=6&&white==n)++opening;
+             ++inner;
++            /* Current body corridor beside the measured island edge. The
++             * outside near edge may already be cropped by the real mouth. */
++            {int body_l=(int)(center-learned_width[y]*.25f+.5f);
++             int body_r=(int)(center+learned_width[y]*.25f+.5f),clear=body_l>=0&&body_r<VISION_WIDTH;
++             if(clear)for(int px=body_l;px<=body_r;++px)if(!binary[y*VISION_WIDTH+px]){clear=0;break;}
++             if(clear)++inner_white;}
+             if(y>=85){near+=center;++near_n;}
+             if(y>=48&&y<=70){far+=center;++far_n;}
+         }
+@@ -408,19 +420,26 @@
+     int outer_arc=arc_near_n>=8&&arc_far_n>=8&&
+         arc_far/arc_far_n-arc_near/arc_near_n>.12f&&
+         ((arc_far/arc_far_n>.18f&&arc_near/arc_near_n>-.15f)||inner_arc);
++    /* A confirmed island plus a long CURRENT inner arc may establish
++     * circulation when the outside NEAR edge is no longer in view. A straight
++     * measured tangent outside edge still blocks this alternative. This does
++     * NOT arm an exit: paired outside-arc evidence is still required below. */
++    int cropped_arc=inner>=24&&inner_white>=16&&
++        near_n>=5&&far_n>=5&&opening>=6&&(arc_near_n<8||arc_far_n<8)&&
++        reference_ring.side*(far/far_n-near/near_n)>
++            (learned_width[90]*.08f>8?learned_width[90]*.08f:8);
+     if(reference_ring.state==1) {
+-        /* The entry mouth must disappear and a sustained real curved corridor
+-         * replace it before an exit can be considered. This prevents the same
+-         * tangent opening from being mistaken for an immediate exit. */
+-        /* Inner curvature alone is still the tangent entrance. Keep ENTER
+-         * guidance until the actual outside road bends islandward too. */
+-        int curved=outer_arc;
++        /* A closed mouth with a paired arc, or a currently supported cropped
++         * inner arc, establishes FOLLOW. Neither shortcut arms an exit: the
++         * separate outside-arc qualification below still rejects a tangent. */
++        int curved=outer_arc||cropped_arc;
++        if(cropped_arc)reference_ring.island_visible=1;
+         if(!reference_ring.island_visible&&reference_ring.island_lost_frames<=4&&normal>=20&&inner>=12&&
+            near_n>=5&&far_n>=5&&reference_ring.side*(far/far_n-near/near_n)>6){
+             /* Confirmed side, CURRENT inner arc and plausible white corridor. */
+             reference_ring.island_visible=1;
+         }
+-        if(normal>=20&&inner>=12&&opening<4&&curved)++reference_ring.clear_votes;
++        if((normal>=20||cropped_arc)&&inner>=12&&(opening<4||cropped_arc)&&curved)++reference_ring.clear_votes;
+         else reference_ring.clear_votes=0;
+         if(reference_ring.clear_votes>=4){reference_ring.state=2;reference_ring.exit_votes=0;
+             reference_ring.exit_armed=reference_ring.arc_votes=0;}
+@@ -504,11 +523,11 @@
+             } else joined[y]=0;
+          }
+          if(!kept)out->junction_anchors=0;}
+-        /* A wide exit mouth can remove every near inner edge before the
+-         * five-frame EXIT vote completes. Keep a currently verified exit
+-         * bridge in that gap instead of resetting FOLLOW after three failed
+-         * inner-edge proposals. Every bridge is revalidated on this image. */
+-        if(reference_ring.state==2&&reference_ring.exit_votes&&
++        /* An open ring mouth can remove the near edges before exit votes
++         * exist. Connect the current near white footprint to eight real far
++         * boundary anchors, retaining FOLLOW and its exit prerequisites.
++         * This is a current path, not an implicit EXIT or stored turn. */
++        if(reference_ring.state==2&&
+            !reference_path_viable(binary,&left,&right,joined,out->junction_anchors)&&
+            reference_roundabout_exit_path(binary,&left,&right,joined,&out->junction_anchors,1))
+             out->path_fallback=1;
+@@ -521,13 +540,14 @@
+             left=raw_left;right=raw_right;memcpy(joined,saved_joined,sizeof(saved_joined));
+             out->junction_anchors=saved_anchors;out->path_fallback=1;
+             if(reference_ring.path_rejects<255)++reference_ring.path_rejects;
+-            /* WC2 phase handling: an invalid entry proposal is rejected;
+-             * FOLLOW is never demoted back into ENTER by a main-line fallback.
+-             * Three consecutive rejected circulation paths cancel it. */
++            /* Current-road fallback is a path-availability event, not a
++             * completed/cancelled ring task. Once FOLLOW is established, keep
++             * the side and exit qualification through a white mouth. Every
++             * published path still comes from this frame; opposite-curve
++             * rejection and OFF/reset continue to cancel the task normally. */
+             if(reference_ring.state==1&&reference_ring.island_visible){
+-                /* Keep only a freshly confirmed entry; normal road stays valid. */
+                 reference_ring.path_rejects=0;
+-            } else if(reference_ring.state==1||reference_ring.path_rejects>=3)reference_roundabout_reset();
++            } else if(reference_ring.state==1)reference_roundabout_reset();
+         } else reference_ring.path_rejects=0;
+     }
+     if(reference_ring.state==3)

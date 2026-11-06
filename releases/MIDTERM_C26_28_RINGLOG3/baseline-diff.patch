@@ -1,0 +1,129 @@
+--- RINGLOG2/demo/code/vision_control.c
++++ RINGLOG3/demo/code/vision_control.c
+@@ -540,6 +540,8 @@
+     int entry_target=ring_entry_preview(r,&view,&far_error,&c->output.far_center_x);
+     if(entry_target)have_far=1;
+     else have_far=reference_preview_error(r,&view,&far_error,&c->output.far_center_x)||have_far;
++    int exit_target=r->roundabout_state==3&&r->junction_anchors>=8&&
++        r->junction_rows>=8&&have_far;
+ #endif
+     if (have_far) heading = far_error - near_error;
+     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
+@@ -568,15 +570,15 @@
+         /* When the near road center has crossed to the other side, prioritize
+          * centering instead of holding the previous bend from far preview.
+          * Continuous taper avoids switching abruptly at a tiny center error. */
+-        if(have_far&&near_error*far_error<0&&!entry_target)
++        if(have_far&&near_error*far_error<0&&!entry_target&&!exit_target)
+             preview_scale=clamp((.22f-absolute(near_error))/.18f,.05f,1.0f);
+         float centering=c->config.kp*clamp(near_error,-c->config.max_lateral,c->config.max_lateral)+
+             c->config.kd*c->derivative;
+         float preview=have_far?preview_scale*c->config.heading_gain*clamp(far_error,-c->config.max_lateral,c->config.max_lateral):0;
+-        /* An explicit current entry path chooses the branch. Opposing tangent
+-         * centering may trim this turn, but cannot silently cancel that choice.
+-         * No fixed side, timed turn, stale pixels or change to normal centering. */
+-        if(entry_target&&centering*preview<0){
++        /* An explicit current entry/verified EXIT path chooses the branch.
++         * Opposing centering may trim it, but cannot keep the vehicle on the
++         * tangent or the previous arc. Ordinary centering is unchanged. */
++        if((entry_target||exit_target)&&centering*preview<0){
+             float trim=absolute(preview)*.25f;centering=clamp(centering,-trim,trim);
+         }
+         target=centering+preview;}
+--- RINGLOG2/demo/code/vision_profile.h
++++ RINGLOG3/demo/code/vision_profile.h
+@@ -153,7 +153,7 @@
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+ #if VISION_ROUTE_SWITCH
+-#define VISION_FIELD_BUILD "MIDTERM_C26_28_RINGLOG2"
++#define VISION_FIELD_BUILD "MIDTERM_C26_28_RINGLOG3"
+ #elif VISION_MIDTERM_ROUTE_TRIAL
+ #define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+ #elif VISION_MIDTERM_AUTONOMOUS
+--- RINGLOG2/demo/code/vision_reference_route.h
++++ RINGLOG3/demo/code/vision_reference_route.h
+@@ -141,6 +141,57 @@
+         bottom=y;++n;
+      }
+      if(n&&n<6)for(i=bottom;i<=top;++i)left->col[i]=right->col[i]=VISION_INVALID_X;}
++}
++
++/* A stopped boot may see a narrow stripe before the car is put on track.
++ * Recover a badly mismatched mature model only from a sustained straight run
++ * of RAW two-sided measurements, before junction fill can alter those edges.
++ * Curves, rings, white fields and inferred/joined rows cannot train it. */
++static uint8_t reference_width_votes;
++static float reference_width_last90,reference_width_last_slope,reference_width_last_center;
++static void reference_width_refresh(const reference_edge_t *left,const reference_edge_t *right)
++{
++    float sy=0,syy=0,sw=0,syw=0,sc=0,syc=0;
++    float width_slope,width_base,center_slope,center_base,den,at90;
++    int n=0,first=-1,last=-1;
++    if(reference_ring.state||width_samples[90]<5){reference_width_votes=0;return;}
++    for(int y=VISION_ROI_BOTTOM-40;y<=VISION_ROI_BOTTOM;++y){
++        int l=left->col[y],r=right->col[y];
++        if(l>=VISION_WIDTH||r>=VISION_WIDTH||r-l+1<VISION_MIN_WIDTH)continue;
++        float w=(float)(r-l+1),c=(l+r)*.5f;
++        if(first<0)first=y;last=y;++n;sy+=y;syy+=(float)y*y;
++        sw+=w;syw+=y*w;sc+=c;syc+=y*c;
++    }
++    den=n*syy-sy*sy;
++    if(n<28||last-first<30||den<=0){reference_width_votes=0;return;}
++    width_slope=(n*syw-sy*sw)/den;width_base=(sw-width_slope*sy)/n;
++    center_slope=(n*syc-sy*sc)/den;center_base=(sc-center_slope*sy)/n;
++    at90=width_base+90*width_slope;
++    if(width_slope<.2f||width_slope>3||vabs(center_slope)>.35f||
++       vabs(center_base+90*center_slope-(VISION_WIDTH-1)*VISION_AXIS_NEAR_X)>at90*.35f||
++       vabs(at90-learned_width[90])<=learned_width[90]*.25f){reference_width_votes=0;return;}
++    for(int y=VISION_ROI_BOTTOM-40;y<=VISION_ROI_BOTTOM;++y){
++        int l=left->col[y],r=right->col[y];
++        if(l>=VISION_WIDTH||r>=VISION_WIDTH)continue;
++        if(vabs((r-l+1)-(width_base+y*width_slope))>4||
++           vabs((l+r)*.5f-(center_base+y*center_slope))>3){reference_width_votes=0;return;}
++    }
++    if(!reference_width_votes||vabs(at90-reference_width_last90)>at90*.05f||
++       vabs(width_slope-reference_width_last_slope)>.2f||
++       vabs(center_base+90*center_slope-reference_width_last_center)>4)reference_width_votes=1;
++    else if(reference_width_votes<8)++reference_width_votes;
++    reference_width_last90=at90;reference_width_last_slope=width_slope;
++    reference_width_last_center=center_base+90*center_slope;
++    if(reference_width_votes<8)return;
++    for(int y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y){
++        int l=left->col[y],r=right->col[y],w=r-l+1;
++        float expected=width_base+y*width_slope;
++        if(l>=VISION_WIDTH||r>=VISION_WIDTH||w<VISION_MIN_WIDTH||
++           vabs(w-expected)>(expected*.08f>6?expected*.08f:6)||
++           vabs((l+r)*.5f-(center_base+y*center_slope))>4)continue;
++        learned_width[y]=(uint16_t)w;width_samples[y]=5;width_age[y]=0;
++    }
++    reference_width_votes=0;
+ }
+ 
+ #include "vision_route_path.h"
+@@ -292,13 +343,10 @@
+     for(y=82;y>=VISION_ROI_TOP+7;--y)for(int seed=0;seed<3;++seed) {
+         int l[8],r[8],k,row,opened,good=1,plan=-1;
+         float pos[8],center,slope;
+-        float branch=seed==0?0:(seed==1?-.5f:.5f);
+-        /* Before exit qualification, a temporary white-mouth bridge keeps
+-         * preferring the locked island branch. Qualified EXIT retains its
+-         * original forward-first search. Both need eight real anchors. */
+-        if(reference_ring.state==2&&!reference_ring.exit_armed)
+-            branch=reference_ring.side*(seed==0?.5f:(seed==1?0:-.5f));
+-        float prediction=axis+branch*learned_width[y];
++        /* Restore the proven forward-first candidate order. Island-side
++         * tracing owns the ring; a gap bridge must not introduce a second,
++         * competing turn preference while its exit is still unqualified. */
++        float prediction=axis+(seed==0?0:(seed==1?-.5f:.5f))*learned_width[y];
+         if(!reference_exit_edge(binary,y,prediction,&l[0],&r[0],&pos[0]))continue;
+         if(vabs(pos[0]-axis)>learned_width[y]*.9f)continue;
+         for(k=1;k<8;++k) {
+@@ -497,6 +545,7 @@
+      * a connected current white strip from the island-side measured boundary. */
+     {uint8_t state=reference_ring.state;reference_ring.state=0;
+      reference_white_corridor(binary,&left,&right);reference_ring.state=state;}
++    reference_width_refresh(&left,&right);
+     /* Direction memory ranks current white exits; it cannot supply pixels
+      * or bypass anchor/white-span checks. Ring arcs do not update this hint. */
+     if(!reference_ring.state)reference_course_observe(&left,&right);
