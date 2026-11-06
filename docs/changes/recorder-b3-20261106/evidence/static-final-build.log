@@ -1,0 +1,98 @@
+C:\shengchanli\smartCar\smartcar\demo\recorder_b3\mdk\recorder_b3_static.uvprojx
+C:\shengchanli\smartCar\smartcar\demo\recorder_b3\mdk\recorder_b3_static.uvprojx
+{
+  "role": "B3 prerequisite static baseline",
+  "keil_zero_errors_warnings": true,
+  "c26_route_owner_reused": true,
+  "autonomous_boot_owner_absent": true,
+  "no_sd_rtos_runtime": true,
+  "forced_zero_private_driver_both_init_set": true,
+  "original_production_project_unchanged": true,
+  "frozen_dependencies_match": true,
+  "input_files": 425,
+  "input_digest": "e272a66a21f1fbd185e73d030efd187de4d2a5305d44d767ab842d225bca7752",
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "base": "0x00000000",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "base": "0x20000000",
+      "used": 383484,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "base": "0x2005d9fc",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "base": "0x2006e000",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "base": "0x20200000",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "base": "0x70000000",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "base": "0x70001000",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "base": "0x70002000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "base": "0x70002400",
+      "used": 948,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "base": "0x80000000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "base": "0x80000400",
+      "used": 103364,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "base": "0x81e00000",
+      "used": 0,
+      "maximum": 2097152
+    }
+  ],
+  "hashes": {
+    ".build\\recorder-b3-20261106\\run-20261105T211332-5668-final\\Objects\\recorder_b3_static.axf": "1c8483e4b97e8e11f2b8562779cea1f1da787ca0b6aefb57f5363709e6490c63",
+    ".build\\recorder-b3-20261106\\run-20261105T211332-5668-final\\Objects\\recorder_b3_static.bin": "d221b1f42106c97086a22959de49da6fc85fb0f9354f0f68a26af97c180fbab8",
+    ".build\\recorder-b3-20261106\\run-20261105T211332-5668-final\\Listings\\recorder_b3_static.map": "11b0d0f54841fdeeb76909c8190daa8818e40c48f7625ff880631e2608245a9e",
+    ".build\\recorder-b3-20261106\\run-20261105T211332-5668-final\\keil-build.log": "a9356261c5d3d3903f73708dc2e6edab8296dfa7326daeef97f51273c61ae6c4",
+    ".build\\recorder-b3-20261106\\run-20261105T211332-5668-final\\inputs.json": "8f7a6fe97dead9bfc5106c00fcf1f52969fcfff42e2ff32e953230e3fd055a9a"
+  },
+  "hardware_tested": false,
+  "B3_motion_accepted": false
+}
+B3 static prerequisite build only; artifacts: C:\shengchanli\smartCar\smartcar\.build\recorder-b3-20261106\run-20261105T211332-5668-final

@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "evidence_type": "physical-board UART reports, host-parsed and checked",
+  "port": "COM14",
+  "baud": 115200,
+  "basic": {
+    "pass": 1,
+    "errors": 0,
+    "stage": "done",
+    "file": "2:/S0000000.BIN",
+    "written": 65536,
+    "read": 65536,
+    "write_ms": 352,
+    "read_ms": 389,
+    "sync_close_ms": 29,
+    "total_ms": 11846,
+    "max_ms": 28,
+    "p95_ms": 28,
+    "p99_ms": 28,
+    "write_KiBps": 181,
+    "read_KiBps": 164
+  },
+  "stress": {
+    "pass": 1,
+    "errors": 0,
+    "stage": "done",
+    "file": "2:/S0000001.BIN",
+    "written": 16777216,
+    "read": 16777216,
+    "write_ms": 88371,
+    "read_ms": 96480,
+    "sync_close_ms": 30,
+    "total_ms": 243701,
+    "max_ms": 584,
+    "p95_ms": 6,
+    "p99_ms": 30,
+    "write_KiBps": 185,
+    "read_KiBps": 169
+  },
+  "baseline_existing_files_checked": 964,
+  "baseline_existing_files_changed": [],
+  "delivered_firmware_input_changes": [
+    "demo\\sd_diagnostic\\mdk\\sd_diagnostic.uvprojx"
+  ],
+  "flashed_image_byte_readback_performed": false,
+  "agent_flashed": false,
+  "agent_reset": false,
+  "user_manually_started_or_reset": true,
+  "COM10_opened": false,
+  "port_closed": true,
+  "files_retained": [
+    "2:/S0000000.BIN",
+    "2:/S0000001.BIN"
+  ],
+  "sha256": {
+    "serial.log": "db00725c2064fc948ed4fc5579212856bcd1ab2475ea2122b9436a321e0bd98e",
+    "result.json": "b8109818b48184a59355ef0176d4af676488acfda4470722ea45cc441a3d57a6",
+    "test_hardware.ps1": "85510c20c3f3d417c1d61694e58db183e6bad8d144d1abe4d97fac27f79da2a6"
+  }
+}

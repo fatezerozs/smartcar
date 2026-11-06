@@ -1,0 +1,8 @@
+test_measurements_do_not_alone_grant_acceptance (test_b2_metrics_review.MetricsReviewTests.test_measurements_do_not_alone_grant_acceptance) ... ok
+test_old_status_log_does_not_invent_metrics (test_b2_metrics_review.MetricsReviewTests.test_old_status_log_does_not_invent_metrics) ... ok
+test_overflow_missing_io_and_invalid_geometry_fail (test_b2_metrics_review.MetricsReviewTests.test_overflow_missing_io_and_invalid_geometry_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.087s
+
+OK

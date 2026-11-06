@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "smartcar.host-vehicle-model/1",
+  "modelId": "C1-geometry-provisional-v0.1",
+  "recordedDate": "2026-11-06",
+  "purpose": "Host simulation and algorithm design only",
+  "productionApproved": false,
+  "hardwareValidated": false,
+  "geometry": {
+    "overallLengthM": {"value": 0.280, "status": "user-supplied-manufacturer-nominal", "source": "product-image"},
+    "overallWidthM": {"value": 0.180, "status": "user-supplied-manufacturer-nominal", "source": "product-image"},
+    "overallHeightM": {"value": 0.080, "status": "user-supplied-manufacturer-nominal", "source": "product-image"},
+    "tireDiameterM": {"value": 0.064, "status": "user-supplied-manufacturer-nominal", "source": "product-image"},
+    "tireWidthM": {"value": 0.027, "status": "user-supplied-manufacturer-nominal", "source": "product-image"},
+    "wheelbaseM": {"value": 0.205, "status": "user-supplied-image-estimate", "source": "provisional-table-image"},
+    "rearTrackM": {"value": 0.152, "status": "user-supplied-image-estimate", "source": "provisional-table-image"},
+    "frontTrackM": {"value": 0.150, "status": "user-supplied-image-estimate", "source": "provisional-table-image"}
+  },
+  "measuredRollingCircumferenceLeftM": null,
+  "measuredRollingCircumferenceRightM": null,
+  "measurementUncertaintyM": null,
+  "encoder": {
+    "hardwareModel": null,
+    "nominalResolutionLabel": 1024,
+    "nominalResolutionInterpretation": "unknown: not confirmed as counts per wheel revolution",
+    "countingMode": "A-rising-edge-with-B-direction",
+    "softwareEdgeMultiplier": 1,
+    "nominalSamplePeriodS": 0.01,
+    "reportedCountIntervalS": 0.01,
+    "left": {"connector": 3, "pins": ["C3", "C4"], "forwardRawSign": -1, "countsPerWheelRev": null, "mechanicalRatio": null},
+    "right": {"connector": 4, "pins": ["C5", "C25"], "forwardRawSign": 1, "countsPerWheelRev": null, "mechanicalRatio": null},
+    "sources": ["docs/reference/ENCODER_SPEED.md", "demo/code/board_encoder.c", "libraries/zf_driver/zf_driver_encoder.c"]
+  },
+  "servo": {
+    "hardwareModel": null,
+    "pwmFrequencyHz": 50,
+    "pulseRightUs": 1430,
+    "pulseCenterUs": 1550,
+    "pulseLeftUs": 1670,
+    "positiveBodySteering": "right",
+    "pulseRightSign": -1,
+    "endpointEvidence": "operator-confirmed-static-unloaded-2026-10-22; current-source-reconfirmed-2026-11-06",
+    "effectiveFrontAngleMap": null,
+    "sources": ["docs/archive/versions/C26_25_SERVO_CALIBRATION.md", "docs/archive/history/SERVO_ENDPOINT_TEST_20261022.md", "demo/code/midterm_route_profile.h", "demo/user/inc/main.h"]
+  },
+  "dynamicCalibration": {
+    "lateralAccelerationMps2": null,
+    "accelerationMps2": null,
+    "brakingDecelerationMps2": null,
+    "controlLatencyS": null,
+    "cameraGroundHomography": null,
+    "nearVisibleDistanceM": null,
+    "nearSpeedCapMps": null,
+    "farTimeBudgetMs": null,
+    "farDistanceBudgetM": null
+  },
+  "sources": {
+    "product-image": "docs/reference/c1-model-sources/product-parameters.png",
+    "provisional-table-image": "docs/reference/c1-model-sources/user-provisional-baseline.png",
+    "chassis-drawing-image": "docs/reference/c1-model-sources/chassis-drawing.png"
+  },
+  "notes": [
+    "Nominal tire circumference pi*diameter is computed, not measured rolling circumference.",
+    "Wheelbase and track values are user-supplied image estimates, not dimensions certified by the drawing.",
+    "The drawing's 108 mm plate dimension is not an axle track dimension.",
+    "Do not infer wheel CPR as 1024 or 4096, or effective steering angle from PWM duty.",
+    "Missing values remain null; this profile does not enable the production planner."
+  ]
+}

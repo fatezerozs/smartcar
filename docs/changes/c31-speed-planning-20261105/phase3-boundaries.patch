@@ -1,0 +1,599 @@
+--- a/README.md
++++ b/README.md
+@@ -10,7 +10,7 @@
+ 
+ - **[当前参数集与实测数据交付（2026-11-06）](docs/changes/vehicle-parameters-20261106/README.md)**：已采用的左右轮 CPR/方向、控制与舵机配置、几何参考、9 个 Encoder 原始窗口、Camera/SD 证据及联合候选待验状态。
+ - **[测试框架与流程详细手册](docs/TESTING_FRAMEWORK_GUIDE.md)**：环境、架构、套件开发、执行流程、报告判读、CI、数据集接入与完整套件索引。
+-- [C31 连续速度规划与降级控制阶段交付](docs/changes/c31-speed-planning-20261105/README.md)：主构型审计、Host 原型、回归与缺失标定；[当前数据入口与v0.3接入](docs/changes/c31-speed-planning-20261105/DATA_INPUTS.md)已核对实测CPR并接入离线回放，尚未接入生产控制路径。
++- [C31 连续速度规划与降级控制阶段交付](docs/changes/c31-speed-planning-20261105/README.md)：[v0.3数据接入](docs/changes/c31-speed-planning-20261105/DATA_INPUTS.md)已消费实测CPR；[Phase 3首批安全边界改动](docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)已进入源码并构建，速度规划器仍未接入生产控制路径。
+ - [项目设计与演进档案](docs/PROJECT_EVOLUTION.md)：成品目标、模型、实现与验证状态、任务、技术取舍和每次提交的简略索引。
+ - [本次详细提交说明：2026-11-02 / C32](docs/changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：测试架构、兼容迁移、本地/远程证据及未关闭项。
+ - [文档目录](docs/INDEX.md)：当前参考、提交记录和历史归档。
+--- a/tests/planning/test_c26_baseline.c
++++ b/tests/planning/test_c26_baseline.c
+@@ -1,4 +1,5 @@
+-/* Characterizes unchanged working-tree C26; not v1.4 acceptance. */
++/* Historical suite id retained; current C26 admission/fault boundary regression.
++ * This is not calibrated speed-planner or hardware acceptance. */
+ #include "../support/fixtures/switch_io.h"
+ #include "vision_drive_internal.h"
+ static void snapshot(const char *event)
+@@ -8,6 +9,81 @@
+         (unsigned)vd.control.output.state,(unsigned long)vd.output_epoch,(unsigned)vd.output_authorized,
+         s.target_left,s.target_right,s.pwm_left,s.pwm_right,(unsigned long)pwm[0],
+         (unsigned long)pwm[1],(unsigned long)vd.control.output.faults);
++}
++static void motors_zero(void)
++{
++    vd_speed_info_t s=info();
++    CHECK(!s.target_left&&!s.target_right&&!s.pwm_left&&!s.pwm_right);
++    CHECK(!pwm[0]&&!pwm[1]);
++}
++static void fault_classes(void)
++{
++    const uint32_t severe[]={VC_FAULT_CONFIG,VC_FAULT_COMMAND,VC_FAULT_NUMERIC,VC_FAULT_OFFSET,
++        VC_FAULT_RUNTIME,VC_FAULT_EXTERNAL,VC_FAULT_ENCODER,UINT32_C(1)<<20};
++    for(unsigned i=0;i<sizeof(severe)/sizeof(severe[0]);++i)for(unsigned mixed=0;mixed<2;++mixed){
++        uint32_t faults=severe[i]|(mixed?VC_FAULT_VISION|VC_FAULT_FRAME:0);
++        switch_boot(0);switch_wait(30,1);CHECK(vision_drive_is_local());
++        vd.guard_faults|=faults;vc_trip(&vd.control,faults);vision_drive_poll(now);
++        motors_zero();switch_wait(30,1);CHECK(!vision_drive_is_local());
++        switch_a=1;switch_wait(10,1);motors_zero();
++        CHECK((vd.control.output.faults&faults)==faults);
++        CHECK((vd.guard_faults&faults)==faults);
++        switch_a=0;switch_wait(30,1);motors_zero();CHECK(!vision_drive_is_local());
++        CHECK((vd.control.output.faults&faults)==faults);
++        CHECK(!vision_drive_command('a',now,1));
++    }
++    /* Internal encoder fault is independently latched in speed state. */
++    switch_boot(0);switch_wait(30,1);switch_delta_left=8;switch_delta_right=-8;switch_wait(60,1);
++    CHECK(info().faults&VC_FAULT_ENCODER);motors_zero();
++    switch_a=1;switch_wait(10,1);CHECK(info().faults&VC_FAULT_ENCODER);
++    switch_delta_left=-15;switch_delta_right=15;switch_a=0;switch_wait(30,1);
++    CHECK(info().faults&VC_FAULT_ENCODER);CHECK(!vision_drive_is_local());motors_zero();
++}
++static void partial_and_final_veto(void)
++{
++    uint32_t epoch;
++    switch_boot(0);switch_wait(30,1);CHECK(vision_drive_is_local());
++    epoch=vd.output_epoch;
++    route_lane.valid=0;route_lane.status=VISION_NO_LANE;route_lane.confidence=11;
++    for(int y=VISION_ROI_TOP;y<=VISION_ROI_BOTTOM;++y)if(y<70||y>79)route_lane.row_flags[y]=0;
++    for(unsigned i=0;i<20;++i){switch_step(1);if(vd.control.output.recovering)motors_zero();}
++    CHECK(!vd.control.output.observation_valid&&vd.control.output.recovering);
++    CHECK(vd.control.output.search_source==2&&vd.control.output.duty==0);
++    CHECK(vd.output_epoch==epoch&&vd.output_authorized);motors_zero();
++    /* Bypass the controller's zero-demand branch with a bounded nonzero
++     * demand: the output facade/final writer must independently veto it. */
++    vd.control.output.duty=.10f;vd_output_apply();motors_zero();
++    for(unsigned i=0;i<5;++i){switch_step(0);vd.control.output.duty=.10f;vd_output_apply();motors_zero();}
++    CHECK(vd.output_epoch==epoch&&vd.output_authorized);
++    set_lane(0);switch_wait(30,1);CHECK(vision_drive_is_local()&&vd.control.output.observation_valid);
++    CHECK(info().target_left&&info().target_right); /* Same lease, no auto-arm. */
++    epoch=vd.output_epoch;vision_drive_stop();CHECK(vd.output_epoch!=epoch);motors_zero();
++    vd.control.output.state=VC_RUNNING;vd.control.output.observation_valid=1;vd.control.output.duty=.10f;
++    vd_output_apply();CHECK(!vd.output_authorized);motors_zero(); /* Revoked authority cannot be recreated. */
++}
++static void fresh_admission(void)
++{
++    uint32_t sequence,capture;
++    switch_boot(0);switch_wait(30,1);CHECK(vision_drive_is_local());
++    sequence=vd.control.last_sequence;capture=vd.control.last_frame_ms;
++    vc_trip(&vd.control,VC_FAULT_VISION|VC_FAULT_FRAME);vision_drive_poll(now);motors_zero();
++    switch_a=1;switch_wait(5,0);CHECK(vd.control.output.state==VC_DISARMED);
++    switch_a=0;switch_wait(4,0);CHECK(!vision_drive_is_local());
++    CHECK(vd.control.stable_frames==0);
++    for(unsigned i=0;i<5;++i){
++        vision_drive_observe(&route_lane,sequence-i,capture,now);
++        CHECK(vd.control.stable_frames==0);CHECK(!vision_drive_is_local());motors_zero();
++    }
++    /* Fewer than the existing five valid frames cannot satisfy admission. */
++    switch_wait(6,1);CHECK(!vision_drive_is_local());
++    switch_wait(30,1);CHECK(vision_drive_is_local());
++    /* A short OFF bounce never acknowledges a fault. */
++    vc_trip(&vd.control,VC_FAULT_FRAME);vision_drive_poll(now);switch_a=1;switch_wait(1,1);
++    switch_a=0;switch_wait(30,1);CHECK(!vision_drive_is_local());
++    CHECK(vd.control.output.faults&VC_FAULT_FRAME);motors_zero();
++    CHECK(vision_drive_command('c',now,1)); /* Explicit clear is not admission. */
++    switch_wait(30,1);CHECK(!vision_drive_is_local());motors_zero();
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());
+ }
+ int main(void)
+ {
+@@ -23,10 +99,14 @@
+     vision_drive_stop();switch_wait(30,1);CHECK(!vision_drive_is_local());snapshot("operator_STOP_inhibits");
+     switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());snapshot("STOP_OFF_ON_admitted");
+     route_lane.valid=0;switch_wait(100,1);CHECK(!vision_drive_is_local());snapshot("vision_fault");
+-    set_lane(0);switch_wait(30,1);CHECK(vision_drive_is_local());snapshot("GAP_vision_restarts_without_OFF");
++    set_lane(0);switch_wait(30,1);CHECK(!vision_drive_is_local());snapshot("vision_recovery_ON_stays_stopped");
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);
++    CHECK(vision_drive_is_local());snapshot("vision_OFF_ON_readmitted");
+     vision_drive_trip(VC_FAULT_ENCODER);switch_wait(30,1);CHECK(!vision_drive_is_local());snapshot("encoder_fault_ON_stays_stopped");
+-    switch_a=1;switch_wait(10,1);snapshot("GAP_stable_OFF_clears_severe");
+-    CHECK(!(vd.control.output.faults&VC_FAULT_ENCODER));
+-    puts("BASELINE CHARACTERIZATION PASS; known v1.4 policy gaps remain, not acceptance PASS.");
++    switch_a=1;switch_wait(10,1);snapshot("stable_OFF_preserves_severe");
++    CHECK(vd.control.output.faults&VC_FAULT_ENCODER);
++    switch_a=0;switch_wait(30,1);CHECK(!vision_drive_is_local());snapshot("severe_OFF_ON_stays_stopped");
++    fault_classes();partial_and_final_veto();fresh_admission();
++    puts("C26 BOUNDARY REGRESSION PASS; admission/fault policy only, not complete v1.4 acceptance.");
+     return 0;
+ }
+--- a/tests/vision/test_turn_route.c
++++ b/tests/vision/test_turn_route.c
+@@ -342,7 +342,7 @@
+         switch_wait(2,1);CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_output()->speed_boost);
+     }
+     /* Entry widens before an exit is visible: only four real entry rows
+-     * remain in the ROI. Keep moving on CURRENT white evidence, honestly
++     * remain in the ROI. Keep steering on CURRENT white evidence, honestly
+      * partial, without resetting the full-valid deadline or inventing eight
+      * anchors. This same partial image can never start from DISARMED. */
+     run_gray(0);gray_short_entry();
+@@ -353,7 +353,8 @@
+          CHECK(route_lane.junction_rows>=12&&vision_drive_is_local());
+          CHECK(vd.control.last_valid_ms==last_valid);
+      }
+-     CHECK(vision_drive_output()->recovering&&vision_drive_output()->duty>=.08f&&vision_drive_output()->duty<=.088f);
++     CHECK(vision_drive_output()->recovering&&vision_drive_output()->duty==0);
++     CHECK(!info().target_right&&!info().target_left&&!info().pwm_right&&!info().pwm_left&&!pwm[0]&&!pwm[1]);
+      gray_crossing(58,110,0);
+      for(unsigned i=0;i<30;++i){vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_step(1);}
+      CHECK(vision_drive_is_local()&&vision_drive_output()->observation_valid&&!vision_drive_output()->recovering);}
+@@ -703,7 +704,9 @@
+      vision_drive_trace_info(&before);route_lane.valid=0;switch_wait(40,1);
+      vision_drive_trace_info(&loss);CHECK(loss.frozen&&!loss.active);
+      set_lane(0);switch_wait(30,1);vision_drive_trace_info(&recovered);
+-     CHECK(recovered.active&&recovered.run==before.run&&recovered.count>before.count&&recovered.revision==loss.revision);}
++     CHECK(!recovered.active&&recovered.frozen&&recovered.run==before.run&&recovered.count==loss.count);
++     switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);vision_drive_trace_info(&recovered);
++     CHECK(recovered.active&&recovered.run>before.run&&recovered.count>0&&recovered.revision==loss.revision);}
+     /* Retain the latest ~60 seconds of a longer continuous run. Memory stays
+      * bounded; crossing the old two-minute deadline must not stop a lap. */
+     switch_wait(12100,1);
+@@ -813,19 +816,19 @@
+     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(25,1);
+     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2);
+     CHECK(vision_drive_output()->steering>-.08f&&vision_drive_output()->steering<.08f);
+-    /* After a zero-demand invalid straight frame, a newly visible current
+-     * partial path must ramp low drive back up instead of retaining duty=0. */
++    /* A newly visible partial path may guide steering after a zero-demand
++     * frame, but cannot restore motor power before valid near road returns. */
+     run_gray(0);route_lane.valid=0;memset(route_lane.row_flags,0,sizeof(route_lane.row_flags));switch_wait(2,1);
+     CHECK(vision_drive_output()->duty==0);
+     CHECK(vision_drive_output()->recovering&&vd.output_authorized&&!pwm[0]&&!pwm[1]);
+-    /* Slow nonzero counts make positive recovery torque observable. */
++    /* Slow nonzero counts must not make the PI restore partial-path torque. */
+     switch_delta_left=-1;switch_delta_right=1;
+     memset(turn_gray,30,sizeof(turn_gray));
+     for(int y=70;y<=79;++y)for(int x=23;x<=103;++x)turn_gray[y*VISION_WIDTH+x]=210;
+     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
+     CHECK(vision_drive_is_local()&&vision_drive_output()->search_source==2&&vision_drive_output()->steering<-.2f);
+-    CHECK(vision_drive_output()->duty>.02f&&info().target_right>3);
+-    CHECK(vd.output_authorized&&pwm[0]&&pwm[1]);
++    CHECK(vision_drive_output()->duty==0&&!info().target_right&&!info().target_left);
++    CHECK(vd.output_authorized&&!info().pwm_right&&!info().pwm_left&&!pwm[0]&&!pwm[1]);
+     switch_boot(0);measured_curve(.4f,0);switch_wait(80,1);
+     CHECK(vision_drive_is_local()&&vision_drive_output()->far_valid&&vision_drive_servo_command_us()<=1530);
+     measured_curve(.4f,1);switch_wait(30,1);
+@@ -938,7 +941,9 @@
+         CHECK(!vision_drive_servo_command_us());
+         gray_road(direction);
+         for(unsigned i=0;i<30;++i){vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_step(1);}
+-        CHECK(vision_drive_is_local()); /* Current edge + retained geometry after exposure loss. */
++        CHECK(!vision_drive_is_local()); /* Exposure fault requires physical acknowledgement. */
++        switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);
++        CHECK(vision_drive_is_local()); /* Fresh current edge after OFF->ON. */
+     }
+     /* Regression: a current, unambiguous lane beyond 1.25 half-widths
+      * must steer under bounded output, not fault after ~80ms of take-up. */
+@@ -975,11 +980,13 @@
+         CHECK(direction>0?vision_drive_servo_command_us()<=1530:vision_drive_servo_command_us()>=1570);
+     }
+     /* No blind powered search: fresh all-white frames cannot justify motion.
+-     * Five valid reacquisition frames can resume without an OFF cycle. */
++     * Valid reacquisition frames cannot acknowledge a fault while C26 is ON. */
+     run_gray(1);memset(turn_gray,210,sizeof(turn_gray));
+     vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(15,1);
+     CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]&&!info().target_right);
+     gray_road(1);vision_midterm_process(turn_gray,turn_binary,&route_lane);switch_wait(20,1);
++    CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);
+     CHECK(!vision_drive_output()->recovering&&vision_drive_output()->observation_valid&&vision_drive_is_local());
+     memset(turn_gray,210,sizeof(turn_gray));vision_midterm_process(turn_gray,turn_binary,&route_lane);
+     switch_wait(340,1);CHECK(!pwm[0]&&!pwm[1]&&!vision_drive_is_local());
+--- a/tests/vision/test_switch_runtime.c
++++ b/tests/vision/test_switch_runtime.c
+@@ -27,7 +27,8 @@
+ {
+     (void)index;uint32_t at=++elapsed;
+     if(at>=finish_at)longjmp(stop_loop,1);
+-    if(at%20U==0&&(experiment!=4||at<2800)&&(experiment!=5||at<2800||at>=3200)){
++    if(at%20U==0&&(experiment!=4||at<2800)&&
++       ((experiment!=5&&experiment!=7&&experiment!=8)||at<2800||at>=3200)){
+         fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(at);
+     }
+     if(at>100&&vision_drive_is_local())observed_running=1;
+@@ -35,6 +36,8 @@
+     if(!in_tick&&!irq_mask&&at>100&&(uint32_t)(at-last_tick)>=10U){
+         int a=(experiment==0||at>=1000)?0:1;
+         if((experiment==2||experiment==6)&&at>=2800)a=1;
++        if(experiment==7&&at>=3400&&at<3500)a=1; /* Deliberate OFF->ON acknowledgement. */
++        if(experiment==8&&at>=3400&&at<3410)a=1; /* Bounce is not acknowledgement. */
+         in_tick=1;last_tick=at;app_mode_sample(a,(at/100U)%2U,at);
+         left_counter=(uint16_t)(left_counter-15);right_counter=(uint16_t)(right_counter+15);
+         vision_drive_safety_tick();in_tick=0;
+@@ -43,14 +46,15 @@
+ }
+ int main(void)
+ {
+-    for(experiment=0;experiment<7;++experiment){
++    for(experiment=0;experiment<9;++experiment){
+         elapsed=0;last_tick=0;left_counter=right_counter=0;observed_running=in_tick=0;finish_at=4200;
+         trace_wire_size=0;trace_wire[0]=0;if(experiment==6)finish_at=6200;
+         moved=servo_moved=0;irq_mask=0;current_case=TEXT;case_name="C26 runtime";
+         memset(pwm,0,sizeof(pwm));mt9v03x_finish_flag=0;mt9v03x_image=NULL;
+         app_mode_init(experiment==0?0:1,1,0);vs_init(NULL);app_transport_init();
+         if(setjmp(stop_loop)==0)vision_debug_run();
+-        if(experiment==0||experiment==1||experiment==5){assert(observed_running&&moved&&vision_drive_is_local());}
++        printf("C26 runtime case=%u observed_running=%u moved=%u final_local=%d\n",experiment,observed_running,moved,vision_drive_is_local());
++        if(experiment==0||experiment==1||experiment==7){assert(observed_running&&moved&&vision_drive_is_local());}
+         else{assert(observed_running&&!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);}
+         if(experiment==6){
+             assert(strstr(trace_wire,"pwm_hz_cfg=17000 scale=1000")!=NULL);
+@@ -64,6 +68,6 @@
+             assert(strstr(trace_wire,"[TRACE_END] run=1 count=")!=NULL);
+         }
+     }
+-    puts("C26 LEVEL RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery resumes, C27 ignored, no UART heartbeat; trace automatically exported while stopped.");
++    puts("C26 RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery requires deliberate OFF->ON, bounce rejected, C27 ignored, no UART heartbeat; trace exported while stopped.");
+     return failures?1:0;
+ }
+--- a/tests/vision/test_route_switch.c
++++ b/tests/vision/test_route_switch.c
+@@ -13,10 +13,12 @@
+     route_lane.valid=0;switch_wait(100,1);CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);
+     vision_drive_last_stop(&before);CHECK(before.sequence&&(before.faults&VC_FAULT_VISION));
+     set_lane(0);switch_wait(6,1);CHECK(!vision_drive_is_local()); /* fewer than five new frames */
+-    switch_wait(30,1);CHECK(vision_drive_is_local()); /* No OFF->ON needed. */
++    switch_wait(30,1);CHECK(!vision_drive_is_local()); /* Held ON cannot acknowledge a fault. */
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());
+     vision_drive_last_stop(&after);CHECK(after.sequence==before.sequence&&after.faults==before.faults);
+     switch_wait(12,0);CHECK(!pwm[0]&&!pwm[1]);
+-    switch_wait(30,1);CHECK(vision_drive_is_local()); /* Recovered camera stream. */
++    switch_wait(30,1);CHECK(!vision_drive_is_local()); /* Camera recovery alone cannot rearm. */
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(30,1);CHECK(vision_drive_is_local());
+     switch_b=1;switch_wait(10,1);CHECK(vision_drive_is_local());
+     switch_a=1;switch_step(1);CHECK(!pwm[0]&&!pwm[1]);switch_wait(100,1);CHECK(!vision_drive_is_local());
+     vision_drive_last_stop(&after);CHECK(after.sequence>before.sequence);
+--- a/tests/suites/README.md
++++ b/tests/suites/README.md
+@@ -9,9 +9,10 @@
+ - L2: Debug/runtime, route/switch/turn, midterm, auto-track and motion chains.
+ - L2: `speed-planning-host` checks the isolated synthetic geometry/planning/jerk,
+   near/far supervisor and offline sidecar/budget contracts. It has no production
+-  defaults or MCU integration. `c26-baseline-characterization` reproduces the
+-  unchanged controller's startup and explicitly records v1.4 policy gaps;
+-  its PASS is a baseline check, not acceptance of the new policy. See
++  defaults or MCU integration. The historical ID `c26-baseline-characterization`
++  now checks C26 admission, physical OFF acknowledgement, severe-fault retention
++  and near-invalid motor inhibition after the first Phase 3 changes; it is not
++  acceptance of the calibrated planner. See
+   [the stage report](../../docs/changes/c31-speed-planning-20261105/README.md).
+ - L2: `recorder` adds 17 capture/storage/SCRAW synthetic integration cases, using
+   the selected Host compiler/mode; `recorder-tools` checks incremental generation
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3446,7 +3446,7 @@
+     {
+       "schemaVersion": "1.0",
+       "id": "c26-baseline-characterization",
+-      "name": "C26 unchanged controller baseline characterization",
++      "name": "C26 admission and motor-inhibit boundary regression",
+       "layer": "integration",
+       "category": "functional",
+       "evidenceClass": "host_simulated",
+@@ -3504,7 +3504,7 @@
+       "artifacts": [
+         "artifacts/**"
+       ],
+-      "scope": "Working-tree startup only; explicitly records v1.4 policy gaps, not target acceptance"
++      "scope": "C26 startup, physical fault acknowledgement, severe-fault retention and near-invalid zero-output boundaries; historical id retained, not full calibrated planner acceptance"
+     }
+   ]
+ }
+--- a/docs/PROJECT_EVOLUTION.md
++++ b/docs/PROJECT_EVOLUTION.md
+@@ -4,6 +4,8 @@
+ 生产固件标识仍为 switch 的 `MIDTERM_C26_31` / auto-track 的 `MIDTERM_C31_AUTO_TRACK_1`。
+ 
+ 本文是项目现状和技术决策的持续维护入口，不代替每次提交的详细说明。
++
++2026-11-06 [Phase 3首批不依赖标定的安全边界改动](changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)：主构型源码已封住near-invalid/partial的非零电机输出，清目标与PI缓存；视觉/帧故障需C26 OFF→ON，严重/混合/未知故障不被普通OFF清除，UART清故障不能替代物理准入，旧帧不计入重新准入。最终专项回归与隔离Keil构建通过；完整Host仍保留auto-track、recorder-startup与Recorder源码锁的既存失败，未宣称整体通过。Phase 2数据仍未齐，规划器/标定参数与短临界区尚未完成接入；未操作设备或提交。
+ 
+ 2026-11-06 [连续速度规划数据接入v0.3](changes/c31-speed-planning-20261105/DATA_INPUTS.md)：复核当前参数交付70个文件哈希、9个Encoder窗口/4500次采样及7组手转比值，将已采用的左右CPR分别接入离线规划/真实PI代码回放。23个Python用例、36组场景/分辨率组合（各两种存储消费模式）通过；单独确认时间/距离预算先到期分支。历史1024假设仅留作显式旧参考，原始数据和生产源码不改。负载滚动周长、真实转角、同步运动near/far数据与固件集成仍待完成；本次未操作硬件、未提交或push。
+ 
+--- a/docs/INDEX.md
++++ b/docs/INDEX.md
+@@ -25,7 +25,7 @@
+ | [PC 视觉数据处理链条](vision_dataset/README.md) | 原始会话归档、抽样、文件标注、审核、Release 和 C31 离线评测；当前为 draft/synthetic 软件验证 |
+ | [数据链条软件验证](vision_dataset/SOFTWARE_VALIDATION.md) | 本轮真实执行、模拟审核、已测范围及正式格式/实例/真实数据未验项 |
+ | [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md) | 完整使用/开发/维护流程、接口示例、排障与套件索引；主页 README 有直接入口 |
+-| [C31 连续速度规划与降级控制阶段交付](changes/c31-speed-planning-20261105/README.md) | 主构型审计、Host规划；[当前数据接入](changes/c31-speed-planning-20261105/DATA_INPUTS.md)已消费左右实测CPR，负载周长/运动预算待补；未接入固件 |
++| [C31 连续速度规划与降级控制阶段交付](changes/c31-speed-planning-20261105/README.md) | [当前数据接入](changes/c31-speed-planning-20261105/DATA_INPUTS.md)与[Phase 3安全边界](changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md)；近场失效清零/故障重新准入已改源码，规划器与标定门仍待完成 |
+ | [TESTING_ARCHITECTURE.md](TESTING_ARCHITECTURE.md) | 统一测试入口、套件分层、隔离执行、报告和数据集待接入接口 |
+ | [测试重构验收记录](testing/VALIDATION.md) | 本轮源码/夹具前后对照、Host/ARM/Keil 证据与未执行范围 |
+ | [ENCODER_SPEED.md](reference/ENCODER_SPEED.md) | 编码器3左/4右与速度环；区分赛道和历史诊断参数 |
+--- a/demo/code/vision_control.c
++++ b/demo/code/vision_control.c
+@@ -404,7 +404,7 @@
+     vc_poll(c, now); /* Check old deadlines before accepting a delayed frame. */
+     if (!c->configured) return;
+     if (c->have_frame && sequence == c->last_sequence) return; /* Not a new observation. */
+-#if VISION_MIDTERM_C31_AUTONOMOUS
++#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+     /* Modular ordering is valid within half the uint32 domain, including wrap.
+      * Old/ambiguous identities never refresh a lease or count as recovery. */
+     if(c->have_frame && (uint32_t)(sequence-c->last_sequence)>=UINT32_C(0x80000000))return;
+@@ -446,9 +446,8 @@
+         c31_zero_wait(c,VC_VISION_NO_LANE,frame_ms,now);
+         return;
+ #elif VISION_ROUTE_SWITCH
+-        /* Partial CURRENT road can guide a bounded low-speed recovery.
+-         * No current boundary evidence means zero motor demand; never power
+-         * through a junction or outside view using only an old turn. */
++        /* Partial CURRENT road may guide the existing bounded steering wait.
++         * It is not a valid near observation and cannot grant motor power. */
+         {float current_target=0;int strong=0,paired=0,carry=0;
+         int current=current_partial_direction(r,&c->config,&current_target,&strong,&paired);
+         if(c->output.state==VC_RUNNING && current &&
+@@ -468,11 +467,7 @@
+             if(current&&search*c->output.steering<0)step*=2.0f;
+             else if(current&&absolute(search)<absolute(c->output.steering))step*=1.5f;
+             c->output.steering+=clamp(search-c->output.steering,-step,step);
+-            /* A current four-row entry plus broad white forward corridor is
+-             * stronger than a detached partial edge. Keep enough low-speed
+-             * demand to pass that transition, below clear-road/corner speed. */
+-            c->output.duty=clamp(c->output.duty+c->config.duty_rise_per_s*dt,0,
+-                c->config.cruise_duty*(r->junction_partial?.60f:.45f));
++            c->output.duty=0; /* Near-invalid: no partial/history drive bypass. */
+             c->output.recovering=1;c->invalid_frames=1;c->derivative=0;
+             c->output.search_source=(uint8_t)(carry?3:2);
+             return;
+--- a/demo/code/vision_actuator.c
++++ b/demo/code/vision_actuator.c
+@@ -167,7 +167,18 @@
+     if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
+     /* Bound PI's actual result independently of its target/speed cap. C31
+      * deliberately retains its existing full physical PWM headroom. */
+-    #if VISION_MIDTERM_C31_AUTONOMOUS
++#if VISION_ROUTE_SWITCH
++    /* Final independent veto after PI/cache: partial guidance or a stale
++     * nonzero demand cannot power either rear motor without current near road.
++     * Keep the existing steering lease; this does not arm or revoke a run. */
++    if(source==VD_OUTPUT_DRIVE && !vd.control.output.observation_valid) {
++        right=left=0;
++#if VISION_ENCODER_ENABLE
++        vd_speed_stop();
++#endif
++    }
++#endif
++#if VISION_MIDTERM_C31_AUTONOMOUS
+     /* Exception policy is enforced at the final motor writer, after PI/cache. */
+     if(source==VD_OUTPUT_DRIVE && vd.control.output.vision_state!=VC_VISION_NORMAL) {
+         right=left=0;vd_speed_stop();
+@@ -292,6 +303,12 @@
+             motor1*=slow;motor2*=slow;
+          }
+          vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
++        if(!vd.control.output.observation_valid) {
++            motor1=motor2=0;
++#if VISION_ENCODER_ENABLE
++            vd_speed_stop(); /* Clear targets and PI before publishing zero. */
++#endif
++        }
+ #endif
+         /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
+         if(!(pulse>=vd.profile.servo_min_us && pulse<=vd.profile.servo_max_us) ||
+--- a/demo/code/vision_startup.c
++++ b/demo/code/vision_startup.c
+@@ -98,8 +98,9 @@
+ #endif
+ 
+ #if VISION_ROUTE_SWITCH
+-/* C26 level authority: valid lane starts/restarts; OFF always revokes drive.
+- * Explicit UART STOP/pause still inhibits until a deliberate OFF cycle. */
++/* C26 owns admission. A fault is never acknowledged by a held ON level.
++ * Stable physical OFF may acknowledge ONLY visual/frame faults; severe faults
++ * retain the explicit clear/configuration procedure. No output is restored. */
+ static uint8_t route_operator_stop,route_released;
+ void vd_route_switch_init(void){route_operator_stop=route_released=0;}
+ void vd_route_switch_cancel(void){route_operator_stop=1;}
+@@ -121,26 +122,37 @@
+             vision_drive_speed_get(&s);
+             if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+                 uint32_t mask=__get_PRIMASK();__disable_irq();
+-                vd.guard_running=0;vd.probe_active=0;vd_output_zero();vd.guard_faults=0;
+-                vc_clear_fault(&vd.control);__set_PRIMASK(mask);
+-                (void)vision_drive_speed_enable(1);
++                uint32_t recoverable=VC_FAULT_VISION|VC_FAULT_FRAME;
++                uint32_t faults=vd.guard_faults|vd.control.output.faults|s.faults;
++                vd.guard_running=0;vd.probe_active=0;vd_output_zero();
++                /* Recheck live ISR faults under the mask. Never clear an
++                 * encoder/numeric/config/external/unknown bit as a side effect
++                 * of switching OFF, including a mixed visual+severe fault. */
++                if(!(faults&~recoverable)) {
++                    uint32_t sequence=vd.control.last_sequence,frame_ms=vd.control.last_frame_ms;
++                    uint8_t have_frame=vd.control.have_frame;
++                    vd.guard_faults&=~recoverable;
++                    vc_clear_fault(&vd.control);
++                    /* Reset admission/history, but keep the publication
++                     * watermark: replayed pre-OFF frames are not new evidence. */
++                    vd.control.last_sequence=sequence;vd.control.last_frame_ms=frame_ms;
++                    vd.control.have_frame=have_frame;
++                }
++                __set_PRIMASK(mask);
++                if(!(faults&~recoverable))(void)vision_drive_speed_enable(1);
+                 route_released=1;route_operator_stop=0;
+             }
+         }
+         return;
+     }
+     route_released=0;
++    /* Remember the fault even if an explicit UART clear later clears its
++     * status bits. That command cannot substitute for physical OFF->ON. */
++    if(vd.guard_faults || vd.control.output.faults)route_operator_stop=1;
+     if(app_mode_change_pending() || route_operator_stop)return;
+-    /* Missing vision is a zero-output wait, not a permanent start lock.
+-     * Do not auto-clear numeric/configuration/encoder/offset/runtime faults. */
+-    if(vd.control.output.state==VC_FAULT && vd.control.output.faults &&
+-       !(vd.control.output.faults&~(VC_FAULT_VISION|VC_FAULT_FRAME))) {
+-        uint32_t mask=__get_PRIMASK();__disable_irq();
+-        vd.guard_running=0;vd_output_zero();
+-        vd.guard_faults&=~(uint32_t)(VC_FAULT_VISION|VC_FAULT_FRAME);
+-        vc_clear_fault(&vd.control);__set_PRIMASK(mask);
+-        return; /* Reacquire five new valid frames before starting. */
+-    }
++    /* Fresh vision while ON cannot acknowledge a latched fault. Stable OFF
++     * above clears only the allowed class and discards old visual history;
++     * subsequent admission still needs fresh frames and every existing gate. */
+     if(vd.control.output.state!=VC_DISARMED)return;
+     vision_drive_speed_get(&s);
+     if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
+--- a/docs/changes/c31-speed-planning-20261105/README.md
++++ b/docs/changes/c31-speed-planning-20261105/README.md
+@@ -3,11 +3,12 @@
+ 任务来源：`SmartCar_C31连续速度规划与视觉降级协同控制_主分支改动任务书_v1.4_20261105.md`。
+ 日期：2026-11-05。唯一主验收构型：MIDTERM_C26_31。
+ 
+-**本轮完成只读基线审计、独立 Host 原型及软件回归；没有把候选策略接入固件。全任务尚未验收。**
++**当前：Phase 0/1已完成，Phase 2数据仍未齐；Phase 3已先落地不依赖标定的安全边界修正。速度规划器仍未接入固件，全任务尚未验收。**
+ 最初用户没有本车标定数据；2026-11-06其他工作已交付并采用左右轮 CPR 2335.8/2358.6，详见下方当前数据接入。负载滚动周长、实际轮角、动态制动及同步运动质量数据仍缺失；参考值可用于离线设计，第 5 节 Phase 2 的生产数据与审查门尚未满足。本阶段未将新规划接入生产控制；不得用纯构建产物执行新策略的赛道验收。
+ 
+ ## 阅读入口
+ 
++- [Phase 3首批安全边界改动与验证](PHASE3_BOUNDARIES.md)：主构型近场失效最终电机清零、物理OFF→ON故障准入、严重故障保留、旧帧与UART clear绕行防护；专项通过、Keil通过，完整Host既存失败明确保留。
+ - [当前数据入口与v0.3接入验证](DATA_INPUTS.md)：主文档交付70个文件哈希、9窗口/4500采样、7组手转比值复核；左右独立CPR已接入Host参考，实际米制标定与运动降级数据仍待补。
+ - [2026-11-06推进：参考参数与联动回放](REFERENCE_PIPELINE.md)：显式参考值、真实双PI复用、36组场景/分辨率组合、遥测满队列隔离及ARM对象证据；尚非生产控制器集成。
+ - [历史C0目标测试申请范围](TARGET_TEST_REQUEST.md)：本任务未执行；确定CPR的目标已由当前实测数据交付取代，不重复占用设备。
+@@ -34,14 +35,14 @@
+   --output .build/speed-planning/figures
+ ```
+ 
+-`speed-planning-host` 是纯仿真模型检验；`c26-baseline-characterization` 是**原控制器现状刻画**。后者明确输出 `GAP_vision_restarts_without_OFF`、`GAP_stable_OFF_clears_severe`，它通过只表示现状被复现，不表示 v1.4 启动政策通过。
++`speed-planning-host` 是纯仿真模型检验。`c26-baseline-characterization`保留历史ID，最初用于刻画`GAP_vision_restarts_without_OFF`和`GAP_stable_OFF_clears_severe`；Phase 3修正后已更新为C26准入/清零/故障保留回归，不再期待两个缺口继续存在。历史日志和证据不改写；当前PASS仍不代表整个v1.4规划任务通过。
+ 
+ 新算法位于 `tools/speed_planning`，没有加入 Keil 工程、生产头文件或运行时启动路径，没有 PWM、UART、串口、调试器或硬件访问接口；原控制器没有被复制成另一套长期实现。
+ 
+ ## 仍需完成的实施
+ 
+ 1. 建立本车几何/速度/制动标定，或按完整 session 留出验证的 ticks/s 经验模型；完成 far-loss 时距预算及恢复迟滞数据审查。
+-2. 集成单一共享算法到主构型；实现最终输出 near-invalid 抑制、PI 缓存清零、候选版本校验和短临界区，保持 C26 授权入口。
+-3. 按 v1.4 收紧视觉故障 OFF→ON 重新准入、严重故障清除分类；同步修改**行为发生变化的专项测试**，保留其他旧断言，不预先把旧失败删除或放宽。
++2. 集成单一共享规划算法到主构型，完成候选一致快照/版本校验和短临界区；near-invalid最终电机清零及PI缓存清零已在本次Phase 3子集实现，C26授权入口保留。
++3. 视觉故障OFF→ON重新准入、严重故障不随普通OFF清除已修正并回归；后续完成其余监督/受控停止与规划器的共同集成。仅改变行为发生变化的专项断言，其他旧回归保留。
+ 4. 如需训练构型遥测，实现有界队列与唯一 Storage 消费者，并验证队列满/SD 延迟。现交付的是 PC sidecar 契约和解析统计，不是板端遥测写入实现。
+-5. 使用真实相同输入做主分支/候选 A/B、测轮速跟踪/制动/误停/圈时，再完成主构型软件与硬件分层验收。本任务不授权硬件操作。
++5. 使用真实相同输入做主分支/候选 A/B、测轮速跟踪/制动/误停/圈时，再完成主构型软件与硬件分层验收。本轮未执行硬件操作。
+--- /dev/null
++++ b/docs/changes/c31-speed-planning-20261105/PHASE3_BOUNDARIES.md
+@@ -0,0 +1,99 @@
++# Phase 3 首批安全边界改动：不依赖物理标定的子集
++
++日期：2026-11-06，Asia/Shanghai。用户询问是否可以在Phase 2未完成时推进独立内容，本轮据此完成以下软件子集。**Phase 2与Phase 3并行推进；不是Phase 2已通过，也不是Phase 3全部完成。**
++
++## 1. 范围、构型和实际变化
++
++主验收构型仍是`MIDTERM_C26_31`，实际工程为[competition/midterm_switch.uvprojx](../../../demo/mdk/competition/midterm_switch.uvprojx)。当前工作区为`feat/vision-recorder-training`，HEAD为`de1415743b004160f520d385c9e3e63008f52007`，存在此前未提交工作；本次只在其基础上提交可复核增量，没有切换分支、commit或push。
++
++| 生产模块 | 改动 | 不需要Phase 2参数的原因 |
++| --- | --- | --- |
++| [vision_control.c](../../../demo/code/vision_control.c) | near观测无效时，partial分支仍可保留原有有界转向引导，但电机需求固定清零；route构型拒绝旧/半域歧义帧序号 | 有效性、身份、零输出是逻辑边界，不是速度/制动阈值 |
++| [vision_actuator.c](../../../demo/code/vision_actuator.c) | route驱动在发布轮速请求前清双电机需求与PI；最终writer在PI/cache之后再次检查`observation_valid`并强制双零 | 不依赖CPR、滚动周长、地面映射或实际转角 |
++| [vision_startup.c](../../../demo/code/vision_startup.c) | 仅稳定C26 OFF允许清除视觉/帧故障；混合、严重及未知故障不自动清除；ON故障锁住重新准入；保留帧发布水位 | 故障分类、物理授权和新鲜帧计数不需要新增物理阈值 |
++
++没有将`.4m/s`、`.8m/s²`、`600ms/.24m`等Host参考值写入生产。未新增300ms/5帧候选阈值；本轮保留当前已有的启动帧数、恢复计时、开关去抖、相机/Encoder超时及速度配置。
++
++## 2. 近场失效的三层封口
++
++原partial分支在`observation_valid=0`时仍可能给出cruise的45%/60%需求。现在该分支只保留既有转向计算，`duty=0`，不因当前partial或历史转向恢复驱动。
++
++输出层另外做两次独立处理：
++
++1. 完成现有转向/轮速混合后，只要route的当前近场观测无效，就把两轮需求置零，并调用`vd_speed_stop()`清除两轮请求、目标、两个PI状态及输出缓存。零请求不等待下一Encoder样本。
++2. `output_commit()`在现有来源授权/故障检查和PI/cache之后，再次以同一近场有效标记强制两个最终电机值为零。被上游错误保留的非零duty不能绕过此处。
++
++这一分支保留原运行租约，不自行重新arm；短暂近场失效后若在原有恢复边界内重新有效，可沿原路径恢复。STOP/故障/模式撤权仍走`vd_output_zero()`，撤销授权并递增epoch，不能借视觉恢复重建授权。舵机继续使用已存在的有界命令映射，未增加实际转角模型。
++
++**有效性范围仍有边界：**本轮使用现有`observation_valid`判定，现有near采样可能包括模型化单边道路；没有完成新的near/far质量标签、严格可信距离或物理曲率判定。此次保证的是“现有判定已无效时没有partial驱动旁路”，不是“所有near-valid判定都已经真实数据认证”。
++
++行为变化会影响依赖partial低速通过的路口：原本继续爬行的无效近场片段现在零驱动。是否需要改善视觉有效性、是否影响赛道通过率，必须用真实图像/运动回放继续评估；不能用本次Host通过宣称整车性能提高。
++
++## 3. 故障清除、C26与帧水位
++
++| 情况 | 本次源码行为 |
++| --- | --- |
++| 上电OFF / ON但尚无有效道路 | 保留现有等待/启动规则，不迁移AUTO_TRACK启动器 |
++| ON运行后短暂近场无效，尚未形成锁存故障 | 原恢复租约内双电机零输出；当前有效道路恢复后可沿原授权继续 |
++| 视觉/帧故障锁存，C26始终ON | 新图像不能清除故障或恢复运行 |
++| 故障后稳定OFF，再ON | 仅当故障集合属于VISION/FRAME时，OFF可清理该集合并重置准入历史；后续仍需现有新鲜有效帧数、Encoder、配置、硬件/模式等所有前置条件 |
++| Encoder、config、numeric、offset、runtime、command、external或未知位；含视觉混合故障 | 普通OFF和OFF→ON均不自动清除；速度层Encoder故障也不被自动重新enable清掉 |
++| UART `c`显式清故障 | 保留既有人工清除能力；ON时观察到故障已锁住route重新准入，因此`c`不能代替物理OFF→ON，也不能恢复旧输出 |
++| UART `a` / heartbeat / C27变化 | 不获得route启动权；`a`继续拒绝，C27不成为C26启动器 |
++| OFF短抖动、模式未稳定 | 不构成故障确认或重新准入 |
++
++OFF确认清理控制器时，只清准入/恢复历史，保留此前的`have_frame/last_sequence/last_frame_ms`发布水位。再配合route的uint32模序拒收，旧帧、重复帧和半域歧义序号不能计作新的准入证据；合法回绕仍按既有半域顺序处理。没有把“清故障”解释为“允许把旧帧再消费一次”。
++
++本次保留已有显式故障处置流程，不声称普通OFF能够修复硬件错误。外部严重故障、STOP与输出撤权的既有epoch机制没有扩大授权范围。
++
++## 4. 测试修改与结果解释
++
++修改的测试没有删除场景：
++
++- [test_c26_baseline.c](../../../tests/planning/test_c26_baseline.c)：保留历史suite ID，改为当前边界回归；增加8类严重/未知位及各自混合视觉故障、真实速度层反向故障、partial清零、非零duty绕行、撤权后的旧RUNNING状态、旧帧重放、不足帧、OFF抖动、UART clear不准入等覆盖。
++- [test_route_switch.c](../../../tests/vision/test_route_switch.c)：原图像恢复后自动启动预期改为必须OFF→ON；保留启动、二次授权、STOP、C27、长时间运行及反向反馈保护场景。
++- [test_turn_route.c](../../../tests/vision/test_turn_route.c)：原partial非零驱动预期改为双零目标/缓存/PWM；保留灰度输入、转向方向/平滑、原失效片段、正常道路及弯道回归。故障后的重新授权开始新物理run，ON期间旧trace保持冻结。
++- [test_switch_runtime.c](../../../tests/vision/test_switch_runtime.c)：通过真实scheduler/transport/vision/PI路径，9个模拟场景覆盖启动、STOP、相机停流、相机恢复仍锁止、稳定OFF→ON恢复、短OFF抖动拒绝、C27忽略与停止后trace导出。
++
++旧`c26-baseline-characterization`的suite ID保持兼容，catalog名称/scope和套件说明已更新，不再把两个旧GAP当作当前预期。旧阶段日志、原始实测数据和历史证据不改写。所有CHECK次数包含重复控制循环，不作为独立场景数。
++
++最终专项运行`20261106T095413-5d3bf1a18d`：environment/compiler及上述4个套件，共6节点PASS。其中route-switch为301063次检查，turn-route为371624次检查；硬件为模拟IO，不是实车通过。
++
++最终完整Host运行`20261106T095539-b248b49cf9`：50节点中46 PASS、3 FAIL、1 SKIPPED，95.501秒；SKIPPED为缺数据的performance-host。逐项结果见[本阶段证据](phase3-boundaries-evidence.json)。完整计划包含既存失败，**不能标记整体Host、PreFlash或发布放行通过**。源码与副作用审查发现的改动只对本阶段范围负责，不将其他工作区实现算作本任务交付。
++
++## 5. 既存失败的改动前对照
++
++| 套件 | 观察结果 | 对照证据 |
++| --- | --- | --- |
++| auto-track / reviewed | `test_auto_track.c:113`，near-only场景的RUNNING/有效性断言失败 | 用本轮前3个生产模块的精确备份替换编译输入，保持其他输入/宏相同，复现相同stderr与非零退出 |
++| recorder-startup / reviewed | `startup_harness.c:113`，`saw_running && saw_pwm && vision_drive_is_local()`失败 | 同样用改动前3模块重编译，复现同一断言 |
++| recorder-tools | `prepare_recorder.py`拒绝源码锁与`demo/code/vision_drive.c`不一致 | 该文件本轮未修改，当前哈希与pre-turn哈希一致；不更新锁来掩盖失败，也未声称生成的旧训练候选已吸收本轮改动 |
++
++上述对照是相对于本轮开始时的dirty工作区，不是干净HEAD全量基线；完整命令、退出码和stderr摘要保存在JSON，私有可执行文件/日志在`.build/phase3-boundaries-20261106`。这些失败仍是未关闭项，不能因不由本轮引入而忽略。
++
++## 6. 主构型纯构建与产物
++
++使用[audit_build.py](../../../tools/speed_planning/audit_build.py)隔离复制实际工程与依赖，拒绝启用构建钩子，只修改产物/Listing输出目录。最终目录为`.build/phase3-boundaries-20261106/final-switch`，Keil目标`nor_sdram_zf_dtcm`，0错误0警告：
++
++| Code | RO-data | RW-data | ZI-data |
++| ---: | ---: | ---: | ---: |
++| 89624 B | 13792 B | 212 B | 196648 B |
++
++原工程宏保持autonomous=0、route-switch=1、route-trial=1、encoder=1、training=1。AXF/BIN/MAP/反汇编的实际字节数与SHA256见证据JSON。未改原Keil工程，未打开调试会话、下载、复位或访问串口；未替换任何已交付的联合静止测试候选。
++
++本轮是带3项安全边界修改的纯构建产物，**不是已经启用新规划器的实验固件，也没有获得烧录/实车放行结论**。不将主机PWM记录或寄存器提交逻辑当作真实PWM重载时序、停车距离或制动能力。
++
++## 7. 尚未完成的Phase 3内容
++
++1. 空间规划、jerk轨迹、far-only限速/时距预算及CONTROLLED_STOP尚未接入主构型；现在的far-only仍是原控制行为，不能称为完成v1.4有限降级策略。
++2. route near-valid/far-valid与质量/可信距离定义仍须数据审查，生产米制模型/制动/实际轮角不得由Host参考自动补全。
++3. 主构型输出准备和PI计算外围仍有原有PRIMASK区间。本次没有简单移除中断屏蔽，也没有完成不可变快照、完整候选版本复核与短提交区重构；不能宣称已达到WCET/中断延迟目标。
++4. Recorder并行写入、真实同输入A/B、误停/制动/圈时及板端C26重新准入验收仍未完成。当前没有远程CI、MSVC或ASan新增结果。
++
++因此当前可以确认“Phase 3已有独立安全子集进入源码”，不能确认“Phase 3完成”或“可直接烧录跑车”。后续继续以[Phase 2数据入口](DATA_INPUTS.md)和本阶段未完成项作为推进边界。
++
++## 8. 读取层、保存与增量
++
++C/Markdown直接原生读取；Keil XML、JSON和测试报告为`structured_parsed`，Host运行、改动前对照、产物哈希和文件保存检查为`computed`。本轮没有依赖`md_extracted`给出精确公式/数值，无新增`pdf_verified`或硬件测量。全局配置、技能和持久Agent行为未改。
++
++本次增量审查包括生产3模块、4个专项测试、catalog/套件说明及主文档入口。原始交付目录、参数profile、库与原Keil工程按pre-turn哈希保护；变更清单、源码哈希见证据，[本轮精确增量patch](phase3-boundaries.patch)相对于本轮开始时的工作区，另外两份机器证据/patch文件不递归包含自身。工作区原有未提交实现保留，不混入本轮提交声明。

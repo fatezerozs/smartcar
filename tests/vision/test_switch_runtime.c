@@ -27,7 +27,8 @@ uint32_t timer_get(int index)
 {
     (void)index;uint32_t at=++elapsed;
     if(at>=finish_at)longjmp(stop_loop,1);
-    if(at%20U==0&&(experiment!=4||at<2800)&&(experiment!=5||at<2800||at>=3200)){
+    if(at%20U==0&&(experiment!=4||at<2800)&&
+       ((experiment!=5&&experiment!=7&&experiment!=8)||at<2800||at>=3200)){
         fill_camera(0,0);mt9v03x_image=camera[0];finish_camera(at);
     }
     if(at>100&&vision_drive_is_local())observed_running=1;
@@ -35,6 +36,8 @@ uint32_t timer_get(int index)
     if(!in_tick&&!irq_mask&&at>100&&(uint32_t)(at-last_tick)>=10U){
         int a=(experiment==0||at>=1000)?0:1;
         if((experiment==2||experiment==6)&&at>=2800)a=1;
+        if(experiment==7&&at>=3400&&at<3500)a=1; /* Deliberate OFF->ON acknowledgement. */
+        if(experiment==8&&at>=3400&&at<3410)a=1; /* Bounce is not acknowledgement. */
         in_tick=1;last_tick=at;app_mode_sample(a,(at/100U)%2U,at);
         left_counter=(uint16_t)(left_counter-15);right_counter=(uint16_t)(right_counter+15);
         vision_drive_safety_tick();in_tick=0;
@@ -43,14 +46,15 @@ uint32_t timer_get(int index)
 }
 int main(void)
 {
-    for(experiment=0;experiment<7;++experiment){
+    for(experiment=0;experiment<9;++experiment){
         elapsed=0;last_tick=0;left_counter=right_counter=0;observed_running=in_tick=0;finish_at=4200;
         trace_wire_size=0;trace_wire[0]=0;if(experiment==6)finish_at=6200;
         moved=servo_moved=0;irq_mask=0;current_case=TEXT;case_name="C26 runtime";
         memset(pwm,0,sizeof(pwm));mt9v03x_finish_flag=0;mt9v03x_image=NULL;
         app_mode_init(experiment==0?0:1,1,0);vs_init(NULL);app_transport_init();
         if(setjmp(stop_loop)==0)vision_debug_run();
-        if(experiment==0||experiment==1||experiment==5){assert(observed_running&&moved&&vision_drive_is_local());}
+        printf("C26 runtime case=%u observed_running=%u moved=%u final_local=%d\n",experiment,observed_running,moved,vision_drive_is_local());
+        if(experiment==0||experiment==1||experiment==7){assert(observed_running&&moved&&vision_drive_is_local());}
         else{assert(observed_running&&!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);}
         if(experiment==6){
             assert(strstr(trace_wire,"pwm_hz_cfg=17000 scale=1000")!=NULL);
@@ -64,6 +68,6 @@ int main(void)
             assert(strstr(trace_wire,"[TRACE_END] run=1 count=")!=NULL);
         }
     }
-    puts("C26 LEVEL RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery resumes, C27 ignored, no UART heartbeat; trace automatically exported while stopped.");
+    puts("C26 RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery requires deliberate OFF->ON, bounce rejected, C27 ignored, no UART heartbeat; trace exported while stopped.");
     return failures?1:0;
 }

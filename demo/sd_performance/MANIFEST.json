@@ -1,0 +1,585 @@
+{
+  "authoritative_build": "artifacts/run-20261106T003457153-37440",
+  "files": [
+    {
+      "path": "artifacts/run-20261106T003223533-35504/keil-build.log",
+      "bytes": 819,
+      "sha256": "075d60059da8258554327c0f58621e09082a0e65fb76814ceac4b45be0bc3b0f"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Listings/sd_performance.map",
+      "bytes": 343820,
+      "sha256": "c2379724569b9cb59cbc38893644f92d02544c0555d1cfc47eb5e7be4e6e7c6d"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/bench.d",
+      "bytes": 439,
+      "sha256": "92b3b7cfd67fb2a9aa5ec988175ad4720672f078c9d5ba9ea41db16548ec5879"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/bench.o",
+      "bytes": 17564,
+      "sha256": "d01875849390032c933ccc286aa4d741b488f940533fe746b7ecfc7a3583b33b"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/board.d",
+      "bytes": 2301,
+      "sha256": "92d15b9cf26d7d6cbeaa826370067ac08a816af0bfb36765a4001dc9e80c1e79"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/board.o",
+      "bytes": 63852,
+      "sha256": "74c7f4c794dde63aea2901ef9e18379555fc41763d267f207a284d4ea74b2195"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/diag_core.d",
+      "bytes": 447,
+      "sha256": "d27ac01cb8d00dd0a887753fa7f7d05868c149e0674f820cd88ef972fba4dee7"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/diag_core.o",
+      "bytes": 20380,
+      "sha256": "ce05945f42bab5cbf467af4a074944fcf7808c3e99a7df356f1e752251b76ed1"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/diag_system.d",
+      "bytes": 1295,
+      "sha256": "aa245d5f7a1063d374aeec83d057ab151bc0f37b649315397ba16d08a8fb6f2a"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/diag_system.o",
+      "bytes": 7492,
+      "sha256": "36fd9949b4c6fa084725f2c5871b60ec845ed800945a3d1e65a56444fa2249fd"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/evkmimxrt1064_flexspi_nor_config.d",
+      "bytes": 1433,
+      "sha256": "553afd64e380f7ed9ec737197f74657f05a584cf3190bda67aee511f0d58e890"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/evkmimxrt1064_flexspi_nor_config.o",
+      "bytes": 4656,
+      "sha256": "1a35afabd076b6416b0d46a796960fc1516c2ede655f54d9ff9e34825e84860a"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/ff.d",
+      "bytes": 459,
+      "sha256": "53c72fdb4c3602b5880b74899da21a1278990fe8d35bbd3074da9952adf6d424"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/ff.o",
+      "bytes": 78852,
+      "sha256": "965886fa8e5cd039c29cd5310250cb221eb530b9d13771dc05014f04859dc2bd"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_cache.d",
+      "bytes": 1365,
+      "sha256": "e881a96265d5047427939d6d72ca23d4fcfc7866fa6870a29dd6e8c98ed105a3"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_cache.o",
+      "bytes": 9528,
+      "sha256": "c5e9335bb1542dff6d48007be7fba9617373c88ce83232ae59d248a847e7bcaa"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_clock.d",
+      "bytes": 1318,
+      "sha256": "793e2a5a37b9e768326be55b77c5f678ebd7bfc096432529604c16551e0e1c48"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_clock.o",
+      "bytes": 63440,
+      "sha256": "33796c1cb7ad5ad5466d955f17d99ec9e9e5ef2e0cc803667aeac16a2054f52d"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_common.d",
+      "bytes": 1320,
+      "sha256": "f55b520f6fb109d0da6d484277623bf39283e9a52a0296e81536f3dfed52a49c"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_common.o",
+      "bytes": 4200,
+      "sha256": "71ed572ae1d85941e5c21195956de05b574c9f31327c6ebf3cbb657b6cfe84db"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_flexspi_nor_boot.d",
+      "bytes": 1529,
+      "sha256": "b5ca9608199af38512962fc89bf0b9d93df2d1491f21f9fabaf8e4ccbe134579"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_flexspi_nor_boot.o",
+      "bytes": 2392,
+      "sha256": "4248ebdb8a9bc07fd266e1b2538011db643d1a5276b681d0d50af3180bda9307"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_gpio.d",
+      "bytes": 1362,
+      "sha256": "04f11749a7e7c0dda8b39382da1ba311f406597bfc0e4914f36b9479dc6bbce5"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_gpio.o",
+      "bytes": 13140,
+      "sha256": "68b71832a93b1a1c3d8bcf70e6167ec1c1cb8e82c24bd51c64880753f3a025f9"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_lpuart.d",
+      "bytes": 1368,
+      "sha256": "0ac309fd6c9bcd46f6a91a5e43e613782b7e2808ea92db90eebc975e785a9bcc"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_lpuart.o",
+      "bytes": 69988,
+      "sha256": "bbf862a3e7f939cba8df43dafa9ef0c24b480c3a81882d0443daad7e6636aefe"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_sdmmc_common.d",
+      "bytes": 1935,
+      "sha256": "85477a900cdc21bfd5a5aa253601e6e8704a1e34efaefd07d92f9a7c6dfd8cfe"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_sdmmc_common.o",
+      "bytes": 19532,
+      "sha256": "44248cdf50fa65390676c337fcc02063ce6bd18dee58a7ba7376d83b5c89e73e"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_usdhc.d",
+      "bytes": 1365,
+      "sha256": "ac872444d8af905580d1ccabe30b2367001afc08abd15798025ec0b2e45fc9de"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/fsl_usdhc.o",
+      "bytes": 75172,
+      "sha256": "b4b3ffafed38d25b89a77f565f0210f9fd39da29a3b6d02952d0d0c21ee64c0c"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/host_policy.d",
+      "bytes": 2009,
+      "sha256": "42e601a056826a82baa0514ddddcab63a65bef235372afeda544772a209ce3c0"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/host_policy.o",
+      "bytes": 46080,
+      "sha256": "98f7b54fd46427f718126cbf55ee992f34f740032f1ff94bde39bc35d5b04328"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/osa.d",
+      "bytes": 1744,
+      "sha256": "35c9f45dda0450a40277a4aeaf0b38680c33adae0439976bb7c9e06fb0473292"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/osa.o",
+      "bytes": 12000,
+      "sha256": "e81baa8dc4625f9e3541c86e517c707c4d0cd91e02ec3c827146c57b7a11f2a7"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance.axf",
+      "bytes": 375460,
+      "sha256": "df2aa997d13ced76bdc34224bed765254e94d74c7f6bc244270ef66682f6d879"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance.bin",
+      "bytes": 39168,
+      "sha256": "257395af369fcb106db1349ed20d0f05e2035d4abf3524c9cf0ea80e31692079"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance.build_log.htm",
+      "bytes": 2145,
+      "sha256": "628d4b9b48c94eab6c03b150143de67ce8de105da4b8a69e17b4dfc49895c6f9"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance.htm",
+      "bytes": 218591,
+      "sha256": "da30e4b395c92e436bbfbd8ac1b6e6d4424a63e8d4c3b41150d4d29c216561bb"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance.lnp",
+      "bytes": 1650,
+      "sha256": "50976b4fa7a38d82d0f8f7844617c90683663cdfc66e709515229d901aa5b8e6"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_performance_SD_Performance.dep",
+      "bytes": 51777,
+      "sha256": "7c20821e6a5fb187db4735edadf33893a752d5a807f12bb88204e300c86c2f3e"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_policy.d",
+      "bytes": 1982,
+      "sha256": "2d39e78208b6166cb405de64d96c6dfce8b207caede9b016b250ab10d62cf7c1"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/sd_policy.o",
+      "bytes": 79244,
+      "sha256": "5b61f72dbee596e213ff375bc9ae3c690b10dd1452b528294a41a9323ad0176f"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/Objects/startup_mimxrt1064.o",
+      "bytes": 16596,
+      "sha256": "5d89ec78923938626ab18da34d8ebfd3b401aa74e4ed45e4c4317b231c758976"
+    },
+    {
+      "path": "artifacts/run-20261106T003223533-35504/verification.json",
+      "bytes": 8202,
+      "sha256": "c3889156510c208b195aa5f8eb6167ad081a56ba27b72b2b7387a99e73425b45"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/keil-build.log",
+      "bytes": 819,
+      "sha256": "a98e8b08391bee877a1ad2e2d731f4d5d28c78ee48b35fa71cc7080c7f54c23f"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Listings/sd_performance.map",
+      "bytes": 343709,
+      "sha256": "86d3783caa5d42ab7f754e4c312ace42695eee64ad98a15dd7cebee4789f913a"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/bench.d",
+      "bytes": 439,
+      "sha256": "c939ea8c7b83f97d6362832c37cbc297984a2df5645e9c5d86c9861fe9c7f8b9"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/bench.o",
+      "bytes": 17564,
+      "sha256": "d01875849390032c933ccc286aa4d741b488f940533fe746b7ecfc7a3583b33b"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/board.d",
+      "bytes": 2301,
+      "sha256": "671338f40703b384bc62927f4cee2505351b9ef02345c2395196c7afeca18d18"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/board.o",
+      "bytes": 63900,
+      "sha256": "04ce2466b078450b27d755e3a1f07586e9d7c9ad28efa5864a80cb3a134dc7da"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/diag_core.d",
+      "bytes": 447,
+      "sha256": "4e2b8663189ad6d883aad354c28b679b7790de23fe5681e7ec5ec69972be8c0c"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/diag_core.o",
+      "bytes": 20380,
+      "sha256": "ce05945f42bab5cbf467af4a074944fcf7808c3e99a7df356f1e752251b76ed1"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/diag_system.d",
+      "bytes": 1295,
+      "sha256": "393d794f391c57fa9fe2cca339ea19094fd7ccc10c4ba540462c155152ff5879"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/diag_system.o",
+      "bytes": 7492,
+      "sha256": "36fd9949b4c6fa084725f2c5871b60ec845ed800945a3d1e65a56444fa2249fd"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/evkmimxrt1064_flexspi_nor_config.d",
+      "bytes": 1433,
+      "sha256": "e10a1375c142b8db128f36774f84dadd0cf879d4a19dab720285cf2a25cab2bf"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/evkmimxrt1064_flexspi_nor_config.o",
+      "bytes": 4656,
+      "sha256": "1a35afabd076b6416b0d46a796960fc1516c2ede655f54d9ff9e34825e84860a"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/ff.d",
+      "bytes": 459,
+      "sha256": "aa9c1bdaa67e4bce43648f30d6fc4a86d883ce8e0336afcddb08a33f46251485"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/ff.o",
+      "bytes": 78852,
+      "sha256": "965886fa8e5cd039c29cd5310250cb221eb530b9d13771dc05014f04859dc2bd"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_cache.d",
+      "bytes": 1365,
+      "sha256": "2b60d22968adac38b0ebf7368100ced534a88fb0bd7f572c85b3a8f0ffd5b3c4"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_cache.o",
+      "bytes": 9528,
+      "sha256": "c5e9335bb1542dff6d48007be7fba9617373c88ce83232ae59d248a847e7bcaa"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_clock.d",
+      "bytes": 1318,
+      "sha256": "a5d4bd77a71403e1a6782774bcd8c57047c7014a42a5b09f5c01a23c15e33d87"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_clock.o",
+      "bytes": 63440,
+      "sha256": "33796c1cb7ad5ad5466d955f17d99ec9e9e5ef2e0cc803667aeac16a2054f52d"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_common.d",
+      "bytes": 1320,
+      "sha256": "f2116478ac523ad8b96b305a44945da05c58a9c55b83dfab23f6bbb1f5d36c1a"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_common.o",
+      "bytes": 4200,
+      "sha256": "71ed572ae1d85941e5c21195956de05b574c9f31327c6ebf3cbb657b6cfe84db"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_flexspi_nor_boot.d",
+      "bytes": 1529,
+      "sha256": "d995c191d8a1db0f9dead630c3fe4b29eb0b3a5674eb392e02a504dfc872c0a7"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_flexspi_nor_boot.o",
+      "bytes": 2392,
+      "sha256": "4248ebdb8a9bc07fd266e1b2538011db643d1a5276b681d0d50af3180bda9307"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_gpio.d",
+      "bytes": 1362,
+      "sha256": "96ed05fe0ff8e0f09e9e01a8d17ae36b5e8860f07c3305f28700dd04b3b65fbf"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_gpio.o",
+      "bytes": 13140,
+      "sha256": "68b71832a93b1a1c3d8bcf70e6167ec1c1cb8e82c24bd51c64880753f3a025f9"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_lpuart.d",
+      "bytes": 1368,
+      "sha256": "4fcb49bd2fb55b0023977288493c701da262ae80304b6bed797e565db60efdfe"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_lpuart.o",
+      "bytes": 69988,
+      "sha256": "bbf862a3e7f939cba8df43dafa9ef0c24b480c3a81882d0443daad7e6636aefe"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_sdmmc_common.d",
+      "bytes": 1935,
+      "sha256": "a4b45eab3948a243d9c343689388178c95776e366ffa4c7deb04c0c46412de02"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_sdmmc_common.o",
+      "bytes": 19532,
+      "sha256": "44248cdf50fa65390676c337fcc02063ce6bd18dee58a7ba7376d83b5c89e73e"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_usdhc.d",
+      "bytes": 1365,
+      "sha256": "b4b024bf742da683e7f8f0a09974d9e25521b173957f9b2eb1fcf81955a9025e"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/fsl_usdhc.o",
+      "bytes": 75172,
+      "sha256": "b4b3ffafed38d25b89a77f565f0210f9fd39da29a3b6d02952d0d0c21ee64c0c"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/host_policy.d",
+      "bytes": 2009,
+      "sha256": "a8f351f21344c0592eb0343530eed5d70b35edf79334de851fabe2facc6b5864"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/host_policy.o",
+      "bytes": 46080,
+      "sha256": "98f7b54fd46427f718126cbf55ee992f34f740032f1ff94bde39bc35d5b04328"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/osa.d",
+      "bytes": 1744,
+      "sha256": "ae8074998a6e6881c0f56a1ccbff665dc2782fb7efb6077d9dd4c0d0f92c81e9"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/osa.o",
+      "bytes": 12000,
+      "sha256": "e81baa8dc4625f9e3541c86e517c707c4d0cd91e02ec3c827146c57b7a11f2a7"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance.axf",
+      "bytes": 375480,
+      "sha256": "8091ed7be9c76a300ee714ca718cc542110ccdf479bb0ab74c3ec452ddcbc0ad"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance.bin",
+      "bytes": 39168,
+      "sha256": "646cd476d00c90f2fbc7c137e6a902cbce4a6cdd628edcfcf3e48d9a1265f9d6"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance.build_log.htm",
+      "bytes": 2145,
+      "sha256": "876e3ec9e9d88a3f8a500de8f1d890ca3ce8b1572251772b85986cbf68ba2361"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance.htm",
+      "bytes": 218591,
+      "sha256": "523b1f884eeebc3e23fc1e31497e6fb2bdd1ef73bdb294ed9c396f3e1231373f"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance.lnp",
+      "bytes": 1650,
+      "sha256": "796ff2c8655356048af6ec1bace8e8672c0d82d1ed8ced70ef97db911afcf4db"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_performance_SD_Performance.dep",
+      "bytes": 51777,
+      "sha256": "91fc3682bbf7900041d635c6597de47fc7328b55937d505e3b9867706829c7a1"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_policy.d",
+      "bytes": 1982,
+      "sha256": "ff528eb7845121028ff01b2e8246e7e83b04d6678a528a996dc56983e01bcfc3"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/sd_policy.o",
+      "bytes": 79244,
+      "sha256": "5b61f72dbee596e213ff375bc9ae3c690b10dd1452b528294a41a9323ad0176f"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/Objects/startup_mimxrt1064.o",
+      "bytes": 16596,
+      "sha256": "5d89ec78923938626ab18da34d8ebfd3b401aa74e4ed45e4c4317b231c758976"
+    },
+    {
+      "path": "artifacts/run-20261106T003457153-37440/verification.json",
+      "bytes": 8202,
+      "sha256": "f833bd1619b3cae46b4c36470d91fea4c76a7bc5918f27d79215829a391d987b"
+    },
+    {
+      "path": "bench.c",
+      "bytes": 6082,
+      "sha256": "77473515f0258f3279b74ab730fbc34dc7ae8f8fde16df577089abfa5330961f"
+    },
+    {
+      "path": "board.c",
+      "bytes": 7567,
+      "sha256": "b221c4ea1bc8ad3c4396eada494013299f9ff7a830205e112ce5e8bb6585823b"
+    },
+    {
+      "path": "build.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "build.ps1",
+      "bytes": 2125,
+      "sha256": "b566cb2ed6340474dc6bea40e4b039f222edbca277af48ea9d94da2daf0a4c23"
+    },
+    {
+      "path": "configure.py",
+      "bytes": 491,
+      "sha256": "4069e5bd6aa033b2372a74d13eb70f6200a268c4ca7a71b044020a8e3fc43d62"
+    },
+    {
+      "path": "diag_core.c",
+      "bytes": 6292,
+      "sha256": "3c07be9a9d91a93b54bb7442d95ab310e1d58e38cf0696afc9665835c15a356f"
+    },
+    {
+      "path": "diag_system.c",
+      "bytes": 886,
+      "sha256": "5a9b0c633813b34f76b30d350f18c84626c3597362545454970b8881be9f0aba"
+    },
+    {
+      "path": "evidence/baseline-sha256.json",
+      "bytes": 151358,
+      "sha256": "c110edc5a266ecf4436642ed3c8c47760ca47f028125730d7a9bb6551853066f"
+    },
+    {
+      "path": "evidence/git-status-before.txt",
+      "bytes": 1917,
+      "sha256": "aa202e475f07ec41db72042f3d46cbab51965b7dd2b1fe014791ac8db2124629"
+    },
+    {
+      "path": "evidence/git-status-final.txt",
+      "bytes": 1941,
+      "sha256": "96e29b67bb64797d99eee0cce76ea68652d66f28536764a95314220d97e510c7"
+    },
+    {
+      "path": "evidence/host-bench.log",
+      "bytes": 656,
+      "sha256": "6c9506f2f0f2e26c3532e6318d8b4f189895d004d8ef1c8478ca76346e73048c"
+    },
+    {
+      "path": "evidence/host-core.log",
+      "bytes": 654,
+      "sha256": "ffd5b5bc9abe6de86165d3ccf9ecb8b9229efafdedfbd16e8d5a9a3d553b7718"
+    },
+    {
+      "path": "evidence/latest-build.txt",
+      "bytes": 91,
+      "sha256": "73968bc8d6036619674a9b97fbd208a690945037c6ff259455c6b0a93d292133"
+    },
+    {
+      "path": "evidence/preservation-final.json",
+      "bytes": 258,
+      "sha256": "1879c8eddcd51f2cdbb88809103f4a8dcc573bd756920d48c43580d4a1d0929f"
+    },
+    {
+      "path": "host_policy.c",
+      "bytes": 657,
+      "sha256": "571d871536bbf68e906a2627c9a552a25a5d6753b28e65e565a95d4d0742513a"
+    },
+    {
+      "path": "include/diag.h",
+      "bytes": 364,
+      "sha256": "f8c85281182b5525c8c343f0a21fcf61525a3f2b98550dc071561f4e05ed0faf"
+    },
+    {
+      "path": "include/ffconf.h",
+      "bytes": 12717,
+      "sha256": "ab1111319e0e121dbe157760b6221ce97f3ee1f6d6d8c2a244bde7334843a62a"
+    },
+    {
+      "path": "mdk/sd_performance.scf",
+      "bytes": 448,
+      "sha256": "f852809cb9a3750de1afa7e1281f05fb53cdf606a7aa6886ccec4a0306d0f4bc"
+    },
+    {
+      "path": "mdk/sd_performance.uvprojx",
+      "bytes": 18775,
+      "sha256": "087af1a516bd19ed42857c4b9617974472716143a1788f73db06c283d738d4e2"
+    },
+    {
+      "path": "osa.c",
+      "bytes": 1554,
+      "sha256": "a91a30ec0aa38ea1b3be77e6d774dbc670be69310dbabe007a03569bcaf30f0d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 6500,
+      "sha256": "32c34efedb0cc002ecbbdbe58b54e747fcf16e796838161e0ee1601e644d4bcd"
+    },
+    {
+      "path": "sd_policy.c",
+      "bytes": 280,
+      "sha256": "b5a6cc7c7b6f4d18fa4b77774215ef55b2ca895da9e6c8d7f03063b324a13bc6"
+    },
+    {
+      "path": "test_performance.ps1",
+      "bytes": 3630,
+      "sha256": "f779f49b984196ebe657c5b4f29f04008041cc4948acb30ee12625b865187dea"
+    },
+    {
+      "path": "tests/test_bench.c",
+      "bytes": 2777,
+      "sha256": "e19473c6a7a6df283b603b78d7768ff4ffc79722c9c059d9543e6616709abcf2"
+    },
+    {
+      "path": "tests/test_bench.exe",
+      "bytes": 66352,
+      "sha256": "d008dca889c6f34f4752944972c4d36ce91981a3605d2ba6ef120ee62f16e173"
+    },
+    {
+      "path": "tests/test_core.c",
+      "bytes": 3793,
+      "sha256": "6a6a58b40128bd7e1b9529e87cf721a284061bd9ac60acf12c1e50483a4e6fe6"
+    },
+    {
+      "path": "tests/test_core.exe",
+      "bytes": 69705,
+      "sha256": "bbae62682918973f957710ab917154f3928e6fa3eb35b23a46474229061eac28"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 4205,
+      "sha256": "27820f75efbcf9c1077b8845dfce3b2223fa0b67f5ff37d2ea4ad693435ae125"
+    }
+  ]
+}

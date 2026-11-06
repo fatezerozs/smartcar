@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-06",
+  "profile": "profiles/c1-host-geometry-v0.1.json",
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "readingLayers": [
+    "original_image_verified",
+    "native-Markdown-and-C",
+    "structured_parsed",
+    "computed"
+  ],
+  "runId": "20261105T213230-2a2e2a4e2e",
+  "suiteStatuses": {
+    "environment": "PASS",
+    "compiler-environment": "PASS",
+    "speed-planning-host": "PASS"
+  },
+  "pythonTests": 16,
+  "cChecks": 104496,
+  "protectedExistingFilesUnchanged": 1404,
+  "changedExistingFiles": [
+    "docs/INDEX.md",
+    "docs/changes/c31-speed-planning-20261105/CALIBRATION.md",
+    "docs/changes/c31-speed-planning-20261105/README.md",
+    "tests/planning/test_offline.py"
+  ],
+  "productionFilesChanged": 0,
+  "modelReport": {
+    "modelId": "C1-geometry-provisional-v0.1",
+    "purpose": "Host design only",
+    "productionApproved": false,
+    "nominalTireRadiusM": 0.032,
+    "computedNominalCircumferenceM": 0.20106192982974677,
+    "rollingCircumferenceMeasured": false,
+    "encoderConversion": {
+      "left": {
+        "available": false,
+        "reason": "left: wheel counts/rev and measured rolling circumference required; nominal 1024/diameter are insufficient"
+      },
+      "right": {
+        "available": false,
+        "reason": "right: wheel counts/rev and measured rolling circumference required; nominal 1024/diameter are insufficient"
+      }
+    },
+    "servoAngleMapAvailable": false,
+    "dynamicCalibrationMissing": [
+      "lateralAccelerationMps2",
+      "accelerationMps2",
+      "brakingDecelerationMps2",
+      "controlLatencyS",
+      "cameraGroundHomography",
+      "nearVisibleDistanceM",
+      "nearSpeedCapMps",
+      "farTimeBudgetMs",
+      "farDistanceBudgetM"
+    ],
+    "exampleRightTurn": {
+      "rearLeftMps": 1.076,
+      "rearRightMps": 0.924,
+      "requiredEffectiveSteeringRad": 0.20219859688286151,
+      "requiredFrontLeftRad": 0.18843522618204675,
+      "requiredFrontRightRad": 0.21809653609100987,
+      "provenance": "ideal-kinematics-with-provisional-geometry",
+      "productionApproved": false,
+      "servoPulseFromAngleUs": null
+    }
+  },
+  "sourceChecks": {
+    "encoder": "A-rising/B-direction; wheel CPR unknown",
+    "servo": "1430/1550/1670 us; angle map unknown"
+  },
+  "profileSha256": "16058875dfbf45443f59b9746e682d0e0d143066f2d51f8690b2f19a682dc897",
+  "notes": [
+    "PNG vendor specifications are user supplied, not independently authenticated to a seller or current physical chassis.",
+    "The drawing does not directly certify the estimated 205/152/150 mm wheelbase/tracks.",
+    "No new actual encoder/servo datasheet model identifier was found in local project records.",
+    "No production planner thresholds or existing C26 control paths changed."
+  ]
+}

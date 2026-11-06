@@ -8,11 +8,14 @@
 #define APP_LINK_TX_SIZE 8192U
 typedef struct {
     uint32_t rx_bytes, tx_bytes, rx_overflow, rx_errors, tx_rejected;
+    uint32_t rx_corrupt, last_uart_error, last_bad_word;
 } app_link_stats_t;
 /* Foreground owns TX; each UART ISR is the sole producer of its RX ring. */
 void app_link_init(void);
 void app_link_rx_isr(unsigned channel, uint8_t byte);
 void app_link_error_isr(unsigned channel);
+void app_link_uart_error_isr(unsigned channel,uint32_t flags);
+void app_link_reject_rx_isr(unsigned channel,uint32_t word);
 uint32_t app_link_read(unsigned channel, uint8_t *data, uint32_t capacity);
 int app_link_take_error(unsigned channel);
 int app_link_send(unsigned channel, const uint8_t *data, uint32_t length);

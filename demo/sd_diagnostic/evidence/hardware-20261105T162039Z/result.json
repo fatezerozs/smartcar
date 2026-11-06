@@ -1,0 +1,13 @@
+﻿{
+    "port":  "COM14",
+    "baud":  115200,
+    "flashed_by_user":  true,
+    "reset_by_agent":  false,
+    "started_utc":  "2026-11-05T16:20:39.8670108Z",
+    "help":  "SDDIAG HELP | STATUS | RUN BASIC | RUN STRESS | RESULT\r\n",
+    "status":  "FS mounted=1 type=3 cluster_sectors=64 free_bytes=15927574528\r\nSD present=1 initialized=1 fault=0 init_status=0 capacity_bytes=15931539456 sectors=31116288 sector_bytes=512 bus_bits=1 clock_hz=24750000 root_hz=198000000 signal_mV=3300\r\n",
+    "basic":  "RESULT pass=1 errors=0 stage=done file=2:/S0000000.BIN written=65536 read=65536 write_ms=352 read_ms=389 sync_close_ms=29 total_ms=11846 max_ms=28 p95_ms=28 p99_ms=28 write_KiBps=181 read_KiBps=164\r\n",
+    "stress":  "RESULT pass=1 errors=0 stage=done file=2:/S0000001.BIN written=16777216 read=16777216 write_ms=88371 read_ms=96480 sync_close_ms=30 total_ms=243701 max_ms=584 p95_ms=6 p99_ms=30 write_KiBps=185 read_KiBps=169\r\n",
+    "outcome":  "passed",
+    "finished_utc":  "2026-11-05T16:25:09.3493272Z"
+}

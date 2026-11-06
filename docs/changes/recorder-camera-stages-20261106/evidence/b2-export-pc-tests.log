@@ -1,0 +1,25 @@
+Recorder harnesses: compiler=gcc mode=optimized; compiled 3 executables once
+test_download_full_pixel_roundtrip_stays_synthetic (test_b2_download_validation.DownloadValidationTests.test_download_full_pixel_roundtrip_stays_synthetic) ... ok
+test_download_unlisted_entry_rejected (test_b2_download_validation.DownloadValidationTests.test_download_unlisted_entry_rejected) ... ok
+test_download_crc_damage_never_complete (test_b2_download_validation.DownloadValidationTests.test_download_crc_damage_never_complete) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.118s
+
+OK
+{
+  "source": "C:\\shengchanli\\smartCar\\recorder-test-du4nmres\\card\\R0000001",
+  "session_id": "synthetic-v1-c-producer",
+  "status": "complete",
+  "frames": 3,
+  "fps": 50.0,
+  "pixel_audit": "C:\\shengchanli\\smartCar\\recorder-test-du4nmres\\pc\\pixel-audit.json"
+}
+{
+  "source": "C:\\shengchanli\\smartCar\\recorder-test-xfdai4xz\\card\\R0000001",
+  "session_id": "synthetic-v1-c-producer",
+  "status": "incomplete",
+  "frames": 2,
+  "fps": 25.0,
+  "pixel_audit": "C:\\shengchanli\\smartCar\\recorder-test-xfdai4xz\\pc\\pixel-audit.json"
+}

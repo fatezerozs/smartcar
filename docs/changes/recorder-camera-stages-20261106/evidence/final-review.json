@@ -1,0 +1,54 @@
+{
+  "original_baseline_files": 1060,
+  "expected_modified_existing_files": [
+    "demo/recorder/recorder_storage.c",
+    "tools/vision_data/archive.py",
+    "tools/vision_data/cli.py"
+  ],
+  "other_existing_files_changed": [],
+  "production_controller_or_parameters_changed": false,
+  "primary_and_training_project_unchanged": true,
+  "taskbook_unchanged": true,
+  "b1": "SKIPPED_BY_USER_NOT_PASSED",
+  "b2_software_prepared": true,
+  "b2_hardware_accepted": false,
+  "c0_measured": false,
+  "hardware_accessed_this_task": false,
+  "global_config_skill_or_persistent_behavior_changed": false,
+  "host": {
+    "recorder_b2_cases": 25,
+    "new_b2_cases": 8,
+    "legacy_recorder_cases_included": 17,
+    "vision_data_regression_cases": 33,
+    "b2_policy": "PASS",
+    "full_host_rerun": false,
+    "known_reviewed_failures_not_modified": true
+  },
+  "evidence_layers": [
+    "native-source",
+    "structured_parsed",
+    "computed"
+  ],
+  "md_extracted": null,
+  "pdf_verified": null,
+  "preexisting_git_status_entries_preserved": true,
+  "cli_contract": {
+    "complete_exit": 0,
+    "incomplete_exit": 1,
+    "b2_hardware_accepted": false
+  },
+  "new_source_and_tools": [
+    "demo/recorder_b2/b2_main.c",
+    "demo/recorder_b2/include/b2_build.h",
+    "demo/recorder_b2/include/b2_policy.h",
+    "demo/recorder_b2/mdk/recorder_b2.uvprojx",
+    "tools/vision_data/continuous.py",
+    "tools/recorder_stage_audit.py",
+    "tools/recorder_stage_demo.py",
+    "tools/prepare_recorder_b2.py",
+    "tools/build_recorder_b2.ps1",
+    "tools/verify_recorder_b2.py",
+    "tests/recorder/test_continuous.py",
+    "tests/recorder/test_b2_policy.c"
+  ]
+}

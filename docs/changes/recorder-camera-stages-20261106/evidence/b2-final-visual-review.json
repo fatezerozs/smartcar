@@ -1,0 +1,11 @@
+{
+  "contact_sheet": "C:/shengchanli/smartCar/b2_real_session_20261105T202916265Z/pc/review/contact-sheet.png",
+  "sampled_frames_visually_reviewed": 10,
+  "all_frames_numerically_verified": 101,
+  "all_frames_visually_reviewed": false,
+  "output_geometry": "188x120 GRAY8 stride188",
+  "scene": "stable indoor scene containing a track, table and furniture",
+  "sample_visual_status": "recognizable consistent scene; no black/blank sample or obvious torn frame observed",
+  "quality_limitation": "bright areas contain saturation; sensor exposure readback and training-image suitability not accepted",
+  "data_link_visual_review_passed": true
+}

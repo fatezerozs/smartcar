@@ -1,0 +1,6 @@
+{
+  "b2_static_camera_and_short_window_approved": true,
+  "actuator_power_isolated_and_chassis_fixed_confirmed_by_user": true,
+  "b2_candidate_not_yet_flashed_by_user": true,
+  "agent_flash_reset_or_start_sent": false
+}

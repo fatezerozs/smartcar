@@ -1,0 +1,19 @@
+[B2] ready id=RECORDER_CAMERA_B2_STATIC_1 rx=irq camera_started=0 session_started=0 export=1 metrics=2
+[B2] state=0 error=0 written=0 synced=0 observed=0 drop=0 pool=0 ambiguous=0 queue=0 dir=
+[B2] state=2 error=0 written=9 synced=0 observed=14 drop=0 pool=0 ambiguous=0 queue=4 dir=2:/R0000003
+[B2] state=2 error=0 written=42 synced=35 observed=64 drop=0 pool=0 ambiguous=0 queue=22 dir=2:/R0000003
+[B2] state=3 error=0 written=72 synced=69 observed=101 drop=0 pool=0 ambiguous=0 queue=33 dir=2:/R0000003
+[B2] state=3 error=0 written=101 synced=101 observed=101 drop=0 pool=0 ambiguous=0 queue=33 dir=2:/R0000003
+[B2] state=4 error=0 written=101 synced=101 observed=101 drop=0 pool=0 ambiguous=0 queue=33 dir=2:/R0000003
+B2METRIC session=2:/R0000003 csi_width_cycles=240 csi_height=94 csi_cr1=40180102 csi_cr18=0000D030 sd_hz=23408866 sd_bits=1
+B2METRIC task=Monitor runtime_us=45651 stack_free_words=868
+B2METRIC task=Capture runtime_us=312866 stack_free_words=996
+B2METRIC task=IDLE runtime_us=2507125 stack_free_words=246
+B2METRIC task=Writer runtime_us=1296361 stack_free_words=3540
+B2METRIC runtime_total_us=4171466 idle_attributed_us=2507125 nonidle_permille=399 csi_irq_count=208 csi_irq_max_us=3 sd_irq_count=1193 sd_irq_max_us=7
+B2METRIC io=write count=309 sample_overflow=0 errors=0 bytes=2285410 total_us=1975550 p50_us=0 p95_us=21583 p99_us=25322 max_us=36939
+B2METRIC io=sync count=4 sample_overflow=0 errors=0 bytes=0 total_us=479281 p50_us=154859 p95_us=157008 p99_us=157008 max_us=157008
+B2METRIC io=close count=2 sample_overflow=0 errors=0 bytes=0 total_us=0 p50_us=0 p95_us=0 p99_us=0 max_us=0
+B2METRIC report_stack_free_words=846
+B2METRIC END session=2:/R0000003
+[B2] state=4 error=0 written=101 synced=101 observed=101 drop=0 pool=0 ambiguous=0 queue=33 dir=2:/R0000003

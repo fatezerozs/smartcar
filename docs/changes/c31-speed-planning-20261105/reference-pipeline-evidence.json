@@ -1,0 +1,1604 @@
+{
+  "schemaVersion": "smartcar.reference-pipeline-evidence/1",
+  "date": "2026-11-06",
+  "productionApproved": false,
+  "productionIntegrated": false,
+  "hardwareAccessed": false,
+  "C0Execution": "deferred at user request; another target test is running",
+  "readingLayers": [
+    "native-C-and-Markdown",
+    "structured_parsed",
+    "computed"
+  ],
+  "finalRunId": "20261105T215858-ad14ab2ba0",
+  "suiteStatuses": {
+    "environment": "PASS",
+    "compiler-environment": "PASS",
+    "speed-planning-host": "PASS"
+  },
+  "releaseEligible": false,
+  "pythonTests": 18,
+  "originalPlannerChecks": 104496,
+  "composedChecksPerFactor": [
+    37816,
+    37814,
+    37810
+  ],
+  "hostReport": {
+    "schemaVersion": "smartcar.composed-reference-replay/1",
+    "referenceId": "C1-reference-v0.2-20261106",
+    "evidence": "synthetic-closed-loop-reference",
+    "productionApproved": false,
+    "hardwareAccessed": false,
+    "controlPeriodMs": 10,
+    "visionPeriodMs": 20,
+    "hypothesis": {
+      "nearBrakingCapMps": 0.45152822909778023,
+      "nearCapReferenceMps": 0.4,
+      "conditionalTicksPerMetre": 5092.95817894065,
+      "planningDecelerationDistanceAtMaxM": 0.20000000000000004,
+      "latencyDistanceAtMaxM": 0.04000000000000001,
+      "productionApproved": false
+    },
+    "profileSha256": "c6acfaa68ccf6b68d37ef0b4453f17726eb392a1e77eac3260a14bcd19bcd4bf",
+    "compilerFamily": "gcc",
+    "mode": "optimized",
+    "compileCommand": [
+      "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-O2",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261105T215858-ad14ab2ba0\\suites\\speed-planning-host\\artifacts\\work\\planning\\composed",
+      "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_pipeline.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+      "-lm",
+      "-o",
+      "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261105T215858-ad14ab2ba0\\suites\\speed-planning-host\\artifacts\\work\\planning\\composed\\pipeline.exe"
+    ],
+    "experiments": [
+      {
+        "conditionalCprResolutionFactor": 0.5,
+        "samples": 6000,
+        "cases": [
+          {
+            "case": "straight",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.010326308093116285,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-bend",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.019077550313825187,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.569999695,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-short-recovery",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1140,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.010326308093116285,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-time-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1600,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2480,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-distance-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1140,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2050,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-recovery-to-degraded",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 800,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1340,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.017967582309532923,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-timeout",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1300,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 2
+          },
+          {
+            "case": "camera-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1080,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 1
+          },
+          {
+            "case": "encoder-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1020,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 4
+          },
+          {
+            "case": "STOP-during-candidate",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1100,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-identity-mismatch",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.017967582309532923,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "infeasible-sharp-cap",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 8
+          }
+        ],
+        "queueExperiments": [
+          {
+            "case": "0",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2975125697"
+          },
+          {
+            "case": "0",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2975125697"
+          },
+          {
+            "case": "1",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1483946591"
+          },
+          {
+            "case": "1",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1483946591"
+          },
+          {
+            "case": "2",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3485306610"
+          },
+          {
+            "case": "2",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3485306610"
+          },
+          {
+            "case": "3",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "965358001"
+          },
+          {
+            "case": "3",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "965358001"
+          },
+          {
+            "case": "4",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "112259381"
+          },
+          {
+            "case": "4",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "112259381"
+          },
+          {
+            "case": "5",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3630579057"
+          },
+          {
+            "case": "5",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3630579057"
+          },
+          {
+            "case": "6",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "650728456"
+          },
+          {
+            "case": "6",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "650728456"
+          },
+          {
+            "case": "7",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1573416971"
+          },
+          {
+            "case": "7",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1573416971"
+          },
+          {
+            "case": "8",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1509265931"
+          },
+          {
+            "case": "8",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1509265931"
+          },
+          {
+            "case": "9",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1135609493"
+          },
+          {
+            "case": "9",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1135609493"
+          },
+          {
+            "case": "10",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "4231289428"
+          },
+          {
+            "case": "10",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "4231289428"
+          },
+          {
+            "case": "11",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2550248791"
+          },
+          {
+            "case": "11",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2550248791"
+          }
+        ],
+        "csvSha256": "47aac0030b47cdbc88ac482e1c8ff09fa2ef437ccf82ae9781f630252ac4eff0"
+      },
+      {
+        "conditionalCprResolutionFactor": 1.0,
+        "samples": 6000,
+        "cases": [
+          {
+            "case": "straight",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.006587390344898597,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-bend",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.018685154170453334,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.599999666,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-short-recovery",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1140,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.006587390344898597,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-time-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1600,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2500,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-distance-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1130,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2020,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-recovery-to-degraded",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 800,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1340,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.01178051162235796,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-timeout",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1300,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 2
+          },
+          {
+            "case": "camera-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1080,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 1
+          },
+          {
+            "case": "encoder-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1020,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 4
+          },
+          {
+            "case": "STOP-during-candidate",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1100,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-identity-mismatch",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.01178051162235796,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "infeasible-sharp-cap",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 8
+          }
+        ],
+        "queueExperiments": [
+          {
+            "case": "0",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1237266746"
+          },
+          {
+            "case": "0",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1237266746"
+          },
+          {
+            "case": "1",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2959503293"
+          },
+          {
+            "case": "1",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2959503293"
+          },
+          {
+            "case": "2",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2324245688"
+          },
+          {
+            "case": "2",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2324245688"
+          },
+          {
+            "case": "3",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2379175222"
+          },
+          {
+            "case": "3",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2379175222"
+          },
+          {
+            "case": "4",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2892069059"
+          },
+          {
+            "case": "4",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2892069059"
+          },
+          {
+            "case": "5",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "702053980"
+          },
+          {
+            "case": "5",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "702053980"
+          },
+          {
+            "case": "6",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2256130078"
+          },
+          {
+            "case": "6",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2256130078"
+          },
+          {
+            "case": "7",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3159872483"
+          },
+          {
+            "case": "7",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3159872483"
+          },
+          {
+            "case": "8",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "399023573"
+          },
+          {
+            "case": "8",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "399023573"
+          },
+          {
+            "case": "9",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2244339072"
+          },
+          {
+            "case": "9",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2244339072"
+          },
+          {
+            "case": "10",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2449589274"
+          },
+          {
+            "case": "10",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2449589274"
+          },
+          {
+            "case": "11",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "627754621"
+          },
+          {
+            "case": "11",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "627754621"
+          }
+        ],
+        "csvSha256": "361d13bf9685a95d03bcc3d18cc5305c6346872fc227b25f560efad9339f0755"
+      },
+      {
+        "conditionalCprResolutionFactor": 2.0,
+        "samples": 6000,
+        "cases": [
+          {
+            "case": "straight",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.006073469008347401,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-bend",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.016175248743214445,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.599999666,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-short-recovery",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1140,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.006073469008347401,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-time-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1580,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2450,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "far-distance-budget",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1130,
+                "mode": "CONTROLLED_STOP"
+              },
+              {
+                "timeMs": 2020,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.799999952,
+            "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+            "brakingCapOverrides": 2,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-recovery-to-degraded",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 800,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "DEGRADED_FAR_LOSS"
+              },
+              {
+                "timeMs": 1340,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.011554385062005809,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "near-timeout",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1300,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 2
+          },
+          {
+            "case": "camera-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1080,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 1
+          },
+          {
+            "case": "encoder-freeze",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1020,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 4
+          },
+          {
+            "case": "STOP-during-candidate",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1100,
+                "mode": "STOP_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "STOP_LATCHED",
+            "finalFaults": 0
+          },
+          {
+            "case": "preview-identity-mismatch",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "RECOVERY_NO_LANE"
+              },
+              {
+                "timeMs": 1120,
+                "mode": "NORMAL_TRACK"
+              }
+            ],
+            "activeSteadySamples": 301,
+            "simulatedTrackingRmseMps": 0.011554385062005809,
+            "maxReferenceMps": 0.400000006,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "NORMAL_TRACK",
+            "finalFaults": 0
+          },
+          {
+            "case": "infeasible-sharp-cap",
+            "transitions": [
+              {
+                "timeMs": 10,
+                "mode": "NORMAL_TRACK"
+              },
+              {
+                "timeMs": 1000,
+                "mode": "FAULT_LATCHED"
+              }
+            ],
+            "activeSteadySamples": 0,
+            "simulatedTrackingRmseMps": null,
+            "maxReferenceMps": 0.399749994,
+            "maxAbsReferenceAccelMps2": 0.5,
+            "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+            "brakingCapOverrides": 0,
+            "finalMode": "FAULT_LATCHED",
+            "finalFaults": 8
+          }
+        ],
+        "queueExperiments": [
+          {
+            "case": "0",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3176510521"
+          },
+          {
+            "case": "0",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3176510521"
+          },
+          {
+            "case": "1",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1315384323"
+          },
+          {
+            "case": "1",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1315384323"
+          },
+          {
+            "case": "2",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "908765776"
+          },
+          {
+            "case": "2",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "908765776"
+          },
+          {
+            "case": "3",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2371420497"
+          },
+          {
+            "case": "3",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2371420497"
+          },
+          {
+            "case": "4",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3492320750"
+          },
+          {
+            "case": "4",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3492320750"
+          },
+          {
+            "case": "5",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "4170755464"
+          },
+          {
+            "case": "5",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "4170755464"
+          },
+          {
+            "case": "6",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "2526663979"
+          },
+          {
+            "case": "6",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "2526663979"
+          },
+          {
+            "case": "7",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "4235669680"
+          },
+          {
+            "case": "7",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "4235669680"
+          },
+          {
+            "case": "8",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "1099621754"
+          },
+          {
+            "case": "8",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "1099621754"
+          },
+          {
+            "case": "9",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3322182377"
+          },
+          {
+            "case": "9",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3322182377"
+          },
+          {
+            "case": "10",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "3290065727"
+          },
+          {
+            "case": "10",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "3290065727"
+          },
+          {
+            "case": "11",
+            "slowStorage": "0",
+            "dropped": "0",
+            "highWater": "2",
+            "controlHash": "314686916"
+          },
+          {
+            "case": "11",
+            "slowStorage": "1",
+            "dropped": "364",
+            "highWater": "8",
+            "controlHash": "314686916"
+          }
+        ],
+        "csvSha256": "7008273cfa52662728ebf642d35d117801d7bfc1efe37e3a6b1b40040186f9a6"
+      }
+    ],
+    "notes": [
+      "Simulated measured speed comes from a fictitious first-order wheel plant; it is not vehicle evidence.",
+      "CPR factor changes both simulated sensor resolution and controller scale consistently. It does not test unknown CPR miscalibration.",
+      "0.5/1/2 factors are artificial sensitivity settings, not a confidence interval.",
+      "Final output means a mock commit record, not PWM hardware or the production vision_actuator writer.",
+      "Queue is fixed-memory single-owner Host code, not an implemented ISR-safe/FreeRTOS sidecar."
+    ]
+  },
+  "targetObjectCompilation": {
+    "commands": [
+      [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\armclang.exe",
+        "--target=arm-arm-none-eabi",
+        "-mcpu=cortex-m7",
+        "-mfpu=fpv5-d16",
+        "-mfloat-abi=hard",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fstack-usage",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-c",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\pipeline.o"
+      ],
+      [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\armclang.exe",
+        "--target=arm-arm-none-eabi",
+        "-mcpu=cortex-m7",
+        "-mfpu=fpv5-d16",
+        "-mfloat-abi=hard",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fstack-usage",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-c",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\speed_planner.o"
+      ],
+      [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\armclang.exe",
+        "--target=arm-arm-none-eabi",
+        "-mcpu=cortex-m7",
+        "-mfpu=fpv5-d16",
+        "-mfloat-abi=hard",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fstack-usage",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\wheel_speed.o"
+      ]
+    ],
+    "artifacts": {
+      "pipeline.o": {
+        "bytes": 9436,
+        "sha256": "e63e3ea0b794d8f93529a9b38bb6574ad1fdd5c06cefa219c465c9a90f0e6526"
+      },
+      "speed_planner.o": {
+        "bytes": 10596,
+        "sha256": "83a88c49fdec556ae3d0b34c549e23ab02e7fdb87707dd8cf5e98147f79e1415"
+      },
+      "wheel_speed.o": {
+        "bytes": 2600,
+        "sha256": "621cf13e51fadb7b7ba2c38e0ba992aae335223daff04c354029be1edfecd104"
+      }
+    },
+    "linkedIntoFirmware": false,
+    "ownStackFrames": {
+      "pipeline.su": [
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:37:sp_preview_advance\t200\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:53:sp_pipeline_init\t24\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:64:sp_pipeline_arm\t160\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:14:preview_valid\t144\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:77:sp_pipeline_prepare\t440\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:12:fail\t8\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:20:anticipate_curve\t8\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:126:sp_pipeline_commit\t16\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:136:sp_pipeline_snapshot\t16\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:149:sp_telemetry_push\t16\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c:155:sp_telemetry_pop\t8\tstatic"
+      ],
+      "speed_planner.su": [
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:12:sp_geometry\t344\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:48:sp_limits_valid\t0\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:64:sp_plan\t216\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:108:sp_shape\t40\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:132:sp_wheel_targets\t0\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:139:sp_servo_map\t8\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:160:sp_supervisor_init\t8\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:163:sp_supervisor_arm\t16\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:174:sp_supervise\t40\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c:241:sp_candidate_allowed\t0\tstatic"
+      ],
+      "wheel_speed.su": [
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c:2:ws_pi_reset\t0\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c:3:ws_pi_step_ff_ms\t64\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c:38:ws_pi_step\t32\tstatic",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c:43:ws_pi_step_ff\t32\tstatic"
+      ]
+    }
+  },
+  "targetObjectSizes": "\n========================================================================\n\n** Object/Image Component Sizes\n\n      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name\n\n      4074         52         88          0          0        384   C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\pipeline.o\n      6350        144         80          0          0        356   C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\speed_planner.o\n       526          0         32          0          0        140   C:\\shengchanli\\smartCar\\smartcar\\.build\\planning-pipeline-20261106\\target-run-final\\target\\wheel_speed.o\n",
+  "plotColumnsMatchFinalHostRun": true,
+  "ownChangedExistingFiles": [
+    "tests/planning/test_offline.py",
+    "docs/changes/c31-speed-planning-20261105/README.md"
+  ],
+  "changedOutsideThisTask": [
+    "docs/changes/recorder-b3-20261106/B3T1_FORMAT.md",
+    "docs/changes/recorder-b3-20261106/MOTION_PROFILE_PENDING.json",
+    "docs/changes/recorder-b3-20261106/README.md",
+    "docs/changes/recorder-b3-20261106/REFERENCE_GEOMETRY.md",
+    "docs/changes/recorder-b3-20261106/REFERENCE_GEOMETRY_V0_1.json",
+    "docs/changes/recorder-b3-20261106/STATIC_SOURCE_AUDIT.md",
+    "docs/changes/recorder-b3-20261106/STATIC_TEST_PROTOCOL.md",
+    "docs/changes/recorder-b3-20261106/evidence/current-candidate.txt",
+    "docs/changes/recorder-b3-20261106/evidence/preservation-review.json",
+    "docs/changes/recorder-b3-20261106/evidence/static-build-evidence.json",
+    "tools/B3StaticTrace.cs"
+  ],
+  "productionSourceChangesByThisTask": 0,
+  "sourceSha256": {
+    "tools/speed_planning/pipeline.c": "2d8d984f96452f3727e27b01722eaa74884528ab8e760fe3e1a2f47d3efd3073",
+    "tools/speed_planning/pipeline.h": "2ed5c2fb35187660d1b4f942ad00e2745abb2c71df07b33be177282bb8b930a9",
+    "tools/speed_planning/reference.py": "c7806f1684d25edef892bed84cdb7e2a741d6107846c727ba6d5052eda656e8b",
+    "tools/speed_planning/replay.py": "35cfdf7b04c4df8f0a88068943923ebc104a864bd8e0058a2eec839408a83180",
+    "tools/speed_planning/plot_pipeline.py": "dcba8e090b7bb3fa46185690cb8330fba9272e27f74fa4212dc769a0764fec50",
+    "tests/planning/test_pipeline.c": "c17705f9ffbe4546ab1df5d6c9e2729f9877d361f8b825579887ff3b8fb5a346",
+    "tests/planning/test_offline.py": "6fd1e8687b9bfc971f0facaa1162e57c0dd960651d103a56cce7b27735fee203",
+    "profiles/c1-host-reference-v0.2.json": "c6acfaa68ccf6b68d37ef0b4453f17726eb392a1e77eac3260a14bcd19bcd4bf",
+    "demo/code/wheel_speed.c": "5731ce8fcaaf7cb585e53eaa6f837e85fd363c2ce43e5be3eda5bbcf5ef2ae1b"
+  },
+  "notes": [
+    "Reference values follow the user permission to provide engineering references, not a claim of calibrated production values.",
+    "Separate concurrent B3 changes were observed and left untouched. The task diff excludes them.",
+    "The earlier C26/speed/encoder related run 20261105T215310-5b3d061975 passed 7 nodes; final rerun only covers changed prototype.",
+    "No new full Host/PreFlash/remote CI or flashable image is claimed. Original unrelated failure records remain open."
+  ]
+}

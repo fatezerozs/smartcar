@@ -1,0 +1,122 @@
+{
+  "build_only": true,
+  "zero_errors_warnings": true,
+  "no_actuator_encoder_control_symbols": true,
+  "tasks": [
+    "Capture priority4 and Writer priority2 only after START",
+    "Monitor priority5; only task in export mode"
+  ],
+  "buffers": {
+    "raw": {
+      "address": "0x81e00080",
+      "bytes": 180736
+    },
+    "recording": {
+      "address": "0x81e2c280",
+      "bytes": 1449984
+    },
+    "bounce": {
+      "address": "0x81f8e5c0",
+      "bytes": 32768
+    },
+    "g_sd": {
+      "address": "0x81f8e280",
+      "bytes": 780
+    },
+    "s_sdmmcHostDmaBuffer": {
+      "address": "0x81e00000",
+      "bytes": 128
+    }
+  },
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "base": "0x00000000",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "base": "0x20000000",
+      "used": 94924,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "base": "0x200172cc",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "base": "0x2006e000",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "base": "0x20200000",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "base": "0x70000000",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "base": "0x70001000",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "base": "0x70002000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "base": "0x70002400",
+      "used": 980,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "base": "0x80000000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "base": "0x80000400",
+      "used": 124992,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "base": "0x81e00000",
+      "used": 1664448,
+      "maximum": 2097152
+    }
+  ],
+  "frozen_file_count": 196,
+  "fresh_dependencies_match_frozen_manifest": true,
+  "embedded_identity_manifest_digest": "de16abe9124010b908a4b619e2999d314e6899818072034185a34d348bffcb16",
+  "adapter_inputs_verified": true,
+  "volume": "2:",
+  "command_gate": "B2 START for Camera/Session; B2 EXPORT MODE initializes only SD for readonly export",
+  "session_limit": "3s recording or 100 observed events; 10s monitor-start cap; software policy, not measured WCET",
+  "sha256": {
+    ".build\\recorder-camera-stages-20261106\\run-20261105T201218-30672-final\\Listings\\recorder_b2.map": "6ef9f7412f8114a02f9210c41af8353ab32402d930e3fbe4b33c1afe2913578e",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T201218-30672-final\\Objects\\recorder_b2.axf": "c7c935f0668f3d2546bda3d705579e273b9347dfb5cc4f6d4ce3a285cbba324d",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T201218-30672-final\\Objects\\recorder_b2.bin": "3144caf30b8dc0ca3e994cfdbecd53c2e8fadbadc44429179720762703091dfa",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T201218-30672-final\\keil-build.log": "d9262dd8edd770cf5604b3ca69cee655d1da5c26adf9011aeb99cc122e10da0f",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T201218-30672-final\\inputs.json": "913fff8f7addf693f7c7b03a2c8928c65e95fa407113454562b1e59a0872f357"
+  },
+  "hardware_accessed": false,
+  "b1": "SKIPPED_BY_USER",
+  "b2_hardware_accepted": false
+}

@@ -8,9 +8,11 @@
 #include "vision_field.h"
 #include "vision_storage.h"
 #include "app_transport.h"
+#include "app_link.h"
 #include "vision_frame.h"
 #include "vision_telemetry.h"
 #include "midterm_boot.h"
+#include "vision_speed.h"
 
 #if MT9V03X_W != VISION_WIDTH || MT9V03X_H != VISION_HEIGHT
 #error "Vision module dimensions must match the MT9V03X camera configuration."
@@ -63,6 +65,9 @@ void app_runtime_run(void)
     uint32_t now = timer_get(GPT_TIM_1), last_frame = now, fps_start = now;
     uint32_t fps_frames = 0, fps_x10 = 0, dropped_copies = 0;
     uint32_t process_ms = 0, history_resets = 0;
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    uint32_t last_boot_report=0;
+#endif
 #if VISION_ROUTE_SWITCH
     uint32_t max_process_ms=0,max_frame_gap_ms=0;
 #endif
@@ -131,6 +136,9 @@ void app_runtime_run(void)
         uint32_t n = app_transport_read(commands, sizeof(commands));
 #if VISION_MIDTERM_AUTONOMOUS
         /* Optional traffic may cancel, never arm or configure. No traffic is required. */
+#if VISION_MIDTERM_C31_AUTONOMOUS
+        if(app_transport_rx_error())midterm_boot_link_error(timer_get(GPT_TIM_1));
+#endif
         if(n || app_transport_activity() || app_transport_stopped()) {
             midterm_boot_cancel(timer_get(GPT_TIM_1));vision_drive_stop();
         }
@@ -254,6 +262,23 @@ void app_runtime_run(void)
         vision_drive_poll(now);
 #if VISION_MIDTERM_AUTONOMOUS
         midterm_boot_poll(now);
+#if VISION_MIDTERM_C31_AUTONOMOUS
+        /* Passive, bounded status output. Host traffic still cancels startup;
+         * reporting never injects RX or grants motion authority. */
+        if((uint32_t)(now-last_boot_report)>=1000U) {
+            vd_speed_info_t speed;app_link_stats_t usb,radio;const vc_output_t *out=vision_drive_output();
+            vision_drive_speed_get(&speed);last_boot_report=now;
+            app_link_stats(APP_LINK_USB,&usb);app_link_stats(APP_LINK_RADIO,&radio);
+            app_console_printf("[AUTO_START] build=%s ms=%lu qualify_ms=%u reviewed=%u boot=%u frames=%lu valid=%u far=%u state=%u faults=%lu speed_enabled=%u samples=%lu rx_usb=%lu err_usb=%lu rx_radio=%lu err_radio=%lu bad_usb=%lu bad_radio=%lu uart_err_usb=0x%08lx uart_err_radio=0x%08lx bad_word_radio=0x%08lx\r\n",
+                VISION_FIELD_BUILD,(unsigned long)now,(unsigned)MIDTERM_BOOT_DELAY_MS,(unsigned)MIDTERM_VISUAL_REVIEWED,
+                (unsigned)midterm_boot_state(),(unsigned long)frames,out->observation_valid,out->far_valid,
+                (unsigned)out->state,(unsigned long)(out->faults|speed.faults),speed.enabled,(unsigned long)speed.samples,
+                (unsigned long)usb.rx_bytes,(unsigned long)usb.rx_errors,(unsigned long)radio.rx_bytes,(unsigned long)radio.rx_errors,
+                (unsigned long)usb.rx_corrupt,(unsigned long)radio.rx_corrupt,
+                (unsigned long)usb.last_uart_error,(unsigned long)radio.last_uart_error,(unsigned long)radio.last_bad_word);
+        }
+        app_transport_poll(); /* Fixed nonblocking TX budget, no wait for RTS. */
+#endif
 #endif
 #endif
         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {

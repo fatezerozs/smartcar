@@ -1,0 +1,1837 @@
+diff --git a/README.md b/README.md
+index 3a8f464..2ff940b 100644
+--- a/README.md
++++ b/README.md
+@@ -9,6 +9,7 @@
+ ## 从哪里阅读
+ 
+ - **[测试框架与流程详细手册](docs/TESTING_FRAMEWORK_GUIDE.md)**：环境、架构、套件开发、执行流程、报告判读、CI、数据集接入与完整套件索引。
++- [C31 连续速度规划与降级控制阶段交付](docs/changes/c31-speed-planning-20261105/README.md)：主构型审计、Host 原型、回归与缺失标定；尚未接入生产控制路径。
+ - [项目设计与演进档案](docs/PROJECT_EVOLUTION.md)：成品目标、模型、实现与验证状态、任务、技术取舍和每次提交的简略索引。
+ - [本次详细提交说明：2026-11-02 / C32](docs/changes/2026-11-02_C32_TESTING_FRAMEWORK.md)：测试架构、兼容迁移、本地/远程证据及未关闭项。
+ - [文档目录](docs/INDEX.md)：当前参考、提交记录和历史归档。
+diff --git a/demo/code/app_link.c b/demo/code/app_link.c
+index 3e15231..2c886e2 100644
+--- a/demo/code/app_link.c
++++ b/demo/code/app_link.c
+@@ -28,6 +28,14 @@ void app_link_error_isr(unsigned channel)
+ {
+     if(channel<APP_LINK_COUNT){++links[channel].stats.rx_errors;++links[channel].errors;}
+ }
++void app_link_uart_error_isr(unsigned channel,uint32_t flags)
++{
++    if(channel<APP_LINK_COUNT){links[channel].stats.last_uart_error=flags;app_link_error_isr(channel);}
++}
++void app_link_reject_rx_isr(unsigned channel,uint32_t word)
++{
++    if(channel<APP_LINK_COUNT){++links[channel].stats.rx_corrupt;links[channel].stats.last_bad_word=word;}
++}
+ int app_link_take_error(unsigned channel)
+ {
+     uint32_t errors;
+diff --git a/demo/code/app_link.h b/demo/code/app_link.h
+index bf488d1..4239ee4 100644
+--- a/demo/code/app_link.h
++++ b/demo/code/app_link.h
+@@ -8,11 +8,14 @@
+ #define APP_LINK_TX_SIZE 8192U
+ typedef struct {
+     uint32_t rx_bytes, tx_bytes, rx_overflow, rx_errors, tx_rejected;
++    uint32_t rx_corrupt, last_uart_error, last_bad_word;
+ } app_link_stats_t;
+ /* Foreground owns TX; each UART ISR is the sole producer of its RX ring. */
+ void app_link_init(void);
+ void app_link_rx_isr(unsigned channel, uint8_t byte);
+ void app_link_error_isr(unsigned channel);
++void app_link_uart_error_isr(unsigned channel,uint32_t flags);
++void app_link_reject_rx_isr(unsigned channel,uint32_t word);
+ uint32_t app_link_read(unsigned channel, uint8_t *data, uint32_t capacity);
+ int app_link_take_error(unsigned channel);
+ int app_link_send(unsigned channel, const uint8_t *data, uint32_t length);
+diff --git a/demo/code/app_link_board.c b/demo/code/app_link_board.c
+index 7f39888..09c35e3 100644
+--- a/demo/code/app_link_board.c
++++ b/demo/code/app_link_board.c
+@@ -16,12 +16,22 @@ int app_link_board_try_tx(unsigned channel,uint8_t byte)
+ }
+ void app_link_board_irq(unsigned channel)
+ {
+-    uint8_t byte;unsigned budget=32U;
+-    uart_index_enum index=channel==APP_LINK_USB?UART_1:UART_8;
++    unsigned budget=32U;
+     LPUART_Type *uart=channel==APP_LINK_USB?LPUART1:LPUART8;
+     uint32_t errors=LPUART_GetStatusFlags(uart)&
+         (kLPUART_RxOverrunFlag|kLPUART_NoiseErrorFlag|kLPUART_FramingErrorFlag|kLPUART_ParityErrorFlag);
+-    if(errors){app_link_error_isr(channel);LPUART_ClearStatusFlags(uart,errors);}
+-    while(budget-- && uart_query_byte(index,&byte))app_link_rx_isr(channel,byte);
++    while(budget-- && LPUART_GetRxFifoCount(uart)) {
++        /* Read DATA once with the NXP per-character error tags intact.
++         * uart_query_byte / LPUART_ReadByte truncate these tags to uint8_t. */
++        uint32_t word=*(volatile uint32_t *)(uintptr_t)LPUART_GetDataRegisterAddress(uart);
++        if(word&LPUART_DATA_RXEMPT_MASK)break;
++        if(word&(LPUART_DATA_FRETSC_MASK|LPUART_DATA_PARITYE_MASK|LPUART_DATA_NOISY_MASK)) {
++            if(word&LPUART_DATA_FRETSC_MASK)errors|=kLPUART_FramingErrorFlag;
++            if(word&LPUART_DATA_PARITYE_MASK)errors|=kLPUART_ParityErrorFlag;
++            if(word&LPUART_DATA_NOISY_MASK)errors|=kLPUART_NoiseErrorFlag;
++            app_link_reject_rx_isr(channel,word);
++        } else app_link_rx_isr(channel,(uint8_t)word);
++    }
++    if(errors){app_link_uart_error_isr(channel,errors);LPUART_ClearStatusFlags(uart,errors);}
+     __DSB();
+ }
+diff --git a/demo/code/app_runtime.c b/demo/code/app_runtime.c
+index 4951ecf..df20b53 100644
+--- a/demo/code/app_runtime.c
++++ b/demo/code/app_runtime.c
+@@ -8,9 +8,11 @@
+ #include "vision_field.h"
+ #include "vision_storage.h"
+ #include "app_transport.h"
++#include "app_link.h"
+ #include "vision_frame.h"
+ #include "vision_telemetry.h"
+ #include "midterm_boot.h"
++#include "vision_speed.h"
+ 
+ #if MT9V03X_W != VISION_WIDTH || MT9V03X_H != VISION_HEIGHT
+ #error "Vision module dimensions must match the MT9V03X camera configuration."
+@@ -63,6 +65,9 @@ void app_runtime_run(void)
+     uint32_t now = timer_get(GPT_TIM_1), last_frame = now, fps_start = now;
+     uint32_t fps_frames = 0, fps_x10 = 0, dropped_copies = 0;
+     uint32_t process_ms = 0, history_resets = 0;
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    uint32_t last_boot_report=0;
++#endif
+ #if VISION_ROUTE_SWITCH
+     uint32_t max_process_ms=0,max_frame_gap_ms=0;
+ #endif
+@@ -131,6 +136,9 @@ void app_runtime_run(void)
+         uint32_t n = app_transport_read(commands, sizeof(commands));
+ #if VISION_MIDTERM_AUTONOMOUS
+         /* Optional traffic may cancel, never arm or configure. No traffic is required. */
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        if(app_transport_rx_error())midterm_boot_link_error(timer_get(GPT_TIM_1));
++#endif
+         if(n || app_transport_activity() || app_transport_stopped()) {
+             midterm_boot_cancel(timer_get(GPT_TIM_1));vision_drive_stop();
+         }
+@@ -254,6 +262,23 @@ void app_runtime_run(void)
+         vision_drive_poll(now);
+ #if VISION_MIDTERM_AUTONOMOUS
+         midterm_boot_poll(now);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        /* Passive, bounded status output. Host traffic still cancels startup;
++         * reporting never injects RX or grants motion authority. */
++        if((uint32_t)(now-last_boot_report)>=1000U) {
++            vd_speed_info_t speed;app_link_stats_t usb,radio;const vc_output_t *out=vision_drive_output();
++            vision_drive_speed_get(&speed);last_boot_report=now;
++            app_link_stats(APP_LINK_USB,&usb);app_link_stats(APP_LINK_RADIO,&radio);
++            app_console_printf("[AUTO_START] build=%s ms=%lu qualify_ms=%u reviewed=%u boot=%u frames=%lu valid=%u far=%u state=%u faults=%lu speed_enabled=%u samples=%lu rx_usb=%lu err_usb=%lu rx_radio=%lu err_radio=%lu bad_usb=%lu bad_radio=%lu uart_err_usb=0x%08lx uart_err_radio=0x%08lx bad_word_radio=0x%08lx\r\n",
++                VISION_FIELD_BUILD,(unsigned long)now,(unsigned)MIDTERM_BOOT_DELAY_MS,(unsigned)MIDTERM_VISUAL_REVIEWED,
++                (unsigned)midterm_boot_state(),(unsigned long)frames,out->observation_valid,out->far_valid,
++                (unsigned)out->state,(unsigned long)(out->faults|speed.faults),speed.enabled,(unsigned long)speed.samples,
++                (unsigned long)usb.rx_bytes,(unsigned long)usb.rx_errors,(unsigned long)radio.rx_bytes,(unsigned long)radio.rx_errors,
++                (unsigned long)usb.rx_corrupt,(unsigned long)radio.rx_corrupt,
++                (unsigned long)usb.last_uart_error,(unsigned long)radio.last_uart_error,(unsigned long)radio.last_bad_word);
++        }
++        app_transport_poll(); /* Fixed nonblocking TX budget, no wait for RTS. */
++#endif
+ #endif
+ #endif
+         if (board_camera_poll(app_mode_allows(APP_MODE_OBSERVE) || app_mode_allows(APP_MODE_DRIVE), now) && mt9v03x_finish_flag) {
+diff --git a/demo/code/app_transport.c b/demo/code/app_transport.c
+index 07f0255..a496f1e 100644
+--- a/demo/code/app_transport.c
++++ b/demo/code/app_transport.c
+@@ -7,23 +7,24 @@
+ #include "app_link.h"
+ #if VISION_DUAL_UART_ENABLE
+ static unsigned owner, busy_now;
+-static int stop_now, changed_now, activity_now;
++static int stop_now, changed_now, activity_now, error_now;
+ static uint8_t in_line[2], discard[2];
+ static uint32_t last_summary;
+ void app_transport_init(void)
+ {
+     owner=VISION_ROUTE_SWITCH?APP_LINK_RADIO:APP_LINK_USB;busy_now=0;
+-    stop_now=changed_now=activity_now=0;last_summary=0;
++    stop_now=changed_now=activity_now=error_now=0;last_summary=0;
+     memset(in_line,0,sizeof(in_line));memset(discard,0,sizeof(discard));
+     app_link_init();
+ }
+ static int send_text(unsigned ch,const char *text)
+ {return app_link_send(ch,(const uint8_t *)text,(uint32_t)strlen(text));}
+ void app_transport_begin(int busy)
+-{busy_now=(unsigned)(busy!=0);stop_now=changed_now=activity_now=0;}
++{busy_now=(unsigned)(busy!=0);stop_now=changed_now=activity_now=error_now=0;}
+ int app_transport_stopped(void){return stop_now;}
+ int app_transport_changed(void){return changed_now;}
+ int app_transport_activity(void){return activity_now;}
++int app_transport_rx_error(void){return error_now;}
+ unsigned app_transport_owner(void){return owner;}
+ void app_transport_poll(void){app_link_poll();}
+ static void link_status(unsigned ch)
+@@ -43,9 +44,20 @@ uint32_t app_transport_read(uint8_t *data,uint32_t capacity)
+         uint32_t count;
+         if(app_link_take_error(ch)) {
+             uint8_t junk[APP_LINK_RX_SIZE];
+-            (void)app_link_read(ch,junk,sizeof(junk));
+-            discard[ch]=1;in_line[ch]=1;stop_now=1;changed_now=1;
+-            (void)send_text(ch,"[LINK] RX_ERROR; discarded until newline\r\n");
++            if(app_link_read(ch,junk,sizeof(junk)))activity_now=1;
++            char text[128];
++            discard[ch]=1;in_line[ch]=1;error_now=1;
++#if VISION_MIDTERM_C31_AUTONOMOUS
++            /* No output lease exists while idle. A byte-free UART error must
++             * restart qualification, not permanently impersonate operator STOP.
++             * Bytes (including discarded ones) still report activity below. */
++            if(busy_now){stop_now=1;changed_now=1;}
++#else
++            stop_now=1;changed_now=1;
++#endif
++            (void)snprintf(text,sizeof(text),"[LINK] port=%s RX_ERROR; %s; discarded until newline\r\n",
++                ch?"radio":"usb",stop_now?"STOP":"qualification reset");
++            (void)send_text(ch,text);
+         }
+         count=app_link_read(ch,bytes,capacity<sizeof(bytes)?capacity:sizeof(bytes));
+         if(count)activity_now=1;
+@@ -112,6 +124,7 @@ void app_transport_poll(void){}
+ int app_transport_stopped(void){return 0;}
+ int app_transport_changed(void){return 0;}
+ int app_transport_activity(void){return 0;}
++int app_transport_rx_error(void){return 0;}
+ unsigned app_transport_owner(void){return VISION_WIRELESS_UART_ENABLE?1U:0U;}
+ void app_transport_summary(uint32_t now,uint32_t frame,unsigned state,unsigned faults,int valid,unsigned motion)
+ {(void)now;(void)frame;(void)state;(void)faults;(void)valid;(void)motion;}
+diff --git a/demo/code/app_transport.h b/demo/code/app_transport.h
+index f6ec615..cf8db44 100644
+--- a/demo/code/app_transport.h
++++ b/demo/code/app_transport.h
+@@ -10,6 +10,7 @@ void app_transport_poll(void);
+ int app_transport_stopped(void);
+ int app_transport_changed(void);
+ int app_transport_activity(void);
++int app_transport_rx_error(void);
+ unsigned app_transport_owner(void);
+ void app_transport_frame(const uint8_t *header,uint32_t hn,const uint8_t *data,uint32_t n);
+ void app_transport_summary(uint32_t now,uint32_t frame,unsigned state,unsigned faults,int valid,unsigned motion);
+diff --git a/demo/code/midterm_boot.c b/demo/code/midterm_boot.c
+index bea9f11..0b37376 100644
+--- a/demo/code/midterm_boot.c
++++ b/demo/code/midterm_boot.c
+@@ -65,6 +65,15 @@ void midterm_boot_cancel(uint32_t now)
+ {
+     if(state==MT_BOOT_WAIT || state==MT_BOOT_RUNNING)terminal(MT_BOOT_STOPPED,now);
+ }
++void midterm_boot_link_error(uint32_t now)
++{
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(state==MT_BOOT_WAIT)track_reset();
++    else if(state==MT_BOOT_RUNNING)terminal(MT_BOOT_STOPPED,now);
++#else
++    midterm_boot_cancel(now);
++#endif
++}
+ mt_boot_state_t midterm_boot_state(void){return state;}
+ void midterm_boot_poll(uint32_t now)
+ {
+@@ -114,9 +123,10 @@ void midterm_boot_poll(uint32_t now)
+                 vd.control.output.state==VC_DISARMED &&
+ #endif
+                 vd_output_arm(now,1);
+-            if(accepted){state=MT_BOOT_RUNNING;signal_time=now;vd_output_apply();}
++            if(accepted){state=MT_BOOT_RUNNING;signal_time=now;}
+             else terminal(MT_BOOT_BLOCKED,now);
+             __set_PRIMASK(mask);
++            if(accepted)vd_output_apply(); /* Preparation must be preemptible. */
+         }
+     }
+     if(state==MT_BOOT_WAIT)board_buzzer_set(elapsed%1000U<100U);
+diff --git a/demo/code/midterm_boot.h b/demo/code/midterm_boot.h
+index 9bb137c..89174f4 100644
+--- a/demo/code/midterm_boot.h
++++ b/demo/code/midterm_boot.h
+@@ -6,5 +6,6 @@ typedef enum { MT_BOOT_OFF=0, MT_BOOT_WAIT, MT_BOOT_RUNNING,
+ void midterm_boot_init(uint32_t boot_ms, uint32_t now);
+ void midterm_boot_poll(uint32_t now);
+ void midterm_boot_cancel(uint32_t now);
++void midterm_boot_link_error(uint32_t now);
+ mt_boot_state_t midterm_boot_state(void);
+ #endif
+diff --git a/demo/code/midterm_profile.h b/demo/code/midterm_profile.h
+index 3eb2df1..466ee77 100644
+--- a/demo/code/midterm_profile.h
++++ b/demo/code/midterm_profile.h
+@@ -31,7 +31,13 @@
+ #ifndef MIDTERM_VISUAL_REVIEWED
+ #define MIDTERM_VISUAL_REVIEWED 0
+ #endif
++#if VISION_MIDTERM_C31_AUTONOMOUS
++/* User-requested qualification window, counted over distinct fresh track
++ * observations, not merely time since power-on. Legacy bench boot is separate. */
++#define MIDTERM_BOOT_DELAY_MS 1000U
++#else
+ #define MIDTERM_BOOT_DELAY_MS 3000U
++#endif
+ #if VISION_MIDTERM_AUTONOMOUS && (!VISION_ENCODER_ENABLE || !VISION_DRIVE_ENABLE || VISION_MOTOR_THRESHOLD_DIAG || VISION_START_SWITCH_ENABLE)
+ #error "Autonomous midterm requires encoders/control, without bench or C12 startup."
+ #endif
+diff --git a/demo/code/midterm_route_profile.h b/demo/code/midterm_route_profile.h
+index 449f8b7..be03389 100644
+--- a/demo/code/midterm_route_profile.h
++++ b/demo/code/midterm_route_profile.h
+@@ -6,7 +6,7 @@
+  * Existing steering controller and frame/heartbeat/encoder protections remain.
+  * Manual route target never starts on power-up. C26 switch target can start
+  * with ON at boot after five valid frames. Autonomous C31 instead requires
+- * continuous valid track for 3000ms and the visual review gate; C26/C27 have
++ * continuous valid track for MIDTERM_BOOT_DELAY_MS and the visual review gate; C26/C27 have
+  * no start/stop authority. No route variant loads a saved profile.
+  */
+ #define MT_ROUTE_AXIS_NEAR_X 0.49733f
+diff --git a/demo/code/vision_actuator.c b/demo/code/vision_actuator.c
+index f6fbc04..adfcb48 100644
+--- a/demo/code/vision_actuator.c
++++ b/demo/code/vision_actuator.c
+@@ -5,7 +5,7 @@
+ void vd_output_zero(void)
+ {
+     uint32_t mask=__get_PRIMASK();__disable_irq();
+-    vd.output_authorized=0;vd.guard_running=0;
++    ++vd.output_epoch;vd.output_authorized=0;vd.guard_running=0;
+     /* Stops always write hardware. Invalidate the motion write cache so a
+      * later explicit start cannot mistake cleared outputs for held PWM. */
+     vd.motion_written_mask=0;
+@@ -37,7 +37,7 @@ static void write_changed(unsigned index,int channel,uint32_t duty)
+     }
+ }
+ 
+-/* All callers hold PRIMASK from target inspection through the last LDOK.
++/* All final writers hold PRIMASK from final authorization through the last LDOK.
+  * PIT may revoke a lease, but it never grants one. Foreground observation cannot
+  * recreate a revoked lease even if its controller still says RUNNING. */
+ enum { VD_OUTPUT_DRIVE=1, VD_OUTPUT_MOTION, VD_OUTPUT_PROBE };
+@@ -65,16 +65,21 @@ static int output_allowed(unsigned source,uint32_t now)
+ #endif
+         if(!app_mode_allows(APP_MODE_DRIVE) || app_mode_change_pending() ||
+            !vd.hardware_ready || !vd.control.configured ||
+-           !vision_drive_profile_ready(&vd.profile) || vd.probe_active || vd.motion.phase ||
++           
++#if !VISION_MIDTERM_C31_AUTONOMOUS
++           !vision_drive_profile_ready(&vd.profile) ||
++#endif
++           vd.probe_active || vd.motion.phase ||
+            vd.control.output.state!=VC_RUNNING ||
+            (vd.control.local_run && !vd.local_permitted) || !vd.control.have_frame ||
+            (uint32_t)(now-vd.control.last_frame_ms)>=VISION_CONTROL_FRAME_TIMEOUT_MS ||
+            (!vd.control.local_run && (uint32_t)(now-vd.control.last_command_ms)>=VISION_CONTROL_COMMAND_TIMEOUT_MS) ||
+            (vd.guard_max_run_ms && (uint32_t)(now-vd.control.armed_ms)>=vd.guard_max_run_ms))return 0;
+-#if VISION_MIDTERM_AUTONOMOUS
++#if VISION_MIDTERM_AUTONOMOUS && !VISION_MIDTERM_C31_AUTONOMOUS
+         if(!vd.control.output.observation_valid || !vd.control.output.far_valid)return 0;
+ #else
+-        /* Switch retains its existing bounded visual recovery controller. */
++        /* Route/autonomous recovery keeps the SAME lease. No current road
++         * means zero demand; stale camera, actual faults and STOP still veto. */
+         if(!vd.control.output.observation_valid && !vd.control.output.recovering)return 0;
+ #endif
+         return 1;
+@@ -117,6 +122,7 @@ static int output_allowed(unsigned source,uint32_t now)
+ }
+ int vd_output_arm(uint32_t now,int local)
+ {
++    int ready=vision_drive_profile_ready(&vd.profile);
+     uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
+ #if VISION_MIDTERM_AUTONOMOUS
+     if(vd.autonomous_stopped || !local){__set_PRIMASK(mask);return 0;}
+@@ -129,11 +135,11 @@ int vd_output_arm(uint32_t now,int local)
+ #endif
+        !vd.probe_active && !vd.motion.phase &&
+        app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
+-       vd.hardware_ready && vision_drive_profile_ready(&vd.profile) &&
++       vd.hardware_ready && ready &&
+        (!local || vd.local_permitted)) {
+         accepted=local?vc_arm_local(&vd.control,now,vd.hardware_ready):
+             vc_arm(&vd.control,now,vd.hardware_ready);
+-        if(accepted)vd.output_authorized=VD_OUTPUT_DRIVE;
++        if(accepted){++vd.output_epoch;vd.output_authorized=VD_OUTPUT_DRIVE;}
+     }
+     __DMB();__set_PRIMASK(mask);return accepted;
+ }
+@@ -161,6 +167,12 @@ static void output_commit(unsigned source,uint32_t right,uint32_t left,uint32_t
+     if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
+     /* Bound PI's actual result independently of its target/speed cap. C31
+      * deliberately retains its existing full physical PWM headroom. */
++    #if VISION_MIDTERM_C31_AUTONOMOUS
++    /* Exception policy is enforced at the final motor writer, after PI/cache. */
++    if(source==VD_OUTPUT_DRIVE && vd.control.output.vision_state!=VC_VISION_NORMAL) {
++        right=left=0;vd_speed_stop();
++    }
++#endif
+     if(right>cap)right=cap;if(left>cap)left=cap;
+     if(servo>PWM_DUTY_MAX) {vd.guard_faults|=VC_FAULT_NUMERIC;vd_output_zero();return;}
+     write_changed(2,SERVO_MOTOR_PWM,servo);
+@@ -199,7 +211,11 @@ void vd_output_apply(void)
+ {
+     if (!vd.initialized) return;
+     uint32_t mask = __get_PRIMASK();
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    uint32_t epoch=vd.output_epoch; /* Control owns preparation; ISR only revokes. */
++#else
+     __disable_irq();
++#endif
+     if(vd.motion.phase) {
+         vd_motion_tick(timer_get(GPT_TIM_1));
+         if(vd.motion.phase)motion_apply();else vd_output_zero();
+@@ -225,6 +241,11 @@ void vd_output_apply(void)
+         vd.guard_running = 0;
+         vd_output_zero();
+     } else {
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        /* Profile validation includes floats; configuration is task-owned and
++         * immutable while running. Final commit rechecks scalar authority. */
++        if(!vision_drive_profile_ready(&vd.profile)){vd_output_zero();return;}
++#endif
+         if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
+             vd_output_zero();__set_PRIMASK(mask);return;
+         }
+@@ -296,6 +317,13 @@ void vd_output_apply(void)
+         /* Controller outputs are bounded; vd.profile validates pulse range first.
+          * This short critical section prevents foreground from re-enabling
+          * PWM after a safety ISR has latched a stop. No UART/float in ISR. */
++#if VISION_MIDTERM_C31_AUTONOMOUS
++#ifdef VISION_HOST_OUTPUT_HOOK
++        {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(1);}
++#endif
++        __disable_irq();
++        if(epoch!=vd.output_epoch){__set_PRIMASK(mask);return;}
++#endif
+         gpio_set_level(MOTOR1_DIR, vd.profile.motor1_forward_level);
+         gpio_set_level(MOTOR2_DIR, vd.profile.motor2_forward_level);
+         output_commit(VD_OUTPUT_DRIVE,right_duty,left_duty,servo_duty);
+diff --git a/demo/code/vision_control.c b/demo/code/vision_control.c
+index e213e83..715fd2b 100644
+--- a/demo/code/vision_control.c
++++ b/demo/code/vision_control.c
+@@ -108,10 +108,13 @@ void vc_poll(vc_controller_t *c, uint32_t now)
+ {
+     int remote=!c->local_run;
+     if (c->output.state != VC_RUNNING) return;
+-#if VISION_ROUTE_SWITCH
+-    if(c->output.recovering&&(uint32_t)(now-c->last_valid_ms)>300U&&
+-       (!c->have_partial||(uint32_t)(now-c->last_partial_ms)>100U||
+-        (uint32_t)(now-c->last_valid_ms)>1200U))vc_trip(c,VC_FAULT_VISION);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(c->loss_active && (uint32_t)(now-c->loss_frame_ms)>=VISION_C31_ZERO_WAIT_MS)
++        vc_trip(c,VC_FAULT_VISION);
++#elif VISION_ROUTE_SWITCH
++    if(c->output.recovering&&(uint32_t)(now-c->last_valid_ms)>VISION_RECOVERY_INITIAL_MS&&
++       (!c->have_partial||(uint32_t)(now-c->last_partial_ms)>VISION_RECOVERY_PARTIAL_FRESH_MS||
++        (uint32_t)(now-c->last_valid_ms)>VISION_RECOVERY_MAX_MS))vc_trip(c,VC_FAULT_VISION);
+ #endif
+     if ((uint32_t)(now - c->last_frame_ms) >= c->config.frame_timeout_ms) vc_trip(c, VC_FAULT_FRAME);
+     if (remote && (uint32_t)(now - c->last_command_ms) >= c->config.command_timeout_ms) vc_trip(c, VC_FAULT_COMMAND);
+@@ -130,6 +133,7 @@ int vc_arm(vc_controller_t *c, uint32_t now, int hardware_confirmed)
+     c->last_command_ms = c->armed_ms = now;
+     c->output.duty = c->output.steering = 0;
+     c->have_partial=c->straight_tracking=0;
++    c->loss_active=c->reacquire_frames=0;c->output.vision_state=VC_VISION_NORMAL;
+     c->derivative = 0;
+     return 1;
+ }
+@@ -377,6 +381,21 @@ static float corner_duty(vc_controller_t *c,const vision_result_t *r,
+ }
+ #endif
+ 
++#if VISION_MIDTERM_C31_AUTONOMOUS
++static void c31_zero_wait(vc_controller_t *c,unsigned reason,uint32_t capture,uint32_t now)
++{
++    if(c->output.state!=VC_RUNNING)return;
++    if(!c->loss_active){c->loss_active=1;c->loss_frame_ms=capture;}
++    if(reason){c->output.vision_state=(uint8_t)reason;c->reacquire_frames=0;}
++    c->output.duty=0;c->output.speed_boost=0;
++    c->output.paired_support=c->output.edge_support=0;
++    c->output.recovering=1;c->output.search_source=0;
++    c->invalid_frames=1;c->derivative=0;c->straight_tracking=0;
++    /* A delayed observation consumes, rather than renews, the original budget. */
++    if((uint32_t)(now-c->loss_frame_ms)>=VISION_C31_ZERO_WAIT_MS)vc_trip(c,VC_FAULT_VISION);
++}
++#endif
++
+ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+                 uint32_t sequence, uint32_t frame_ms, uint32_t now)
+ {
+@@ -385,6 +404,11 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+     vc_poll(c, now); /* Check old deadlines before accepting a delayed frame. */
+     if (!c->configured) return;
+     if (c->have_frame && sequence == c->last_sequence) return; /* Not a new observation. */
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    /* Modular ordering is valid within half the uint32 domain, including wrap.
++     * Old/ambiguous identities never refresh a lease or count as recovery. */
++    if(c->have_frame && (uint32_t)(sequence-c->last_sequence)>=UINT32_C(0x80000000))return;
++#endif
+     if (c->have_frame && (uint32_t)(frame_ms - c->last_frame_ms) >= c->config.frame_timeout_ms) {
+         c->stable_frames = 0;
+         c->derivative = 0;
+@@ -416,15 +440,20 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+         !control_band_error(r, &c->config, c->config.near_y, &near_error, &c->output.near_center_x)) {
+         c->stable_frames = 0;
+         c->straight_tracking=0;
+-#if VISION_ROUTE_SWITCH
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        /* Local geometry can describe direction, but never grants motor power.
++         * Keep the existing bounded steering command while awaiting full road. */
++        c31_zero_wait(c,VC_VISION_NO_LANE,frame_ms,now);
++        return;
++#elif VISION_ROUTE_SWITCH
+         /* Partial CURRENT road can guide a bounded low-speed recovery.
+          * No current boundary evidence means zero motor demand; never power
+          * through a junction or outside view using only an old turn. */
+         {float current_target=0;int strong=0,paired=0,carry=0;
+         int current=current_partial_direction(r,&c->config,&current_target,&strong,&paired);
+         if(c->output.state==VC_RUNNING && current &&
+-           ((uint32_t)(now-c->last_valid_ms)<=300U||
+-            (current&&strong&&(uint32_t)(now-c->last_valid_ms)<=1200U))) {
++           ((uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_INITIAL_MS||
++            (current&&strong&&(uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_MAX_MS))) {
+             float step=c->config.steer_rate*dt;
+             float chosen=current_target;
+             float search=clamp(chosen*1.25f,-1,1);
+@@ -448,6 +477,20 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+             c->output.search_source=(uint8_t)(carry?3:2);
+             return;
+         }}
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        if(c->output.state==VC_RUNNING &&
++           ((uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_INITIAL_MS ||
++            (c->have_partial && (uint32_t)(now-c->last_partial_ms)<=VISION_RECOVERY_PARTIAL_FRESH_MS &&
++             (uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_MAX_MS))) {
++            /* No trustworthy current lane: zero motor demand, preserve only
++             * the bounded existing lease. A fresh lane may resume before the
++             * deadline; current partial geometry may not extend it forever. */
++            c->output.recovering=1;c->output.search_source=0;
++            if(c->invalid_frames<255U)++c->invalid_frames;
++            c->output.duty=0;c->derivative=0;
++            return;
++        }
++#else
+         if(c->output.state==VC_RUNNING && c->invalid_frames<2 &&
+            (uint32_t)(now-c->last_valid_ms)<=40U) {
+             /* The bounded zero-demand grace period is still recovery. Keep
+@@ -457,6 +500,7 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+             ++c->invalid_frames;c->output.duty=0;c->derivative=0;
+             return; /* No motor drive on missing evidence, no guessed steering. */
+         }
++#endif
+ #endif
+         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_VISION);
+         return;
+@@ -471,6 +515,18 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
+     have_far = control_band_error(r, &c->config, c->config.far_y, &far_error, &c->output.far_center_x);
+ #if VISION_ROUTE_SWITCH
+     have_far=reference_preview_error(r,&c->config,&far_error,&c->output.far_center_x)||have_far;
++#endif
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(c->output.state==VC_RUNNING) {
++        c->output.observation_valid=1;c->output.far_valid=(uint8_t)have_far;
++        if(!have_far){c31_zero_wait(c,VC_VISION_FAR_LOSS,frame_ms,now);return;}
++        if(c->loss_active) {
++            if(++c->reacquire_frames<VISION_C31_REACQUIRE_FRAMES) {
++                c31_zero_wait(c,0,frame_ms,now);return;
++            }
++            c->loss_active=0;c->reacquire_frames=0;c->output.vision_state=VC_VISION_NORMAL;
++        }
++    }
+ #endif
+     if (have_far) heading = far_error - near_error;
+     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }
+diff --git a/demo/code/vision_control.h b/demo/code/vision_control.h
+index 3793dd5..2740cb8 100644
+--- a/demo/code/vision_control.h
++++ b/demo/code/vision_control.h
+@@ -5,6 +5,7 @@
+ #include "midterm_open_loop.h"
+ 
+ typedef enum { VC_DISARMED = 0, VC_RUNNING, VC_FAULT } vc_state_t;
++typedef enum { VC_VISION_NORMAL = 0, VC_VISION_FAR_LOSS, VC_VISION_NO_LANE } vc_vision_state_t;
+ enum {
+     VC_FAULT_CONFIG = 1U, VC_FAULT_VISION = 2U, VC_FAULT_FRAME = 4U,
+     VC_FAULT_COMMAND = 8U, VC_FAULT_NUMERIC = 16U,
+@@ -26,9 +27,10 @@ typedef struct {
+     float near_center_x, far_center_x; /* 双边实测中点 / (W-1)，供居中直道标定。 */
+     float paired_support, edge_support; /* Current geometry weights [0,1], not probabilities. */
+     uint8_t observation_valid, far_valid;
+-    uint8_t recovering; /* Fresh images, temporarily missing lane, bounded turn search. */
++    uint8_t recovering; /* Fresh images: current partial guidance or bounded zero-demand wait. */
+     uint8_t search_source; /* 0:none, 1:history, 2:current partial, 3:current edge + curvature. */
+     uint8_t speed_boost; /* 0:base, 1:paired road, 2:paired corner, 3:current single edge. */
++    uint8_t vision_state; /* C31 exception state; nonzero inhibits actual motor PWM. */
+ } vc_output_t;
+ typedef struct {
+     vc_config_t config;
+@@ -42,6 +44,8 @@ typedef struct {
+     uint32_t last_partial_ms,straight_since_ms;
+     uint8_t have_partial,straight_tracking;
+     uint8_t local_run; /* Volatile authority: never serialized as configuration. */
++    uint8_t loss_active, reacquire_frames;
++    uint32_t loss_frame_ms; /* First failed capture, never refreshed by partial/new frames. */
+ } vc_controller_t;
+ 
+ void vc_default_config(vc_config_t *config);
+diff --git a/demo/code/vision_drive.c b/demo/code/vision_drive.c
+index 7d469c9..708dca6 100644
+--- a/demo/code/vision_drive.c
++++ b/demo/code/vision_drive.c
+@@ -240,12 +240,9 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t
+     trace_visual.entry_guide_rows=r->entry_guide_rows;
+ #endif
+     vc_observe(&vd.control, r, sequence, frame_ms, now);
+-#if VISION_MIDTERM_C31_AUTONOMOUS
+-    /* No C26 vision reacquisition/recovery authority in autonomous mode. */
+-    if(vd.control.output.state==VC_RUNNING &&
+-       (!vd.control.output.observation_valid || !vd.control.output.far_valid))
+-        vc_trip(&vd.control,VC_FAULT_VISION);
+-#endif
++    /* The controller owns bounded visual recovery. Missing far preview or a
++     * recoverable observation does not revoke the existing driving lease.
++     * This grants no new arm/clear authority to C26, UART or old frames. */
+ #if VISION_ROUTE_SWITCH
+     route_record_fault();
+ #endif
+diff --git a/demo/code/vision_drive_internal.h b/demo/code/vision_drive_internal.h
+index 37f5887..0f9b538 100644
+--- a/demo/code/vision_drive_internal.h
++++ b/demo/code/vision_drive_internal.h
+@@ -24,6 +24,7 @@ typedef struct {
+     /* Source-bound lease, granted only in vision_actuator under PRIMASK.
+      * Every zero revokes it; foreground targets cannot renew it. */
+     volatile uint8_t output_authorized;
++    volatile uint32_t output_epoch; /* Revocation invalidates prepared PWM and PI. */
+     /* Sticky for this initialized software session; no persistent reset claim. */
+     volatile uint8_t autonomous_stopped;
+     volatile uint8_t guard_running, guard_local, mode_stop_pending;
+diff --git a/demo/code/vision_profile.h b/demo/code/vision_profile.h
+index c5c97c5..0671f2f 100644
+--- a/demo/code/vision_profile.h
++++ b/demo/code/vision_profile.h
+@@ -143,6 +143,23 @@
+ #define VISION_DUTY_STEERING_WEIGHT 1.0f
+ #define VISION_DUTY_MISSING_FAR_SCALE 0.5f
+ #define VISION_CONTROL_FRAME_TIMEOUT_MS 100U
++/* Fresh-frame visual degradation is separate from camera disconnection.
++ * These are the existing route partial-evidence bounds, now shared by C31. */
++#define VISION_RECOVERY_INITIAL_MS 300U
++#define VISION_RECOVERY_PARTIAL_FRESH_MS 100U
++#define VISION_RECOVERY_MAX_MS 1200U
++/* C31 exception handling only: motors remain inhibited throughout this window.
++ * 300ms preserves the existing short recovery budget; five full fresh frames
++ * confirm reacquisition. Neither value is a physical stopping calibration. */
++#ifndef VISION_C31_ZERO_WAIT_MS
++#define VISION_C31_ZERO_WAIT_MS 300U
++#endif
++#ifndef VISION_C31_REACQUIRE_FRAMES
++#define VISION_C31_REACQUIRE_FRAMES 5U
++#endif
++#if VISION_C31_ZERO_WAIT_MS < 1 || VISION_C31_ZERO_WAIT_MS > 300U || VISION_C31_REACQUIRE_FRAMES < 2 || VISION_C31_REACQUIRE_FRAMES > 255
++#error "C31 recovery requires a bounded zero-motor window and consecutive evidence."
++#endif
+ #define VISION_CONTROL_COMMAND_TIMEOUT_MS 500U
+ #define VISION_CONTROL_MAX_RUN_MS 5000U
+ #define VISION_CONTROL_ARM_FRAMES 5U
+diff --git a/demo/code/vision_speed.c b/demo/code/vision_speed.c
+index 464fc7b..9f5fc24 100644
+--- a/demo/code/vision_speed.c
++++ b/demo/code/vision_speed.c
+@@ -125,34 +125,57 @@ int vision_drive_speed_enable(int enable)
+ #endif
+ }
+ #if VISION_ENCODER_ENABLE
+-static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
++typedef struct {
++    vd_speed_info_t speed;
++    ws_pi_t pi[2];
++    uint32_t consumed,last_control,sample_interval;
++    uint8_t active,reset_pending;
++    unsigned backwards[2],stalled[2];
++#if VISION_ROUTE_SWITCH
++    unsigned slow_backwards[2];
++#endif
++} speed_work_t;
++static void work_trip(speed_work_t *w,unsigned detail,uint32_t now)
++{
++    if(!w->speed.faults) {
++        w->speed.fault_detail=(uint8_t)detail;
++        w->speed.fault_control_age_ms=now-w->last_control;
++        w->speed.fault_sample_age_ms=now-w->speed.sample_ms;
++        w->speed.fault_interval_ms=w->sample_interval;
++        w->speed.fault_raw3=w->speed.raw3;w->speed.fault_raw4=w->speed.raw4;
++        w->speed.fault_target_right=w->speed.target_right;w->speed.fault_target_left=w->speed.target_left;
++        w->speed.fault_pwm_right=w->speed.pwm_right;w->speed.fault_pwm_left=w->speed.pwm_left;
++    }
++    w->speed.faults|=VC_FAULT_ENCODER;
++}
++static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
+ {
+     *out_right=right;*out_left=left;
+ #if VISION_ENCODER_ENABLE
+-    if(speed.enabled) {
+-        uint32_t now=timer_get(GPT_TIM_1),seq=speed.samples,periods=seq-consumed;
++    if(w->speed.enabled) {
++        uint32_t now=timer_get(GPT_TIM_1),seq=w->speed.samples,periods=seq-w->consumed;
+         uint16_t pwm_cap=cap;
+ #if VISION_ROUTE_SWITCH
+         if(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active)
+             pwm_cap=MT_ROUTE_PWM_FULL_SCALE;
+ #endif
+         *out_right=*out_left=0;
+-        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){trip(VS_FAULT_OUTPUT,now);return 0;}
+-        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
+-        if(reset_pending){ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]);memset(backwards,0,sizeof(backwards));
+-            memset(stalled,0,sizeof(stalled));
++        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
++        if((uint32_t)(now-w->speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){work_trip(w,VS_FAULT_STALE,now);return 0;}
++        if(w->reset_pending){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);memset(w->backwards,0,sizeof(w->backwards));
++            memset(w->stalled,0,sizeof(w->stalled));
+ #if VISION_ROUTE_SWITCH
+-            memset(slow_backwards,0,sizeof(slow_backwards));
++            memset(w->slow_backwards,0,sizeof(w->slow_backwards));
+ #endif
+-            reset_pending=0;consumed=seq;periods=0;last_control=now;}
+-        if(!right&&!left){ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]);active=0;consumed=seq;last_control=now;return 1;}
+-        /* Arming the speed-output lease is distinct from steering settle.
++            w->reset_pending=0;w->consumed=seq;periods=0;w->last_control=now;}
++        if(!right&&!left){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);w->active=0;w->consumed=seq;w->last_control=now;return 1;}
++        /* Arming the w->speed-output lease is distinct from steering settle.
+          * The next hardware sample may be up to 10ms away. Do not let its
+          * ISR compare against a timestamp from the zero-output interval. */
+-        if(!active){last_control=now;consumed=seq;periods=0;}
+-        active=1;
++        if(!w->active){w->last_control=now;w->consumed=seq;periods=0;}
++        w->active=1;
+         if(periods) {
+-            unsigned target_ticks=speed.max_ticks;
++            unsigned target_ticks=w->speed.max_ticks;
+ #if VISION_ROUTE_SWITCH
+             int track=vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active;
+             if(track)target_ticks=vt_route_ticks(target_ticks,
+@@ -160,10 +183,10 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
+                 vd.control.output.paired_support,vd.control.output.edge_support);
+ #endif
+             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
+-            int32_t measured[2]={(int32_t)speed.raw4*speed.sign4,(int32_t)speed.raw3*speed.sign3};
++            int32_t measured[2]={(int32_t)w->speed.raw4*w->speed.sign4,(int32_t)w->speed.raw3*w->speed.sign3};
+             /* No queue: the latest count cannot stand in for missed measurements. */
+-            if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){trip(VS_FAULT_BACKLOG,now);return 0;}
+-            if(sample_interval<VD_SPEED_SAMPLE_MIN_INTERVAL_MS || sample_interval>VD_SPEED_SAMPLE_MAX_INTERVAL_MS){trip(VS_FAULT_SAMPLE_GAP,now);return 0;}
++            if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){work_trip(w,VS_FAULT_BACKLOG,now);return 0;}
++            if(w->sample_interval<VD_SPEED_SAMPLE_MIN_INTERVAL_MS || w->sample_interval>VD_SPEED_SAMPLE_MAX_INTERVAL_MS){work_trip(w,VS_FAULT_SAMPLE_GAP,now);return 0;}
+             if(reverse){measured[0]=-measured[0];measured[1]=-measured[1];}
+ #if VISION_ROUTE_SWITCH
+             if(track){
+@@ -171,24 +194,24 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
+                 if(vd.control.output.speed_boost==1&&vd.control.straight_tracking&&
+                    (uint32_t)(now-vd.control.straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
+                     rise=MT_ROUTE_STRAIGHT_TARGET_RISE;
+-                vt_ramp_targets(targets,speed.target_right,speed.target_left,periods*rise);
++                vt_ramp_targets(targets,w->speed.target_right,w->speed.target_left,periods*rise);
+             }
+ #endif
+             for(unsigned i=0;i<2;++i) {
+ #if VISION_ROUTE_SWITCH
+-                /* The shared speed envelope above retains differential even
++                /* The shared w->speed envelope above retains differential even
+                  * during launch. Steering geometry may change the inner target
+                  * at the controller's bounded steering rate. */
+-                int32_t before=i?speed.target_left:speed.target_right;
+-                /* Do not carry straight-speed integral into a lower target
++                int32_t before=i?w->speed.target_left:w->speed.target_right;
++                /* Do not carry straight-w->speed integral into a lower target
+                  * at a junction / sharp turn. The new PI error still handles
+                  * measured overspeed; no reverse torque is requested. */
+                 /* Do not erode torque on every one-count target fluctuation.
+                  * Track only a substantial drop (>=25%, at least 3 counts). */
+                 if(track&&before>0&&before-targets[i]>=3&&targets[i]*4<=before*3)
+-                    pi[i].integral_q8=(int32_t)((int64_t)pi[i].integral_q8*targets[i]/before);
++                    w->pi[i].integral_q8=(int32_t)((int64_t)w->pi[i].integral_q8*targets[i]/before);
+ #endif
+-                if(targets[i]>speed.max_ticks){trip(VS_FAULT_TARGET,now);return 0;}
++                if(targets[i]>w->speed.max_ticks){work_trip(w,VS_FAULT_TARGET,now);return 0;}
+ #if VISION_ROUTE_SWITCH
+                 /* Small counts during take-up are not proof of a driven reverse.
+                  * Require meaningful drive for the fast path; persistent small
+@@ -196,30 +219,30 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
+                 /* C26_16 field starts tripped at just 3 reverse counts.
+                  * Keep the 200ms persistent-reverse path, but do not turn a
+                  * 30ms pulse/gear take-up transient into a latched start fault. */
+-                backwards[i]=(targets[i]>=3&&pi[i].output>=cap/4U&&measured[i]<-4)?backwards[i]+periods:0;
+-                slow_backwards[i]=(targets[i]>=3&&pi[i].output>=cap/2U&&measured[i]<0)?slow_backwards[i]+periods:0;
+-                if(slow_backwards[i]>=20){trip(i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
++                w->backwards[i]=(targets[i]>=3&&w->pi[i].output>=cap/4U&&measured[i]<-4)?w->backwards[i]+periods:0;
++                w->slow_backwards[i]=(targets[i]>=3&&w->pi[i].output>=cap/2U&&measured[i]<0)?w->slow_backwards[i]+periods:0;
++                if(w->slow_backwards[i]>=20){work_trip(w,i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
+ #else
+-                backwards[i]=(targets[i]>0&&measured[i]<0)?backwards[i]+periods:0;
++                w->backwards[i]=(targets[i]>0&&measured[i]<0)?w->backwards[i]+periods:0;
+ #endif
+-                if(backwards[i]>=3){trip(i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
++                if(w->backwards[i]>=3){work_trip(w,i?VS_FAULT_REVERSE_LEFT:VS_FAULT_REVERSE_RIGHT,now);return 0;}
+ #if VISION_ROUTE_SWITCH
+-                {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:speed.max_ticks));
+-                 uint16_t effort=track?vp_effort_limit(pi[i].output,periods):pwm_cap;
+-                 ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,effort,sample_interval,ff);}
++                {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:w->speed.max_ticks));
++                 uint16_t effort=track?vp_effort_limit(w->pi[i].output,periods):pwm_cap;
++                 ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,effort,w->sample_interval,ff);}
+ #else
+-                ws_pi_step_ff_ms(&pi[i],targets[i],measured[i],speed.kp_q8,speed.ki_q8,pwm_cap,sample_interval,0);
++                ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,pwm_cap,w->sample_interval,0);
+ #endif
+                 /* Keep the old no-count threshold independent of the larger
+-                 * PWM headroom: a stalled motor must not wait for full duty. */
+-                stalled[i]=(targets[i]>0&&pi[i].output>=(unsigned)cap*9U/10U&&measured[i]==0)?stalled[i]+periods:0;
+-                if(stalled[i]>=50){trip(i?VS_FAULT_NOCOUNT_LEFT:VS_FAULT_NOCOUNT_RIGHT,now);return 0;}
++                 * PWM headroom: a w->stalled motor must not wait for full duty. */
++                w->stalled[i]=(targets[i]>0&&w->pi[i].output>=(unsigned)cap*9U/10U&&measured[i]==0)?w->stalled[i]+periods:0;
++                if(w->stalled[i]>=50){work_trip(w,i?VS_FAULT_NOCOUNT_LEFT:VS_FAULT_NOCOUNT_RIGHT,now);return 0;}
+             }
+-            speed.target_right=(int16_t)targets[0];speed.target_left=(int16_t)targets[1];
+-            speed.measured_right=(int16_t)measured[0];speed.measured_left=(int16_t)measured[1];
+-            consumed=seq;last_control=now;
++            w->speed.target_right=(int16_t)targets[0];w->speed.target_left=(int16_t)targets[1];
++            w->speed.measured_right=(int16_t)measured[0];w->speed.measured_left=(int16_t)measured[1];
++            w->consumed=seq;w->last_control=now;
+         }
+-        speed.pwm_right=*out_right=pi[0].output;speed.pwm_left=*out_left=pi[1].output;
++        w->speed.pwm_right=*out_right=w->pi[0].output;w->speed.pwm_left=*out_left=w->pi[1].output;
+     }
+ #else
+     (void)reverse;(void)cap;
+@@ -231,7 +254,7 @@ static int speed_control_output(uint16_t right,uint16_t left,int reverse,uint16_
+ 
+ /* Target publication never consumes a sample or advances PI. All three APIs
+  * below are called with interrupts masked by the foreground/output facade. */
+-int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
++static int speed_publish(uint16_t right,uint16_t left,int reverse,uint16_t cap,
+                     uint16_t *out_right,uint16_t *out_left)
+ {
+     *out_right=right;*out_left=left;
+@@ -256,13 +279,52 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
+ #endif
+     return 1;
+ }
++int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
++                    uint16_t *out_right,uint16_t *out_left)
++{
++    uint32_t mask=__get_PRIMASK();int ok;__disable_irq();
++    ok=speed_publish(right,left,reverse,cap,out_right,out_left);
++    __DMB();__set_PRIMASK(mask);return ok;
++}
+ void vd_speed_control_poll(uint32_t now)
+ {
+ #if VISION_ENCODER_ENABLE
+-    uint32_t mask=__get_PRIMASK();uint16_t right,left;__disable_irq();
+-    if(speed.enabled && request_cap && !speed.faults && !vd.guard_faults) {
+-        if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS)trip(VS_FAULT_STALE,now);
+-        else (void)speed_control_output(request_right,request_left,request_reverse,request_cap,&right,&left);
++    uint32_t mask=__get_PRIMASK(),epoch,seq;uint16_t right,left,cap,req_r,req_l;
++    int reverse;speed_work_t w;
++    __disable_irq();
++    if(!speed.enabled || !request_cap || speed.faults || vd.guard_faults){__set_PRIMASK(mask);return;}
++    if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
++        trip(VS_FAULT_STALE,now);__set_PRIMASK(mask);return;
++    }
++    epoch=vd.output_epoch;seq=speed.samples;
++    w.speed=speed;memcpy(w.pi,pi,sizeof(pi));w.consumed=consumed;w.last_control=last_control;
++    w.sample_interval=sample_interval;w.active=active;w.reset_pending=reset_pending;
++    memcpy(w.backwards,backwards,sizeof(backwards));memcpy(w.stalled,stalled,sizeof(stalled));
++#if VISION_ROUTE_SWITCH
++    memcpy(w.slow_backwards,slow_backwards,sizeof(slow_backwards));
++#endif
++    req_r=request_right;req_l=request_left;cap=request_cap;reverse=request_reverse;
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    __set_PRIMASK(mask);
++#endif
++    (void)speed_control_output(&w,req_r,req_l,reverse,cap,&right,&left);
++#if VISION_MIDTERM_C31_AUTONOMOUS
++#ifdef VISION_HOST_OUTPUT_HOOK
++    {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(2);}
++#endif
++    __disable_irq();
++#endif
++    /* A stop/reset or a newer sample invalidates all speculative PI state.
++     * Never overwrite an ISR's newer counts or resurrect its cleared PI. */
++    if(epoch==vd.output_epoch && seq==speed.samples && cap==request_cap &&
++       req_r==request_right && req_l==request_left && !vd.guard_faults) {
++        speed=w.speed;memcpy(pi,w.pi,sizeof(pi));consumed=w.consumed;last_control=w.last_control;
++        active=w.active;reset_pending=w.reset_pending;
++        memcpy(backwards,w.backwards,sizeof(backwards));memcpy(stalled,w.stalled,sizeof(stalled));
++#if VISION_ROUTE_SWITCH
++        memcpy(slow_backwards,w.slow_backwards,sizeof(slow_backwards));
++#endif
++        if(w.speed.faults){vd.guard_faults|=w.speed.faults;vd_output_zero();}
+     }
+     __DMB();__set_PRIMASK(mask);
+ #else
+diff --git a/demo/mdk/README.md b/demo/mdk/README.md
+index dc64ab1..50a490b 100644
+--- a/demo/mdk/README.md
++++ b/demo/mdk/README.md
+@@ -1,6 +1,10 @@
+ # Keil 工程入口
+ 
+ 当前实车循迹使用 **competition/midterm_switch.uvprojx**。迁移日期：2026-10-23。
++2026-11-05 采集训练工程已整合有效赛道连续 1 秒自动启动与 UART 损坏字节过滤；当前构建运动审核为 1，蜂鸣器静音。
++当前采集固件为 rev5：近端有效/远场缺失可继续，短时失道有界恢复；包含 rev4 的 SD 单数据线与引脚隔离修正。
++请打开 `training/recorder_train.uvprojx`，下载 `.build/recorder-train/Objects/recorder_train.axf`；采集 RTOS 构型尚待本轮实车验证。
++默认 `./tools/build_recorder.ps1` 仍生成运动锁定构型，复现本次运动构建使用 `-MotionReviewed`。
+ 各目录位于同一深度，共用上级 `scf/` 链接脚本、`ini/` 调试初始化及仓库源码。
+ 
+ | 目录 | 用途 | 生成 / 构建（仓库根目录执行） |
+@@ -8,6 +12,7 @@
+ | `competition/` | 当前 C31 主程序 | `./tools/build_midterm.ps1 -Variant switch` |
+ | `base/` | 基础工程及变体生成模板 `rt1064.uvprojx` | `./tools/build_keil.ps1 -UV4 E:/ElecTronic/Keil/UV4/UV4.exe` |
+ | `training/` | route、train、auto 训练与实验变体 | `./tools/build_midterm.ps1 -Variant route`（或 train / auto） |
++| `training/recorder_train.uvprojx` | 独立采集训练 RTOS/持续 SD 写入，默认运动锁定 | `./tools/build_recorder.ps1`；先读 [实施说明](../../docs/vision_recorder/IMPLEMENTATION.md) |
+ | `diagnostics/` | 编码器速度环、运动、电机阈值与链路诊断 | `./tools/build_motor_threshold.ps1 -Variant speed`（或 motion / threshold）；`./tools/build_link_mvp.ps1` |
+ 
+ `base` 是共同配置来源；生成的变体不要单独修改编译宏来维护另一份配置。
+diff --git a/docs/INDEX.md b/docs/INDEX.md
+index 1110c6f..1015a36 100644
+--- a/docs/INDEX.md
++++ b/docs/INDEX.md
+@@ -16,7 +16,15 @@
+ 
+ | 文档 | 用途 |
+ | --- | --- |
++| [采集训练版实施与使用](vision_recorder/IMPLEMENTATION.md) | 独立 RTOS 工程、持续 SD 写入、取卡/PC 导入、软件证据和待上板项 |
++| [车载持续采集存储架构](vision_recorder/ARCHITECTURE.md) | 用户已批准并实施首版的设计依据；板端实时性和稳定性待验收 |
++| [采集版内存与时序预算](vision_recorder/MEMORY_BUDGET.md) | 两级缓冲、SD 长尾和控制期限的候选计算，非实测 |
++| [采集版未决事项与实施门禁](vision_recorder/OPEN_ISSUES.md) | 调度/所有权/协议/SD/取卡的待关闭问题和用户已定边界 |
++| [2026-11-04 视觉数据架构交接](vision_dataset/ARCHITECTURE_HANDOFF_2026-11-04.md) | 已完成模块、尚缺架构、职责边界、接手顺序和验收条件 |
++| [PC 视觉数据处理链条](vision_dataset/README.md) | 原始会话归档、抽样、文件标注、审核、Release 和 C31 离线评测；当前为 draft/synthetic 软件验证 |
++| [数据链条软件验证](vision_dataset/SOFTWARE_VALIDATION.md) | 本轮真实执行、模拟审核、已测范围及正式格式/实例/真实数据未验项 |
+ | [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md) | 完整使用/开发/维护流程、接口示例、排障与套件索引；主页 README 有直接入口 |
++| [C31 连续速度规划与降级控制阶段交付](changes/c31-speed-planning-20261105/README.md) | 主构型链路/指令审计、独立 Host 规划与预算统计、回归及未标定门；未接入固件 |
+ | [TESTING_ARCHITECTURE.md](TESTING_ARCHITECTURE.md) | 统一测试入口、套件分层、隔离执行、报告和数据集待接入接口 |
+ | [测试重构验收记录](testing/VALIDATION.md) | 本轮源码/夹具前后对照、Host/ARM/Keil 证据与未执行范围 |
+ | [ENCODER_SPEED.md](reference/ENCODER_SPEED.md) | 编码器3左/4右与速度环；区分赛道和历史诊断参数 |
+diff --git a/docs/PROJECT_EVOLUTION.md b/docs/PROJECT_EVOLUTION.md
+index 4e4d479..78142c5 100644
+--- a/docs/PROJECT_EVOLUTION.md
++++ b/docs/PROJECT_EVOLUTION.md
+@@ -1,10 +1,43 @@
+ # 项目设计与演进档案
+ 
+-更新日期：2026-11-02。当前仓库工程版本：`C32`（测试体系重构）。维护分支：`main`。
++更新日期：2026-11-05。当前已提交仓库工程版本：`C32`（测试体系重构）。正式维护分支：`main`；当前采集开发分支：`feat/vision-recorder-training`。
+ 生产固件标识仍为 switch 的 `MIDTERM_C26_31` / auto-track 的 `MIDTERM_C31_AUTO_TRACK_1`。
+ 
+ 本文是项目现状和技术决策的持续维护入口，不代替每次提交的详细说明。
+ 
++2026-11-05 main 验证工作树已由用户确认1秒有效赛道自动启动恢复，根因是无线帧错误字节被当作输入取消启动。
++本次按要求将完整 UART DATA 字校验、等待期错误重新计时、1000ms准入整合到采集训练工程，
++Control继续独占运动，Link交接错误事件；训练状态查询、记录收尾和导出语义保留。
++新增采集 Control/Link 联动测试通过，既有采集/存储测试与单次 Keil 构建通过；运动构型为 review=1、蜂鸣器静音。
++用户已反馈采集构型启动正常、速度较慢且部分路段较稳定，但只能完成部分赛道后异常停止；具体固件身份和停止故障码尚未闭环。
++“行驶同时 written/synced 增长”与卡上内容仍未验收，不能由能运动推定采集成功。
++具体用法、哈希和证据见[采集实施记录第11节](vision_recorder/IMPLEMENTATION.md#11-2026-11-05整合-main-启动修正到采集训练工程)。
++
++后续SD核验发现通用SD引脚初始化覆盖UART8的D16/D17及舵机C30，造成无线状态不可见并影响舵机输出。
++采集rev4改为USDHC1原生1-bit/3.3V/最高25MHz，保留无线和舵机引脚，并约束实际Host/卡协商。
++新增SD状态、引脚测试和单次构建通过；尚未取得rev4板端写入增长或卡上内容证据，不能认定SD已正常运行。
++详情见[采集实施记录第12节](vision_recorder/IMPLEMENTATION.md)。
++
++操作者离线补充：测试场地为中期检查同款完整赛道，当前硬件不在身边。训练轮速刻度40相对main的132有主动降速原因，
++不据此推断实际速度比例。原先单帧近/远场无效即锁止的路径，已按用户要求在当前采集分支改为分级视觉恢复：
++近端有效时不要求远场持续有效；短时无路零动力等待300ms；当前强局部道路允许已有最长1200ms恢复，持续失道仍锁止。
++rev5的主机单元/真实Control-Link视觉联动及兼容测试、单次Keil构建通过，尚无该固件实车结论。
++后续以板载版本/引脚状态、停车前后视觉与速度故障、SD写入及文件完整性证据分开核验。
++
++2026-11-04 工作区新增 [PC 视觉数据处理链条](vision_dataset/README.md)：原始归档、
++抽样/事件上下文、文件标注及机器候选隔离、人工审核记录、Session 切分与 Release、
++生产 C31 单帧/序列消费者和独立质量/速度比较。仅使用 draft SCRAW、synthetic/mock
++做软件验证，尚未提交；当时没有车载 Recorder。后续软件实施见下一段；仍无 Label Studio 写入、真实
++人类审核或新增实车结论。现有全局测试 Runner/CI 和生产固件未修改，正式格式与硬件风险继续保留。
++
++2026-11-04 用户批准后，独立采集训练分支落实 [RECORDER_TRAIN_1](vision_recorder/IMPLEMENTATION.md)：
++最小静态 FreeRTOS 调度、Control/Capture/Vision/Storage/Link 所有者分工、原始帧退休/替换、
++持续 SD 写入、分段/CRC/不完整恢复、独立记录收尾与取卡命令、PC SCRAW-1 adapter。
++17 项采集测试及原有 33 项 PC 测试通过，专用 Keil 完整链接 0 错误/0 警告。
++本轮没有新增实车结论、没有烧录或操作真实卡；默认运动审核锁保留。速度当前可牺牲，
++稳定优先，只作为采集训练版本，RTOS/SD/40 ticks 训练参数不自动进入正式赛道工程。
++原先设计依据保存在 [ARCHITECTURE](vision_recorder/ARCHITECTURE.md)。尚未 commit/push。
++
+ 2026-10-23 工程整理：Keil 入口按 competition / base / training / diagnostics 分组，
+ 构建产物集中到 `.build/`；删除废弃根目录工程和旧临时产物。见 [工程目录](../demo/mdk/README.md)。
+ 此次仅调整工程路径与构建工具，控制算法和实车验收状态不变；历史发布哈希仍对应整理前快照。
+@@ -31,6 +64,9 @@
+ “实车已验证”只适用于已核对的功能；“已实现、软件验证”不等于实车完成；
+ “部分可用”仍需稳定性验证；“当前目标”需要推进；“后续候选”不承诺全部采用。
+ 
++2026-11-05 至 11-06，[连续速度规划与分级降级阶段交付](changes/c31-speed-planning-20261105/README.md)
++完成主构型工作区审计、独立 Host 原型及回归。缺少本车标定和真实 session，未接入生产控制路径；现存启动分类差距及既有 AUTO_TRACK/Recorder 测试失败单列报告。
++
+ 2026-11-02 / C32 工程进展：测试体系的清单/Schema/DAG、公共夹具解耦、隔离执行、状态/证据报告与 CI 已实现。
+ 本地完整 PreFlash 为 57 PASS / 1 个数据集接口 SKIPPED，ARM 及九种 Keil 构型通过；远端 MSVC optimized/ASan 各 43 PASS / 1 SKIPPED。
+ 性能/质量的数据集、标签、测量 Adapter 与批准基线按用户决定延期，不阻塞其他模块；没有真实准确率或性能改善结论。
+@@ -50,7 +86,7 @@ C32 是工程归档版本，没有改写生产控制逻辑、固件协议标识
+ | 十字进入 | 部分可用，能够进入 | 通过过程、方向选择、丢线及恢复需稳定 |
+ | 右侧相切圆环切入和绕行 | 未通过实车验收 | 不能把 ENTER/FOLLOW 或主机产生转向当成已入环 |
+ | 当前白色通道、单边恢复、舵机/差速联动 | 已实现、软件验证，并用于现有行驶 | 复杂交汇和真实车体响应边界未完整标定 |
+-| 上电识别赛道若干秒后启动 | auto-track 的连续 3000ms 准入已实现并通过主机模拟；switch 保留 C26 许可 | 默认 review=0 锁止；板端时序、断电/复位及实车启动未验收，R4 未完成 |
++| 上电识别赛道后启动 | auto-track 连续1000ms准入已通过主机测试，main验证工作树由用户确认本次实车能启动；采集训练工程已整合 | 采集RTOS构型本轮待烧录；默认review=0、本次构建为1；精确板端时序、重复冷启动与持续行驶仍待验收，R4未全部关闭 |
+ | 无线文字遥测和静态图像采集 | 各自工具和解析已实现 | 运动中同时采集未实现；当前图像模式会停车 |
+ | 贝叶斯估计 | 模块与受约束提示接口已实现；默认未训练，仅观测 | 场地数据、训练/校准、策略收益的实车验证 |
+ | 类 SLAM 状态与地图建模 | 后续候选，未实现 | 先明确定位、路段覆盖或回环识别的实际任务 |
+@@ -132,10 +168,11 @@ C30 用外边界全部有效点拟合，减少首尾量化造成的漏检；C31
+ 
+ ### 3.5 启动现状与采集现状
+ 
+-**C31 软件现状（2026-10-28）：** switch 保留 C26 ON + 连续五帧有效道路等资格及 OFF 停止语义。
+-独立 auto-track 不采样 C26/C27；新鲜、不同序号的有效近远观测须在采集/前台双时间上连续覆盖 3000ms，再检查 review、轮速及故障准入。同帧轮询不积累资格，计时中无效/过期会重置连续性。
++**C31 启动现状（2026-11-05）：** switch 保留 C26 ON + 连续五帧有效道路等资格及 OFF 停止语义。
++独立 auto-track 不采样 C26/C27；新鲜、不同序号的有效近远观测须在采集/前台双时间上连续覆盖 1000ms，再检查 review、轮速及故障准入。同帧轮询不积累资格，计时中无效/过期会重置连续性。
+ 默认 `MIDTERM_VISUAL_REVIEWED=0`，构建仍锁止；运行后无效观测、STOP/故障锁止，旧开关/UART 入口不能重新授权。跨普通 MCU reset 的真实断电锁止语义尚未证明。
+-上述已通过主机模拟，尚无板端及实车验收；第 4 节 R4 仍待完成。
++1秒准入与UART修正已由用户在main验证工作树确认本次能启动；采集训练工程已整合但本轮待烧录。
++精确板端计时、重复冷启动和持续行驶尚未验收；第4节R4未全部关闭。训练状态查询不会误取消启动。
+ 
+ 文字遥测已有目标/反馈/PWM、路径、圆环、支持度、处理耗时与帧间隔。
+ 94×60 图像工具目前用于停车摆位或手推，图像模式会撤销运行输出。
+diff --git a/tests/framework/test_framework.py b/tests/framework/test_framework.py
+index 1c7fe8f..a9263af 100644
+--- a/tests/framework/test_framework.py
++++ b/tests/framework/test_framework.py
+@@ -23,7 +23,7 @@ from benchmark import compare, statistic, summarize, validate_benchmark
+ from process_runner import ProcessTimeout, resource_locks, run_process
+ from providers import Context, Execution, SuiteProblem
+ from reporter import write_report
+-from run_tests import execute_suite, make_result, schedule, main as plan_main
++from run_tests import execute_suite, make_result, schedule, input_snapshot, main as plan_main
+ 
+ 
+ class Scratch(unittest.TestCase):
+@@ -44,6 +44,18 @@ class ContractTests(Scratch):
+         self.assertNotIn('hardware-acceptance',select_suites(catalog,'PreFlash'))
+         self.assertNotIn('keil-base',select_suites(catalog,'Host'))
+         self.assertIn('performance-host',select_suites(catalog,'Host'))
++        self.assertIn('recorder',select_suites(catalog,'Host'))
++        self.assertIn('recorder',select_suites(catalog,'PreFlash'))
++        self.assertEqual(catalog['recorder']['dependsOn'],['compiler-environment'])
++        self.assertTrue(catalog['recorder']['required'])
++        closure=select_suites(catalog,'Host',['recorder'])
++        self.assertEqual(closure,['environment','compiler-environment','recorder'])
++
++    def test_recorder_sources_are_in_acceptance_snapshot(self):
++        snapshot=input_snapshot()
++        for path in ('demo/recorder/recorder_core.c','demo/recorder/recorder_storage.c',
++                     'demo/recorder/include/recorder_runtime.h','tests/recorder/test_recorder.py'):
++            self.assertIn(path,snapshot)
+ 
+     def bad_catalog(self, mutate):
+         catalog=read_json(ROOT/'tests/suites/catalog.json')
+@@ -170,6 +182,32 @@ class ProcessTests(Scratch):
+         self.assertEqual(result['exitCode'],124)
+         self.assertTrue(result['processes'][0]['cleanupVerified'])
+ 
++    def test_python_compiler_bridge_preserves_selected_environment(self):
++        suite,context=self.execution('pass')
++        suite['dependsOn']=['compiler-environment'];suite['environment']={'FIXTURE_VALUE':'kept'}
++        context.options.compiler='msvc';context.options.mode='asan'
++        context.compiler='C:/fixture/cl.exe';context.compiler_env={'Path':'compiler-bin','LIB':'fixture-lib'}
++        work=self.folder/'bridge';work.mkdir();result=make_result(suite,work)
++        with (work/'stdout.log').open('wb') as out,(work/'stderr.log').open('wb') as err:
++            execution=Execution(suite,work,context,result,out,err)
++            env=execution.script_environment()
++            self.assertEqual(env['Path'],'compiler-bin');self.assertEqual(env['LIB'],'fixture-lib')
++            self.assertEqual(env['SMARTCAR_TEST_COMPILER'],'msvc')
++            self.assertEqual(env['SMARTCAR_TEST_COMPILER_PATH'],context.compiler)
++            self.assertEqual(env['SMARTCAR_TEST_MODE'],'asan');self.assertEqual(env['FIXTURE_VALUE'],'kept')
++            self.assertEqual(env['TMP'],str(execution.work))
++            self.assertEqual(context.compiler_env,{'Path':'compiler-bin','LIB':'fixture-lib'})
++            context.compiler=None
++            with self.assertRaises(SuiteProblem) as raised:execution.script_environment()
++            self.assertEqual(raised.exception.status,'BLOCKED')
++
++    def test_python_without_compiler_dependency_keeps_existing_behavior(self):
++        suite,context=self.execution('pass');work=self.folder/'plain';work.mkdir()
++        with (work/'stdout.log').open('wb') as out,(work/'stderr.log').open('wb') as err:
++            execution=Execution(suite,work,context,make_result(suite,work),out,err)
++            self.assertIs(execution.script_environment(),execution.env)
++            self.assertNotIn('compilerFamily',execution.result['details'])
++
+     def test_unrelated_compile_error_is_not_expected_rejection(self):
+         suite,context=self.execution('pass')
+         work=self.folder/'execution'
+diff --git a/tests/suites/README.md b/tests/suites/README.md
+index b6a1a43..2ae05ce 100644
+--- a/tests/suites/README.md
++++ b/tests/suites/README.md
+@@ -7,6 +7,15 @@ It is validated against `../schemas/suite.schema.json` with PowerShell 7 `Test-J
+ - L0: `environment`, `compiler-environment`, `target-environment`, `arm-environment`.
+ - L1: Vision, Bayes, Control, Drive, Speed, Link, board adapters and offline tools.
+ - L2: Debug/runtime, route/switch/turn, midterm, auto-track and motion chains.
++- L2: `speed-planning-host` checks the isolated synthetic geometry/planning/jerk,
++  near/far supervisor and offline sidecar/budget contracts. It has no production
++  defaults or MCU integration. `c26-baseline-characterization` reproduces the
++  unchanged controller's startup and explicitly records v1.4 policy gaps;
++  its PASS is a baseline check, not acceptance of the new policy. See
++  [the stage report](../../docs/changes/c31-speed-planning-20261105/README.md).
++- L2: `recorder` adds 17 capture/storage/SCRAW synthetic integration cases, using
++  the selected Host compiler/mode; `recorder-tools` checks incremental generation
++  without starting a firmware build. Both are required in Host and PreFlash.
+ - L3-A: Vision preprocessing/oracle, field protocol, transport, interface/data,
+   valid macro matrix and exact-diagnostic invalid macro rejection.
+ - L3-B: `performance-host`; pending inputs are an optional, explicit `SKIPPED`.
+diff --git a/tests/suites/catalog.json b/tests/suites/catalog.json
+index 7c25800..f0d8439 100644
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -1734,6 +1734,51 @@
+               "VISION_DRIVE_ENABLE=1",
+               "VISION_START_SWITCH_ENABLE=0"
+             ]
++          },
++          {
++            "id": "runtime-reviewed",
++            "sources": [
++              "tests/vision/test_midterm_runtime.c",
++              "demo/code/midterm_boot.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/app_link.c",
++              "demo/code/app_transport.c",
++              "demo/code/app_runtime.c",
++              "demo/code/vision_debug.c",
++              "demo/code/vision_frame.c",
++              "demo/code/vision_telemetry.c",
++              "demo/code/vision_midterm.c",
++              "demo/code/track_bayes.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c"
++            ],
++            "includeDirectories": [
++              "tests/vision/stubs",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=1",
++              "VISION_MIDTERM_AUTO_TRACK=1",
++              "MIDTERM_VISUAL_REVIEWED=1",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_DUAL_UART_ENABLE=1"
++            ]
+           }
+         ]
+       },
+@@ -2937,6 +2982,67 @@
+       ],
+       "scope": "Manual evidence only: camera/DMA, encoder, PWM/LDOK, interrupt timing and vehicle/track acceptance."
+     },
++    {
++      "schemaVersion": "1.0",
++      "id": "recorder-tools",
++      "name": "Recorder incremental generation contracts",
++      "layer": "contract",
++      "category": "build-contract",
++      "evidenceClass": "host",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/recorder/test_build_tools.py"
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 60,
++      "required": true,
++      "dependsOn": [
++        "environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Isolated generated-byte/mtime and build-mode contracts only; no Keil or C compiler"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "recorder",
++      "name": "Recorder ownership, storage and SCRAW integration",
++      "layer": "integration",
++      "category": "data-capture",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/recorder/test_recorder.py",
++        "arguments": [
++          "-v"
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 180,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [
++        "recorder-host-tests"
++      ],
++      "profiles": [
++        "Host",
++        "PreFlash"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "17 synthetic/mock tests; selected Host compiler/mode, no Keil, SD card, vehicle or hard real-time acceptance"
++    },
+     {
+       "schemaVersion": "1.0",
+       "id": "framework",
+@@ -3146,6 +3252,259 @@
+       "artifacts": [
+         "artifacts/**"
+       ]
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "recorder-startup",
++      "name": "Recorder Startup",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "unreviewed",
++            "sources": [
++              "tests/recorder/startup_harness.c",
++              "demo/code/midterm_boot.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c",
++              "demo/recorder/recorder_control.c",
++              "demo/recorder/recorder_link.c",
++              "demo/code/app_link.c",
++              "demo/code/vision_midterm.c"
++            ],
++            "includeDirectories": [
++              "tests/recorder/startup_mocks",
++              "tests/recorder/mocks",
++              "tests/vision/stubs",
++              "demo/recorder/include",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=1",
++              "VISION_MIDTERM_AUTO_TRACK=1",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_DUAL_UART_ENABLE=1"
++            ]
++          },
++          {
++            "id": "reviewed",
++            "sources": [
++              "tests/recorder/startup_harness.c",
++              "demo/code/midterm_boot.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c",
++              "demo/recorder/recorder_control.c",
++              "demo/recorder/recorder_link.c",
++              "demo/code/app_link.c",
++              "demo/code/vision_midterm.c"
++            ],
++            "includeDirectories": [
++              "tests/recorder/startup_mocks",
++              "tests/recorder/mocks",
++              "tests/vision/stubs",
++              "demo/recorder/include",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=1",
++              "VISION_MIDTERM_AUTO_TRACK=1",
++              "MIDTERM_VISUAL_REVIEWED=1",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_DUAL_UART_ENABLE=1"
++            ]
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 300,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment",
++        "vision",
++        "control",
++        "speed",
++        "link-board"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ]
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "recorder-sd-pins",
++      "name": "Recorder SD Pins",
++      "layer": "unit",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/recorder/sd_pins_harness.c",
++              "demo/recorder/recorder_sd_pins.c"
++            ],
++            "includeDirectories": [
++              "tests/recorder/sd_pins_mocks",
++              "demo/recorder/include"
++            ],
++            "defines": []
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 60,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ]
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "speed-planning-host",
++      "name": "C31 offline speed planning prototype",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/planning/test_offline.py"
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 180,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Synthetic SI model and strict offline sidecar tests only; no MCU integration or calibration claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "c26-baseline-characterization",
++      "name": "C26 unchanged controller baseline characterization",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/planning/test_c26_baseline.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c"
++            ],
++            "includeDirectories": [
++              "tests/vision/stubs",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=0",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0"
++            ]
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 300,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Working-tree startup only; explicitly records v1.4 policy gaps, not target acceptance"
+     }
+   ]
+ }
+diff --git a/tests/vision/stubs/link_board/main.h b/tests/vision/stubs/link_board/main.h
+index 3bdbac0..fe534ee 100644
+--- a/tests/vision/stubs/link_board/main.h
++++ b/tests/vision/stubs/link_board/main.h
+@@ -17,11 +17,17 @@ typedef enum {UART_1=1,UART_8=8} uart_index_enum;
+ #define kLPUART_NoiseErrorFlag 4U
+ #define kLPUART_FramingErrorFlag 8U
+ #define kLPUART_ParityErrorFlag 16U
++#define LPUART_DATA_RXEMPT_MASK 0x1000U
++#define LPUART_DATA_FRETSC_MASK 0x2000U
++#define LPUART_DATA_PARITYE_MASK 0x4000U
++#define LPUART_DATA_NOISY_MASK 0x8000U
+ void gpio_init(int pin,int direction,int level,int mode);
+ int gpio_get_level(int pin);
+ void uart_init(uart_index_enum index,uint32_t baud,int tx,int rx);
+ void uart_rx_interrupt(uart_index_enum index,uint32_t enabled);
+ int uart_query_byte(uart_index_enum index,uint8_t *byte);
++uint8_t LPUART_GetRxFifoCount(LPUART_Type *uart);
++uintptr_t LPUART_GetDataRegisterAddress(LPUART_Type *uart);
+ uint32_t LPUART_GetStatusFlags(LPUART_Type *uart);
+ void LPUART_ClearStatusFlags(LPUART_Type *uart,uint32_t flags);
+ void LPUART_WriteByte(LPUART_Type *uart,uint8_t byte);
+diff --git a/tests/vision/test_auto_track.c b/tests/vision/test_auto_track.c
+index d92c254..6937330 100644
+--- a/tests/vision/test_auto_track.c
++++ b/tests/vision/test_auto_track.c
+@@ -25,6 +25,18 @@ static void auto_step(int frames)
+     vd_route_switch_poll(now); /* Even direct legacy calls cannot arm/clear. */
+ }
+ static void wait_steps(unsigned n,int frames){while(n--)auto_step(frames);}
++static void near_only(void)
++{
++    set_lane(0);
++    for(unsigned y=VISION_ROI_TOP;y<=88U;++y)route_lane.row_flags[y]=0;
++}
++static void no_road(void)
++{set_lane(0);route_lane.valid=0;route_lane.status=VISION_NO_LANE;memset(route_lane.row_flags,0,sizeof(route_lane.row_flags));}
++static void partial_road(int strong)
++{
++    no_road();route_lane.confidence=10;
++    for(unsigned y=80;y<(strong?92U:86U);++y)route_lane.row_flags[y]=3;
++}
+ static void wait_start(void)
+ {
+     unsigned n=0;
+@@ -60,9 +72,18 @@ static void legacy_entries_rejected(void)
+ }
+ int main(void)
+ {
++    CHECK(MIDTERM_BOOT_DELAY_MS==1000U); /* Explicit accepted startup requirement. */
++    auto_boot(0);wait_steps(95,1);
++    CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);
++    wait_steps(30,1); /* Fresh stable geometry must decide by 1.25s, not 3s. */
++#if MIDTERM_VISUAL_REVIEWED
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
++#else
++    CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);
++#endif
+     auto_boot(0);legacy_entries_rejected();wait_steps(300,0);
+     CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]); /* uptime is irrelevant */
+-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);
++    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);
+     CHECK(info().max_ticks==132&&info().sign3==-1&&info().sign4==1);
+     CHECK(info().kp_q8==256&&info().ki_q8==12&&info().enabled);
+     /* Even stale writes from legacy code cannot veto autonomous arm/output. */
+@@ -87,48 +108,75 @@ int main(void)
+     CHECK(!vd_output_arm(now,1));
+     midterm_boot_poll(now);
+     CHECK(midterm_boot_state()==MT_BOOT_STOPPED);latched();
+-    auto_boot(0);wait_start();route_lane.valid=0;wait_steps(2,1);
++    auto_boot(0);wait_start();wait_steps(60,1);
++    near_only();wait_steps(100,1);
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.observation_valid&&!vd.control.output.far_valid);
++    CHECK(vd.output_authorized&&vd.guard_running&&!vd.autonomous_stopped&&!vd.control.output.faults);
++    CHECK(pwm[0]||pwm[1]); /* Near feedback still reaches physical output. */
++    set_lane(0);wait_steps(20,1);CHECK(vd.control.output.far_valid);
++    no_road();wait_steps(12,1);
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.recovering&&!vd.control.output.faults);
++    CHECK(vd.output_authorized&&vd.guard_running&&!pwm[0]&&!pwm[1]);
++    set_lane(0);wait_steps(60,1);
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&!vd.control.output.recovering&&(pwm[0]||pwm[1]));
++    partial_road(1);wait_steps(60,1);
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.recovering&&vd.control.output.search_source==2);
++    CHECK(vd.output_authorized&&(pwm[0]||pwm[1]));
++    no_road();wait_steps(4,1); /* Brief gap after a long partial recovery. */
++    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&!pwm[0]&&!pwm[1]&&vd.output_authorized);
++    partial_road(1);wait_steps(10,1);CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
++    set_lane(0);wait_steps(30,1);CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
++    no_road();wait_steps(40,1);
++    CHECK(midterm_boot_state()==MT_BOOT_STOPPED&&(vd.control.output.faults&VC_FAULT_VISION));
++    set_lane(0);latched();
++    auto_boot(0);wait_start();wait_steps(20,1);partial_road(1);wait_steps(140,1);
++    CHECK(midterm_boot_state()==MT_BOOT_STOPPED&&(vd.control.output.faults&VC_FAULT_VISION));set_lane(0);latched();
++    auto_boot(0);wait_start();wait_steps(20,1);partial_road(0);wait_steps(40,1);
+     CHECK(midterm_boot_state()==MT_BOOT_STOPPED);set_lane(0);latched();
++    auto_boot(0);wait_start();wait_steps(20,1);no_road();wait_steps(4,1);
++    vision_drive_stop();midterm_boot_poll(now);set_lane(0);latched();
+     auto_boot(0);wait_start();wait_steps(60,1);
+     switch_delta_left=8;switch_delta_right=-8;wait_steps(80,1);
+     CHECK(info().faults&&midterm_boot_state()==MT_BOOT_STOPPED);latched();
+ #else
+     latched(); /* Default review is actually omitted from compiler flags. */
+ #endif
+-    auto_boot(0);wait_steps(200,1);route_lane.valid=0;wait_steps(2,1);
++    auto_boot(0);near_only();wait_steps(180,1);
++    CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);set_lane(0);wait_start();
++    auto_boot(0);wait_steps(50,1);route_lane.valid=0;wait_steps(2,1);
+     CHECK(midterm_boot_state()==MT_BOOT_WAIT);set_lane(0);
+-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);wait_steps(12,0);
++    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0);wait_steps(50,1);wait_steps(12,0);
+     CHECK(midterm_boot_state()==MT_BOOT_WAIT);
+-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);
++    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0);wait_steps(50,1);
+     /* No foreground poll over a timeout, then a fresh frame: reset continuity. */
+     now+=200;raw3=(uint16_t)(raw3-15);raw4=(uint16_t)(raw4+15);
+     vision_drive_safety_tick();vision_drive_observe(&route_lane,++route_sequence,now,now);
+-    midterm_boot_poll(now);wait_steps(290,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);
++    midterm_boot_poll(now);wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0);wait_steps(50,1);
+     /* Duplicate sequence with updated capture times must not extend continuity. */
+     for(unsigned i=0;i<350;++i){
+         auto_step(0);vision_drive_observe(&route_lane,route_sequence,now,now);
+         midterm_boot_poll(now);CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);
+     }
+-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);
++    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0);wait_steps(50,1);
+     /* New sequences carrying stale capture timestamps never qualify. */
+     for(unsigned i=0;i<350;++i){auto_step(0);vision_drive_observe(&route_lane,++route_sequence,now-120U,now);}
+-    CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_steps(300,1);
++    CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_steps(90,1);
+     CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);vd.control.output.far_valid=0;midterm_boot_poll(now);
+-    wait_steps(290,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+-    auto_boot(0);wait_steps(200,1);vision_drive_stop();
++    auto_boot(0);wait_steps(50,1);vd.control.output.far_valid=0;midterm_boot_poll(now);
++    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0);wait_steps(50,1);vision_drive_stop();
+     midterm_boot_poll(now);CHECK(midterm_boot_state()==MT_BOOT_STOPPED);latched();
+-    auto_boot(0);wait_steps(200,1);vd.guard_faults|=VC_FAULT_NUMERIC;midterm_boot_poll(now);
++    auto_boot(0);wait_steps(50,1);vd.guard_faults|=VC_FAULT_NUMERIC;midterm_boot_poll(now);
+     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
+     auto_boot(0);block_local=1;wait_steps(400,1);
+     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
+     auto_boot(0);vd.hardware_ready=0;wait_steps(400,1);
+     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
+-    auto_boot(0xFFFFFC18U);wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
++    auto_boot(0xFFFFFC18U);wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+     vision_drive_stop();wait_steps(70,0);CHECK(!buzzer);
+     printf("AUTO TRACK PASS: %u checks; review=%d, simulated IO only.\n",checks,MIDTERM_VISUAL_REVIEWED);
+     return 0;
+diff --git a/tests/vision/test_link_board.c b/tests/vision/test_link_board.c
+index ef06484..ce7a7ff 100644
+--- a/tests/vision/test_link_board.c
++++ b/tests/vision/test_link_board.c
+@@ -4,6 +4,7 @@
+ #include <stdio.h>
+ LPUART_Type test_uart[2];
+ static unsigned rts,rx_count[2],rx_pos[2],sent[2],barriers,initialized,enabled;
++static uint32_t rx_words[2][64];
+ void gpio_init(int pin,int direction,int level,int mode)
+ {assert(pin==D26 && direction==GPI && level==GPIO_HIGH && mode==GPI_PULL_UP);}
+ int gpio_get_level(int pin){assert(pin==D26);return (int)rts;}
+@@ -13,10 +14,12 @@ void uart_rx_interrupt(uart_index_enum index,uint32_t on)
+ {assert(index==UART_8 && on==1);++enabled;}
+ int uart_query_byte(uart_index_enum index,uint8_t *byte)
+ {
+-    unsigned ch=index==UART_1?0U:1U;
+-    if(rx_pos[ch]==rx_count[ch])return 0;
+-    *byte=(uint8_t)(rx_pos[ch]++);return 1;
++    (void)index;(void)byte;assert(!"uint8 reader loses error tags");return 0;
+ }
++uint8_t LPUART_GetRxFifoCount(LPUART_Type *uart)
++{unsigned ch=uart==LPUART1?0U:1U;return (uint8_t)(rx_count[ch]-rx_pos[ch]);}
++uintptr_t LPUART_GetDataRegisterAddress(LPUART_Type *uart)
++{unsigned ch=uart==LPUART1?0U:1U;assert(rx_pos[ch]<rx_count[ch]);return (uintptr_t)&rx_words[ch][rx_pos[ch]++];}
+ uint32_t LPUART_GetStatusFlags(LPUART_Type *uart){return uart->flags;}
+ void LPUART_ClearStatusFlags(LPUART_Type *uart,uint32_t flags){uart->flags&=~flags;}
+ void LPUART_WriteByte(LPUART_Type *uart,uint8_t byte)
+@@ -26,6 +29,7 @@ int main(void)
+ {
+     uint8_t bytes[40];app_link_stats_t stats;
+     app_link_init();assert(initialized==1 && enabled==1);
++    for(unsigned ch=0;ch<2;++ch)for(unsigned i=0;i<64;++i)rx_words[ch][i]=i;
+     rx_count[0]=40;rx_count[1]=5;
+     test_uart[0].flags=kLPUART_RxOverrunFlag|kLPUART_TxDataRegEmptyFlag;
+     app_link_board_irq(0);assert(rx_pos[0]==32 && app_link_take_error(0));
+@@ -40,6 +44,20 @@ int main(void)
+     test_uart[1].flags=kLPUART_TxDataRegEmptyFlag;
+     assert(app_link_board_try_tx(1,'d') && sent[1]==1);
+     app_link_stats(0,&stats);assert(stats.rx_errors==1 && stats.rx_bytes==40);
+-    puts("UART IRQ ADAPTER PASS: pin direction, 32-byte ISR budget, per-port RX, error clearing, TX-ready and RTS gates.");
++    rx_pos[1]=0;rx_count[1]=5;
++    rx_words[1][0]=LPUART_DATA_FRETSC_MASK|'!';
++    rx_words[1][1]=LPUART_DATA_PARITYE_MASK|'s';
++    rx_words[1][2]=LPUART_DATA_NOISY_MASK|0;
++    rx_words[1][3]='!';rx_words[1][4]='s';
++    app_link_board_irq(1);
++    assert(app_link_take_error(1));
++    assert(app_link_read(1,bytes,40)==2 && bytes[0]=='!' && bytes[1]=='s');
++    app_link_stats(1,&stats);
++    assert(stats.rx_corrupt==3 && stats.rx_bytes==7 && stats.rx_errors==1);
++    assert(stats.last_bad_word==LPUART_DATA_NOISY_MASK);
++    assert(stats.last_uart_error==(kLPUART_FramingErrorFlag|kLPUART_ParityErrorFlag|kLPUART_NoiseErrorFlag));
++    rx_pos[1]=0;rx_count[1]=1;rx_words[1][0]=LPUART_DATA_RXEMPT_MASK|'a';
++    app_link_board_irq(1);assert(app_link_read(1,bytes,40)==0);
++    puts("UART IRQ ADAPTER PASS: 32-word budget, per-byte frame/parity/noise rejection, clean STOP preserved, error counters, empty FIFO, TX-ready and RTS gates.");
+     return 0;
+ }
+diff --git a/tests/vision/test_midterm_runtime.c b/tests/vision/test_midterm_runtime.c
+index 26b2146..5fa0115 100644
+--- a/tests/vision/test_midterm_runtime.c
++++ b/tests/vision/test_midterm_runtime.c
+@@ -13,9 +13,17 @@ void vision_test_runtime_tick(void);
+ #include "vision_drive_internal.h"
+ #include <assert.h>
+ static unsigned experiment,observed_running,stop_injected;
++static unsigned error_injected,last_repeat;
++static uint32_t first_running_ms;
+ static uint16_t counter;
+ void board_buzzer_set(int on){(void)on;}
+-void board_encoder_read(uint16_t *l,uint16_t *r){*l=*r=counter;}
++void board_encoder_read(uint16_t *l,uint16_t *r){
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    *l=(uint16_t)(0U-counter);*r=counter; /* Compiled C31 left=-1, right=+1. */
++#else
++    *l=*r=counter;
++#endif
++}
+ void board_encoder_capture(board_encoder_diag_t *out){memset(out,0,sizeof(*out));}
+ void app_link_board_init(void){}
+ int app_link_board_try_tx(unsigned ch,uint8_t c){(void)ch;(void)c;return 0;} /* Radio always busy. */
+@@ -36,31 +44,67 @@ uint32_t timer_get(int index)
+ {
+     (void)index;
+     if(elapsed>100 && vision_drive_is_local()) {
+-        assert(elapsed>=3000);observed_running=1;
++        assert(elapsed>=MIDTERM_BOOT_DELAY_MS);
++        if(!observed_running)first_running_ms=elapsed;
++        observed_running=1;
+     }
+-    if(!stop_injected && ((experiment==1&&elapsed>=1000)||(experiment==3&&elapsed>=3600))) {
++    if(!stop_injected && ((experiment==1&&elapsed>=MIDTERM_BOOT_DELAY_MS/2U)||
++                         (experiment==3&&elapsed>=MIDTERM_BOOT_DELAY_MS+600U))) {
+         stop_injected=1;
+         app_link_rx_isr(1,'!');
+     }
++#if VISION_MIDTERM_C31_AUTONOMOUS
++    if(experiment==4 && elapsed>=500U && error_injected==0) {
++        app_link_error_isr(APP_LINK_USB);++error_injected;
++    }
++    if(experiment==4 && elapsed>=900U && error_injected==1) {
++        /* The board IRQ rejects tagged corrupt data; no valid RX activity. */
++        app_link_reject_rx_isr(APP_LINK_RADIO,0x2000U);
++        app_link_uart_error_isr(APP_LINK_RADIO,0x20000U);++error_injected;
++    }
++    if(experiment==5 && elapsed>=500U && elapsed/100U!=last_repeat) {
++        last_repeat=elapsed/100U;app_link_error_isr(APP_LINK_RADIO);++error_injected;
++    }
++    if(experiment>=6 && !error_injected &&
++       elapsed>=(experiment==6?MIDTERM_BOOT_DELAY_MS+600U:500U)) {
++        app_link_error_isr(APP_LINK_RADIO);++error_injected;
++        if(experiment==7)app_link_rx_isr(APP_LINK_RADIO,'!');
++        if(experiment==8)app_link_rx_isr(APP_LINK_RADIO,'\n');
++    }
++#endif
+     return ticks_base+elapsed;
+ }
+ int main(void)
+ {
+-    for(experiment=0;experiment<4;++experiment) {
+-        elapsed=0;counter=0;observed_running=0;stop_injected=0;finish_at=4200;
+-        feed_until=experiment==2 ? 3200U : finish_at;
++    for(experiment=0;experiment<
++#if VISION_MIDTERM_C31_AUTONOMOUS
++        9U
++#else
++        4U
++#endif
++        ;++experiment) {
++        elapsed=0;counter=0;observed_running=0;stop_injected=0;error_injected=last_repeat=0;first_running_ms=0;
++        finish_at=MIDTERM_BOOT_DELAY_MS+1200U;
++        feed_until=experiment==2 ? MIDTERM_BOOT_DELAY_MS+600U : finish_at;
+         moved=servo_moved=0;irq_mask=0;current_case=TEXT;case_name="autonomous runtime";
+         memset(pwm,0,sizeof(pwm));mt9v03x_finish_flag=0;mt9v03x_image=NULL;
+         app_mode_init(1,1,0);vs_init(NULL);app_transport_init();
+         if(setjmp(stop_loop)==0)vision_debug_run();
+-        if(experiment==0) {
++        if(experiment==0 || experiment==4) {
+             assert(observed_running&&moved&&vision_drive_is_local());
+-        } else if(experiment==1) {
++            if(experiment==4) {
++                app_link_stats_t rx;app_link_stats(APP_LINK_RADIO,&rx);
++                assert(error_injected==2 && first_running_ms>=900U+MIDTERM_BOOT_DELAY_MS);
++                assert(rx.rx_bytes==0 && rx.rx_corrupt==1 && rx.last_bad_word==0x2000U);
++            }
++        } else if(experiment==5) {
++            assert(error_injected>10 && !observed_running&&!moved&&midterm_boot_state()==MT_BOOT_WAIT);
++        } else if(experiment==1 || experiment==7 || experiment==8) {
+             assert(!observed_running&&!moved&&midterm_boot_state()==MT_BOOT_STOPPED);
+         } else {
+             assert(observed_running&&midterm_boot_state()==MT_BOOT_STOPPED&&!pwm[0]&&!pwm[1]);
+         }
+     }
+-    puts("AUTO RUNTIME PASS: actual camera/controller/speed loop, no UART heartbeat, busy radio, pre/post-start STOP, camera loss.");
++    puts("AUTO RUNTIME PASS: camera/control/speed loop, busy radio, STOP, camera loss; C31 boot RX errors restart qualification, repeated errors inhibit, running errors/actual bytes stop.");
+     return failures?1:0;
+ }
+diff --git a/tools/testing/providers.py b/tools/testing/providers.py
+index ad8f228..ede368c 100644
+--- a/tools/testing/providers.py
++++ b/tools/testing/providers.py
+@@ -96,6 +96,27 @@ class Execution:
+                             ignore=shutil.ignore_patterns('Objects','Listings','*.uvoptx','*.uvguix.*','*.build_log.htm'))
+         return workspace
+ 
++    def script_environment(self):
++        """Compiler-dependent Python suites use the selected toolchain, not PATH guesses."""
++        if 'compiler-environment' not in self.suite['dependsOn']:
++            return self.env
++        if not self.context.compiler:
++            raise SuiteProblem('BLOCKED', 'Compiler environment has not passed')
++        env = dict(self.context.compiler_env)
++        overrides = dict(self.suite['environment'], TEMP=str(self.work), TMP=str(self.work),
++                         PYTHONDONTWRITEBYTECODE='1', PYTHONUTF8='1',
++                         SMARTCAR_TEST_COMPILER=self.context.options.compiler,
++                         SMARTCAR_TEST_COMPILER_PATH=self.context.compiler,
++                         SMARTCAR_TEST_MODE=self.context.options.mode)
++        for key, value in overrides.items():
++            if os.name == 'nt':
++                for existing in list(env):
++                    if existing.upper() == key.upper(): del env[existing]
++            env[key] = value
++        self.result['details'].update(compilerFamily=self.context.options.compiler,
++                                      compilerMode=self.context.options.mode)
++        return env
++
+     def initialize_compiler(self):
+         context = self.context
+         env = dict(context.compiler_env)
+@@ -310,7 +331,7 @@ class Execution:
+                 command = [str(path)]
+             command += entry.get('arguments',[])
+             # Code locates repository files via __file__/$PSScriptRoot. CWD is private and writable.
+-            self.process(command)
++            self.process(command, env=self.script_environment() if kind == 'python' else None)
+         elif kind == 'aggregate':
+             self.log('PASS: all explicit child suite dependencies passed')
+         elif kind == 'static':
+diff --git a/tools/testing/run_tests.py b/tools/testing/run_tests.py
+index 7e98846..586a8e3 100644
+--- a/tools/testing/run_tests.py
++++ b/tools/testing/run_tests.py
+@@ -36,7 +36,7 @@ def git_state():
+ 
+ def input_snapshot():
+     files = {}
+-    for directory in ('demo/code','demo/user','demo/mdk/base','demo/mdk/scf','libraries','tools','tests'):
++    for directory in ('demo/code','demo/user','demo/recorder','demo/mdk/base','demo/mdk/scf','libraries','tools','tests'):
+         for path in sorted((ROOT/directory).rglob('*')):
+             if path.is_file() and path.suffix.lower() in ('.c','.h','.s','.inc','.lib','.a','.ps1','.psm1','.cmd','.py','.json','.gray','.scf','.sct','.uvprojx'):
+                 if any(part in ('output','__pycache__','Objects','Listings') for part in path.relative_to(ROOT).parts):

@@ -10,6 +10,7 @@ void app_transport_poll(void);
 int app_transport_stopped(void);
 int app_transport_changed(void);
 int app_transport_activity(void);
+int app_transport_rx_error(void);
 unsigned app_transport_owner(void);
 void app_transport_frame(const uint8_t *header,uint32_t hn,const uint8_t *data,uint32_t n);
 void app_transport_summary(uint32_t now,uint32_t frame,unsigned state,unsigned faults,int valid,unsigned motion);

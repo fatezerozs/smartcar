@@ -15,6 +15,8 @@ tests/vision/output/
 *.pdb
 *.ilk
 *.exp
+*.exe
+*.dll
 *.uvoptx
 *.uvguix.*
 *.build_log.htm
@@ -35,3 +37,10 @@ demo/mdk/diagnostics/encoder_speed.uvprojx
 
 demo/mdk/training/midterm_train.uvprojx
 demo/mdk/training/midterm_auto.uvprojx
+# Recorder projects reference generated private adapters/absolute run paths.
+demo/mdk/training/recorder_train.uvprojx
+demo/recorder_b2/mdk/recorder_b2.uvprojx
+demo/recorder_b3/mdk/recorder_b3_static.uvprojx
+
+# Large original SD stress/readback payloads stay local; publish CRC/hash reports.
+demo/sd_performance/evidence/readback-*/*.BIN

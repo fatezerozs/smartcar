@@ -1,0 +1,18 @@
+[
+  {
+    "path": "demo/recorder_b2/b2_main.c",
+    "sha256": "37AC7A57BB90EEB0A109A427588CBED17112AEA9C646188D1CBC6D97C517E232"
+  },
+  {
+    "path": "demo/recorder_b2/mdk/recorder_b2.uvprojx",
+    "sha256": "8CE49E18643CF57F3FD91F13DD3730C4BE4EF0EEB9D9FC3110B8560DD7250C7E"
+  },
+  {
+    "path": "tools/prepare_recorder_b2.py",
+    "sha256": "8BD3898F288C322D40574CBF13AAA89CC4B075F5903E500EE388F00C71242750"
+  },
+  {
+    "path": "tools/verify_recorder_b2.py",
+    "sha256": "3EE2E425E4E9CDE9D5C0ABE8BA180503550CD88F98C565E2B31A55DA7601F0BA"
+  }
+]

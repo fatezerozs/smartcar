@@ -108,10 +108,13 @@ void vc_poll(vc_controller_t *c, uint32_t now)
 {
     int remote=!c->local_run;
     if (c->output.state != VC_RUNNING) return;
-#if VISION_ROUTE_SWITCH
-    if(c->output.recovering&&(uint32_t)(now-c->last_valid_ms)>300U&&
-       (!c->have_partial||(uint32_t)(now-c->last_partial_ms)>100U||
-        (uint32_t)(now-c->last_valid_ms)>1200U))vc_trip(c,VC_FAULT_VISION);
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    if(c->loss_active && (uint32_t)(now-c->loss_frame_ms)>=VISION_C31_ZERO_WAIT_MS)
+        vc_trip(c,VC_FAULT_VISION);
+#elif VISION_ROUTE_SWITCH
+    if(c->output.recovering&&(uint32_t)(now-c->last_valid_ms)>VISION_RECOVERY_INITIAL_MS&&
+       (!c->have_partial||(uint32_t)(now-c->last_partial_ms)>VISION_RECOVERY_PARTIAL_FRESH_MS||
+        (uint32_t)(now-c->last_valid_ms)>VISION_RECOVERY_MAX_MS))vc_trip(c,VC_FAULT_VISION);
 #endif
     if ((uint32_t)(now - c->last_frame_ms) >= c->config.frame_timeout_ms) vc_trip(c, VC_FAULT_FRAME);
     if (remote && (uint32_t)(now - c->last_command_ms) >= c->config.command_timeout_ms) vc_trip(c, VC_FAULT_COMMAND);
@@ -130,6 +133,7 @@ int vc_arm(vc_controller_t *c, uint32_t now, int hardware_confirmed)
     c->last_command_ms = c->armed_ms = now;
     c->output.duty = c->output.steering = 0;
     c->have_partial=c->straight_tracking=0;
+    c->loss_active=c->reacquire_frames=0;c->output.vision_state=VC_VISION_NORMAL;
     c->derivative = 0;
     return 1;
 }
@@ -377,6 +381,21 @@ static float corner_duty(vc_controller_t *c,const vision_result_t *r,
 }
 #endif
 
+#if VISION_MIDTERM_C31_AUTONOMOUS
+static void c31_zero_wait(vc_controller_t *c,unsigned reason,uint32_t capture,uint32_t now)
+{
+    if(c->output.state!=VC_RUNNING)return;
+    if(!c->loss_active){c->loss_active=1;c->loss_frame_ms=capture;}
+    if(reason){c->output.vision_state=(uint8_t)reason;c->reacquire_frames=0;}
+    c->output.duty=0;c->output.speed_boost=0;
+    c->output.paired_support=c->output.edge_support=0;
+    c->output.recovering=1;c->output.search_source=0;
+    c->invalid_frames=1;c->derivative=0;c->straight_tracking=0;
+    /* A delayed observation consumes, rather than renews, the original budget. */
+    if((uint32_t)(now-c->loss_frame_ms)>=VISION_C31_ZERO_WAIT_MS)vc_trip(c,VC_FAULT_VISION);
+}
+#endif
+
 void vc_observe(vc_controller_t *c, const vision_result_t *r,
                 uint32_t sequence, uint32_t frame_ms, uint32_t now)
 {
@@ -385,6 +404,11 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     vc_poll(c, now); /* Check old deadlines before accepting a delayed frame. */
     if (!c->configured) return;
     if (c->have_frame && sequence == c->last_sequence) return; /* Not a new observation. */
+#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+    /* Modular ordering is valid within half the uint32 domain, including wrap.
+     * Old/ambiguous identities never refresh a lease or count as recovery. */
+    if(c->have_frame && (uint32_t)(sequence-c->last_sequence)>=UINT32_C(0x80000000))return;
+#endif
     if (c->have_frame && (uint32_t)(frame_ms - c->last_frame_ms) >= c->config.frame_timeout_ms) {
         c->stable_frames = 0;
         c->derivative = 0;
@@ -416,15 +440,19 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
         !control_band_error(r, &c->config, c->config.near_y, &near_error, &c->output.near_center_x)) {
         c->stable_frames = 0;
         c->straight_tracking=0;
-#if VISION_ROUTE_SWITCH
-        /* Partial CURRENT road can guide a bounded low-speed recovery.
-         * No current boundary evidence means zero motor demand; never power
-         * through a junction or outside view using only an old turn. */
+#if VISION_MIDTERM_C31_AUTONOMOUS
+        /* Local geometry can describe direction, but never grants motor power.
+         * Keep the existing bounded steering command while awaiting full road. */
+        c31_zero_wait(c,VC_VISION_NO_LANE,frame_ms,now);
+        return;
+#elif VISION_ROUTE_SWITCH
+        /* Partial CURRENT road may guide the existing bounded steering wait.
+         * It is not a valid near observation and cannot grant motor power. */
         {float current_target=0;int strong=0,paired=0,carry=0;
         int current=current_partial_direction(r,&c->config,&current_target,&strong,&paired);
         if(c->output.state==VC_RUNNING && current &&
-           ((uint32_t)(now-c->last_valid_ms)<=300U||
-            (current&&strong&&(uint32_t)(now-c->last_valid_ms)<=1200U))) {
+           ((uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_INITIAL_MS||
+            (current&&strong&&(uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_MAX_MS))) {
             float step=c->config.steer_rate*dt;
             float chosen=current_target;
             float search=clamp(chosen*1.25f,-1,1);
@@ -439,15 +467,25 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
             if(current&&search*c->output.steering<0)step*=2.0f;
             else if(current&&absolute(search)<absolute(c->output.steering))step*=1.5f;
             c->output.steering+=clamp(search-c->output.steering,-step,step);
-            /* A current four-row entry plus broad white forward corridor is
-             * stronger than a detached partial edge. Keep enough low-speed
-             * demand to pass that transition, below clear-road/corner speed. */
-            c->output.duty=clamp(c->output.duty+c->config.duty_rise_per_s*dt,0,
-                c->config.cruise_duty*(r->junction_partial?.60f:.45f));
+            c->output.duty=0; /* Near-invalid: no partial/history drive bypass. */
             c->output.recovering=1;c->invalid_frames=1;c->derivative=0;
             c->output.search_source=(uint8_t)(carry?3:2);
             return;
         }}
+#if VISION_MIDTERM_C31_AUTONOMOUS
+        if(c->output.state==VC_RUNNING &&
+           ((uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_INITIAL_MS ||
+            (c->have_partial && (uint32_t)(now-c->last_partial_ms)<=VISION_RECOVERY_PARTIAL_FRESH_MS &&
+             (uint32_t)(now-c->last_valid_ms)<=VISION_RECOVERY_MAX_MS))) {
+            /* No trustworthy current lane: zero motor demand, preserve only
+             * the bounded existing lease. A fresh lane may resume before the
+             * deadline; current partial geometry may not extend it forever. */
+            c->output.recovering=1;c->output.search_source=0;
+            if(c->invalid_frames<255U)++c->invalid_frames;
+            c->output.duty=0;c->derivative=0;
+            return;
+        }
+#else
         if(c->output.state==VC_RUNNING && c->invalid_frames<2 &&
            (uint32_t)(now-c->last_valid_ms)<=40U) {
             /* The bounded zero-demand grace period is still recovery. Keep
@@ -458,8 +496,13 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
             return; /* No motor drive on missing evidence, no guessed steering. */
         }
 #endif
+#endif
+#if !VISION_MIDTERM_C31_AUTONOMOUS
+        /* C31 already returns after c31_zero_wait above. Compile this legacy
+         * fallback only for variants that can reach it (MSVC /W4 /WX). */
         if (c->output.state == VC_RUNNING) vc_trip(c, VC_FAULT_VISION);
         return;
+#endif
     }
 #if !VISION_ROUTE_SWITCH
     if (absolute(near_error) > c->config.max_lateral) {
@@ -471,6 +514,18 @@ void vc_observe(vc_controller_t *c, const vision_result_t *r,
     have_far = control_band_error(r, &c->config, c->config.far_y, &far_error, &c->output.far_center_x);
 #if VISION_ROUTE_SWITCH
     have_far=reference_preview_error(r,&c->config,&far_error,&c->output.far_center_x)||have_far;
+#endif
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    if(c->output.state==VC_RUNNING) {
+        c->output.observation_valid=1;c->output.far_valid=(uint8_t)have_far;
+        if(!have_far){c31_zero_wait(c,VC_VISION_FAR_LOSS,frame_ms,now);return;}
+        if(c->loss_active) {
+            if(++c->reacquire_frames<VISION_C31_REACQUIRE_FRAMES) {
+                c31_zero_wait(c,0,frame_ms,now);return;
+            }
+            c->loss_active=0;c->reacquire_frames=0;c->output.vision_state=VC_VISION_NORMAL;
+        }
+    }
 #endif
     if (have_far) heading = far_error - near_error;
     if (!finite_value(heading)) { vc_trip(c, VC_FAULT_NUMERIC); return; }

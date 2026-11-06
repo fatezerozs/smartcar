@@ -1,0 +1,27 @@
+{
+  "receivedDate": "2026-11-06",
+  "source": "User-supplied attachments; no seller identity, drawing revision, or measurement uncertainty provided",
+  "items": [
+    {
+      "file": "user-provisional-baseline.png",
+      "originalFilename": "codex-clipboard-2ff69203-ef9d-48b2-9262-59b3ba0f1a26.png",
+      "sha256": "f38b3df8deb9d34df13585f1f2f7585fbe98770642ff920afae0c2cda948e858",
+      "bytes": 55901,
+      "verification": "original PNG visually inspected; copied byte-for-byte"
+    },
+    {
+      "file": "product-parameters.png",
+      "originalFilename": "tb_image_share_1793912124074.png",
+      "sha256": "0106d4830a9c3491cc6eea9c0b6bbf7bde32b317c96615aebeb377432f7a82d1",
+      "bytes": 520680,
+      "verification": "original PNG visually inspected; copied byte-for-byte"
+    },
+    {
+      "file": "chassis-drawing.png",
+      "originalFilename": "tb_image_share_1793911972308.png",
+      "sha256": "89e1cdb678c12d38e51d8c296da924685545bf0975f675316b7baf74d97b35f3",
+      "bytes": 131065,
+      "verification": "original PNG visually inspected; copied byte-for-byte"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "smartcar.encoder-production/1",
+  "adopted_by": "explicit user request: 不要作为估计了,直接写入生产配置",
+  "date": "2026-11-06",
+  "counting_mode": "A-rising with B-direction, QTMR2 free-running 16-bit modular deltas, 10ms sampling",
+  "left": {
+    "connector": 3,
+    "pins": [
+      "C3",
+      "C4"
+    ],
+    "forward_raw_sign": -1,
+    "counts_per_wheel_revolution": 2335.8,
+    "observed_counts": -23358,
+    "operator_forward_turns": 10
+  },
+  "right": {
+    "connector": 4,
+    "pins": [
+      "C5",
+      "C25"
+    ],
+    "forward_raw_sign": 1,
+    "counts_per_wheel_revolution": 2358.6,
+    "observed_counts": 23586,
+    "operator_forward_turns": 10
+  },
+  "production_configuration_written": true,
+  "metrological_repeatability_passed": false,
+  "loaded_rolling_circumference_m": null,
+  "hardware_motion_enabled_by_this_change": false,
+  "source_profile": "demo/code/midterm_route_profile.h",
+  "evidence": "docs/changes/recorder-b3-20261106/encoder-joint-static-20261106/measurement-ledger.json",
+  "limitations": [
+    "Repeated 3-turn trials differed; full turns are operator observations",
+    "Other wheel count drift/handling observed, notably +273 during right reverse and -2 during left 10 turns",
+    "No loaded circumference; current native controller remains counts/10ms and does not consume CPR to set physical speed"
+  ]
+}

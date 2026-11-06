@@ -1,0 +1,37 @@
+{
+  "files": {
+    "demo/recorder_b2/b2_main.c": "026035f13c00d610f23d7827792fe225fc2f1422f202c1986bbe7516eaa4ba71",
+    "demo/recorder_b2/b2_metrics.c": "6359e84cd0df6998441edf1312b2e84a0dc663dd36867aa2ea2316ac53cd8519",
+    "demo/recorder_b2/include/b2_metrics.h": "2ca336bb52ba62e07a3a41569746af3a7a42d7e1e650c7455c52e5eb84cf070b",
+    "demo/recorder_b2/include/b2_metric_stats.h": "56f3e0f319f62937877134e6119c45600f6e136be809aa653fbd86376a62b278",
+    "demo/recorder_b2/include/FreeRTOSConfig.h": "252efd773f652b969d36ca23412a439c6c193220ab33b0d58e99d0961719fb16",
+    "demo/recorder_b2/include/b2_build.h": "f4959e7f6ee38998638cc3149a2d8c49fd40edc03a8409fdd3fedd1403872b45",
+    "demo/recorder/recorder_storage.c": "73a0788f454454cc4439f98a8c6f0696a3168b17b67cba2dcdb644f7be2f32a9",
+    "tools/prepare_recorder_b2.py": "28223a0009280c197096ac19c36ca2292903ca51d3828ea61cf376d8922aa154",
+    "tools/verify_recorder_b2.py": "a0878e49663ebe6923e6f00bafd35f934143faef9ff2670d06c474243438cbfe",
+    "tools/test_recorder_b2_static.ps1": "57c029453ccd85ec19f64dbb7ba1bc04d69720edd980c51f9c3bc4a117a27e43",
+    "tools/B2SessionExport.cs": "19b4ccebac14f456214cd83875e701cbfcf976dba95f5ef91701e2c5ba58338f",
+    "tools/review_b2_metrics.py": "548432c83e13415a508453ef9a6a21a0a00ff65d5797f020477a3bf3a38ee4ee",
+    "tests/recorder/test_b2_metric_stats.c": "f241a3d0cb43aab4f3994d1b43507d19d5e6a1f1a32b4e3dd56d8101af25b0d4",
+    "tests/recorder/test_b2_metrics_review.py": "e9cc642797f0f3c7e0a6591dc29a1c4d21a2a47f6203726c79abad5358fa8f4c"
+  },
+  "build": "run-20261105T201218-30672-final",
+  "tests": {
+    "recorder_regression": 25,
+    "metrics_parser": 3,
+    "metric_stats_host": "PASS",
+    "client_selftest": "PASS"
+  },
+  "hardware_measurements_this_revision": "NOT_RUN",
+  "existing_real_session_pc_verification": "PASS_100_FRAMES",
+  "production_source_project_config_modified": false,
+  "global_agent_config_or_skill_modified": false,
+  "self_review": [
+    "metrics buffers bounded to 512 per kind, overflow explicit",
+    "default Recorder I/O hooks compile to no operation; legacy regression passed",
+    "private B2 FreeRTOS config active in final tasks.d",
+    "no Camera START or SD writes during completed download",
+    "no full B2 claim without instrumented board measurements",
+    "two old SD uvoptx changes retained and disclosed; not overwritten"
+  ]
+}

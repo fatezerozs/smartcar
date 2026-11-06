@@ -1,0 +1,402 @@
+{
+  "evidence_layer": "computed, CRC-verified binary traces plus operator turn reports",
+  "windows": {
+    "221522823": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221522823Z",
+      "sha256": "0c69011c39d3988c4bc96bc48ec63285f9e2750f570a7d548ce4061e3021cccc",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1523779,
+      "last_ms": 1528769,
+      "sample_sequence": 152845,
+      "total_left_right": [
+        599,
+        -2454
+      ],
+      "raw_left_right": [
+        601,
+        63082
+      ],
+      "total_ranges_left_right": [
+        [
+          599,
+          599
+        ],
+        [
+          -2454,
+          -2454
+        ]
+      ],
+      "stationary_both_wheels": true
+    },
+    "221704177": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221704177Z",
+      "sha256": "b0d79de25538cef232da4e0f0cf4380a96fbb97a857ceeaa7a13fb55fe7ccb0a",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1625119,
+      "last_ms": 1630109,
+      "sample_sequence": 162979,
+      "total_left_right": [
+        -5975,
+        -2476
+      ],
+      "raw_left_right": [
+        59563,
+        63060
+      ],
+      "total_ranges_left_right": [
+        [
+          -5975,
+          -5974
+        ],
+        [
+          -2476,
+          -2476
+        ]
+      ],
+      "stationary_both_wheels": false
+    },
+    "221808520": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221808520Z",
+      "sha256": "5d75f2f221e2622f9d70975fc6ed59db222e4efa5201ff4b0cbb3951927f4f00",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1689449,
+      "last_ms": 1694439,
+      "sample_sequence": 169412,
+      "total_left_right": [
+        -5992,
+        -2480
+      ],
+      "raw_left_right": [
+        59546,
+        63056
+      ],
+      "total_ranges_left_right": [
+        [
+          -5992,
+          -5992
+        ],
+        [
+          -2480,
+          -2480
+        ]
+      ],
+      "stationary_both_wheels": true
+    },
+    "221953478": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T221953478Z",
+      "sha256": "ef24cb2a3939a136f43d10d068c8f2065616f7326e9afb15c36b546260d07971",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1794519,
+      "last_ms": 1799509,
+      "sample_sequence": 179919,
+      "total_left_right": [
+        -13015,
+        -2485
+      ],
+      "raw_left_right": [
+        52523,
+        63051
+      ],
+      "total_ranges_left_right": [
+        [
+          -13015,
+          -13015
+        ],
+        [
+          -2490,
+          -2485
+        ]
+      ],
+      "stationary_both_wheels": false
+    },
+    "222127961": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T222127961Z",
+      "sha256": "22928c1949e56d983851143b1f079793b73a23c824db68a8567cfeecc678fb75",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1888889,
+      "last_ms": 1893879,
+      "sample_sequence": 189356,
+      "total_left_right": [
+        -5897,
+        -2478
+      ],
+      "raw_left_right": [
+        59641,
+        63058
+      ],
+      "total_ranges_left_right": [
+        [
+          -5897,
+          -5897
+        ],
+        [
+          -2478,
+          -2478
+        ]
+      ],
+      "stationary_both_wheels": true
+    },
+    "222252414": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T222252414Z",
+      "sha256": "38fc36da19fe13602cb7cf7992942a68274001e8f160cd97c3f2d9b63e64c9b8",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 1973449,
+      "last_ms": 1978439,
+      "sample_sequence": 197812,
+      "total_left_right": [
+        -5892,
+        4651
+      ],
+      "raw_left_right": [
+        59646,
+        4651
+      ],
+      "total_ranges_left_right": [
+        [
+          -5896,
+          -5892
+        ],
+        [
+          4651,
+          4651
+        ]
+      ],
+      "stationary_both_wheels": false
+    },
+    "222431442": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T222431442Z",
+      "sha256": "f2fee4b0f865bfcb90a017bf515bb609c9ec932fded91c401ad8cc556acb3915",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 2072509,
+      "last_ms": 2077499,
+      "sample_sequence": 207718,
+      "total_left_right": [
+        -5619,
+        -2393
+      ],
+      "raw_left_right": [
+        59919,
+        63143
+      ],
+      "total_ranges_left_right": [
+        [
+          -5619,
+          -5619
+        ],
+        [
+          -2393,
+          -2393
+        ]
+      ],
+      "stationary_both_wheels": true
+    },
+    "222609519": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T222609519Z",
+      "sha256": "0113d0fb376dc5dee3f27d56d05e6a967b78e5d6f08e316b496587b121e092e8",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 2170579,
+      "last_ms": 2175569,
+      "sample_sequence": 217525,
+      "total_left_right": [
+        -28977,
+        -2395
+      ],
+      "raw_left_right": [
+        36561,
+        63141
+      ],
+      "total_ranges_left_right": [
+        [
+          -28977,
+          -28977
+        ],
+        [
+          -2395,
+          -2395
+        ]
+      ],
+      "stationary_both_wheels": true
+    },
+    "222829502": {
+      "directory": "C:\\shengchanli\\smartCar\\b3_static_trace_20261105T222829502Z",
+      "sha256": "f02c17502e5338c204283ff8d3351efaf861fe9da507c82c2f2f40297facad78",
+      "source": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "samples": 500,
+      "first_ms": 2310419,
+      "last_ms": 2315409,
+      "sample_sequence": 231509,
+      "total_left_right": [
+        -28977,
+        21191
+      ],
+      "raw_left_right": [
+        36561,
+        21191
+      ],
+      "total_ranges_left_right": [
+        [
+          -28977,
+          -28977
+        ],
+        [
+          21191,
+          21191
+        ]
+      ],
+      "stationary_both_wheels": true
+    }
+  },
+  "trials": [
+    {
+      "before": "221522823",
+      "after": "221704177",
+      "operator_wheel": "left",
+      "operator_direction": "forward",
+      "operator_turns": 3,
+      "delta_left_right": [
+        -6574,
+        -22
+      ],
+      "counts_per_turn": 2191.3333333333335,
+      "status": "rejected_operator_other_wheel_may_have_moved",
+      "direction_matches_config": true
+    },
+    {
+      "before": "221808520",
+      "after": "221953478",
+      "operator_wheel": "left",
+      "operator_direction": "forward",
+      "operator_turns": 3,
+      "delta_left_right": [
+        -7023,
+        -5
+      ],
+      "counts_per_turn": 2341.0,
+      "status": "repeat_window_other_wheel_jitter",
+      "direction_matches_config": true
+    },
+    {
+      "before": "221953478",
+      "after": "222127961",
+      "operator_wheel": "left",
+      "operator_direction": "reverse",
+      "operator_turns": 3,
+      "delta_left_right": [
+        7118,
+        7
+      ],
+      "counts_per_turn": 2372.6666666666665,
+      "status": "opposite_wheel_net_change",
+      "direction_matches_config": true
+    },
+    {
+      "before": "222127961",
+      "after": "222252414",
+      "operator_wheel": "right",
+      "operator_direction": "forward",
+      "operator_turns": 3,
+      "delta_left_right": [
+        5,
+        7129
+      ],
+      "counts_per_turn": 2376.3333333333335,
+      "status": "opposite_wheel_jitter",
+      "direction_matches_config": true
+    },
+    {
+      "before": "222252414",
+      "after": "222431442",
+      "operator_wheel": "right",
+      "operator_direction": "reverse",
+      "operator_turns": 3,
+      "delta_left_right": [
+        273,
+        -7044
+      ],
+      "counts_per_turn": 2348.0,
+      "status": "opposite_wheel_net_change_273",
+      "direction_matches_config": true
+    },
+    {
+      "before": "222431442",
+      "after": "222609519",
+      "operator_wheel": "left",
+      "operator_direction": "forward",
+      "operator_turns": 10,
+      "delta_left_right": [
+        -23358,
+        -2
+      ],
+      "counts_per_turn": 2335.8,
+      "status": "user_adopted_for_production_with_opposite_wheel_net_minus2",
+      "direction_matches_config": true
+    },
+    {
+      "before": "222609519",
+      "after": "222829502",
+      "operator_wheel": "right",
+      "operator_direction": "forward",
+      "operator_turns": 10,
+      "delta_left_right": [
+        0,
+        23586
+      ],
+      "counts_per_turn": 2358.6,
+      "status": "user_adopted_for_production_isolated_stable_windows",
+      "direction_matches_config": true
+    }
+  ],
+  "adopted_production_profile": {
+    "schema": "smartcar.encoder-production/1",
+    "adopted_by": "explicit user request: 不要作为估计了,直接写入生产配置",
+    "date": "2026-11-06",
+    "counting_mode": "A-rising with B-direction, QTMR2 free-running 16-bit modular deltas, 10ms sampling",
+    "left": {
+      "connector": 3,
+      "pins": [
+        "C3",
+        "C4"
+      ],
+      "forward_raw_sign": -1,
+      "counts_per_wheel_revolution": 2335.8,
+      "observed_counts": -23358,
+      "operator_forward_turns": 10
+    },
+    "right": {
+      "connector": 4,
+      "pins": [
+        "C5",
+        "C25"
+      ],
+      "forward_raw_sign": 1,
+      "counts_per_wheel_revolution": 2358.6,
+      "observed_counts": 23586,
+      "operator_forward_turns": 10
+    },
+    "production_configuration_written": true,
+    "metrological_repeatability_passed": false,
+    "loaded_rolling_circumference_m": null,
+    "hardware_motion_enabled_by_this_change": false,
+    "source_profile": "demo/code/midterm_route_profile.h",
+    "evidence": "docs/changes/recorder-b3-20261106/encoder-joint-static-20261106/measurement-ledger.json",
+    "limitations": [
+      "Repeated 3-turn trials differed; full turns are operator observations",
+      "Other wheel count drift/handling observed, notably +273 during right reverse and -2 during left 10 turns",
+      "No loaded circumference; current native controller remains counts/10ms and does not consume CPR to set physical speed"
+    ]
+  },
+  "all_windows_encoder_samples": 4500,
+  "sample_period_ms": 10,
+  "all_windows_C26_OFF": true,
+  "all_observed_applied_pwm_zero": true,
+  "flash_reset_performed": false,
+  "COM14_closed": true
+}

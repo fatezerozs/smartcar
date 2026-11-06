@@ -1,0 +1,1 @@
+/* Storage runtime header needs no queue API in this harness. */

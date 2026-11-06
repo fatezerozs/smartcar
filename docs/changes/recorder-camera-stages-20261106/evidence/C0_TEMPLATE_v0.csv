@@ -1,0 +1,43 @@
+﻿record_id,measurement_type,wheel,repeat_index,measurement_date,operator,status,axle_distance_mm,track_distance_mm,roll_distance_mm,wheel_turns,encoder_before_counts,encoder_after_counts,counter_bits,command_us,angle_deg,approach_direction,power_state,load_condition,surface,battery_V,tire_pressure_kPa,instrument,instrument_resolution_mm,instrument_resolution_deg,uncertainty_standard_mm,uncertainty_standard_deg,temperature_C,photo_ref,notes
+C0-001,wheelbase,,1,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-002,rear_track,,1,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-003,rolling_circumference,left,1,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-004,encoder_scale,left,1,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-005,encoder_scale,left,1,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-006,rolling_circumference,right,1,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-007,encoder_scale,right,1,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-008,encoder_scale,right,1,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-009,servo_angle,left,1,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-010,servo_angle,center,1,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-011,servo_angle,right,1,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-012,servo_angle,left,1,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-013,servo_angle,center,1,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-014,servo_angle,right,1,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-015,wheelbase,,2,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-016,rear_track,,2,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-017,rolling_circumference,left,2,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-018,encoder_scale,left,2,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-019,encoder_scale,left,2,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-020,rolling_circumference,right,2,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-021,encoder_scale,right,2,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-022,encoder_scale,right,2,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-023,servo_angle,left,2,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-024,servo_angle,center,2,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-025,servo_angle,right,2,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-026,servo_angle,left,2,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-027,servo_angle,center,2,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-028,servo_angle,right,2,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-029,wheelbase,,3,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-030,rear_track,,3,,,unknown,,,,,,,,,,,,,,,,,,,,,,,
+C0-031,rolling_circumference,left,3,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-032,encoder_scale,left,3,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-033,encoder_scale,left,3,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-034,rolling_circumference,right,3,,,unknown,,,,,,,,,,forward,,,,,,,,,,,,,
+C0-035,encoder_scale,right,3,,,unknown,,,,,,,16,,,forward,,,,,,,,,,,,,
+C0-036,encoder_scale,right,3,,,unknown,,,,,,,16,,,reverse,,,,,,,,,,,,,
+C0-037,servo_angle,left,3,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-038,servo_angle,center,3,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-039,servo_angle,right,3,,,unknown,,,,,,,,,,from_left,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-040,servo_angle,left,3,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-041,servo_angle,center,3,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review
+C0-042,servo_angle,right,3,,,unknown,,,,,,,,,,from_right,,,,,,,,,,,,,Requires separate actuator approval and mechanical limit review

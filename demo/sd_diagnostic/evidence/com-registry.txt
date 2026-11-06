@@ -1,0 +1,17 @@
+
+\Device\BthModem2 : COM4
+\Device\BthModem3 : COM6
+\Device\BthModem0 : COM7
+\Device\BthModem1 : COM3
+\Device\USBSER000 : COM14
+\Device\USBSER001 : COM10
+PSPath            : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\SERIALCOMM
+PSParentPath      : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP
+PSChildName       : SERIALCOMM
+PSDrive           : HKLM
+PSProvider        : Microsoft.PowerShell.Core\Registry
+
+
+
+User-confirmed mapping: COM10=wireless; COM14=wired. No port opened.
+WMI Win32_SerialPort: Access Denied; registry read-only fallback used.

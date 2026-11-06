@@ -1,0 +1,330 @@
+{
+  "files": [
+    {
+      "path": "demo/recorder/recorder_storage.c",
+      "bytes": 12433,
+      "sha256": "60d5c24ebc1745ed671ebf777e4ede165cd0a78167e1cefb59addb03b8ed83cd"
+    },
+    {
+      "path": "demo/recorder_b2/b2_main.c",
+      "bytes": 4540,
+      "sha256": "2f5bdee31cfd03482586c103d7693277cd580c9cf98c4ef9bff598451bc928ee"
+    },
+    {
+      "path": "demo/recorder_b2/include/b2_build.h",
+      "bytes": 424,
+      "sha256": "cd8aa566c28a9747f3bbe60f64687ac3e7a8141c61a1cf457c3c33bd98d081ec"
+    },
+    {
+      "path": "demo/recorder_b2/include/b2_policy.h",
+      "bytes": 751,
+      "sha256": "cc6582c7cb708e8ccb5c68e563edb54750a68ff6961b6227e9d5cf4899512b9f"
+    },
+    {
+      "path": "demo/recorder_b2/mdk/recorder_b2.uvprojx",
+      "bytes": 29674,
+      "sha256": "2319d1fccbf732675085fbb17df5fc2c6a59ae0d7ddf2ecabcfd86742fa97290"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/ACCEPTANCE.md",
+      "bytes": 3173,
+      "sha256": "09be3ef5eb8e9f548c545f32465848c32b1750854b35c86791462ea4922b2969"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/B1_SKIPPED.md",
+      "bytes": 600,
+      "sha256": "5ac0025664c4ff15ae82d3773adde519397e356277a0868783bd9555cf1bbc1e"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/B2_CAMERA_SESSION_VALIDATION.md",
+      "bytes": 4632,
+      "sha256": "b4e8ab91f1ae81d6c0e1996b9058c939b2bde512e3a41d081bb9a0b2e2ebabf7"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/BUILD_INPUT_DIFF.md",
+      "bytes": 2420,
+      "sha256": "7f6b900619f90b983930ad2edbc11e48b98cd2d1cf73002f2caa077d03bd49be"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/C0_CALIBRATION_PROTOCOL.md",
+      "bytes": 2913,
+      "sha256": "d4462d796307f1b10c23ec04fe7021125f03244974ff7909407963e981e39856"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/C0_MEASUREMENT_TEMPLATE.csv",
+      "bytes": 10922,
+      "sha256": "2b0b518e02afd9c26dc5d02aace543a5df7fc2c0bd2e593c608f66223871a415"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/C0_PARAMETER_REVIEW.json",
+      "bytes": 2488,
+      "sha256": "0d3fed0174d773a0c02a60a7c35830992d45b882eccc9e061bed25c4615fb086"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/C0_UNCERTAINTY.md",
+      "bytes": 1575,
+      "sha256": "32e261b4c9434d43e11f0f17f0cb9b27b6dfe08140baed37ea5479b4c499775c"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/CONTROL_TIMING_BASELINE_PLAN.md",
+      "bytes": 2143,
+      "sha256": "794c99c71eaf15232020f6043a4d5b485c8c013ddbb8b9bc1a71568571540314"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/DATA_CONTRACT_GAP.md",
+      "bytes": 2500,
+      "sha256": "3580cd5aaa79cf98657af807a183856637604ca52bc0b7bf4328f82971ea216b"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/MEMORY_AND_DMA_BUDGET.md",
+      "bytes": 3176,
+      "sha256": "d06422367a9d33f7b7f803b76140d8c2ce518efd486669d5ebffca4aecc60301"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/P0_BASELINE.md",
+      "bytes": 5307,
+      "sha256": "96f5858b38b478a23df8d6b4010f2bdab1224594d788b019410d3fd66fd95b77"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/README.md",
+      "bytes": 2020,
+      "sha256": "f3565bcc9dce99b81f5f4ac6200d1c8fa53c156afd5278fd0947d27a3770b47f"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/SD_CSI_CONTENTION_PLAN.md",
+      "bytes": 1326,
+      "sha256": "add93782651ab7a22df10bce045b931d08999a62c9a69f4a84c6f0b09093c31e"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/SESSION_FORMAT.md",
+      "bytes": 3376,
+      "sha256": "97caee629976ba5530710ac3a3d7f8e9e321fa3e2d789338c7d5af87a58f378d"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/C0_TEMPLATE_v0.csv",
+      "bytes": 4500,
+      "sha256": "3918cad60cf30a79d7ba3177213c3480a5c7e3dd13cc0ce4cce117d143ad858b"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-build-evidence.json",
+      "bytes": 3480,
+      "sha256": "f8511e4b50ca5bd06ee22a25286dd5d403f84f1c169f7e2e79bf2d2d64d92b06"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-candidate-location.txt",
+      "bytes": 103,
+      "sha256": "a10b204c205f50beab36cbb01d1ee33e42df97a373842047773c6599b73385a7"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-cli-contract.json",
+      "bytes": 286,
+      "sha256": "29e4429024ca10235c286fbd9d2bd4f3319f34e922b809c08eaf4e8878092e07"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-demo-result.json",
+      "bytes": 2721,
+      "sha256": "4c585159e024b32981728a22bcc3e54bca2f61720c8ccddee9989b54630f5ca6"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-demo.log",
+      "bytes": 2723,
+      "sha256": "1108bfd7a45877cbec84543729f28efb0b28bdf7a74f8f90d00d546d3d034f8e"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-host-tests.log",
+      "bytes": 3884,
+      "sha256": "5381b07f3b5e0ff2336852d7cc287462c2aa338063a451a70cf56cd37b9a9694"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-keil-build.log",
+      "bytes": 1810,
+      "sha256": "97df59fdd38393683c10457beb7937271a5f348ccbf9512d3cb7ae8f0d53d9f4"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-policy.log",
+      "bytes": 111,
+      "sha256": "3fa1887a1c7be3dba57b5c2582eb758b2ae51f851766dce4b3c7ae8f1acd2fac"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-repro-build.log",
+      "bytes": 303,
+      "sha256": "c3d719f5c84d8dd88d0373e5717a728ad8f7967a6b97c5d68dfc5306c276d386"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/b2-retained-data-manifest.json",
+      "bytes": 19276,
+      "sha256": "5f68a521adca6ee023e235bd235f43c2a841a0fc24999e1d600b0c099eb4e055"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/baseline-sha256.json",
+      "bytes": 126105,
+      "sha256": "37ca30bdf6130a6435250f3d0fbf90ac29bdd3c5f46aa517cb4d95da3ba53aed"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/before/demo/recorder/recorder_storage.c",
+      "bytes": 11759,
+      "sha256": "1205aa5f6904c4211516ad5a3829e3491e5d79b8319385a146babde0c2f708a5"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/before/tools/vision_data/archive.py",
+      "bytes": 15243,
+      "sha256": "ea2363a585704534927e6a657058be27ba20d835e0b35511cb67d3bdf1a6cca9"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/before/tools/vision_data/cli.py",
+      "bytes": 9468,
+      "sha256": "903203c54a83c93c1dbeb9c62fa8879be38cf66af8e2709f28ced5fd70d43a6c"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/c0-csv-roundtrip.json",
+      "bytes": 231,
+      "sha256": "ae709b36940b356a8e8e6add0a71d900314b5279f50dc902599c15cfef74a7b0"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/c0-template-check.json",
+      "bytes": 144,
+      "sha256": "730fdd8408a794d979953018b43ff140315d2bc82e23698e08500eac288229ac"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/create_c0_template.mjs",
+      "bytes": 3106,
+      "sha256": "7870fe9248ec0844cd11c98ed16249bb180a9b2df20ab57f235a058a05a67488"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/final-review.json",
+      "bytes": 1698,
+      "sha256": "8d9362b291471a11d90bddb28293af027d2f26e11e32eeccf5525eeed28a098c"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/git-status-before.txt",
+      "bytes": 1941,
+      "sha256": "96e29b67bb64797d99eee0cce76ea68652d66f28536764a95314220d97e510c7"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/git-status-final.txt",
+      "bytes": 2236,
+      "sha256": "b1b97e694146a7056b7e9f4d78ce5eaec6fd676c964d15529369be69be945788"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/head-before.txt",
+      "bytes": 41,
+      "sha256": "1af01d5332e0a1bd0cde1bf1e982b09889f00937a6278cd05dd1d1c889111702"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/primary-keil-build.log",
+      "bytes": 5906,
+      "sha256": "28e7265db5c6a37591df76a9bbb293ffa57a89e1464a0439a57ff78101e68d76"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/primary-map-summary.json",
+      "bytes": 2356,
+      "sha256": "2e26cf08e2f55453b1563f3b6d15bc652c8c0fe14d1deb9cd6ce120548ed61e3"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/recorder-map-summary.json",
+      "bytes": 4545,
+      "sha256": "9a3ec2a34900262341373c55c6af1d1c0ce21367d987e8dafbc0a884cb67839f"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/sd-performance-xml-diff.json",
+      "bytes": 1831,
+      "sha256": "0806aa74429caf798b4342b95ae4f38defec6248eabd7e999f52de69e3d90df7"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/sd_diagnostic-project-hash-chain.json",
+      "bytes": 761,
+      "sha256": "1884aef21c02c1c603e6f2d7df799c965f03f378b13452cbb7ddd346f035dbbd"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/sd_performance-project-hash-chain.json",
+      "bytes": 1149,
+      "sha256": "9daeb764b2e45a7ca268eac09f76bda0a9f08dc4beccf6fc4d05c544464705e0"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/source-references.json",
+      "bytes": 1854,
+      "sha256": "4bbe5885105a6bee4ff60d002582ce979f93afbcfafcbfb31a918d7513e2183b"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/task-incremental.patch",
+      "bytes": 8650,
+      "sha256": "9b8939a6526cbe988a5954918977aa00f55c8b7a3b13ecceca02ab73a8577d59"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/taskbook-sha256.txt",
+      "bytes": 64,
+      "sha256": "709f03a3abc4bb56d16ccac7e12e79746022088d151f1a2d7fcd4580eb067827"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/test_b2_policy.exe",
+      "bytes": 57631,
+      "sha256": "398d566eee41f3400ca7d5e9d3fa6c033afc29b07830ceeb334d920b69ac1042"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/tracked-before.patch",
+      "bytes": 97872,
+      "sha256": "a576692385dc081c590872fa5498ea0111d3698095a95dc1f00eff066338a30c"
+    },
+    {
+      "path": "docs/changes/recorder-camera-stages-20261106/evidence/vision-data-regression.log",
+      "bytes": 4745,
+      "sha256": "5f4fd53e4f3d51d21e0d1dcebb5a545da406139ebc9cffa4a11fa47202f269d9"
+    },
+    {
+      "path": "tests/recorder/test_b2_policy.c",
+      "bytes": 969,
+      "sha256": "8370d9e0ee308b140ed8e2907f2d66b21c964b71ac683bfbd44dbd9d40c72654"
+    },
+    {
+      "path": "tests/recorder/test_continuous.py",
+      "bytes": 5093,
+      "sha256": "4cf13ed48311a9945c9093f22316551080410f14ac6e488ece6321ad9afda547"
+    },
+    {
+      "path": "tools/build_recorder_b2.ps1",
+      "bytes": 2020,
+      "sha256": "4bc75df12d8b19361c7886f1b0453c0d2744fe2858e2871a17bcaa35528d69e7"
+    },
+    {
+      "path": "tools/prepare_recorder_b2.py",
+      "bytes": 6986,
+      "sha256": "8bd3898f288c322d40574cbf13aaa89cc4b075f5903e500ee388f00c71242750"
+    },
+    {
+      "path": "tools/recorder_stage_audit.py",
+      "bytes": 3826,
+      "sha256": "6ba4c91a7353b0e8d35cd5c9a4dac2328214a228f81308d43b8979b8ea1db893"
+    },
+    {
+      "path": "tools/recorder_stage_demo.py",
+      "bytes": 4430,
+      "sha256": "847a2ac276a3920fdec8846de1f4da65acb7b16d163718fcbb00797fdb631491"
+    },
+    {
+      "path": "tools/verify_recorder_b2.py",
+      "bytes": 3282,
+      "sha256": "3ee2e425e4e9cde9d5c0abe8ba180503550cd88f98c565e2b31a55da7601f0ba"
+    },
+    {
+      "path": "tools/vision_data/archive.py",
+      "bytes": 16436,
+      "sha256": "eaf1e997fe0352558a92138810aa1689c8740d6cc77bb3e590381a0bf0de4058"
+    },
+    {
+      "path": "tools/vision_data/cli.py",
+      "bytes": 10038,
+      "sha256": "1310e7d01e4825ee7713d61b86d55e436d7b77b7721dc5654188bed20dc87aad"
+    },
+    {
+      "path": "tools/vision_data/continuous.py",
+      "bytes": 5735,
+      "sha256": "bc6964393ed1e0f6394ff555b058466c48471ce5eb73fa21c693f676be936b57"
+    }
+  ],
+  "builds": [
+    ".build/recorder-camera-stages-20261106/primary-01",
+    ".build/recorder-camera-stages-20261106/run-20261105T192407-50452-final"
+  ],
+  "hardware_accessed": false,
+  "b1": "skipped_by_user"
+}

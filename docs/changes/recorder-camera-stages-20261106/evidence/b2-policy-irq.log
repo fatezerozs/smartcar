@@ -1,0 +1,2 @@
+PASS IRQ staging: 128-byte burst, overflow, FIFO order, index wrap, complete STOP command
+PASS B2 window: zero-time, limits, wrap, observed events; command: CRLF, fragmentation, overflow tail discard

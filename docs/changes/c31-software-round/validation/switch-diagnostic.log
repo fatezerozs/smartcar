@@ -1,0 +1,120 @@
+test_route_switch.c
+vision_speed.c
+wheel_speed.c
+vision_motion.c
+vision_drive.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+vision_control.c
+midterm_open_loop.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+C26 LEVEL PASS: 300954 checks; zero-output loss, five-frame recovery, retained stop reason; simulated IO.
+test_switch_runtime.c
+midterm_boot.c
+vision_speed.c
+wheel_speed.c
+app_link.c
+app_transport.c
+app_runtime.c
+vision_debug.c
+vision_frame.c
+vision_telemetry.c
+vision_midterm.c
+track_bayes.c
+vision_control.c
+midterm_open_loop.c
+vision_drive.c
+vision_motion.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+正在生成代码...
+正在编译...
+vision_vehicle_profile.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+C26 LEVEL RUNTIME PASS: ON start, OFF/STOP/camera-loss stop, stream recovery resumes, C27 ignored, no UART heartbeat; trace automatically exported while stopped.
+test_turn_route.c
+vision_midterm.c
+vision_speed.c
+wheel_speed.c
+vision_motion.c
+vision_drive.c
+vision_actuator.c
+vision_guard.c
+vision_probe.c
+vision_startup.c
+vision_vehicle_profile.c
+vision_control.c
+midterm_open_loop.c
+app_mode.c
+vision_field.c
+vision_storage.c
+正在生成代码...
+SUPPORT paired=24 side=-1 target=89
+SUPPORT paired=23 side=-1 target=86
+SUPPORT paired=24 side=1 target=122
+SUPPORT paired=23 side=1 target=119
+RING SPEED state=2 mode=1 target=121/123
+RING SPEED state=3 mode=1 target=121/123
+RING SPEED state=4 mode=1 target=121/123
+PROJECTED CROSS offset=-8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.04 missing=0 crawl=0
+PERIPHERAL bridge dir=-1 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.109 targets=123/120
+PERIPHERAL bridge dir=0 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.002 targets=123/123
+PERIPHERAL bridge dir=1 rows=4 anchors=8 both=83 duty=0.1287 mode=1 heading=0.105 targets=88/92
+TANGENT CONTROL side=-1 guided=132 peak_turn=1.000 width90=151
+TANGENT CONTROL side=1 guided=132 peak_turn=1.000 width90=151
+CLOSED PLANTS stage=0 target_R/L=122/123 measured_R/L=122/123 pwm_R/L=175/410
+CLOSED PLANTS stage=1 target_R/L=47/73 measured_R/L=47/73 pwm_R/L=67/242
+FIELD edge dir=-1 both=0 inferred=87 mode=3 duty=0.0973 u=-1.000 targets=31/49 pwm=364/585
+FIELD edge dir=1 both=0 inferred=87 mode=3 duty=0.0957 u=1.000 targets=46/30 pwm=549/343
+PAIRED corner dir=-1 target_outer/inner=73/47 duty=0.1283
+PAIRED corner dir=1 target_outer/inner=73/47 duty=0.1279
+HEADROOM DIAG step=1495 now=16160 sample=1616 pwm=1000/1000 target=122/123 measured=1/1 gains=256/12 faults=0
+HEADROOM DIAG step=1496 now=16170 sample=1617 pwm=1000/1000 target=122/123 measured=1/1 gains=256/12 faults=0
+HEADROOM DIAG step=1497 now=16180 sample=1618 pwm=1000/1000 target=122/123 measured=1/1 gains=256/12 faults=0
+HEADROOM DIAG step=1498 now=16190 sample=1619 pwm=1000/1000 target=122/123 measured=1/1 gains=256/12 faults=0
+HEADROOM DIAG step=1499 now=16200 sample=1620 pwm=1000/1000 target=122/123 measured=1/1 gains=256/12 faults=0
+PARTIAL DIAG step=0 now=1230 sample=123 pwm=0/0 target=0/0 state=1 duty=0.00000000 auth=0 valid=0 recovery=0 faults=0
+PARTIAL DIAG step=1 now=1240 sample=124 pwm=0/0 target=0/0 state=1 duty=0.00400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=2 now=1250 sample=125 pwm=0/0 target=0/0 state=1 duty=0.00400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=3 now=1260 sample=126 pwm=0/0 target=0/0 state=1 duty=0.00800000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=4 now=1270 sample=127 pwm=0/0 target=0/0 state=1 duty=0.00800000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=5 now=1280 sample=128 pwm=0/0 target=0/0 state=1 duty=0.01200000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=6 now=1290 sample=129 pwm=0/0 target=0/0 state=1 duty=0.01200000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=7 now=1300 sample=130 pwm=0/0 target=0/0 state=1 duty=0.01600000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=8 now=1310 sample=131 pwm=0/0 target=0/0 state=1 duty=0.01600000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=9 now=1320 sample=132 pwm=0/0 target=0/0 state=1 duty=0.02000000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=10 now=1330 sample=133 pwm=0/0 target=0/0 state=1 duty=0.02000000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=11 now=1340 sample=134 pwm=0/0 target=0/0 state=1 duty=0.02400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=12 now=1350 sample=135 pwm=0/0 target=0/0 state=1 duty=0.02400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=13 now=1360 sample=136 pwm=0/0 target=0/0 state=1 duty=0.02800000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=14 now=1370 sample=137 pwm=0/0 target=0/0 state=1 duty=0.02800000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=15 now=1380 sample=138 pwm=0/0 target=0/0 state=1 duty=0.03200000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=16 now=1390 sample=139 pwm=0/0 target=0/0 state=1 duty=0.03200000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=17 now=1400 sample=140 pwm=0/0 target=0/0 state=1 duty=0.03600000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=18 now=1410 sample=141 pwm=0/0 target=0/0 state=1 duty=0.03600000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=19 now=1420 sample=142 pwm=0/0 target=0/0 state=1 duty=0.04000000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=20 now=1430 sample=143 pwm=0/0 target=0/0 state=1 duty=0.04000000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=21 now=1440 sample=144 pwm=0/0 target=0/0 state=1 duty=0.04400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=22 now=1450 sample=145 pwm=0/0 target=0/0 state=1 duty=0.04400000 auth=0 valid=0 recovery=1 faults=0
+PARTIAL DIAG step=23 now=1460 sample=146 pwm=0/0 target=0/0 state=1 duty=0.04800000 auth=0 valid=0 recovery=1 faults=0
+DIAG partial now=1460 samples=146 pwm=0/0 target=0/0 duty=0.04800000 faults=0
+speed:828 vision_drive_output()->duty>.02f&&info().target_right>3

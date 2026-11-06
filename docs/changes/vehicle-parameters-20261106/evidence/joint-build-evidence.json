@@ -1,0 +1,85 @@
+{
+  "role": "C26 Camera async Writer stationary combined candidate",
+  "build_passed": true,
+  "warnings": 0,
+  "primary_project_unchanged": true,
+  "C26_and_PI_linked": true,
+  "autonomous_boot_absent": true,
+  "forced_zero_both_driver_entrypoints": true,
+  "producer_hard_frame_cap": 100,
+  "writer_deferred_until_operator_run": true,
+  "frozen_inputs": 468,
+  "source_digest": "6fe0b9ea632b45a6cde010ff966eae902d20f60dda2d873d8f87308ebd36049b",
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "used": 206316,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "used": 980,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "used": 203680,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "used": 1664448,
+      "maximum": 2097152
+    }
+  ],
+  "hashes": {
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\candidate.uvprojx": "645c9c40a7ee71f7f1a3fd750efa29759315981b586e5c719fb400758c1a43f1",
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\Objects\\recorder_joint_static.axf": "f1605964bba9a9171ddd8af7f94ab61989a6dfd44d215f9164bfa710078edfd5",
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\Objects\\recorder_joint_static.bin": "03e91470c0a8627ce823ce80609234ea24a7367bdb50605e9d75c6f418cdd841",
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\Listings\\recorder_joint_static.map": "f93475e3450e57977dcbff8fd70d1c315c246f792c288fba87aab1720fb5c688",
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\keil-build.log": "f6f46675a8d99a13a85ae40e5ad64f5f4654e4122826ceb826bd4f3eddcc14be",
+    ".build\\recorder-joint-20261106\\run-20261106T065153-38176-final\\inputs.json": "4fc26d4f102697ab7963695dbce51ebe073f356a7849210d26f0deb46d41f912"
+  },
+  "hardware_joint_regression_passed": false,
+  "motion_accepted": false
+}

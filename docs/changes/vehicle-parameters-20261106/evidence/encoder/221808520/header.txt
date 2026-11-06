@@ -1,0 +1,1 @@
+B3TRACE DATA format=B3T1 run=8 count=1759 bytes=112576 crc32=05DC053A lost=0 reason=1 hz=600000000 pi_gap_max_ms=4 pi_max_cycles=5360 mask_max_cycles=139 emit_max_cycles=458 m1=85 m2=95 servo=185 static=1 synthetic=0 source=d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d

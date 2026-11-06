@@ -1,0 +1,10 @@
+{"utc":"2026-11-05T19:48:52.7390294Z","value":"DTR=false RTS=false; user confirmed flash and physical isolation","kind":"open"}
+{"utc":"2026-11-05T19:48:53.9453217Z","value":"B2 STATUS","kind":"tx"}
+{"utc":"2026-11-05T19:48:54.0013526Z","value":"[B2] ready id=RECORDER_CAMERA_B2_STATIC_1 rx=irq camera_started=0 session_started=0\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:48:59.9675324Z","value":"B2 START","kind":"tx"}
+{"utc":"2026-11-05T19:49:00.2571018Z","value":"[B2] state=0 error=0 written=0 synced=0 observed=0 drop=0 pool=0 ambiguous=0 queue=0 dir=\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:49:01.2656767Z","value":"[B2] state=2 error=0 written=8 synced=0 observed=13 drop=0 pool=0 ambiguous=0 queue=4 dir=2:/R0000001\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:49:02.2862630Z","value":"[B2] state=2 error=0 written=42 synced=34 observed=63 drop=0 pool=0 ambiguous=0 queue=21 dir=2:/R0000001\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:49:03.3043043Z","value":"[B2] state=3 error=0 written=77 synced=69 observed=100 drop=0 pool=0 ambiguous=0 queue=32 dir=2:/R0000001\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:49:04.3076964Z","value":"[B2] state=4 error=0 written=100 synced=100 observed=100 drop=0 pool=0 ambiguous=0 queue=32 dir=2:/R0000001\r\n","kind":"rx"}
+{"utc":"2026-11-05T19:49:05.3225123Z","value":"[B2] state=4 error=0 written=100 synced=100 observed=100 drop=0 pool=0 ambiguous=0 queue=32 dir=2:/R0000001\r\n","kind":"rx"}

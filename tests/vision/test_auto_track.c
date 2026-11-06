@@ -25,6 +25,18 @@ static void auto_step(int frames)
     vd_route_switch_poll(now); /* Even direct legacy calls cannot arm/clear. */
 }
 static void wait_steps(unsigned n,int frames){while(n--)auto_step(frames);}
+static void near_only(void)
+{
+    set_lane(0);
+    for(unsigned y=VISION_ROI_TOP;y<=88U;++y)route_lane.row_flags[y]=0;
+}
+static void no_road(void)
+{set_lane(0);route_lane.valid=0;route_lane.status=VISION_NO_LANE;memset(route_lane.row_flags,0,sizeof(route_lane.row_flags));}
+static void partial_road(int strong)
+{
+    no_road();route_lane.confidence=10;
+    for(unsigned y=80;y<(strong?92U:86U);++y)route_lane.row_flags[y]=3;
+}
 static void wait_start(void)
 {
     unsigned n=0;
@@ -60,9 +72,18 @@ static void legacy_entries_rejected(void)
 }
 int main(void)
 {
+    CHECK(MIDTERM_BOOT_DELAY_MS==1000U); /* Explicit accepted startup requirement. */
+    auto_boot(0);wait_steps(95,1);
+    CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);
+    wait_steps(30,1); /* Fresh stable geometry must decide by 1.25s, not 3s. */
+#if MIDTERM_VISUAL_REVIEWED
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
+#else
+    CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);
+#endif
     auto_boot(0);legacy_entries_rejected();wait_steps(300,0);
     CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]); /* uptime is irrelevant */
-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);
+    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);
     CHECK(info().max_ticks==132&&info().sign3==-1&&info().sign4==1);
     CHECK(info().kp_q8==256&&info().ki_q8==12&&info().enabled);
     /* Even stale writes from legacy code cannot veto autonomous arm/output. */
@@ -87,48 +108,81 @@ int main(void)
     CHECK(!vd_output_arm(now,1));
     midterm_boot_poll(now);
     CHECK(midterm_boot_state()==MT_BOOT_STOPPED);latched();
-    auto_boot(0);wait_start();route_lane.valid=0;wait_steps(2,1);
+    auto_boot(0);wait_start();wait_steps(60,1);
+    /* Pre-budget fallback, not the future MPC degradation policy. Missing
+     * calibrated/integrated budgets must not authorize unbounded near-only
+     * motion. Keep the scenario and verify zero output plus its deadline. */
+    near_only();wait_steps(10,1);
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.observation_valid&&!vd.control.output.far_valid);
+    CHECK(vd.output_authorized&&vd.guard_running&&!vd.autonomous_stopped&&!vd.control.output.faults);
+    CHECK(vd.control.output.recovering&&!pwm[0]&&!pwm[1]);
+    CHECK(!info().target_right&&!info().target_left&&!info().pwm_right&&!info().pwm_left);
+    set_lane(0);wait_steps(20,1);CHECK(vd.control.output.far_valid);
+    no_road();wait_steps(12,1);
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.recovering&&!vd.control.output.faults);
+    CHECK(vd.output_authorized&&vd.guard_running&&!pwm[0]&&!pwm[1]);
+    set_lane(0);wait_steps(60,1);
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&!vd.control.output.recovering&&(pwm[0]||pwm[1]));
+    partial_road(1);wait_steps(10,1);
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&vd.control.output.recovering&&!vd.control.output.search_source);
+    CHECK(vd.output_authorized&&!pwm[0]&&!pwm[1]);
+    no_road();wait_steps(4,1); /* Brief gap after a long partial recovery. */
+    CHECK(midterm_boot_state()==MT_BOOT_RUNNING&&!pwm[0]&&!pwm[1]&&vd.output_authorized);
+    partial_road(1);wait_steps(4,1);CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
+    set_lane(0);wait_steps(30,1);CHECK(midterm_boot_state()==MT_BOOT_RUNNING);
+    no_road();wait_steps(40,1);
+    CHECK(midterm_boot_state()==MT_BOOT_STOPPED&&(vd.control.output.faults&VC_FAULT_VISION));
+    set_lane(0);latched();
+    auto_boot(0);wait_start();wait_steps(60,1);near_only();wait_steps(100,1);
+    CHECK(midterm_boot_state()==MT_BOOT_STOPPED&&(vd.control.output.faults&VC_FAULT_VISION));latched();
+    auto_boot(0);wait_start();wait_steps(20,1);partial_road(1);wait_steps(140,1);
+    CHECK(midterm_boot_state()==MT_BOOT_STOPPED&&(vd.control.output.faults&VC_FAULT_VISION));set_lane(0);latched();
+    auto_boot(0);wait_start();wait_steps(20,1);partial_road(0);wait_steps(40,1);
     CHECK(midterm_boot_state()==MT_BOOT_STOPPED);set_lane(0);latched();
+    auto_boot(0);wait_start();wait_steps(20,1);no_road();wait_steps(4,1);
+    vision_drive_stop();midterm_boot_poll(now);set_lane(0);latched();
     auto_boot(0);wait_start();wait_steps(60,1);
     switch_delta_left=8;switch_delta_right=-8;wait_steps(80,1);
     CHECK(info().faults&&midterm_boot_state()==MT_BOOT_STOPPED);latched();
 #else
     latched(); /* Default review is actually omitted from compiler flags. */
 #endif
-    auto_boot(0);wait_steps(200,1);route_lane.valid=0;wait_steps(2,1);
+    auto_boot(0);near_only();wait_steps(180,1);
+    CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);set_lane(0);wait_start();
+    auto_boot(0);wait_steps(50,1);route_lane.valid=0;wait_steps(2,1);
     CHECK(midterm_boot_state()==MT_BOOT_WAIT);set_lane(0);
-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);wait_steps(12,0);
+    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0);wait_steps(50,1);wait_steps(12,0);
     CHECK(midterm_boot_state()==MT_BOOT_WAIT);
-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);
+    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0);wait_steps(50,1);
     /* No foreground poll over a timeout, then a fresh frame: reset continuity. */
     now+=200;raw3=(uint16_t)(raw3-15);raw4=(uint16_t)(raw4+15);
     vision_drive_safety_tick();vision_drive_observe(&route_lane,++route_sequence,now,now);
-    midterm_boot_poll(now);wait_steps(290,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);
+    midterm_boot_poll(now);wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0);wait_steps(50,1);
     /* Duplicate sequence with updated capture times must not extend continuity. */
     for(unsigned i=0;i<350;++i){
         auto_step(0);vision_drive_observe(&route_lane,route_sequence,now,now);
         midterm_boot_poll(now);CHECK(midterm_boot_state()==MT_BOOT_WAIT&&!pwm[0]&&!pwm[1]);
     }
-    wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);
+    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0);wait_steps(50,1);
     /* New sequences carrying stale capture timestamps never qualify. */
     for(unsigned i=0;i<350;++i){auto_step(0);vision_drive_observe(&route_lane,++route_sequence,now-120U,now);}
-    CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_steps(300,1);
+    CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_steps(90,1);
     CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);vd.control.output.far_valid=0;midterm_boot_poll(now);
-    wait_steps(290,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
-    auto_boot(0);wait_steps(200,1);vision_drive_stop();
+    auto_boot(0);wait_steps(50,1);vd.control.output.far_valid=0;midterm_boot_poll(now);
+    wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0);wait_steps(50,1);vision_drive_stop();
     midterm_boot_poll(now);CHECK(midterm_boot_state()==MT_BOOT_STOPPED);latched();
-    auto_boot(0);wait_steps(200,1);vd.guard_faults|=VC_FAULT_NUMERIC;midterm_boot_poll(now);
+    auto_boot(0);wait_steps(50,1);vd.guard_faults|=VC_FAULT_NUMERIC;midterm_boot_poll(now);
     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
     auto_boot(0);block_local=1;wait_steps(400,1);
     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
     auto_boot(0);vd.hardware_ready=0;wait_steps(400,1);
     CHECK(midterm_boot_state()==MT_BOOT_BLOCKED);latched();
-    auto_boot(0xFFFFFC18U);wait_steps(300,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
+    auto_boot(0xFFFFFC18U);wait_steps(90,1);CHECK(midterm_boot_state()==MT_BOOT_WAIT);wait_start();
     vision_drive_stop();wait_steps(70,0);CHECK(!buzzer);
     printf("AUTO TRACK PASS: %u checks; review=%d, simulated IO only.\n",checks,MIDTERM_VISUAL_REVIEWED);
     return 0;

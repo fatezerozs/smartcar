@@ -1,0 +1,270 @@
+> git rev-parse --show-toplevel
+C:/shengchanli/smartCar/smartcar
+Exit code: 0
+
+> git rev-parse HEAD
+78f2d534d3675c3679317e864ed1e51be8da2c66
+Exit code: 0
+
+> git status --short --branch
+## main...origin/main
+ M demo/code/app_mode.c
+ M demo/code/app_mode.h
+ M demo/code/app_runtime.c
+ M demo/code/board_camera.c
+ M demo/code/board_io.c
+ M demo/code/midterm_boot.c
+ M demo/code/midterm_route_profile.h
+ M demo/code/vision_actuator.c
+ M demo/code/vision_control.c
+ M demo/code/vision_drive.c
+ M demo/code/vision_drive.h
+ M demo/code/vision_drive_internal.h
+ M demo/code/vision_frame.c
+ M demo/code/vision_frame.h
+ M demo/code/vision_guard.c
+ M demo/code/vision_motion.c
+ M demo/code/vision_probe.c
+ M demo/code/vision_profile.h
+ M demo/code/vision_speed.c
+ M demo/code/vision_speed.h
+ M demo/code/vision_startup.c
+ M demo/code/wheel_speed.c
+ M demo/code/wheel_speed.h
+ M demo/mdk/competition/midterm_switch.uvprojx
+ M docs/INDEX.md
+ M docs/PROJECT_EVOLUTION.md
+ M libraries/zf_device/zf_device_mt9v03x.c
+ M libraries/zf_device/zf_device_mt9v03x.h
+ M tests/vision/stubs/main.h
+ M tests/vision/test_board_mode.c
+ M tests/vision/test_debug.c
+ M tests/vision/test_dual_runtime.c
+ M tests/vision/test_equivalence.c
+ M tests/vision/test_field_protocol.ps1
+ M tests/vision/test_midterm_boot.c
+ M tests/vision/test_midterm_runtime.c
+ M tests/vision/test_speed.c
+ M tests/vision/test_switch_runtime.c
+ M tests/vision/test_turn_route.c
+ M tools/build_midterm.ps1
+ M tools/field_protocol.ps1
+?? demo/mdk/competition/midterm_auto-track.uvprojx
+?? docs/changes/2026-10-28_C31_SOFTWARE_HARDENING.md
+?? docs/changes/c31-architecture-next/
+?? docs/changes/c31-implementation/
+?? docs/changes/c31-software-baseline/
+?? docs/changes/c31-software-round/
+?? tests/vision/run_auto_track_tests.cmd
+?? tests/vision/test_auto_track.c
+Exit code: 0
+
+> git branch --show-current
+main
+Exit code: 0
+
+> git log -3 --oneline --decorate
+78f2d53 (HEAD -> main, origin/main, origin/HEAD) 整理 Keil 工程目录
+ddee8c5 feat: archive C31 progress and organize project evolution documents
+8453672 feat: integrate C28 track control and archive 2026-10-22 progress
+Exit code: 0
+
+> git remote -v
+origin	https://github.com/fatezerozs/smartcar.git (fetch)
+origin	https://github.com/fatezerozs/smartcar.git (push)
+Exit code: 0
+
+> git status -sb
+## main...origin/main
+ M demo/code/app_mode.c
+ M demo/code/app_mode.h
+ M demo/code/app_runtime.c
+ M demo/code/board_camera.c
+ M demo/code/board_io.c
+ M demo/code/midterm_boot.c
+ M demo/code/midterm_route_profile.h
+ M demo/code/vision_actuator.c
+ M demo/code/vision_control.c
+ M demo/code/vision_drive.c
+ M demo/code/vision_drive.h
+ M demo/code/vision_drive_internal.h
+ M demo/code/vision_frame.c
+ M demo/code/vision_frame.h
+ M demo/code/vision_guard.c
+ M demo/code/vision_motion.c
+ M demo/code/vision_probe.c
+ M demo/code/vision_profile.h
+ M demo/code/vision_speed.c
+ M demo/code/vision_speed.h
+ M demo/code/vision_startup.c
+ M demo/code/wheel_speed.c
+ M demo/code/wheel_speed.h
+ M demo/mdk/competition/midterm_switch.uvprojx
+ M docs/INDEX.md
+ M docs/PROJECT_EVOLUTION.md
+ M libraries/zf_device/zf_device_mt9v03x.c
+ M libraries/zf_device/zf_device_mt9v03x.h
+ M tests/vision/stubs/main.h
+ M tests/vision/test_board_mode.c
+ M tests/vision/test_debug.c
+ M tests/vision/test_dual_runtime.c
+ M tests/vision/test_equivalence.c
+ M tests/vision/test_field_protocol.ps1
+ M tests/vision/test_midterm_boot.c
+ M tests/vision/test_midterm_runtime.c
+ M tests/vision/test_speed.c
+ M tests/vision/test_switch_runtime.c
+ M tests/vision/test_turn_route.c
+ M tools/build_midterm.ps1
+ M tools/field_protocol.ps1
+?? demo/mdk/competition/midterm_auto-track.uvprojx
+?? docs/changes/2026-10-28_C31_SOFTWARE_HARDENING.md
+?? docs/changes/c31-architecture-next/
+?? docs/changes/c31-implementation/
+?? docs/changes/c31-software-baseline/
+?? docs/changes/c31-software-round/
+?? tests/vision/run_auto_track_tests.cmd
+?? tests/vision/test_auto_track.c
+Exit code: 0
+
+> git show --stat --oneline HEAD
+78f2d53 整理 Keil 工程目录
+ .gitignore                                         |  12 +-
+ README.md                                          |   4 +-
+ demo/code/VISION_CONTROL.md                        |   2 +-
+ demo/code/VISION_README.md                         |   2 +-
+ demo/mdk/EventRecorderStub.scvd                    |   9 -
+ demo/mdk/JLinkSettings.ini                         |  39 --
+ ...70\264\346\227\266\346\226\207\344\273\266.bat" |  37 -
+ demo/mdk/README.md                                 |  24 +
+ demo/mdk/{ => base}/rt1064.uvprojx                 | 766 ++++++++++----------
+ demo/mdk/{ => competition}/midterm_switch.uvprojx  | 766 ++++++++++----------
+ demo/mdk/diagnostics/README.md                     |   4 +
+ demo/mdk/{ => training}/midterm_route.uvprojx      | 768 ++++++++++-----------
+ docs/PROJECT_EVOLUTION.md                          |   6 +-
+ docs/archive/history/ARCHITECTURE_MODES.md         |   2 +-
+ docs/archive/history/BASELINE_20261020.md          |   4 +-
+ docs/archive/history/MIDTERM_C26_SWITCH.md         |   8 +-
+ docs/archive/history/MIDTERM_FIELD.md              |   2 +-
+ docs/archive/history/MIDTERM_IMPLEMENTATION.md     |   6 +-
+ docs/archive/history/MIDTERM_ROUTE_CANDIDATE.md    |   2 +-
+ docs/archive/history/MIDTERM_STAGE1.md             |   2 +-
+ docs/archive/history/MOTOR_THRESHOLD_DIAG.md       |   2 +-
+ docs/archive/history/OPEN_LOOP_FIELD_3.md          |   2 +-
+ docs/archive/history/PROJECT_GUIDE.md              |   2 +-
+ docs/archive/history/REFERENCE_TURN_REVIEW.md      |   2 +-
+ .../history/RUN_START_END_ASSESSMENT_20261022.md   |   2 +-
+ docs/archive/history/TEAM_HANDOFF_20261020.md      |   2 +-
+ docs/archive/history/TEAM_HANDOFF_20261022.md      |   2 +-
+ docs/archive/history/VERIFICATION.md               |   2 +-
+ docs/archive/versions/C26_10_MIDTERM_MAP.md        |   2 +-
+ docs/archive/versions/C26_11_CURRENT_WHITE_PATH.md |   2 +-
+ .../versions/C26_12_EDGE_RETURN_SMOOTHING.md       |   2 +-
+ .../versions/C26_13_TURN_SPEED_AND_RECORDING.md    |   2 +-
+ docs/archive/versions/C26_14_MAP_AND_STEERING.md   |   2 +-
+ .../versions/C26_15_B_TO_A_AND_CORNER_SPEED.md     |   2 +-
+ docs/archive/versions/C26_16_CONTINUOUS_LAPS.md    |   2 +-
+ .../versions/C26_17_CENTER_START_AND_CROSSING.md   |   2 +-
+ .../C26_18_RECOVERY_AND_STRAIGHT_CANDIDATE.md      |   2 +-
+ docs/archive/versions/C26_18_RING_AND_SPEED.md     |   2 +-
+ docs/archive/versions/C26_20_MAIN_INTEGRATION.md   |   2 +-
+ docs/archive/versions/C26_21_ROUTE_POLICY.md       |   2 +-
+ .../archive/versions/C26_22_CORNER_AND_JUNCTION.md |   2 +-
+ .../versions/C26_23_FIELD_SPEED_AND_PATH.md        |   2 +-
+ docs/archive/versions/C26_24_SPEED_TRACKING.md     |   2 +-
+ docs/archive/versions/C26_25_SERVO_CALIBRATION.md  |   2 +-
+ .../versions/C26_26_TANGENT_ENTRY_AND_SPEED.md     |   2 +-
+ .../archive/versions/C26_27_PERIPHERAL_JUNCTION.md |   4 +-
+ .../versions/C26_28_EVIDENCE_DRIVEN_SPEED.md       |   2 +-
+ .../C26_29_ENTRY_AND_CONTINUOUS_SUPPORT.md         |   2 +-
+ .../versions/C26_30_CAPTURED_TANGENT_ENTRY.md      |   2 +-
+ docs/archive/versions/C26_31_ENTRY_CONTINUITY.md   |   2 +-
+ docs/archive/versions/C26_6_ENCODER_START_FIX.md   |   2 +-
+ docs/archive/versions/C26_7_LATERAL_RECOVERY.md    |   2 +-
+ docs/archive/versions/C26_8_REFERENCE_PATH.md      |   2 +-
+ docs/archive/versions/C26_9_STEER_CENTERING.md     |   2 +-
+ docs/changes/2026-10-22_C28.md                     |   2 +-
+ docs/changes/2026-10-23_C31.md                     |   2 +-
+ docs/reference/DUAL_UART.md                        |   2 +-
+ docs/reference/ENCODER_SPEED.md                    |   2 +-
+ docs/reference/MOTION_DIAG.md                      |   2 +-
+ releases/README.md                                 |   2 +-
+ smartcar.uvprojx                                   | 427 ------------
+ tools/build_keil.ps1                               |   2 +-
+ tools/build_link_mvp.ps1                           |  14 +-
+ tools/build_midterm.ps1                            |  12 +-
+ tools/build_motor_threshold.ps1                    |  12 +-
+ tools/check_arm.ps1                                |  20 +-
+ tools/flash_keil.ps1                               |   4 +-
+ tools/verify_project.ps1                           |   4 +-
+ 68 files changed, 1285 insertions(+), 1757 deletions(-)
+Exit code: 0
+
+> git diff --stat
+warning: in the working copy of 'demo/code/app_mode.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_actuator.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_drive_internal.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_motion.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_probe.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/wheel_speed.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/wheel_speed.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/vision/test_dual_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/vision/test_speed.c', LF will be replaced by CRLF the next time Git touches it
+ demo/code/app_mode.c                    |  24 +---
+ demo/code/app_mode.h                    |   9 +-
+ demo/code/app_runtime.c                 |  14 +-
+ demo/code/board_camera.c                |   4 +
+ demo/code/board_io.c                    |  15 ++-
+ demo/code/midterm_boot.c                |  75 ++++++++++-
+ demo/code/midterm_route_profile.h       |   6 +-
+ demo/code/vision_actuator.c             | 220 +++++++++++++++++++++++++++++---
+ demo/code/vision_control.c              |   5 +-
+ demo/code/vision_drive.c                |  37 ++++--
+ demo/code/vision_drive.h                |  13 +-
+ demo/code/vision_drive_internal.h       |  10 +-
+ demo/code/vision_frame.c                |  15 ++-
+ demo/code/vision_frame.h                |   8 +-
+ demo/code/vision_guard.c                |   2 +-
+ demo/code/vision_motion.c               |  53 ++------
+ demo/code/vision_probe.c                |  18 +--
+ demo/code/vision_profile.h              |  18 ++-
+ demo/code/vision_speed.c                |  70 ++++++++--
+ demo/code/vision_speed.h                |  21 ++-
+ demo/code/vision_startup.c              |  24 +++-
+ demo/code/wheel_speed.c                 |  28 +++-
+ demo/code/wheel_speed.h                 |   6 +
+ docs/INDEX.md                           |   3 +-
+ docs/PROJECT_EVOLUTION.md               |  28 ++--
+ libraries/zf_device/zf_device_mt9v03x.c |  23 ++++
+ libraries/zf_device/zf_device_mt9v03x.h |   4 +
+ tests/vision/stubs/main.h               |   3 +
+ tests/vision/test_board_mode.c          |   3 +
+ tests/vision/test_debug.c               |  18 ++-
+ tests/vision/test_dual_runtime.c        |   2 +-
+ tests/vision/test_equivalence.c         | 163 ++++++++++++++++++++---
+ tests/vision/test_field_protocol.ps1    |   4 +-
+ tests/vision/test_midterm_boot.c        |   3 +-
+ tests/vision/test_midterm_runtime.c     |  35 +++--
+ tests/vision/test_speed.c               |  23 ++++
+ tests/vision/test_switch_runtime.c      |   2 +-
+ tests/vision/test_turn_route.c          |   7 +-
+ tools/build_midterm.ps1                 |  52 ++++++--
+ tools/field_protocol.ps1                |   2 +-
+ 40 files changed, 854 insertions(+), 216 deletions(-)
+Exit code: 0
+
+> git diff --cached --stat
+Exit code: 0
+
+> git diff --check
+warning: in the working copy of 'demo/code/app_mode.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_actuator.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_drive_internal.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_motion.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/vision_probe.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/wheel_speed.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/code/wheel_speed.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/vision/test_dual_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/vision/test_speed.c', LF will be replaced by CRLF the next time Git touches it
+Exit code: 0
+

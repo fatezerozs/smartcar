@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:smartcar:vision-data:contracts:1.0",
+  "title": "SmartCar offline data contracts; cross-artifact constraints are additionally checked by code",
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "id": {"type": "string", "minLength": 1},
+    "ref": {"type": "object", "required": ["path", "sha256"], "properties": {
+      "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}
+    }},
+    "session": {"type": "object", "required": ["schema_version", "format", "session_id", "synthetic", "width", "height", "stride", "pixel_format", "timestamp_unit", "timestamp_semantics", "segments"], "properties": {
+      "schema_version": {"const": "1.0"}, "format": {"enum": ["SCRAW-DRAFT-1", "SCRAW-1"]},
+      "session_id": {"$ref": "#/$defs/id"}, "synthetic": {"type": "boolean"},
+      "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1},
+      "stride": {"type": "integer", "minimum": 1}, "pixel_format": {"const": "GRAY8"},
+      "timestamp_unit": {"const": "us"}, "timestamp_semantics": {"type": "string", "minLength": 1},
+      "segments": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[^/\\\\]+\\.scraw$"}}
+    }},
+    "frame": {"type": "object", "required": ["frame_id", "session_id", "source_sequence", "timestamp_us", "source_segment", "payload_offset", "payload_size", "payload_sha256", "pixels_sha256", "png_path", "png_sha256", "width", "height", "stride", "timestamp_semantics", "a1_transform"], "properties": {
+      "frame_id": {"$ref": "#/$defs/id"}, "session_id": {"$ref": "#/$defs/id"},
+      "source_sequence": {"type": "integer", "minimum": 0}, "timestamp_us": {"type": "integer", "minimum": 0},
+      "payload_offset": {"type": "integer", "minimum": 0}, "payload_size": {"type": "integer", "minimum": 1},
+      "payload_sha256": {"$ref": "#/$defs/hash"}, "pixels_sha256": {"$ref": "#/$defs/hash"}, "png_sha256": {"$ref": "#/$defs/hash"}
+    }},
+    "event": {"type": "object", "required": ["event_id", "session_id", "event_type", "start_frame_id", "end_frame_id", "phase_segments", "boundary_confidence", "review_status"], "properties": {
+      "event_id": {"$ref": "#/$defs/id"}, "session_id": {"$ref": "#/$defs/id"},
+      "start_frame_id": {"$ref": "#/$defs/id"}, "end_frame_id": {"$ref": "#/$defs/id"},
+      "phase_segments": {"type": "array"}, "boundary_confidence": {"enum": ["exact", "uncertain"]}
+    }},
+    "annotation": {"type": "object", "required": ["schema_version", "kind", "id", "frame_id", "level", "status", "origin", "actor", "created_at", "source_tool", "version", "scene", "geometry", "exposure_algorithms"], "properties": {
+      "schema_version": {"const": "1.0"}, "kind": {"const": "annotation"}, "origin": {"const": "human"},
+      "id": {"$ref": "#/$defs/id"}, "frame_id": {"$ref": "#/$defs/id"},
+      "level": {"enum": ["T1", "T2", "T3"]}, "status": {"enum": ["draft", "submitted", "reviewed", "approved", "rejected"]},
+      "actor": {"type": "string", "minLength": 1}, "version": {"type": "integer", "minimum": 1},
+      "geometry": {"type": "array"}, "exposure_algorithms": {"type": "array", "items": {"type": "string"}}
+    }},
+    "prediction": {"type": "object", "required": ["schema_version", "kind", "id", "frame_id", "status", "algorithm", "input_sha256", "configuration", "geometry"], "properties": {
+      "schema_version": {"const": "1.0"}, "kind": {"const": "prediction"}, "status": {"const": "draft"},
+      "input_sha256": {"$ref": "#/$defs/hash"}, "algorithm": {"type": "string", "minLength": 1}, "geometry": {"type": "array"}
+    }},
+    "review": {"type": "object", "required": ["schema_version", "bundle_id", "annotation_id", "annotation_sha256", "revision", "previous_sha256", "action", "reviewer", "notes", "at", "human_attestation"], "properties": {
+      "schema_version": {"const": "1.0"}, "annotation_sha256": {"$ref": "#/$defs/hash"},
+      "revision": {"type": "integer", "minimum": 1}, "action": {"enum": ["reviewed", "approved", "rejected"]},
+      "human_attestation": {"const": true}, "reviewer": {"type": "string", "minLength": 1}, "notes": {"type": "string", "minLength": 1}
+    }},
+    "view": {"type": "object", "required": ["schema_version", "view_id", "created_at", "policy", "sessions", "events", "frames"], "properties": {
+      "schema_version": {"const": "1.0"}, "sessions": {"type": "array", "minItems": 1}, "events": {"type": "array", "items": {"$ref": "#/$defs/event"}}, "frames": {"type": "array", "minItems": 1}
+    }},
+    "split": {"type": "object", "required": ["schema_version", "split_id", "sessions", "near_duplicate_candidates", "layout_split_overlap", "policy"], "properties": {
+      "schema_version": {"const": "1.0"}, "sessions": {"type": "array", "minItems": 1}
+    }},
+    "release": {"type": "object", "required": ["schema_version", "release_id", "purpose", "sessions", "frame_ids", "ground_truth", "review_snapshot", "view_sha256", "split_sha256", "synthetic", "format_status"], "properties": {
+      "schema_version": {"const": "1.0"}, "frame_ids": {"type": "array", "minItems": 1},
+      "ground_truth": {"type": "array"}, "view_sha256": {"$ref": "#/$defs/hash"}, "split_sha256": {"$ref": "#/$defs/hash"},
+      "synthetic": {"type": "boolean"}, "format_status": {"const": "DRAFT"}
+    }},
+    "run": {"type": "object", "required": ["schema_version", "run_id", "algorithm_id", "git", "input_tree_sha256", "release_sha256", "environment_id", "toolchain", "parameters", "warmup", "repetitions", "frame_ids", "measurements", "quality", "host_compute_ns", "status", "release_eligible"], "properties": {
+      "schema_version": {"const": "1.0"}, "input_tree_sha256": {"$ref": "#/$defs/hash"}, "release_sha256": {"$ref": "#/$defs/hash"},
+      "warmup": {"type": "integer", "minimum": 0}, "repetitions": {"type": "integer", "minimum": 1},
+      "release_eligible": {"const": false}, "measurements": {"type": "array", "minItems": 1}, "quality": {"type": "array"}
+    }}
+  }
+}

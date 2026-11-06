@@ -1,0 +1,12 @@
+{
+  "rows": 84,
+  "all_unknown": true,
+  "no_numeric_measurements_invented": true,
+  "distinct_measurements": [
+    "encoder_scale",
+    "rear_track",
+    "rolling_circumference",
+    "servo_angle",
+    "wheelbase"
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "map": ".build/recorder-train/Listings/recorder_train.map",
+  "sha256": "cfe6e7a3ce290669cd9a085d28fb29c9a966e92a2d5a63561481254804ef32e2",
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "execution_base": "0x00000000",
+      "load_base": "0x7001c2c0",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "execution_base": "0x20000000",
+      "load_base": "0x7001c1c0",
+      "used": 197496,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "execution_base": "0x20030378",
+      "load_base": "0x7001c2c0",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "execution_base": "0x2006e000",
+      "load_base": "0x7001c2c0",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "execution_base": "0x20200000",
+      "load_base": "0x7001c2c0",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "execution_base": "0x70000000",
+      "load_base": "0x70000000",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "execution_base": "0x70001000",
+      "load_base": "0x70001000",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "execution_base": "0x70002000",
+      "load_base": "0x70002000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "execution_base": "0x70002400",
+      "load_base": "0x70002400",
+      "used": 980,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "execution_base": "0x80000000",
+      "load_base": "0x700027d4",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "execution_base": "0x80000400",
+      "load_base": "0x70002800",
+      "used": 195424,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "execution_base": "0x81e00000",
+      "load_base": "0x7001c2c0",
+      "used": 1664448,
+      "maximum": 2097152
+    }
+  ],
+  "symbols": {
+    "raw": [
+      {
+        "address": "0x81e083c0",
+        "kind": "Data",
+        "bytes": 180736,
+        "object": "recorder_capture.o(.bss.SDRAM_NonCacheable)"
+      }
+    ],
+    "recording": [
+      {
+        "address": "0x81e345c0",
+        "kind": "Data",
+        "bytes": 1449984,
+        "object": "recorder_capture.o(.bss.SDRAM_NonCacheable)"
+      }
+    ],
+    "vision": [
+      {
+        "address": "0x80019dc0",
+        "kind": "Data",
+        "bytes": 67968,
+        "object": "recorder_capture.o(.bss.SDRAM_CACHE)"
+      }
+    ],
+    "binary": [
+      {
+        "address": "0x8002a740",
+        "kind": "Data",
+        "bytes": 22560,
+        "object": "recorder_control.o(.bss.SDRAM_CACHE)"
+      }
+    ],
+    "bounce": [
+      {
+        "address": "0x81e00340",
+        "kind": "Data",
+        "bytes": 32768,
+        "object": "fsl_sd_disk.o(.bss.SDRAM_NonCacheable)"
+      }
+    ],
+    "g_sd": [
+      {
+        "address": "0x81e00000",
+        "kind": "Data",
+        "bytes": 772,
+        "object": "fsl_sd_disk.o(.bss.SDRAM_NonCacheable)"
+      }
+    ],
+    "control_stack": [
+      {
+        "address": "0x2000c6d0",
+        "kind": "Data",
+        "bytes": 8192,
+        "object": "main.o(.bss.control_stack)"
+      }
+    ],
+    "capture_stack": [
+      {
+        "address": "0x2000b6d0",
+        "kind": "Data",
+        "bytes": 4096,
+        "object": "main.o(.bss.capture_stack)"
+      }
+    ],
+    "vision_stack": [
+      {
+        "address": "0x2002c288",
+        "kind": "Data",
+        "bytes": 16384,
+        "object": "main.o(.bss.vision_stack)"
+      }
+    ],
+    "storage_stack": [
+      {
+        "address": "0x20025eec",
+        "kind": "Data",
+        "bytes": 16384,
+        "object": "main.o(.bss.storage_stack)"
+      }
+    ],
+    "link_stack": [
+      {
+        "address": "0x2000f668",
+        "kind": "Data",
+        "bytes": 8192,
+        "object": "main.o(.bss.link_stack)"
+      }
+    ],
+    "idle_stack": [
+      {
+        "address": "0x2000eca4",
+        "kind": "Data",
+        "bytes": 1024,
+        "object": "main.o(.bss.idle_stack)"
+      }
+    ],
+    "SysTick_Handler": [
+      {
+        "address": "0x80006b15",
+        "kind": "Thumb Code",
+        "bytes": 44,
+        "object": "port.o(.text.SysTick_Handler)"
+      }
+    ]
+  }
+}

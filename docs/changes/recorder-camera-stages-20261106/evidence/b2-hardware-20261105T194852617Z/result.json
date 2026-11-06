@@ -1,0 +1,15 @@
+﻿{
+    "hardware_accepted":  false,
+    "written":  100,
+    "stop_sent":  false,
+    "start_sent":  true,
+    "out":  "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\recorder-camera-stages-20261106\\evidence\\b2-hardware-20261105T194852617Z",
+    "pc_session_verified":  false,
+    "agent_flash_or_reset":  false,
+    "reason":  "Board reports closed; full Session extraction and PC verification pending",
+    "synced":  100,
+    "identity_verified":  true,
+    "board_closed":  true,
+    "baud":  115200,
+    "port":  "COM14"
+}

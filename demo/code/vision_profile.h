@@ -143,6 +143,23 @@
 #define VISION_DUTY_STEERING_WEIGHT 1.0f
 #define VISION_DUTY_MISSING_FAR_SCALE 0.5f
 #define VISION_CONTROL_FRAME_TIMEOUT_MS 100U
+/* Fresh-frame visual degradation is separate from camera disconnection.
+ * These are the existing route partial-evidence bounds, now shared by C31. */
+#define VISION_RECOVERY_INITIAL_MS 300U
+#define VISION_RECOVERY_PARTIAL_FRESH_MS 100U
+#define VISION_RECOVERY_MAX_MS 1200U
+/* C31 exception handling only: motors remain inhibited throughout this window.
+ * 300ms preserves the existing short recovery budget; five full fresh frames
+ * confirm reacquisition. Neither value is a physical stopping calibration. */
+#ifndef VISION_C31_ZERO_WAIT_MS
+#define VISION_C31_ZERO_WAIT_MS 300U
+#endif
+#ifndef VISION_C31_REACQUIRE_FRAMES
+#define VISION_C31_REACQUIRE_FRAMES 5U
+#endif
+#if VISION_C31_ZERO_WAIT_MS < 1 || VISION_C31_ZERO_WAIT_MS > 300U || VISION_C31_REACQUIRE_FRAMES < 2 || VISION_C31_REACQUIRE_FRAMES > 255
+#error "C31 recovery requires a bounded zero-motor window and consecutive evidence."
+#endif
 #define VISION_CONTROL_COMMAND_TIMEOUT_MS 500U
 #define VISION_CONTROL_MAX_RUN_MS 5000U
 #define VISION_CONTROL_ARM_FRAMES 5U

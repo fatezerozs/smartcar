@@ -7,23 +7,24 @@
 #include "app_link.h"
 #if VISION_DUAL_UART_ENABLE
 static unsigned owner, busy_now;
-static int stop_now, changed_now, activity_now;
+static int stop_now, changed_now, activity_now, error_now;
 static uint8_t in_line[2], discard[2];
 static uint32_t last_summary;
 void app_transport_init(void)
 {
     owner=VISION_ROUTE_SWITCH?APP_LINK_RADIO:APP_LINK_USB;busy_now=0;
-    stop_now=changed_now=activity_now=0;last_summary=0;
+    stop_now=changed_now=activity_now=error_now=0;last_summary=0;
     memset(in_line,0,sizeof(in_line));memset(discard,0,sizeof(discard));
     app_link_init();
 }
 static int send_text(unsigned ch,const char *text)
 {return app_link_send(ch,(const uint8_t *)text,(uint32_t)strlen(text));}
 void app_transport_begin(int busy)
-{busy_now=(unsigned)(busy!=0);stop_now=changed_now=activity_now=0;}
+{busy_now=(unsigned)(busy!=0);stop_now=changed_now=activity_now=error_now=0;}
 int app_transport_stopped(void){return stop_now;}
 int app_transport_changed(void){return changed_now;}
 int app_transport_activity(void){return activity_now;}
+int app_transport_rx_error(void){return error_now;}
 unsigned app_transport_owner(void){return owner;}
 void app_transport_poll(void){app_link_poll();}
 static void link_status(unsigned ch)
@@ -43,9 +44,20 @@ uint32_t app_transport_read(uint8_t *data,uint32_t capacity)
         uint32_t count;
         if(app_link_take_error(ch)) {
             uint8_t junk[APP_LINK_RX_SIZE];
-            (void)app_link_read(ch,junk,sizeof(junk));
-            discard[ch]=1;in_line[ch]=1;stop_now=1;changed_now=1;
-            (void)send_text(ch,"[LINK] RX_ERROR; discarded until newline\r\n");
+            if(app_link_read(ch,junk,sizeof(junk)))activity_now=1;
+            char text[128];
+            discard[ch]=1;in_line[ch]=1;error_now=1;
+#if VISION_MIDTERM_C31_AUTONOMOUS
+            /* No output lease exists while idle. A byte-free UART error must
+             * restart qualification, not permanently impersonate operator STOP.
+             * Bytes (including discarded ones) still report activity below. */
+            if(busy_now){stop_now=1;changed_now=1;}
+#else
+            stop_now=1;changed_now=1;
+#endif
+            (void)snprintf(text,sizeof(text),"[LINK] port=%s RX_ERROR; %s; discarded until newline\r\n",
+                ch?"radio":"usb",stop_now?"STOP":"qualification reset");
+            (void)send_text(ch,text);
         }
         count=app_link_read(ch,bytes,capacity<sizeof(bytes)?capacity:sizeof(bytes));
         if(count)activity_now=1;
@@ -112,6 +124,7 @@ void app_transport_poll(void){}
 int app_transport_stopped(void){return 0;}
 int app_transport_changed(void){return 0;}
 int app_transport_activity(void){return 0;}
+int app_transport_rx_error(void){return 0;}
 unsigned app_transport_owner(void){return VISION_WIRELESS_UART_ENABLE?1U:0U;}
 void app_transport_summary(uint32_t now,uint32_t frame,unsigned state,unsigned faults,int valid,unsigned motion)
 {(void)now;(void)frame;(void)state;(void)faults;(void)valid;(void)motion;}

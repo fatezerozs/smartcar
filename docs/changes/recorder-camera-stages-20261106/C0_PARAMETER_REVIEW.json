@@ -1,0 +1,96 @@
+{
+  "calibration_version": null,
+  "measured": false,
+  "parameters": [
+    {
+      "parameter": "wheelbase",
+      "unit": "mm",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "rear_track",
+      "unit": "mm",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "left_rolling_circumference_loaded",
+      "unit": "mm/turn",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "right_rolling_circumference_loaded",
+      "unit": "mm/turn",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "left_encoder_scale",
+      "unit": "counts/wheel_turn",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "right_encoder_scale",
+      "unit": "counts/wheel_turn",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "left_encoder_forward_sign",
+      "unit": "sign",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "right_encoder_forward_sign",
+      "unit": "sign",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "left_front_servo_curve",
+      "unit": "deg vs us",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    },
+    {
+      "parameter": "right_front_servo_curve",
+      "unit": "deg vs us",
+      "value": null,
+      "standard_uncertainty": null,
+      "status": "unknown",
+      "production_approved": false,
+      "raw_record_refs": []
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "checked": 1219,
+  "changed": [],
+  "writes_confined_to": "demo/sd_performance/",
+  "existing_sd_diagnostic_preserved": true,
+  "flashed": false,
+  "reset": false,
+  "serial_opened_this_stage": false,
+  "new_firmware_hardware_validated": false
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "fixture": "complete",
+    "exit_code": 0,
+    "status": "complete",
+    "synthetic": true,
+    "hardware_accepted": false
+  },
+  {
+    "fixture": "gap",
+    "exit_code": 1,
+    "status": "incomplete",
+    "synthetic": true,
+    "hardware_accepted": false
+  }
+]

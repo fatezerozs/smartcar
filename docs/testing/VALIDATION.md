@@ -19,10 +19,10 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 - `softwarePassed=true`，`releaseEligible=false`：本轮显式使用 GCC 补充 Host 证据。
 - 工具：GCC 14.2.0、UV4 5.39.0.0、ARMCLANG 文件版本 18.0.0；完整命令及版本证据保存在环境和原始日志中。
 
-完整本地证据：
-[summary.md](../../.test-results/20261101T175852-a5a26be988/summary.md)、
-[run.json](../../.test-results/20261101T175852-a5a26be988/run.json)、
-[environment.json](../../.test-results/20261101T175852-a5a26be988/environment.json)。
+完整本地证据（以下为本机生成路径，不随Git发布；公开摘要见后面的validation.json）：
+`../../.test-results/20261101T175852-a5a26be988/summary.md`、
+`../../.test-results/20261101T175852-a5a26be988/run.json`、
+`../../.test-results/20261101T175852-a5a26be988/environment.json`。
 可提交的精简索引为 [validation.json](validation.json)，包括结果文件哈希、套件
 结果和九个 AXF 的 SHA-256。生成目录本身不提交；CI 按 artifact 归档。
 
@@ -62,11 +62,11 @@ C32 工程提交与归档边界见 [C32 说明](../changes/2026-11-02_C32_TESTIN
 | 质量退化但运行更快的合成比较输入 | 比较器自测确认总门禁 FAIL，不能用速度抵消质量失败 |
 
 环境反例报告：
-[MSVC 缺失与独立模块](../../.test-results/20261101T175959-13d9a78134/summary.md)、
-[ASan 缺失](../../.test-results/20261101T175959-164932a528/summary.md)。
+`../../.test-results/20261101T175959-13d9a78134/summary.md`、
+`../../.test-results/20261101T175959-164932a528/summary.md`。
 旧包装兼容证据：
-[Speed group](../../.test-results/20261101T175448-22d0d65f36/summary.md)、
-[Motion diagnostic](../../.test-results/20261101T175512-60215ae2ad/summary.md)。
+`../../.test-results/20261101T175448-22d0d65f36/summary.md`、
+`../../.test-results/20261101T175512-60215ae2ad/summary.md`。
 
 ## 验收标准对应
 

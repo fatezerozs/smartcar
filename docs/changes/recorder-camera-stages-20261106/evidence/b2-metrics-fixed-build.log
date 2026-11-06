@@ -1,0 +1,125 @@
+C:\shengchanli\smartCar\smartcar\demo\recorder_b2\mdk\recorder_b2.uvprojx
+C:\shengchanli\smartCar\smartcar\demo\recorder_b2\mdk\recorder_b2.uvprojx
+{
+  "build_only": true,
+  "zero_errors_warnings": true,
+  "no_actuator_encoder_control_symbols": true,
+  "tasks": [
+    "Capture priority4 and Writer priority2 only after START",
+    "Monitor priority5; only task in export mode"
+  ],
+  "buffers": {
+    "raw": {
+      "address": "0x81e00080",
+      "bytes": 180736
+    },
+    "recording": {
+      "address": "0x81e2c280",
+      "bytes": 1449984
+    },
+    "bounce": {
+      "address": "0x81f8e5c0",
+      "bytes": 32768
+    },
+    "g_sd": {
+      "address": "0x81f8e280",
+      "bytes": 780
+    },
+    "s_sdmmcHostDmaBuffer": {
+      "address": "0x81e00000",
+      "bytes": 128
+    }
+  },
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "base": "0x00000000",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "base": "0x20000000",
+      "used": 95020,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "base": "0x2001732c",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "base": "0x2006e000",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "base": "0x20200000",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "base": "0x70000000",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "base": "0x70001000",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "base": "0x70002000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "base": "0x70002400",
+      "used": 980,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "base": "0x80000000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "base": "0x80000400",
+      "used": 125568,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "base": "0x81e00000",
+      "used": 1664448,
+      "maximum": 2097152
+    }
+  ],
+  "frozen_file_count": 196,
+  "fresh_dependencies_match_frozen_manifest": true,
+  "embedded_identity_manifest_digest": "31d8b396f70106a5976991542121e185020ce27c0d3f602c805d44e2566feeea",
+  "adapter_inputs_verified": true,
+  "volume": "2:",
+  "command_gate": "B2 START for Camera/Session; B2 EXPORT MODE initializes only SD for readonly export",
+  "session_limit": "3s recording or 100 observed events; 10s monitor-start cap; software policy, not measured WCET",
+  "sha256": {
+    ".build\\recorder-camera-stages-20261106\\run-20261105T202317-45776-final\\Listings\\recorder_b2.map": "d4b60bd8feaac2f3b0f9a7848c973e0a214865a3bd4129321b769b1ca9da1c65",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T202317-45776-final\\Objects\\recorder_b2.axf": "d485107a3814ab061367f80c8eafa844555c0739cf8691004590fbeb1ce4e444",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T202317-45776-final\\Objects\\recorder_b2.bin": "d45a37ca1c5ab1855de0b0e0bc697456ec90374f3e89c9f18ba6a6bc02c312d7",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T202317-45776-final\\keil-build.log": "41543fbe4d6875b3b71807a2206a8788dc8c7bbad404932faf56161a42e18826",
+    ".build\\recorder-camera-stages-20261106\\run-20261105T202317-45776-final\\inputs.json": "5290d2203bd419a35b2f20587f6a1462ac60951229d4d3e1bad844556ecb9981"
+  },
+  "hardware_accessed": false,
+  "b1": "SKIPPED_BY_USER",
+  "b2_hardware_accepted": false
+}
+Build only, hardware unverified; new artifacts: C:\shengchanli\smartCar\smartcar\.build\recorder-camera-stages-20261106\run-20261105T202317-45776-final

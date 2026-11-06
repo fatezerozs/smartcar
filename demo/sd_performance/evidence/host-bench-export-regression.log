@@ -1,0 +1,17 @@
+PASS table CRC32 known vector
+PASS failure/collision scenario 1
+PASS failure/collision scenario 2
+PASS failure/collision scenario 3
+PASS failure/collision scenario 4
+PASS failure/collision scenario 5
+PASS failure/collision scenario 6
+PASS failure/collision scenario 7
+PASS failure/collision scenario 8
+PASS failure/collision scenario 10
+PASS failure/collision scenario 11
+PASS failure/collision scenario 12
+PASS failure/collision scenario 13
+PASS failure/collision scenario 14
+PASS 16MiB 25MHz mode, full read/CRC, exact bounded calls and untruncated result
+PASS 50MHz request and timing accounting
+ALL 16 BENCH CHECKS PASS; MOCK I/O ONLY

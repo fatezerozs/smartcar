@@ -1,0 +1,15 @@
+{
+  "baseline_files": 852,
+  "changed": [
+    "docs\\INDEX.md"
+  ],
+  "missing": [],
+  "production_source_and_original_projects_changed": [],
+  "unrelated_document_change_retained": "docs/INDEX.md changed during task, adds C1 reference link; not written or reverted by this B3 work",
+  "latest_private_core_host_regression": "docs\\changes\\recorder-b3-20261106\\evidence\\host-regression-20261105T214044004720Z\\result.json",
+  "frozen_final_sources_unchanged": true,
+  "hardware_accessed_this_B3_round": false,
+  "motion_started": false,
+  "user_direction": "static first; physical scale and actual motion limits not yet measured",
+  "global_agent_settings_or_skills_changed": false
+}

@@ -1,0 +1,6 @@
+{
+  "old_axf_and_bin_unchanged": true,
+  "old_map_restored_sha256": "86d3783caa5d42ab7f754e4c312ace42695eee64ad98a15dd7cebee4789f913a",
+  "matches_original": true,
+  "cause": "uVision uvoptx cached ListingPath overrides project path; configure.py now updates both"
+}

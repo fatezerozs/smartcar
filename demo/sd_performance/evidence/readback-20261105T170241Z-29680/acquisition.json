@@ -1,0 +1,13 @@
+﻿{
+    "port":  "COM14",
+    "baud":  921600,
+    "user_power_cycle_confirmed_in_chat":  true,
+    "agent_reset":  false,
+    "agent_flashed":  false,
+    "sd_write_test_sent":  false,
+    "downloaded":  false,
+    "pc_verified":  false,
+    "started_utc":  "2026-11-05T17:02:42.0088945Z",
+    "error":  "Exception calling \"Download\" with \"3\" argument(s): \"No complete serial line\"",
+    "finished_utc":  "2026-11-05T17:03:12.8643690Z"
+}

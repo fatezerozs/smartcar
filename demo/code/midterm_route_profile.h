@@ -1,12 +1,25 @@
 #ifndef MIDTERM_ROUTE_PROFILE_H
 #define MIDTERM_ROUTE_PROFILE_H
+/* Adopted for production configuration by the operator on 2026-11-06.
+ * Wheel-end effective counts in the current A-rising/B-direction mode:
+ * LEFT: -23358 raw counts / 10 forward wheel turns; RIGHT: +23586 / 10.
+ * Preserve fractional CPR from the measured ratio; do not assume 1024/4096.
+ * Evidence and repeat/drift limits: docs/changes/recorder-b3-20261106/
+ * encoder-joint-static-20261106. This is not a rolling-distance calibration.
+ */
+#define MT_ROUTE_ENCODER_LEFT_FORWARD_SIGN (-1)
+#define MT_ROUTE_ENCODER_RIGHT_FORWARD_SIGN 1
+#define MT_ROUTE_ENCODER_LEFT_CPR_X10 23358U
+#define MT_ROUTE_ENCODER_RIGHT_CPR_X10 23586U
+#define MT_ROUTE_ENCODER_LEFT_CPR (MT_ROUTE_ENCODER_LEFT_CPR_X10 / 10.0f)
+#define MT_ROUTE_ENCODER_RIGHT_CPR (MT_ROUTE_ENCODER_RIGHT_CPR_X10 / 10.0f)
 /* Route profiles: manual A-to-B training and C26 continuous-track variant.
  * Camera axis is from the current raised camera mount; recompile if moved.
  * Successful speed baseline and measured servo window are applied in drive_init.
  * Existing steering controller and frame/heartbeat/encoder protections remain.
  * Manual route target never starts on power-up. C26 switch target can start
  * with ON at boot after five valid frames. Autonomous C31 instead requires
- * continuous valid track for 3000ms and the visual review gate; C26/C27 have
+ * continuous valid track for MIDTERM_BOOT_DELAY_MS and the visual review gate; C26/C27 have
  * no start/stop authority. No route variant loads a saved profile.
  */
 #define MT_ROUTE_AXIS_NEAR_X 0.49733f

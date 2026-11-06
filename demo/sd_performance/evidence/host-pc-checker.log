@@ -1,0 +1,10 @@
+PASS good-S (read-only fixture unchanged)
+PASS good-P (read-only fixture unchanged)
+PASS crc (read-only fixture unchanged)
+PASS sequence (read-only fixture unchanged)
+PASS tag (read-only fixture unchanged)
+PASS magic (read-only fixture unchanged)
+PASS pattern-valid-crc (read-only fixture unchanged)
+PASS truncated (read-only fixture unchanged)
+PASS extra-block (read-only fixture unchanged)
+ALL 9 PC CHECKER CASES PASS; corruption with recomputed CRC is rejected

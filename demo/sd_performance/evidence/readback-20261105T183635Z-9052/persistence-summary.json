@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "scope": "Existing test files readable and internally correct after user-confirmed full power cycle",
+  "bytes": 50462720,
+  "file_count": 5,
+  "validated_blocks": 4640,
+  "unique_transfer_frames": 1540,
+  "transport_crc_retries": 0,
+  "write_commands_sent": [],
+  "agent_reset": false,
+  "agent_flashed": false,
+  "serial_closed": true,
+  "restored_baud": 115200,
+  "start_local": "2026-11-06T02:36:35.248922+08:00",
+  "finish_local": "2026-11-06T02:46:18.583420+08:00",
+  "elapsed_seconds": 583.334498,
+  "original_files_checked": 1219,
+  "original_files_changed": [],
+  "pc_reader_path_independent": false,
+  "pc_verification_algorithm_independent": true
+}

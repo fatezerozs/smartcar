@@ -5,7 +5,7 @@
 void vd_output_zero(void)
 {
     uint32_t mask=__get_PRIMASK();__disable_irq();
-    vd.output_authorized=0;vd.guard_running=0;
+    ++vd.output_epoch;vd.output_authorized=0;vd.guard_running=0;
     /* Stops always write hardware. Invalidate the motion write cache so a
      * later explicit start cannot mistake cleared outputs for held PWM. */
     vd.motion_written_mask=0;
@@ -37,7 +37,7 @@ static void write_changed(unsigned index,int channel,uint32_t duty)
     }
 }
 
-/* All callers hold PRIMASK from target inspection through the last LDOK.
+/* All final writers hold PRIMASK from final authorization through the last LDOK.
  * PIT may revoke a lease, but it never grants one. Foreground observation cannot
  * recreate a revoked lease even if its controller still says RUNNING. */
 enum { VD_OUTPUT_DRIVE=1, VD_OUTPUT_MOTION, VD_OUTPUT_PROBE };
@@ -65,16 +65,21 @@ static int output_allowed(unsigned source,uint32_t now)
 #endif
         if(!app_mode_allows(APP_MODE_DRIVE) || app_mode_change_pending() ||
            !vd.hardware_ready || !vd.control.configured ||
-           !vision_drive_profile_ready(&vd.profile) || vd.probe_active || vd.motion.phase ||
+
+#if !VISION_MIDTERM_C31_AUTONOMOUS
+           !vision_drive_profile_ready(&vd.profile) ||
+#endif
+           vd.probe_active || vd.motion.phase ||
            vd.control.output.state!=VC_RUNNING ||
            (vd.control.local_run && !vd.local_permitted) || !vd.control.have_frame ||
            (uint32_t)(now-vd.control.last_frame_ms)>=VISION_CONTROL_FRAME_TIMEOUT_MS ||
            (!vd.control.local_run && (uint32_t)(now-vd.control.last_command_ms)>=VISION_CONTROL_COMMAND_TIMEOUT_MS) ||
            (vd.guard_max_run_ms && (uint32_t)(now-vd.control.armed_ms)>=vd.guard_max_run_ms))return 0;
-#if VISION_MIDTERM_AUTONOMOUS
+#if VISION_MIDTERM_AUTONOMOUS && !VISION_MIDTERM_C31_AUTONOMOUS
         if(!vd.control.output.observation_valid || !vd.control.output.far_valid)return 0;
 #else
-        /* Switch retains its existing bounded visual recovery controller. */
+        /* Route/autonomous recovery keeps the SAME lease. No current road
+         * means zero demand; stale camera, actual faults and STOP still veto. */
         if(!vd.control.output.observation_valid && !vd.control.output.recovering)return 0;
 #endif
         return 1;
@@ -117,6 +122,7 @@ static int output_allowed(unsigned source,uint32_t now)
 }
 int vd_output_arm(uint32_t now,int local)
 {
+    int ready=vision_drive_profile_ready(&vd.profile);
     uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
 #if VISION_MIDTERM_AUTONOMOUS
     if(vd.autonomous_stopped || !local){__set_PRIMASK(mask);return 0;}
@@ -129,11 +135,11 @@ int vd_output_arm(uint32_t now,int local)
 #endif
        !vd.probe_active && !vd.motion.phase &&
        app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
-       vd.hardware_ready && vision_drive_profile_ready(&vd.profile) &&
+       vd.hardware_ready && ready &&
        (!local || vd.local_permitted)) {
         accepted=local?vc_arm_local(&vd.control,now,vd.hardware_ready):
             vc_arm(&vd.control,now,vd.hardware_ready);
-        if(accepted)vd.output_authorized=VD_OUTPUT_DRIVE;
+        if(accepted){++vd.output_epoch;vd.output_authorized=VD_OUTPUT_DRIVE;}
     }
     __DMB();__set_PRIMASK(mask);return accepted;
 }
@@ -161,6 +167,23 @@ static void output_commit(unsigned source,uint32_t right,uint32_t left,uint32_t 
     if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
     /* Bound PI's actual result independently of its target/speed cap. C31
      * deliberately retains its existing full physical PWM headroom. */
+#if VISION_ROUTE_SWITCH
+    /* Final independent veto after PI/cache: partial guidance or a stale
+     * nonzero demand cannot power either rear motor without current near road.
+     * Keep the existing steering lease; this does not arm or revoke a run. */
+    if(source==VD_OUTPUT_DRIVE && !vd.control.output.observation_valid) {
+        right=left=0;
+#if VISION_ENCODER_ENABLE
+        vd_speed_stop();
+#endif
+    }
+#endif
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    /* Exception policy is enforced at the final motor writer, after PI/cache. */
+    if(source==VD_OUTPUT_DRIVE && vd.control.output.vision_state!=VC_VISION_NORMAL) {
+        right=left=0;vd_speed_stop();
+    }
+#endif
     if(right>cap)right=cap;if(left>cap)left=cap;
     if(servo>PWM_DUTY_MAX) {vd.guard_faults|=VC_FAULT_NUMERIC;vd_output_zero();return;}
     write_changed(2,SERVO_MOTOR_PWM,servo);
@@ -199,7 +222,11 @@ void vd_output_apply(void)
 {
     if (!vd.initialized) return;
     uint32_t mask = __get_PRIMASK();
+#if VISION_MIDTERM_C31_AUTONOMOUS
+    uint32_t epoch=vd.output_epoch; /* Control owns preparation; ISR only revokes. */
+#else
     __disable_irq();
+#endif
     if(vd.motion.phase) {
         vd_motion_tick(timer_get(GPT_TIM_1));
         if(vd.motion.phase)motion_apply();else vd_output_zero();
@@ -225,6 +252,11 @@ void vd_output_apply(void)
         vd.guard_running = 0;
         vd_output_zero();
     } else {
+#if VISION_MIDTERM_C31_AUTONOMOUS
+        /* Profile validation includes floats; configuration is task-owned and
+         * immutable while running. Final commit rechecks scalar authority. */
+        if(!vision_drive_profile_ready(&vd.profile)){vd_output_zero();return;}
+#endif
         if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
             vd_output_zero();__set_PRIMASK(mask);return;
         }
@@ -271,6 +303,12 @@ void vd_output_apply(void)
             motor1*=slow;motor2*=slow;
          }
          vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
+        if(!vd.control.output.observation_valid) {
+            motor1=motor2=0;
+#if VISION_ENCODER_ENABLE
+            vd_speed_stop(); /* Clear targets and PI before publishing zero. */
+#endif
+        }
 #endif
         /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
         if(!(pulse>=vd.profile.servo_min_us && pulse<=vd.profile.servo_max_us) ||
@@ -296,6 +334,13 @@ void vd_output_apply(void)
         /* Controller outputs are bounded; vd.profile validates pulse range first.
          * This short critical section prevents foreground from re-enabling
          * PWM after a safety ISR has latched a stop. No UART/float in ISR. */
+#if VISION_MIDTERM_C31_AUTONOMOUS
+#ifdef VISION_HOST_OUTPUT_HOOK
+        {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(1);}
+#endif
+        __disable_irq();
+        if(epoch!=vd.output_epoch){__set_PRIMASK(mask);return;}
+#endif
         gpio_set_level(MOTOR1_DIR, vd.profile.motor1_forward_level);
         gpio_set_level(MOTOR2_DIR, vd.profile.motor2_forward_level);
         output_commit(VD_OUTPUT_DRIVE,right_duty,left_duty,servo_duty);

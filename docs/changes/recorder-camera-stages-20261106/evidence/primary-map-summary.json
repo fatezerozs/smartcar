@@ -1,0 +1,100 @@
+{
+  "map": ".build/recorder-camera-stages-20261106/primary-01/Listings/rt1064.map",
+  "sha256": "e1bc99f6b606059605404bef181bc320219e03b6ffd00e4ebb11b45b7b2d335b",
+  "regions": [
+    {
+      "name": "ITCM_ncache",
+      "execution_base": "0x00000000",
+      "load_base": "0x7001b0c0",
+      "used": 0,
+      "maximum": 65536
+    },
+    {
+      "name": "RW_m_data",
+      "execution_base": "0x20000000",
+      "load_base": "0x7001afc0",
+      "used": 186620,
+      "maximum": 449536
+    },
+    {
+      "name": "ARM_LIB_HEAP",
+      "execution_base": "0x2002d8fc",
+      "load_base": "0x7001b0c0",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ARM_LIB_STACK",
+      "execution_base": "0x2006e000",
+      "load_base": "0x7001b0c0",
+      "used": 8192,
+      "maximum": 8192
+    },
+    {
+      "name": "OCRAM_cache",
+      "execution_base": "0x20200000",
+      "load_base": "0x7001b0c0",
+      "used": 0,
+      "maximum": 524288
+    },
+    {
+      "name": "RW_m_config_text",
+      "execution_base": "0x70000000",
+      "load_base": "0x70000000",
+      "used": 512,
+      "maximum": 4096
+    },
+    {
+      "name": "RW_m_ivt_text",
+      "execution_base": "0x70001000",
+      "load_base": "0x70001000",
+      "used": 1088,
+      "maximum": 4096
+    },
+    {
+      "name": "VECTOR_ROM",
+      "execution_base": "0x70002000",
+      "load_base": "0x70002000",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_text",
+      "execution_base": "0x70002400",
+      "load_base": "0x70002400",
+      "used": 948,
+      "maximum": 4176896
+    },
+    {
+      "name": "VECTOR_RAM",
+      "execution_base": "0x80000000",
+      "load_base": "0x700027b4",
+      "used": 1024,
+      "maximum": 1024
+    },
+    {
+      "name": "ER_m_ram_text",
+      "execution_base": "0x80000400",
+      "load_base": "0x700027b8",
+      "used": 100324,
+      "maximum": 31448064
+    },
+    {
+      "name": "SDRAM_ncache",
+      "execution_base": "0x81e00000",
+      "load_base": "0x7001b0c0",
+      "used": 0,
+      "maximum": 2097152
+    }
+  ],
+  "symbols": {
+    "SysTick_Handler": [
+      {
+        "address": "0x800054b7",
+        "kind": "Thumb Code",
+        "bytes": 2,
+        "object": "isr.o(.text.SysTick_Handler)"
+      }
+    ]
+  }
+}

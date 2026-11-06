@@ -1,0 +1,10 @@
+PASS route-switch-baseline C26 LEVEL PASS: 300940 checks; zero-output loss, five-frame recovery, retained stop reason; simulated IO.
+PASS speed-baseline measured=50.50 pwm=101
+FF PLANT gain=0.70 target=40 measured=39.90 pwm=57
+FF PLANT gain=0.70 target=20 measured=19.60 pwm=28
+FF PLANT gain=0.70 target=50 measured=50.40 pwm=72
+SPEED PASS 13284 checks; synthetic IO only
+PASS encoder-board-baseline ENCODER BOARD PASS: encoder3 LEFT, encoder4 RIGHT, vendor mode, QTMR2 pin input ownership, read-only diagnostics.
+PASS route-switch-private-hooks C26 LEVEL PASS: 300940 checks; zero-output loss, five-frame recovery, retained stop reason; simulated IO.
+PASS private hook coverage: PI begin/end=112409 mode=74944
+Evidence: C:\shengchanli\smartCar\smartcar\docs\changes\recorder-b3-20261106\evidence\host-regression-20261105T211542603212Z

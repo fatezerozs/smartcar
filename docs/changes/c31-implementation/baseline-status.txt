@@ -1,0 +1,28 @@
+ M demo/code/app_mode.c
+ M demo/code/app_mode.h
+ M demo/code/app_runtime.c
+ M demo/code/board_camera.c
+ M demo/code/board_io.c
+ M demo/code/midterm_boot.c
+ M demo/code/midterm_route_profile.h
+ M demo/code/vision_actuator.c
+ M demo/code/vision_drive.c
+ M demo/code/vision_drive_internal.h
+ M demo/code/vision_frame.c
+ M demo/code/vision_frame.h
+ M demo/code/vision_motion.c
+ M demo/code/vision_probe.c
+ M demo/code/vision_profile.h
+ M demo/code/vision_speed.c
+ M demo/code/vision_speed.h
+ M demo/code/vision_startup.c
+ M demo/code/wheel_speed.c
+ M demo/code/wheel_speed.h
+ M tests/vision/test_field_protocol.ps1
+ M tools/build_midterm.ps1
+ M tools/field_protocol.ps1
+?? docs/changes/c31-architecture-next/
+?? docs/changes/c31-software-baseline/
+?? docs/changes/c31-software-round/
+?? tests/vision/run_auto_track_tests.cmd
+?? tests/vision/test_auto_track.c

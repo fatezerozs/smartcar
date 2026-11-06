@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "path": "demo/recorder_b2/b2_main.c",
+      "sha256": "5ED4CFBF351D630565E870D714BBBEE9E267FEE709C41A3E45006F8A25C9ADA3"
+    },
+    {
+      "path": "demo/recorder_b2/b2_export.c",
+      "sha256": "E0DF2DB71005D2D0093BE67A5C54B3B109818D861B035B8FD97C8365031C4DE0"
+    },
+    {
+      "path": "demo/recorder_b2/include/b2_export.h",
+      "sha256": "2C936BB11AAE6F2F0CF670415CF04B3C33C0FC5878E97CEAF7DDD0AC8490FC86"
+    },
+    {
+      "path": "demo/recorder_b2/mdk/recorder_b2.uvprojx",
+      "sha256": "E5B7A047EF5126D6DF3AFA34F3A1FEB2F3D00082BB1236761A76A931121194C9"
+    },
+    {
+      "path": "tools/prepare_recorder_b2.py",
+      "sha256": "F8DBFADD73CFA7E4B176426AC9B9AABDAD018F28FAFC1B790EDBBA34CA07E1B9"
+    },
+    {
+      "path": "tools/verify_recorder_b2.py",
+      "sha256": "9182C52753B34D83370255A66461D0FB44AB46CD8EE1E05DC6F8A66D0FB02B3D"
+    },
+    {
+      "path": "tools/B2SessionExport.cs",
+      "sha256": "1D5FFF7DCC6F9A1B8ADBAD2177869E145927DC097A4246C67D33A74D5146E91A"
+    },
+    {
+      "path": "tools/download_b2_session.ps1",
+      "sha256": "B174C6F41B5CEC8E3B5ABBA1B808048ECC9869FBB0BD977086999E5C8255B84D"
+    },
+    {
+      "path": "tools/verify_b2_session.py",
+      "sha256": "6CB0AD592315605676BDC0F6E61340834E434D3E1E83279A9AB454D6ADDA50AD"
+    },
+    {
+      "path": "tests/recorder/b2_export_mock.h",
+      "sha256": "7C8AEEA277A8886429698B2E569343C546D632CCC7867F76D69E2F9E5090902C"
+    },
+    {
+      "path": "tests/recorder/test_b2_export.c",
+      "sha256": "8AE2E136D3192829548DE0177679BE194D87C7A38BB21062D95DC90338BBDB78"
+    },
+    {
+      "path": "tests/recorder/test_b2_download_validation.py",
+      "sha256": "1C9ED99361DB4160A2B509B909296E49CFD39674F2755BBFFFA64ED119CFF423"
+    }
+  ],
+  "hardware_acceptance": "PENDING_DOWNLOAD_AND_REVIEW",
+  "candidate": "C:/shengchanli/smartCar/smartcar/.build/recorder-camera-stages-20261106/run-20261105T195937-29944-final",
+  "exporter_no_write_api": true,
+  "host_fault_scenarios_passed": 9,
+  "user_manual_flash_required": true,
+  "client_selftest_passed": true,
+  "pc_wrapper_tests_passed": 3,
+  "previous_session": "2:/R0000001",
+  "hardware_access_this_revision": false
+}

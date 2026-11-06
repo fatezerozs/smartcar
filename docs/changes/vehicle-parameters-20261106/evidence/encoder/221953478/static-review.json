@@ -1,0 +1,46 @@
+{
+  "format": "B3T1",
+  "role": "B3 static prerequisite RAM trace; no SD/image/motion Session",
+  "synthetic": false,
+  "status": "complete",
+  "events": 1759,
+  "events_by_kind": {
+    "raw_counter_read": 500,
+    "encoder_sample": 500,
+    "pi_idle_or_reject": 501,
+    "pwm_driver_write": 3,
+    "c26_mode": 1,
+    "vision_observation": 250,
+    "state_fault": 1,
+    "pwm_register_snapshot": 3,
+    "pi_work_path": 0
+  },
+  "source_input_digest": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+  "c26_raw_levels_seen": [
+    1
+  ],
+  "counter_sample_interval_ms": {
+    "min": 10,
+    "median": 10,
+    "max": 10
+  },
+  "raw_sample_reference_missing": [],
+  "all_observed_applied_pwm_zero": true,
+  "all_three_actuator_snapshots_present": true,
+  "nonzero_requested_pwm_events": 0,
+  "active_pi_observed": false,
+  "pi_gap_max_ms": 5,
+  "pi_max_us": 9.988333333333333,
+  "primask_max_us": 0.23166666666666666,
+  "emit_max_us": 1.19,
+  "b3_motion_accepted": false,
+  "control_parallel_sd_validated": false,
+  "production_ready": false,
+  "limits": [
+    "No SD/Camera raw file recording in this baseline",
+    "Applied register commands are zero by a private static driver adapter; requested PWM and PI values are not actual actuator output",
+    "C26 transitions, active PI and manual Encoder direction tests need separate observed coverage",
+    "Timebase is GPT1 milliseconds and cycle intervals; no physical switch-edge or pulse measurement",
+    "Per-stream joins must use explicit references or previous-sample age, never equate targets with measured motion"
+  ]
+}

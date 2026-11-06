@@ -1,0 +1,290 @@
+{
+  "status": "STATIC_OFF_AND_LOGICAL_ON_REARM_OBSERVED_NOT_B3_MOTION_COMPLETE",
+  "cases": [
+    {
+      "phase": "OFF",
+      "root": "C:/shengchanli/smartCar/b3_static_trace_20261105T215219289Z",
+      "trace_complete": true,
+      "events": 1759,
+      "encoder_samples": 500,
+      "interval_ms": {
+        "min": 10,
+        "median": 10,
+        "max": 10
+      },
+      "pi_work_records": 0,
+      "distinct_consumed_sequences": 0,
+      "pi_gap_max_ms": 6,
+      "pi_max_us": 9.258333333333333,
+      "primask_max_us": 0.23166666666666666,
+      "emit_max_us": 1.245,
+      "pi_sample_age_max_ms": null,
+      "c26_on_duration_sampled_ms": null,
+      "states": [
+        {
+          "ms": 140338,
+          "state": 0,
+          "faults": 0
+        }
+      ],
+      "modes": [
+        {
+          "ms": 140339,
+          "raw_c26": 1,
+          "selected": 0,
+          "settled": 1
+        }
+      ],
+      "control_running_observed": false,
+      "ends_disarmed_fault_free": true,
+      "retained_speed_detail_codes_seen": [
+        0
+      ],
+      "all_applied_zero": true,
+      "all_observed_compare_widths_zero": true,
+      "requested_native_peak_by_channel": {
+        "0": 0,
+        "1": 0,
+        "2": 0
+      },
+      "raw_counter_ranges_left_right": [
+        [
+          64318,
+          64318
+        ],
+        [
+          799,
+          799
+        ]
+      ],
+      "header": "B3TRACE DATA format=B3T1 run=1 count=1759 bytes=112576 crc32=D64DB30B lost=0 reason=1 hz=600000000 pi_gap_max_ms=6 pi_max_cycles=5555 mask_max_cycles=139 emit_max_cycles=747 m1=85 m2=95 servo=185 static=1 synthetic=0 source=d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "raw_sha256": "d92ed043dbf4f1144303cd2f0a3860f9ae4f0a810faebae920cd4d2e7e661ab9",
+      "source_digest": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "stop_records_within_this_capture": []
+    },
+    {
+      "phase": "ON_OFF_1",
+      "root": "C:/shengchanli/smartCar/b3_static_trace_20261105T215450693Z",
+      "trace_complete": true,
+      "events": 1935,
+      "encoder_samples": 500,
+      "interval_ms": {
+        "min": 10,
+        "median": 10,
+        "max": 10
+      },
+      "pi_work_records": 81,
+      "distinct_consumed_sequences": 80,
+      "pi_gap_max_ms": 7,
+      "pi_max_us": 24.901666666666667,
+      "primask_max_us": 18.711666666666666,
+      "emit_max_us": 1.1783333333333332,
+      "pi_sample_age_max_ms": 9,
+      "c26_on_duration_sampled_ms": 4720,
+      "states": [
+        {
+          "ms": 318409,
+          "state": 0,
+          "faults": 0
+        },
+        {
+          "ms": 318538,
+          "state": 1,
+          "faults": 0
+        },
+        {
+          "ms": 319349,
+          "state": 2,
+          "faults": 256
+        },
+        {
+          "ms": 323159,
+          "state": 0,
+          "faults": 0
+        }
+      ],
+      "modes": [
+        {
+          "ms": 318409,
+          "raw_c26": 0,
+          "selected": 0,
+          "settled": 0
+        },
+        {
+          "ms": 318439,
+          "raw_c26": 0,
+          "selected": 3,
+          "settled": 1
+        },
+        {
+          "ms": 323129,
+          "raw_c26": 1,
+          "selected": 3,
+          "settled": 0
+        },
+        {
+          "ms": 323159,
+          "raw_c26": 1,
+          "selected": 0,
+          "settled": 1
+        }
+      ],
+      "control_running_observed": true,
+      "ends_disarmed_fault_free": true,
+      "retained_speed_detail_codes_seen": [
+        0,
+        10
+      ],
+      "all_applied_zero": true,
+      "all_observed_compare_widths_zero": true,
+      "requested_native_peak_by_channel": {
+        "0": 5110,
+        "1": 4540,
+        "2": 794
+      },
+      "raw_counter_ranges_left_right": [
+        [
+          64287,
+          64305
+        ],
+        [
+          806,
+          823
+        ]
+      ],
+      "header": "B3TRACE DATA format=B3T1 run=2 count=1935 bytes=123840 crc32=A6EF6F94 lost=0 reason=1 hz=600000000 pi_gap_max_ms=7 pi_max_cycles=14941 mask_max_cycles=11227 emit_max_cycles=707 m1=85 m2=95 servo=185 static=1 synthetic=0 source=d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "raw_sha256": "4fb2b0eee84f80e3e2b7be4214619306f9c4ef2ff0b8dcf29de6acab42e997aa",
+      "source_digest": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "stop_records_within_this_capture": [
+        {
+          "sequence": 1,
+          "ms": 319349,
+          "reason": 2,
+          "faults": 256,
+          "speed_detail": 10
+        }
+      ]
+    },
+    {
+      "phase": "REARM_ON_OFF_2",
+      "root": "C:/shengchanli/smartCar/b3_static_trace_20261105T220024618Z",
+      "trace_complete": true,
+      "events": 1939,
+      "encoder_samples": 500,
+      "interval_ms": {
+        "min": 10,
+        "median": 10,
+        "max": 10
+      },
+      "pi_work_records": 83,
+      "distinct_consumed_sequences": 82,
+      "pi_gap_max_ms": 7,
+      "pi_max_us": 18.003333333333334,
+      "primask_max_us": 17.926666666666666,
+      "emit_max_us": 1.2216666666666667,
+      "pi_sample_age_max_ms": 1,
+      "c26_on_duration_sampled_ms": 4160,
+      "states": [
+        {
+          "ms": 675009,
+          "state": 0,
+          "faults": 0
+        },
+        {
+          "ms": 675140,
+          "state": 1,
+          "faults": 0
+        },
+        {
+          "ms": 675979,
+          "state": 2,
+          "faults": 256
+        },
+        {
+          "ms": 679199,
+          "state": 0,
+          "faults": 0
+        }
+      ],
+      "modes": [
+        {
+          "ms": 675009,
+          "raw_c26": 0,
+          "selected": 0,
+          "settled": 0
+        },
+        {
+          "ms": 675039,
+          "raw_c26": 0,
+          "selected": 3,
+          "settled": 1
+        },
+        {
+          "ms": 679169,
+          "raw_c26": 1,
+          "selected": 3,
+          "settled": 0
+        },
+        {
+          "ms": 679199,
+          "raw_c26": 1,
+          "selected": 0,
+          "settled": 1
+        }
+      ],
+      "control_running_observed": true,
+      "ends_disarmed_fault_free": true,
+      "retained_speed_detail_codes_seen": [
+        9,
+        10
+      ],
+      "all_applied_zero": true,
+      "all_observed_compare_widths_zero": true,
+      "requested_native_peak_by_channel": {
+        "0": 5210,
+        "1": 4640,
+        "2": 794
+      },
+      "raw_counter_ranges_left_right": [
+        [
+          64273,
+          64828
+        ],
+        [
+          355,
+          819
+        ]
+      ],
+      "header": "B3TRACE DATA format=B3T1 run=5 count=1939 bytes=124096 crc32=B664D50E lost=0 reason=1 hz=600000000 pi_gap_max_ms=7 pi_max_cycles=10802 mask_max_cycles=10756 emit_max_cycles=733 m1=85 m2=95 servo=185 static=1 synthetic=0 source=d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "raw_sha256": "7579167c7bb9caa24f4e15b91877f19efbcac070c9d4de13a9781cec2b27f680",
+      "source_digest": "d85c360e92252621d0ecffed7eaaed85fdea21b7dbfe0d44a6fe330ef57ae09d",
+      "stop_records_within_this_capture": [
+        {
+          "sequence": 3,
+          "ms": 675979,
+          "reason": 2,
+          "faults": 256,
+          "speed_detail": 9
+        }
+      ]
+    }
+  ],
+  "same_boot_rearm_observed": true,
+  "active_pi_and_zero_output_guard_observed": true,
+  "no_count_guard_observed": true,
+  "hardware_outputs_power_isolated_user_confirmed": true,
+  "com14_closed_after_each_run": true,
+  "no_more_hardware_actions_per_latest_user_instruction": true,
+  "B3_motion_accepted": false,
+  "missing": [
+    "wheel-end CPR and physical speed scale",
+    "deliberate single-wheel direction/rotation validation",
+    "loaded servo/physical wheel-angle evidence as needed for the trial",
+    "matched Camera+SD+control static timing/telemetry validation",
+    "actual bounded low-speed motion Session with raw images and synchronized persistent telemetry"
+  ],
+  "off_stop_from_running_before_no_count_fault": "not established by these zero-output traces; no-count fault occurred before later OFF, so no physical stopping latency claim",
+  "empty_waits_not_counted_as_tests": true,
+  "reverse_left_guard_observed": true,
+  "encoder_direction_validation": "NOT_PASSED; reverse-left protection in the second logical ON capture requires diagnosis before powered motion"
+}
