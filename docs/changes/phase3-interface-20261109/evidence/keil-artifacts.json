@@ -1,0 +1,74 @@
+{
+  "buildOnly": true,
+  "sourceProjectSha256": "03f688f685e235c148a154e785c3c1c32b762400086f1ab7c528aaac6b8b9565",
+  "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+  "target": "nor_sdram_zf_dtcm",
+  "processes": [
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\UV4\\UV4.exe",
+        "-r",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\workspace\\demo\\mdk\\competition\\MPC_20261106.uvprojx",
+        "-t",
+        "nor_sdram_zf_dtcm",
+        "-j0",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\build.log"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 10.94322
+    },
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+        "--bincombined",
+        "--output",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\rt1064.bin",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\Objects\\rt1064.axf"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.054451
+    },
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+        "--text",
+        "-c",
+        "-s",
+        "--output",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\disassembly.txt",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\Objects\\rt1064.axf"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-interface-20261109\\keil-final\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.182603
+    }
+  ],
+  "zeroErrorsWarnings": true,
+  "artifacts": {
+    "Objects\\rt1064.axf": {
+      "bytes": 1214632,
+      "sha256": "2146f5ab58dc981b856b1090ac94c62c348d6cf0ddb4a4bac3d6fb84027a54e9"
+    },
+    "rt1064.bin": {
+      "bytes": 110528,
+      "sha256": "5bc05e5f48554d9e8654f6a736cf6ce03a680d5dfe27798e43370e682617411b"
+    },
+    "disassembly.txt": {
+      "bytes": 2556640,
+      "sha256": "af95653ad877d95b38688dcade1c2fd74209539fd062f10cd447953100169c91"
+    },
+    "Listings\\rt1064.map": {
+      "bytes": 2081681,
+      "sha256": "5ea54a57a76028c787bc4c3294ca6dacae86bb9afd690b169984dd2ba6b2a9a1"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\demo\code -IC:\shengchanli\smartCar\smartcar\tools\speed_planning C:\shengchanli\smartCar\smartcar\tests\planning\test_planner_shadow.c C:\shengchanli\smartCar\smartcar\demo\code\vision_planner.c C:\shengchanli\smartCar\smartcar\tools\speed_planning\speed_planner.c C:\shengchanli\smartCar\smartcar\demo\code\vision_planner_shadow.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T031732-337ebf44f9\suites\planner-shadow\artifacts\default\planner-shadow.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T031732-337ebf44f9\suites\planner-shadow\artifacts\default\planner-shadow.exe
+PLANNER SHADOW PASS: 159 checks; no PI, motor or real-time claim.
+[PASS] Completed within declared software evidence scope

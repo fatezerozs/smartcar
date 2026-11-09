@@ -1,4 +1,7 @@
 #include "vision_drive_internal.h"
+#if VISION_PLANNER_RUNTIME
+#include "vision_planner_runtime.h"
+#endif
 
 /* Lifecycle and command facade; IO, guard, startup, probing and profile
  * validation live in their own implementation units. */
@@ -129,6 +132,9 @@ void vision_drive_init(uint32_t now)
 #if VISION_ENCODER_ENABLE
     vd_speed_init(now);
 #endif
+#if VISION_PLANNER_RUNTIME
+    vd_planner_runtime_init();
+#endif
     vd_output_zero();
 #if VISION_ROUTE_SWITCH
     vd_route_switch_init();
@@ -202,6 +208,9 @@ void vision_drive_poll(uint32_t now)
     }
 #endif
 #if VISION_ENCODER_ENABLE
+#if VISION_PLANNER_RUNTIME
+    vd_planner_runtime_poll(now);
+#endif
     vd_speed_control_poll(now); /* Independent of visual-frame publication. */
 #endif
     vd_startup_poll_switch(now);
@@ -240,6 +249,11 @@ void vision_drive_observe(const vision_result_t *r, uint32_t sequence, uint32_t 
     trace_visual.entry_guide_rows=r->entry_guide_rows;
 #endif
     vc_observe(&vd.control, r, sequence, frame_ms, now);
+#if VISION_PLANNER_RUNTIME
+    vd_planner_runtime_observe(r,sequence,frame_ms,now);
+    vd_planner_runtime_poll(now);
+    vd_speed_control_poll(now);
+#endif
     /* The controller owns bounded visual recovery. Missing far preview or a
      * recoverable observation does not revoke the existing driving lease.
      * This grants no new arm/clear authority to C26, UART or old frames. */

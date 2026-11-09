@@ -1,0 +1,109 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_DUAL_UART_ENABLE=0 -DVISION_DRIVE_ENABLE=0 C:\shengchanli\smartCar\smartcar\demo\code\app_mode.c C:\shengchanli\smartCar\smartcar\tests\vision\test_debug.c C:\shengchanli\smartCar\smartcar\demo\code\vision_debug.c C:\shengchanli\smartCar\smartcar\demo\code\app_runtime.c C:\shengchanli\smartCar\smartcar\demo\code\app_transport.c C:\shengchanli\smartCar\smartcar\demo\code\vision_frame.c C:\shengchanli\smartCar\smartcar\demo\code\vision_telemetry.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c C:\shengchanli\smartCar\smartcar\demo\code\track_bayes.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\disabled\debug.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\disabled\debug.exe
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+ADAPTER RESULT: 228 checks, 0 failures (mock MCU/transport, no hardware claim)
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_DUAL_UART_ENABLE=0 -DVISION_DRIVE_ENABLE=1 -DVISION_START_SWITCH_ENABLE=0 -DVISION_DRIVE_PROFILE_CONFIRMED=1 -DVISION_MOTOR_DIRECTION_CONFIRMED=1 -DVISION_CAMERA_CALIBRATED=1 -DVISION_SERVO_CENTER_US=1500 -DVISION_SERVO_MIN_US=1200 -DVISION_SERVO_MAX_US=1800 -DVISION_SERVO_RIGHT_SIGN=1 -DVISION_MOTOR_DUTY_CAP=0.2f -DVISION_MOTOR_CRUISE_DUTY=0.1f C:\shengchanli\smartCar\smartcar\tests\vision\test_debug.c C:\shengchanli\smartCar\smartcar\demo\code\vision_debug.c C:\shengchanli\smartCar\smartcar\demo\code\app_runtime.c C:\shengchanli\smartCar\smartcar\demo\code\app_transport.c C:\shengchanli\smartCar\smartcar\demo\code\vision_frame.c C:\shengchanli\smartCar\smartcar\demo\code\vision_telemetry.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c C:\shengchanli\smartCar\smartcar\demo\code\track_bayes.c C:\shengchanli\smartCar\smartcar\demo\code\vision_control.c C:\shengchanli\smartCar\smartcar\demo\code\midterm_open_loop.c C:\shengchanli\smartCar\smartcar\demo\code\vision_drive.c C:\shengchanli\smartCar\smartcar\demo\code\vision_motion.c C:\shengchanli\smartCar\smartcar\demo\code\vision_actuator.c C:\shengchanli\smartCar\smartcar\demo\code\vision_guard.c C:\shengchanli\smartCar\smartcar\demo\code\vision_probe.c C:\shengchanli\smartCar\smartcar\demo\code\vision_startup.c C:\shengchanli\smartCar\smartcar\demo\code\vision_vehicle_profile.c C:\shengchanli\smartCar\smartcar\demo\code\app_mode.c C:\shengchanli\smartCar\smartcar\demo\code\vision_field.c C:\shengchanli\smartCar\smartcar\demo\code\vision_storage.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\configured\debug.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\configured\debug.exe
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+fragmented field gain  packets=0 elapsed=800: complete
+field trailing arm     packets=0 elapsed=800: complete
+field stops running    packets=0 elapsed=800: complete
+probe bounded text     packets=0 elapsed=1200: complete
+image cancels probe    packets=0 elapsed=1300: complete
+STOP before probe      packets=0 elapsed=1200: complete
+STOP after probe       packets=0 elapsed=1200: complete
+no probe in image      packets=0 elapsed=1300: complete
+wheel bounded text     packets=0 elapsed=1200: complete
+image cancels wheel    packets=0 elapsed=1300: complete
+STOP before wheel      packets=0 elapsed=1200: complete
+STOP after wheel       packets=0 elapsed=1200: complete
+no wheel in image      packets=0 elapsed=1300: complete
+saved profile stays stopped packets=0 elapsed=3000: complete
+STOP cancels countdown packets=0 elapsed=3000: complete
+image cancels countdown packets=2 elapsed=3000: complete
+physical samples do not arm packets=0 elapsed=3000: complete
+invalid boot no retry  packets=0 elapsed=3000: complete
+DIP observer rejects arm packets=0 elapsed=800: complete
+DIP stops running      packets=0 elapsed=800: complete
+DIP cancels partial line packets=0 elapsed=800: complete
+ADAPTER RESULT: 12923 checks, 0 failures (mock MCU/transport, no hardware claim)
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_DUAL_UART_ENABLE=0 -DVISION_DRIVE_ENABLE=1 -DVISION_START_SWITCH_ENABLE=0 -DVISION_DRIVE_PROFILE_CONFIRMED=1 -DVISION_MOTOR_DIRECTION_CONFIRMED=1 -DVISION_CAMERA_CALIBRATED=1 -DVISION_SERVO_CENTER_US=1500 -DVISION_SERVO_MIN_US=1200 -DVISION_SERVO_MAX_US=1800 -DVISION_SERVO_RIGHT_SIGN=1 -DVISION_MOTOR_DUTY_CAP=0.2f -DVISION_MOTOR_CRUISE_DUTY=0.1f -DVISION_WIRELESS_UART_ENABLE=1 C:\shengchanli\smartCar\smartcar\tests\vision\test_debug.c C:\shengchanli\smartCar\smartcar\demo\code\vision_debug.c C:\shengchanli\smartCar\smartcar\demo\code\app_runtime.c C:\shengchanli\smartCar\smartcar\demo\code\app_transport.c C:\shengchanli\smartCar\smartcar\demo\code\vision_frame.c C:\shengchanli\smartCar\smartcar\demo\code\vision_telemetry.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c C:\shengchanli\smartCar\smartcar\demo\code\track_bayes.c C:\shengchanli\smartCar\smartcar\demo\code\vision_control.c C:\shengchanli\smartCar\smartcar\demo\code\midterm_open_loop.c C:\shengchanli\smartCar\smartcar\demo\code\vision_drive.c C:\shengchanli\smartCar\smartcar\demo\code\vision_motion.c C:\shengchanli\smartCar\smartcar\demo\code\vision_actuator.c C:\shengchanli\smartCar\smartcar\demo\code\vision_guard.c C:\shengchanli\smartCar\smartcar\demo\code\vision_probe.c C:\shengchanli\smartCar\smartcar\demo\code\vision_startup.c C:\shengchanli\smartCar\smartcar\demo\code\vision_vehicle_profile.c C:\shengchanli\smartCar\smartcar\demo\code\app_mode.c C:\shengchanli\smartCar\smartcar\demo\code\vision_field.c C:\shengchanli\smartCar\smartcar\demo\code\vision_storage.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\wireless\debug.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\debug\artifacts\wireless\debug.exe
+text                   packets=0 elapsed=1300: complete
+image/text             packets=3 elapsed=3000: complete
+pause/uppercase resume packets=0 elapsed=1300: complete
+history reset          packets=0 elapsed=1300: complete
+camera stops           packets=0 elapsed=3000: complete
+no camera frames       packets=0 elapsed=2600: complete
+32-bit clock wraps     packets=0 elapsed=1400: complete
+copy race rejection    packets=0 elapsed=2600: complete
+two-buffer cycle       packets=0 elapsed=2600: complete
+null camera buffer     packets=0 elapsed=2600: complete
+image/history gap      packets=2 elapsed=2600: complete
+text command burst     packets=0 elapsed=1300: complete
+mixed mode burst       packets=2 elapsed=2300: complete
+reset command burst    packets=0 elapsed=1300: complete
+repeat image command   packets=2 elapsed=2300: complete
+full observer no drive packets=0 elapsed=1300: complete
+return midterm then arm packets=0 elapsed=650: complete
+stop wins over arm     packets=0 elapsed=650: complete
+image disarms drive    packets=1 elapsed=1300: complete
+fragmented field gain  packets=0 elapsed=800: complete
+field trailing arm     packets=0 elapsed=800: complete
+field stops running    packets=0 elapsed=800: complete
+probe bounded text     packets=0 elapsed=1200: complete
+image cancels probe    packets=0 elapsed=1300: complete
+STOP before probe      packets=0 elapsed=1200: complete
+STOP after probe       packets=0 elapsed=1200: complete
+no probe in image      packets=0 elapsed=1300: complete
+wheel bounded text     packets=0 elapsed=1200: complete
+image cancels wheel    packets=0 elapsed=1300: complete
+STOP before wheel      packets=0 elapsed=1200: complete
+STOP after wheel       packets=0 elapsed=1200: complete
+no wheel in image      packets=0 elapsed=1300: complete
+saved profile stays stopped packets=0 elapsed=3000: complete
+STOP cancels countdown packets=0 elapsed=3000: complete
+image cancels countdown packets=2 elapsed=3000: complete
+physical samples do not arm packets=0 elapsed=3000: complete
+invalid boot no retry  packets=0 elapsed=3000: complete
+DIP observer rejects arm packets=0 elapsed=800: complete
+DIP stops running      packets=0 elapsed=800: complete
+DIP cancels partial line packets=0 elapsed=800: complete
+ADAPTER RESULT: 14089 checks, 0 failures (mock MCU/transport, no hardware claim)
+[PASS] Completed within declared software evidence scope

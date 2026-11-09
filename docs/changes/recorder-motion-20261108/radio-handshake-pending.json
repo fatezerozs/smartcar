@@ -1,0 +1,30 @@
+{
+  "port": "COM10",
+  "baud": 115200,
+  "handshake_passed": false,
+  "only_status_queries_sent": true,
+  "start_sent": false,
+  "arm_sent": false,
+  "motion_test_started": false,
+  "observed": "binary data rather than expected ASCII identity; source not established",
+  "captures": [
+    {
+      "path": "C:\\shengchanli\\smartCar\\wireless_diagnostics\\wireless-20261108-213217-842089\\rx.bin",
+      "bytes": 30,
+      "sha256": "40718fee0c3bc08e4349bf5fb5540c49981fb7d67b92fc7e8e9de0e05ea29ae2",
+      "contains_expected_identity": false,
+      "head_hex": "003c34470020834400c012440000374300004b43a7e3d53ee17a343e3108"
+    },
+    {
+      "path": "C:\\shengchanli\\smartCar\\wireless_diagnostics\\wireless-20261108-213303-977669\\rx.bin",
+      "bytes": 30,
+      "sha256": "50c18cfacf6bc19f6cb796337cd43444533ec25a2073aee966c98d33241116dd",
+      "contains_expected_identity": false,
+      "head_hex": "00000000000743000000000000404000000000000000000000807f000020"
+    }
+  ],
+  "layers": [
+    "structured_parsed",
+    "computed"
+  ]
+}

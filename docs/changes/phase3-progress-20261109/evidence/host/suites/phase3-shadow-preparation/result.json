@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "phase3-shadow-preparation",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 5.958131,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:29.161+00:00",
+  "finishedAt": "2026-11-09T10:09:35.120+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_shadow_preparation.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\phase3-shadow-preparation\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 5.956091,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\phase3-shadow-preparation",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Source-pinned measured candidates and labelled engineering references; native private shadow/field trace and legacy PWM equivalence; no hardware or active metric approval",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

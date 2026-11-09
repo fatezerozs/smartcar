@@ -1,0 +1,128 @@
+--- a/demo/candidates/phase3-shadow/vision_planner_shadow_diag.c
++++ b/demo/candidates/phase3-shadow/vision_planner_shadow_diag.c
+@@ -39,6 +39,54 @@
+ }
+ static uint32_t clock_hz(void){return SystemCoreClock;}
+ #endif
++/* A stopped-only algorithm benchmark. Private stack states and synthetic
++ * stamps never enter vd_planner_runtime, the live PI or the final writer. */
++static void benchmark(char *response,unsigned capacity)
++{
++    vps_state_t state;vps_config_t config=phase3_shadow_configuration.planning;
++    vps_input_t input;vps_result_t result;uint32_t maximum=0,total=0,expired=0;
++    unsigned ready=0,zero=0,checks=0;uint16_t last_right=0,last_left=0;
++    enable_cycles();
++    config.planner.limits.provenance=SP_SIMULATION;
++    /* Short, explicitly synthetic far episode, solely to exercise the path. */
++    config.policy.far_budget_ms=50U;config.policy.far_frames=3U;
++    for(unsigned scenario=0;scenario<3;++scenario){
++        memset(&input,0,sizeof(input));
++        input.identity.output_epoch=1;input.identity.config_revision=config.planner.revision;
++        input.valid=VP_VALID_ALL;input.external_admitted=1;input.requested_speed_m_s=.3f;
++        input.near_preview.count=input.full_preview.count=5;
++        input.near_preview.units=input.full_preview.units=SP_METRES;
++        for(unsigned j=0;j<5;++j){input.near_preview.distance[j]=input.full_preview.distance[j]=(float)j*.25f;}
++        checks+=(unsigned)vps_init(&state,VP_SHADOW,&config);
++        for(unsigned j=0;j<=64;++j){
++            uint32_t now=100U+j*10U,frame=1U+j/2U,capture=100U+(j/2U)*20U;
++            input.identity.frame_seq=frame;input.identity.capture_ms=capture;
++            input.identity.encoder_seq=j+1U;input.identity.encoder_ms=now;
++            input.near_preview.sequence=input.full_preview.sequence=frame;
++            input.near_preview.capture_ms=input.full_preview.capture_ms=capture;
++            input.observation=(sp_input_t){now,frame,capture,j+1U,now,(float)j*.002f,.2f,(float)(j/2U)*.004f,
++                (uint8_t)(j%2U==0),1,1,1,0,0,1};
++            if(scenario==1&&j>=20U&&j<30U){input.observation.near_valid=0;input.observation.far_valid=0;input.valid=VP_VALID_ENCODER;}
++            else input.valid=VP_VALID_ALL;
++            if(scenario==2&&j>=20U)input.observation.far_valid=0;
++            if(!j){checks+=(unsigned)vps_arm(&state,&input);continue;}
++            uint32_t start=cycles();vps_status_t status=vps_tick(&state,&input,&result);uint32_t elapsed=cycles()-start;
++            total+=elapsed;if(elapsed>maximum)maximum=elapsed;
++            if(status==VPS_READY){
++                ++ready;last_right=result.candidate.right_ticks_10ms;last_left=result.candidate.left_ticks_10ms;
++                checks+=(unsigned)vps_result_matches(&state,&result,&result.candidate.stamp,now);
++                expired+=(unsigned)!vps_result_matches(&state,&result,&result.candidate.stamp,now+config.planner.candidate_max_age_ms);
++            }else if(status==VPS_ZERO)++zero;
++            else if(status==VPS_FAULT){snprintf(response,capacity,"[PLANNER_BENCH] FAIL scenario=%u sample=%u status=%u synthetic=1\r\n",scenario,j,(unsigned)status);return;}
++        }
++        checks+=(unsigned)(scenario==0?state.supervisor.mode==SP_NORMAL_TRACK:
++                           scenario==1?state.supervisor.mode==SP_NORMAL_TRACK:state.supervisor.mode==SP_CONTROLLED_STOP);
++    }
++    unsigned passed=checks==ready+9U&&expired==ready&&ready&&zero&&last_left&&last_right&&cycles_enabled;
++    snprintf(response,capacity,"[PLANNER_BENCH] %s synthetic=1 metric_active=0 profile=%s cases=3 ticks=192 ready=%u zero=%u checks=%u expired_rejected=%lu target_R/L=%u/%u cpu_hz=%lu cycles_enabled=%u mean_cycles=%lu max_cycles=%lu; includes=supervisor+planner; excludes=vision+PI+PWM+UART; no_drive_authority\r\n",
++        passed?"PASS":"FAIL",PHASE3_SHADOW_PROFILE_ID,ready,zero,checks,(unsigned long)expired,last_right,last_left,
++        (unsigned long)clock_hz(),cycles_enabled,(unsigned long)(total/192U),(unsigned long)maximum);
++}
+ static int16_t millimetres(float x)
+ {
+     if(!(x>=0&&x<=32.767f))return 0;
+@@ -81,6 +129,9 @@
+         snprintf(response,capacity,"[PLANNER] REJECT stop first\r\n");return 1;
+     }
+     if(count)frozen=1;was_running=0;
++    if(!strcmp(command,"planner_bench")){
++        benchmark(response,capacity);return 1;
++    }
+     if(!strcmp(command,"planner_load")){
+         int ok=!count&&vision_drive_planner_configure(VDR_SHADOW,&phase3_shadow_configuration);
+         if(ok){loaded=1;enable_cycles();poll_max=observe_max=last_observe=0;}
+@@ -109,5 +160,5 @@
+             run,count,frozen,overwritten,cycles_enabled,(unsigned long)clock_hz(),(unsigned long)poll_max,(unsigned long)observe_max);
+         return 1;
+     }
+-    snprintf(response,capacity,"[PLANNER] REJECT command; planner, planner_load, planner_row N, planner_clear\r\n");return 1;
++    snprintf(response,capacity,"[PLANNER] REJECT command; planner, planner_load, planner_bench, planner_row N, planner_clear\r\n");return 1;
+ }
+--- a/tools/prepare_phase3_shadow.py
++++ b/tools/prepare_phase3_shadow.py
+@@ -19,7 +19,7 @@
+ sys.path.insert(0,str(ROOT/'tools/testing'))
+ from process_runner import run_process
+ 
+-VERSION='PHASE3_C26_SHADOW_20261109_1'
++VERSION='PHASE3_C26_SHADOW_20261109_2'
+ 
+ 
+ def replace_once(text,old,new):
+--- a/tests/planning/test_shadow_candidate.c
++++ b/tests/planning/test_shadow_candidate.c
+@@ -36,6 +36,7 @@
+     printf("SHADOW CANDIDATE plans=%lu source=%u; identical legacy PWM sequence\n",(unsigned long)s.plans,vd_speed_source());
+     /* Direct service calls cannot sneak in a query/load during a run. */
+     CHECK(vd_shadow_diag_field("planner_load",reply,sizeof(reply))&&strstr(reply,"REJECT stop first"));
++    CHECK(vd_shadow_diag_field("planner_bench",reply,sizeof(reply))&&strstr(reply,"REJECT stop first"));
+     CHECK(vision_drive_is_local()&&vd_speed_source()==VD_SPEED_LEGACY);
+     for(unsigned j=0;j<300;++j)switch_step(1);
+     command("planner");CHECK(!pwm[0]&&!pwm[1]&&strstr(reply,"configured=1")&&strstr(reply,"metric_active=0"));
+@@ -45,6 +46,12 @@
+     char saved[VF_RESPONSE_CAPACITY];strcpy(saved,reply);
+     command("planner_load");CHECK(strstr(reply,"REJECT"));
+     command("planner_row 0");CHECK(!strcmp(saved,reply));
++    vd_speed_info_t before=info();vdr_info_t planner_before;vision_drive_planner_info(&planner_before);
++    CHECK(vd_shadow_diag_field("planner_bench",reply,sizeof(reply))&&strstr(reply,"[PLANNER_BENCH] PASS"));
++    CHECK(strstr(reply,"synthetic=1")&&strstr(reply,"ticks=192"));printf("%s",reply);
++    vd_speed_info_t after=info();vdr_info_t planner_after;vision_drive_planner_info(&planner_after);
++    CHECK(!memcmp(&before,&after,sizeof(before))&&!memcmp(&planner_before,&planner_after,sizeof(planner_before)));
++    command("planner_row 0");CHECK(!strcmp(saved,reply));
+     command("planner_row 256");CHECK(strstr(reply,"REJECT"));
+     command("planner_row -1");CHECK(strstr(reply,"REJECT"));
+     command("planner_row 0x1");CHECK(strstr(reply,"REJECT"));
+--- a/tests/planning/test_shadow_preparation.py
++++ b/tests/planning/test_shadow_preparation.py
+@@ -13,7 +13,7 @@
+ 
+ ROOT=Path(__file__).resolve().parents[2]
+ sys.path.insert(0,str(ROOT))
+-from tools.prepare_phase3_shadow import prepare
++from tools.prepare_phase3_shadow import VERSION,prepare
+ from tools.speed_planning.phase3_profile import PROFILE,build_profile,header,project,validate_profile
+ from tools.speed_planning.replay import compile_command
+ from tools.speed_planning.visual_trace import decode_frame
+@@ -54,7 +54,7 @@
+         self.assertTrue(all(n.text=='0' for n in a.iter() if n.tag.startswith('RunUserProg')))
+         self.assertEqual((self.code/'vision_speed.c').read_bytes(),(ROOT/'demo/code/vision_speed.c').read_bytes())
+         self.assertEqual((self.code/'vision_actuator.c').read_bytes(),(ROOT/'demo/code/vision_actuator.c').read_bytes())
+-        self.assertIn('build=PHASE3_C26_SHADOW_20261109_1',(self.code/'vision_field.c').read_text('utf-8'))
++        self.assertIn('build='+VERSION,(self.code/'vision_field.c').read_text('utf-8'))
+         self.assertFalse(self.manifest['autoLoadOrArm']);self.assertFalse(self.manifest['flashed'])
+ 
+     def test_native_candidate_keeps_legacy_pwm_and_retains_stop_only_trace(self):

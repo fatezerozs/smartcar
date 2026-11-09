@@ -1,0 +1,955 @@
+diff --git a/demo/code/vision_metric_io.c b/demo/code/vision_metric_io.c
+--- /dev/null
++++ b/demo/code/vision_metric_io.c
+@@ -0,0 +1,165 @@
++#include "vision_metric_io.h"
++#include <limits.h>
++#include <string.h>
++static int range(float x,float a,float b){return x>=a&&x<=b;}
++static int duration(uint32_t x){return x&&x<UINT32_C(0x80000000);}
++static int sign_ok(int x){return x==1||x==-1;}
++static uint64_t magnitude(int64_t x){return (uint64_t)(x<0?-x:x);}
++static float distance(const vm_odom_t *s,uint64_t l,uint64_t r)
++{return .5f*((float)l/s->config.ticks_per_metre_left+(float)r/s->config.ticks_per_metre_right);}
++static int source_ok(const vm_odom_t *s,const vm_encoder_t *e)
++{
++    /* Native totals saturate at INT32 endpoints; they do not wrap. Do not
++     * interpret saturation as genuine stationary feedback or invent counts. */
++    return e&&e->valid==1&&e->sign_left==s->config.sign_left&&e->sign_right==s->config.sign_right&&
++        e->total_left!=INT32_MIN&&e->total_left!=INT32_MAX&&e->total_right!=INT32_MIN&&e->total_right!=INT32_MAX;
++}
++int vm_encoder_from_speed(const vd_speed_info_t *s,int have,vm_encoder_t *out)
++{
++    if(!out)return 0;memset(out,0,sizeof(*out));
++    if(!s||have!=1||s->faults||!s->signs_confirmed||!sign_ok(s->sign3)||!sign_ok(s->sign4))return 0;
++    out->sequence=s->samples;out->ms=s->sample_ms;out->total_left=s->total3;out->total_right=s->total4;
++    out->sign_left=s->sign3;out->sign_right=s->sign4;out->valid=1;return 1;
++}
++int vm_odom_init(vm_odom_t *s,const vm_odom_config_t *c)
++{
++    if(!s)return 0;memset(s,0,sizeof(*s));
++    if(!c||!c->revision||!duration(c->max_age_ms)||!duration(c->interpolation_gap_ms)||
++       !range(c->ticks_per_metre_left,1e-6f,1e6f)||!range(c->ticks_per_metre_right,1e-6f,1e6f)||
++       !sign_ok(c->sign_left)||!sign_ok(c->sign_right))return 0;
++    s->config=*c;s->configured=1;return 1;
++}
++vm_status_t vm_odom_push(vm_odom_t *s,const vm_encoder_t *e)
++{
++    uint32_t dt=0,span=0;int64_t l=0,r=0;uint8_t continuous=0;
++    if(!s||!s->configured)return VM_BAD_CONFIG;
++    if(!source_ok(s,e))return VM_BAD_SOURCE;
++    if(s->count){
++        dt=e->ms-s->last.ms;span=e->sequence-s->last.sequence;
++        if(!span)return e->ms==s->last.ms&&e->total_left==s->last.total_left&&e->total_right==s->last.total_right?VM_DUPLICATE:VM_CONFLICT;
++        if(!duration(span)||!duration(dt))return VM_OLD;
++        l=((int64_t)e->total_left-s->last.total_left)*s->config.sign_left;
++        r=((int64_t)e->total_right-s->last.total_right)*s->config.sign_right;
++        /* Derived from the native signed16 counter delta per sample, not a
++         * newly guessed physical speed threshold. Preserve gaps explicitly. */
++        if(magnitude(l)>(uint64_t)span*32768U||magnitude(r)>(uint64_t)span*32768U||
++           l<INT32_MIN||l>INT32_MAX||r<INT32_MIN||r>INT32_MAX)return VM_BAD_SOURCE;
++        if(UINT64_MAX-s->travel_left<magnitude(l)||UINT64_MAX-s->travel_right<magnitude(r))return VM_BAD_SOURCE;
++        continuous=(uint8_t)(span==1&&dt<=s->config.interpolation_gap_ms);
++    }
++    s->travel_left+=magnitude(l);s->travel_right+=magnitude(r);
++    s->delta_left=(int32_t)l;s->delta_right=(int32_t)r;s->elapsed_ms=dt;s->sequence_span=span;
++    s->last=*e;++s->revision;
++    /* Keep the retained clock window unambiguous across uint32 wrap even if
++     * this offline consumer is supplied widely separated logged samples. */
++    while(s->count&&(uint32_t)(e->ms-s->history[(s->head+VM_HISTORY_CAPACITY-s->count)%VM_HISTORY_CAPACITY].ms)>=UINT32_C(0x80000000))
++        --s->count;
++    s->history[s->head]=(vm_history_t){e->ms,e->sequence,s->travel_left,s->travel_right,continuous};
++    s->head=(s->head+1)%VM_HISTORY_CAPACITY;if(s->count<VM_HISTORY_CAPACITY)++s->count;
++    return VM_OK;
++}
++vm_status_t vm_odom_current(const vm_odom_t *s,uint32_t now,vm_motion_t *out)
++{
++    if(!out)return VM_BAD_SOURCE;memset(out,0,sizeof(*out));
++    if(!s||!s->configured)return VM_BAD_CONFIG;if(!s->count)return VM_WAIT;
++    if((uint32_t)(now-s->last.ms)>=s->config.max_age_ms)return VM_EXPIRED;
++    out->sequence=s->last.sequence;out->ms=s->last.ms;out->revision=s->revision;
++    out->elapsed_ms=s->elapsed_ms;out->sequence_span=s->sequence_span;
++    out->delta_left=s->delta_left;out->delta_right=s->delta_right;
++    out->odometer_m=distance(s,s->travel_left,s->travel_right);
++    if(s->elapsed_ms){
++        float per_s=1000.0f/(float)s->elapsed_ms;
++        out->left_speed_m_s=(float)s->delta_left/s->config.ticks_per_metre_left*per_s;
++        out->right_speed_m_s=(float)s->delta_right/s->config.ticks_per_metre_right*per_s;
++        out->speed_m_s=.5f*((float)magnitude(s->delta_left)/s->config.ticks_per_metre_left+
++                          (float)magnitude(s->delta_right)/s->config.ticks_per_metre_right)*per_s;
++        out->velocity_valid=1;
++    }
++    return VM_OK;
++}
++vm_status_t vm_odom_at_capture(const vm_odom_t *s,uint32_t capture,uint32_t now,float *out)
++{
++    if(!out)return VM_BAD_SOURCE;*out=0;
++    /* This query needs only timestamp freshness and distance history. Avoid
++     * recomputing wheel velocities when the caller already read current(). */
++    if(!s||!s->configured)return VM_BAD_CONFIG;
++    if(!s->count)return VM_WAIT;
++    if((uint32_t)(now-s->last.ms)>=s->config.max_age_ms)return VM_EXPIRED;
++    if((uint32_t)(now-capture)>=UINT32_C(0x80000000))return VM_BAD_SOURCE;
++    if((uint32_t)(capture-s->last.ms)>0&&(uint32_t)(capture-s->last.ms)<UINT32_C(0x80000000))return VM_WAIT;
++    for(unsigned j=0;j<s->count;++j){
++        unsigned index=(s->head+VM_HISTORY_CAPACITY-1-j)%VM_HISTORY_CAPACITY;
++        const vm_history_t *b=&s->history[index];
++        if(b->ms==capture){*out=distance(s,b->travel_left,b->travel_right);return VM_OK;}
++        if(j+1<s->count){
++            const vm_history_t *a=&s->history[(index+VM_HISTORY_CAPACITY-1)%VM_HISTORY_CAPACITY];
++            uint32_t width=b->ms-a->ms,offset=capture-a->ms;
++            if(duration(width)&&offset<width){
++                if(!b->continuous)return VM_NO_BRACKET;
++                float fraction=(float)offset/(float)width;
++                *out=distance(s,a->travel_left,a->travel_right)+fraction*distance(s,b->travel_left-a->travel_left,b->travel_right-a->travel_right);
++                return VM_OK;
++            }
++        }
++    }
++    return VM_NO_BRACKET;
++}
++static int vision_config(const vm_vision_config_t *c)
++{
++    if(!c||!c->revision||!duration(c->max_age_ms)||c->near_count<5||c->near_count>SP_CAPACITY||
++       c->full_count<5||c->full_count>SP_CAPACITY||c->min_confidence>100||
++       !range(c->max_step_m,1e-6f,10000)||!range(c->min_x_m,-10000,10000)||
++       !range(c->max_x_m,c->min_x_m,10000)||!range(c->min_y_m,0,10000)||!range(c->max_y_m,c->min_y_m,10000))return 0;
++    for(unsigned i=0;i<9;++i)if(!range(c->homography[i],-1e20f,1e20f))return 0;
++    return 1;
++}
++static int domain(const sp_geometry_history_t *h,const vm_vision_config_t *c)
++{
++    for(unsigned j=0;j<h->count;++j)if(!range(h->points[j].x,c->min_x_m,c->max_x_m)||
++        !range(h->points[j].y,c->min_y_m,c->max_y_m))return 0;
++    return 1;
++}
++void vm_vision_init(vm_vision_t *s){if(s)memset(s,0,sizeof(*s));}
++int vm_vision_frame(vm_vision_t *s,const vm_vision_config_t *c,const vision_result_t *source,
++                     uint32_t seq,uint32_t capture,uint32_t now,vm_frame_t *out)
++{
++    sp_geometry_history_t near_history,full_history;
++    if(!out)return 0;memset(out,0,sizeof(*out));out->sequence=seq;out->capture_ms=capture;
++    if(!s||!vision_config(c)||(s->revision&&s->revision!=c->revision))return 0;
++    s->revision=c->revision;
++    out->config_revision=c->revision;
++    near_history=s->near_history;full_history=s->full_history;
++    if(sp_vision_preview(&near_history,source,c->near_rows,c->near_count,c->min_confidence,c->homography,
++        seq,capture,now,c->max_age_ms,c->max_step_m,&out->near_preview)&&domain(&near_history,c)){
++        out->near_valid=1;s->near_history=near_history;
++    }
++    if(sp_vision_preview(&full_history,source,c->full_rows,c->full_count,c->min_confidence,c->homography,
++        seq,capture,now,c->max_age_ms,c->max_step_m,&out->full_preview)&&domain(&full_history,c)){
++        out->far_valid=out->near_valid;s->full_history=full_history;
++    }
++    out->domain_valid=out->near_valid;return 1;
++}
++vm_status_t vm_shadow_input(const vm_odom_t *s,const vm_frame_t *f,int new_frame,vp_stamp_t id,
++                             uint32_t now,float requested,int admitted,vps_input_t *out)
++{
++    vm_motion_t m;float captured=0;vm_status_t status;uint8_t capture_valid=0;
++    if(!out)return VM_BAD_SOURCE;memset(out,0,sizeof(*out));
++    if(!f||(new_frame!=0&&new_frame!=1)||(admitted!=0&&admitted!=1)||
++       !range(requested,0,100)||f->near_valid>1||f->far_valid>1||f->domain_valid>1)return VM_BAD_SOURCE;
++    if(!s||!s->configured||!id.config_revision||s->config.revision!=id.config_revision||
++       f->config_revision!=id.config_revision)return VM_BAD_CONFIG;
++    status=vm_odom_current(s,now,&m);if(status!=VM_OK)return status;if(!m.velocity_valid)return VM_WAIT;
++    if(f->near_valid&&f->domain_valid){
++        status=vm_odom_at_capture(s,f->capture_ms,now,&captured);if(status!=VM_OK)return status;
++        capture_valid=1;
++    }
++    id.frame_seq=f->sequence;id.capture_ms=f->capture_ms;id.encoder_seq=m.sequence;id.encoder_ms=m.ms;
++    out->identity=id;out->external_admitted=(uint8_t)admitted;out->requested_speed_m_s=requested;
++    out->near_preview=f->near_preview;out->full_preview=f->full_preview;
++    out->valid=VP_VALID_ENCODER;
++    if(f->near_valid)out->valid|=VP_VALID_NEAR|VP_VALID_METRIC_GEOMETRY;
++    if(f->domain_valid)out->valid|=VP_VALID_GROUND_DOMAIN;
++    out->observation=(sp_input_t){now,f->sequence,f->capture_ms,m.sequence,m.ms,m.odometer_m,m.speed_m_s,captured,
++        (uint8_t)new_frame,f->near_valid,f->far_valid,1,0,0,capture_valid};
++    return VM_OK;
++}
+diff --git a/demo/code/vision_metric_io.h b/demo/code/vision_metric_io.h
+--- /dev/null
++++ b/demo/code/vision_metric_io.h
+@@ -0,0 +1,82 @@
++#ifndef SMARTCAR_VISION_METRIC_IO_H
++#define SMARTCAR_VISION_METRIC_IO_H
++#include "vision_planner_shadow.h"
++#include "vision_speed.h"
++#include "../../tools/speed_planning/vision_adapter.h"
++#define VM_HISTORY_CAPACITY 32U
++typedef enum { VM_OK=0,VM_DUPLICATE,VM_WAIT,VM_BAD_CONFIG,VM_BAD_SOURCE,
++               VM_CONFLICT,VM_OLD,VM_EXPIRED,VM_NO_BRACKET } vm_status_t;
++typedef struct {
++    uint32_t sequence,ms;
++    int32_t total_left,total_right;
++    int8_t sign_left,sign_right;
++    uint8_t valid;
++} vm_encoder_t;
++typedef struct {
++    uint32_t revision,max_age_ms,interpolation_gap_ms; /* Shared calibration bundle revision. */
++    float ticks_per_metre_left,ticks_per_metre_right;
++    int8_t sign_left,sign_right;
++} vm_odom_config_t;
++typedef struct {
++    uint32_t ms,sequence;
++    uint64_t travel_left,travel_right;
++    uint8_t continuous;
++} vm_history_t;
++typedef struct {
++    vm_odom_config_t config;
++    vm_encoder_t last;
++    vm_history_t history[VM_HISTORY_CAPACITY];
++    uint64_t travel_left,travel_right;
++    int32_t delta_left,delta_right;
++    uint32_t elapsed_ms,sequence_span,revision;
++    unsigned head,count;
++    uint8_t configured;
++} vm_odom_t;
++typedef struct {
++    uint32_t sequence,ms,elapsed_ms,sequence_span,revision;
++    int32_t delta_left,delta_right;
++    float odometer_m,speed_m_s,left_speed_m_s,right_speed_m_s;
++    uint8_t velocity_valid;
++} vm_motion_t;
++/* Reads only an already captured native snapshot. ENCODER3 is left,
++ * ENCODER4 is right. have_sample is explicit: sequence0 is legal at wrap. */
++int vm_encoder_from_speed(const vd_speed_info_t *source,int have_sample,vm_encoder_t *out);
++int vm_odom_init(vm_odom_t *state,const vm_odom_config_t *config);
++vm_status_t vm_odom_push(vm_odom_t *state,const vm_encoder_t *sample);
++vm_status_t vm_odom_current(const vm_odom_t *state,uint32_t now_ms,vm_motion_t *out);
++/* Exact sample or bracketed linear interpolation only, never extrapolation.
++ * A future capture returns WAIT; a missed sample marks a discontinuous span.
++ * Interpolation is a model, not physically measured inter-sample motion. */
++vm_status_t vm_odom_at_capture(const vm_odom_t *state,uint32_t capture_ms,
++                               uint32_t now_ms,float *odometer_m);
++
++typedef struct {
++    float homography[9]; /* Pixels -> rear-axle ground coordinates, metres. */
++    float min_x_m,max_x_m,min_y_m,max_y_m,max_step_m;
++    uint8_t near_rows[SP_CAPACITY],full_rows[SP_CAPACITY];
++    unsigned near_count,full_count,min_confidence;
++    uint32_t revision,max_age_ms;
++} vm_vision_config_t;
++typedef struct {sp_geometry_history_t near_history,full_history;uint32_t revision;} vm_vision_t;
++typedef struct {
++    uint32_t sequence,capture_ms,config_revision;
++    sp_preview_t near_preview,full_preview;
++    uint8_t near_valid,far_valid,domain_valid;
++} vm_frame_t;
++/* Reuses the existing strict paired-row adapter. No second detector, no
++ * inferred geometry approval. Config/rows/domain are supplied by the caller. */
++int vm_vision_frame(vm_vision_t *state,const vm_vision_config_t *config,
++                     const vision_result_t *source,uint32_t sequence,uint32_t capture_ms,
++                     uint32_t now_ms,vm_frame_t *out);
++void vm_vision_init(vm_vision_t *state); /* New geometry session only. */
++/* Builds the actual vps input from an accepted frame + cumulative counts.
++ * If a NEW usable frame lacks an odometer bracket, return WAIT and let the caller
++ * keep processing its PREVIOUS accepted frame until the next sample arrives.
++ * An explicitly invalid near frame is forwarded immediately without claiming
++ * capture odometer alignment; it never waits for a geometry-only prerequisite.
++ * Odometry, vision and identity must name the same immutable calibration
++ * bundle revision. Never send a partial result to vps_arm/tick on failure. */
++vm_status_t vm_shadow_input(const vm_odom_t *odometry,const vm_frame_t *frame,int new_frame,
++                             vp_stamp_t identity,uint32_t now_ms,float requested_speed_m_s,
++                             int external_admitted,vps_input_t *out);
++#endif
+diff --git a/demo/code/vision_metric_pi.c b/demo/code/vision_metric_pi.c
+--- /dev/null
++++ b/demo/code/vision_metric_pi.c
+@@ -0,0 +1,82 @@
++#include "vision_metric_pi.h"
++#include <string.h>
++static int feedback_valid(const vm_pi_state_t *s,const vm_motion_t *m,uint32_t now)
++{
++    return m&&m->velocity_valid==1&&m->sequence_span==1&&m->sequence-s->last_sequence==1&&
++        m->elapsed_ms==m->ms-s->last_ms&&m->elapsed_ms>=VD_SPEED_SAMPLE_MIN_INTERVAL_MS&&
++        m->elapsed_ms<=VD_SPEED_SAMPLE_MAX_INTERVAL_MS&&
++        (uint32_t)(now-m->ms)<VD_SPEED_SAMPLE_MAX_AGE_MS&&
++        m->delta_left>=-32768&&m->delta_left<=32768&&m->delta_right>=-32768&&m->delta_right<=32768;
++}
++int vm_pi_init(vm_pi_state_t *s,const vm_pi_config_t *c,uint64_t session,const vm_motion_t *anchor)
++{
++    if(!s)return 0;memset(s,0,sizeof(*s));
++    if(!c||!c->revision||!session||!anchor||!c->kp_left_q8||!c->kp_right_q8||
++       !c->pwm_cap_left||c->pwm_cap_left>1000||!c->pwm_cap_right||c->pwm_cap_right>1000)return 0;
++    s->config=*c;s->session=session;s->last_sequence=anchor->sequence;s->last_ms=anchor->ms;s->configured=1;return 1;
++}
++void vm_pi_stop(vm_pi_state_t *s,const vm_motion_t *m)
++{
++    if(!s)return;ws_pi_reset(&s->left);ws_pi_reset(&s->right);++s->revision;
++    if(m&&((m->sequence==s->last_sequence&&m->ms==s->last_ms)||
++       ((uint32_t)(m->sequence-s->last_sequence)>0&&(uint32_t)(m->sequence-s->last_sequence)<UINT32_C(0x80000000)&&
++        (uint32_t)(m->ms-s->last_ms)>0&&(uint32_t)(m->ms-s->last_ms)<UINT32_C(0x80000000)))){
++        s->last_sequence=m->sequence;s->last_ms=m->ms;
++    }
++}
++vm_pi_status_t vm_pi_prepare(const vm_pi_state_t *s,const vps_state_t *p,const vps_result_t *r,
++                              const vm_motion_t *m,const vp_stamp_t *current,uint32_t now,
++                              uint16_t ff_left,uint16_t ff_right,vm_pi_candidate_t *out)
++{
++    if(!out)return VM_PI_REJECTED;memset(out,0,sizeof(*out));out->status=VM_PI_REJECTED;
++    if(!s||!s->configured||!m||!r||!current||!p||
++       s->config.revision!=p->config.planner.revision)return VM_PI_REJECTED;
++    if(m->sequence==s->last_sequence&&m->ms==s->last_ms){out->status=VM_PI_WAIT;return VM_PI_WAIT;}
++    if(!vps_result_matches(p,r,current,now)||!feedback_valid(s,m,now)||
++       m->sequence!=r->candidate.stamp.encoder_seq||m->ms!=r->candidate.stamp.encoder_ms)return VM_PI_REJECTED;
++    out->left=s->left;out->right=s->right;out->stamp=r->candidate.stamp;out->session=s->session;
++    out->base_revision=s->revision;out->result_revision=r->revision;out->feedback_revision=m->revision;
++    out->elapsed_ms=m->elapsed_ms;out->target_left=r->candidate.left_ticks_10ms;out->target_right=r->candidate.right_ticks_10ms;
++    out->measured_left=(int32_t)((int64_t)m->delta_left*10/m->elapsed_ms);
++    out->measured_right=(int32_t)((int64_t)m->delta_right*10/m->elapsed_ms);
++    /* Feedforward is explicit, bounded by the same shared kernel as legacy
++     * control. No duty-to-speed model, repeated target ramp or steering mix. */
++    ws_pi_step_ff_ms(&out->left,out->target_left,out->measured_left,s->config.kp_left_q8,s->config.ki_left_q8,
++        s->config.pwm_cap_left,m->elapsed_ms,ff_left);
++    ws_pi_step_ff_ms(&out->right,out->target_right,out->measured_right,s->config.kp_right_q8,s->config.ki_right_q8,
++        s->config.pwm_cap_right,m->elapsed_ms,ff_right);
++    out->status=VM_PI_READY;return VM_PI_READY;
++}
++int vm_pi_commit(vm_pi_state_t *s,const vps_state_t *p,const vps_result_t *r,const vm_motion_t *m,
++                    const vp_stamp_t *current,uint32_t now,const vm_pi_candidate_t *c)
++{
++    if(!s||!s->configured||!c||c->status!=VM_PI_READY||!r||!current||!p||
++       s->config.revision!=p->config.planner.revision||
++       c->session!=s->session||c->base_revision!=s->revision||c->result_revision!=r->revision||
++       !vps_result_matches(p,r,current,now)||!feedback_valid(s,m,now)||c->feedback_revision!=m->revision||
++       m->sequence!=c->stamp.encoder_seq||m->ms!=c->stamp.encoder_ms||m->elapsed_ms!=c->elapsed_ms||
++       c->target_left!=r->candidate.left_ticks_10ms||c->target_right!=r->candidate.right_ticks_10ms||
++       !vp_candidate_matches(VP_SHADOW,&r->candidate,&c->stamp,now)||
++       c->measured_left!=(int32_t)((int64_t)m->delta_left*10/m->elapsed_ms)||
++       c->measured_right!=(int32_t)((int64_t)m->delta_right*10/m->elapsed_ms))return 0;
++    s->left=c->left;s->right=c->right;s->last_sequence=m->sequence;s->last_ms=m->ms;++s->revision;return 1;
++}
++vm_pi_status_t vm_pi_apply_shadow(vm_pi_state_t *s,const vps_state_t *p,const vps_result_t *r,
++                                    const vm_motion_t *m,const vp_stamp_t *current,uint32_t now,
++                                    uint16_t ff_left,uint16_t ff_right,vm_pi_candidate_t *out)
++{
++    if(!out){vm_pi_stop(s,m);return VM_PI_REJECTED;}
++    memset(out,0,sizeof(*out));out->status=VM_PI_REJECTED;
++    if(!s||!s->configured||!p||!r||r->revision!=p->revision){vm_pi_stop(s,m);return VM_PI_REJECTED;}
++    if(r->status==VPS_ZERO||r->status==VPS_FAULT||r->status==VPS_INACTIVE||
++       !p->supervisor.authorized||p->supervisor.motor_inhibit){
++        vm_pi_stop(s,m);out->status=VM_PI_ZERO;return VM_PI_ZERO;
++    }
++    if(r->status==VPS_WAIT){out->status=VM_PI_WAIT;return VM_PI_WAIT;}
++    vm_pi_status_t status=vm_pi_prepare(s,p,r,m,current,now,ff_left,ff_right,out);
++    if(status==VM_PI_WAIT)return status;
++    if(status!=VM_PI_READY||!vm_pi_commit(s,p,r,m,current,now,out)){
++        vm_pi_stop(s,m);memset(out,0,sizeof(*out));out->status=VM_PI_REJECTED;return VM_PI_REJECTED;
++    }
++    return VM_PI_READY;
++}
+diff --git a/demo/code/vision_metric_pi.h b/demo/code/vision_metric_pi.h
+--- /dev/null
++++ b/demo/code/vision_metric_pi.h
+@@ -0,0 +1,54 @@
++#ifndef SMARTCAR_VISION_METRIC_PI_H
++#define SMARTCAR_VISION_METRIC_PI_H
++#include "vision_metric_io.h"
++#include "wheel_speed.h"
++/* Diagnostic, caller-owned pair of the EXISTING PI algorithm. No live driver
++ * state, GPIO/PWM or legacy duty/steering mix. Never call both target sources
++ * on the same physical PI. Active runtime ownership remains to be integrated. */
++typedef struct {
++    uint32_t revision; /* Same immutable calibration bundle as planner/metric IO. */
++    uint16_t kp_left_q8,ki_left_q8,kp_right_q8,ki_right_q8,pwm_cap_left,pwm_cap_right;
++} vm_pi_config_t;
++typedef struct {
++    vm_pi_config_t config;
++    ws_pi_t left,right;
++    uint64_t session;
++    uint32_t revision,last_sequence,last_ms;
++    uint8_t configured;
++} vm_pi_state_t;
++typedef enum { VM_PI_READY=0,VM_PI_WAIT,VM_PI_REJECTED,VM_PI_ZERO } vm_pi_status_t;
++typedef struct {
++    ws_pi_t left,right;
++    vp_stamp_t stamp;
++    uint64_t session;
++    uint32_t base_revision,result_revision,feedback_revision,elapsed_ms;
++    int32_t measured_left,measured_right;
++    uint16_t target_left,target_right;
++    vm_pi_status_t status;
++} vm_pi_candidate_t;
++int vm_pi_init(vm_pi_state_t *state,const vm_pi_config_t *config,uint64_t session,
++                 const vm_motion_t *anchor);
++/* STOP clears PI immediately and invalidates every prepared candidate. An
++ * available current feedback sample can anchor the next interval, even while
++ * inhibited, so normal recovery need not synthesize or replay lost samples. */
++void vm_pi_stop(vm_pi_state_t *state,const vm_motion_t *current);
++vm_pi_status_t vm_pi_prepare(const vm_pi_state_t *state,const vps_state_t *planner,
++                              const vps_result_t *result,const vm_motion_t *feedback,
++                              const vp_stamp_t *current,uint32_t now_ms,
++                              uint16_t feedforward_left,uint16_t feedforward_right,
++                              vm_pi_candidate_t *out);
++/* Caller serializes prepare/commit; rechecks all versions + sample/age and
++ * supervisor deadlines. Success publishes only the caller's diagnostic PI
++ * state. A rejected candidate has zero PWM; failures never mutate live IO. */
++int vm_pi_commit(vm_pi_state_t *state,const vps_state_t *planner,const vps_result_t *result,
++                    const vm_motion_t *feedback,const vp_stamp_t *current,uint32_t now_ms,
++                    const vm_pi_candidate_t *candidate);
++/* Serialized offline composition: ZERO/FAULT resets both diagnostic PIs in
++ * this call, WAIT retains state without publishing another command, READY
++ * prepares+rechecks+adopts one feedback step. Errors clear diagnostic state. */
++vm_pi_status_t vm_pi_apply_shadow(vm_pi_state_t *state,const vps_state_t *planner,
++                                    const vps_result_t *result,const vm_motion_t *feedback,
++                                    const vp_stamp_t *current,uint32_t now_ms,
++                                    uint16_t feedforward_left,uint16_t feedforward_right,
++                                    vm_pi_candidate_t *out);
++#endif
+diff --git a/tools/speed_planning/metric_odom_runner.c b/tools/speed_planning/metric_odom_runner.c
+--- /dev/null
++++ b/tools/speed_planning/metric_odom_runner.c
+@@ -0,0 +1,39 @@
++/* Native snapshot input replay, no device access. Scales are mandatory CLI
++ * inputs. Capture queries are synthetic midpoint times within logged samples. */
++#ifdef _MSC_VER
++#define _CRT_SECURE_NO_WARNINGS
++#endif
++#include "vision_metric_io.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++int main(int argc,char **argv)
++{
++    vm_odom_t state;vm_odom_config_t config;char line[256],*end;FILE *input,*output;
++    unsigned sequence,ms,previous_ms=0,index=0;int left,right;
++    if(argc!=5)return 2;
++    memset(&config,0,sizeof(config));config.revision=1;config.max_age_ms=30;config.interpolation_gap_ms=20;
++    config.sign_left=-1;config.sign_right=1;
++    config.ticks_per_metre_left=strtof(argv[3],&end);if(*end)return 2;
++    config.ticks_per_metre_right=strtof(argv[4],&end);if(*end)return 2;
++    if(!vm_odom_init(&state,&config))return 2;
++    input=fopen(argv[1],"r");if(!input)return 3;output=fopen(argv[2],"w");if(!output){fclose(input);return 3;}
++    fprintf(output,"index,sequence,ms,odometerM,leftSpeedMps,rightSpeedMps,speedMps,velocityValid,captureMs,captureStatus,captureOdometerM\n");
++    if(!fgets(line,sizeof(line),input))return 4;
++    while(fgets(line,sizeof(line),input)){
++        vd_speed_info_t native;vm_encoder_t sample;vm_motion_t motion;float captured=0;uint32_t capture;
++        if(sscanf(line,"%u,%u,%d,%d",&sequence,&ms,&left,&right)!=4)return 4;
++        memset(&native,0,sizeof(native));native.samples=sequence;native.sample_ms=ms;
++        native.total3=left;native.total4=right;native.sign3=-1;native.sign4=1;native.signs_confirmed=1;
++        if(!vm_encoder_from_speed(&native,1,&sample)||vm_odom_push(&state,&sample)!=VM_OK||
++           vm_odom_current(&state,ms,&motion)!=VM_OK)return 5;
++        capture=index?previous_ms+(uint32_t)(ms-previous_ms)/2U:ms;
++        vm_status_t status=vm_odom_at_capture(&state,capture,ms,&captured);
++        fprintf(output,"%u,%u,%u,%.9g,%.9g,%.9g,%.9g,%u,%u,%u,%.9g\n",index,sequence,ms,
++            (double)motion.odometer_m,(double)motion.left_speed_m_s,(double)motion.right_speed_m_s,
++            (double)motion.speed_m_s,(unsigned)motion.velocity_valid,(unsigned)capture,(unsigned)status,(double)captured);
++        previous_ms=ms;++index;
++    }
++    if(ferror(input)||ferror(output)){fclose(input);fclose(output);return 6;}
++    fclose(input);return fclose(output)?6:0;
++}
+diff --git a/tools/speed_planning/replay_metric_odom.py b/tools/speed_planning/replay_metric_odom.py
+--- /dev/null
++++ b/tools/speed_planning/replay_metric_odom.py
+@@ -0,0 +1,102 @@
++"""Check native C count/history conversion against an independent Python calculation.
++
++Consumes existing frozen stop traces only. No serial, firmware, control commands,
++metric vision or synthetic PI output is added to a measured motion record.
++"""
++import argparse
++import csv
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import shutil
++import subprocess
++from tools.speed_planning.export_stop_trace import validate_trace
++from tools.speed_planning.replay import compile_command
++from tools.speed_planning.vehicle_model import ROOT
++
++
++def run(traces, output, left_scale, right_scale, compiler=None):
++    traces = [Path(p).resolve() for p in traces]; output = Path(output).resolve()
++    if not traces or any(not math.isfinite(v) or not 0 < v <= 1e6 for v in (left_scale, right_scale)):
++        raise ValueError('Explicit finite positive wheel scales and traces required')
++    loaded = []
++    for path in traces:
++        data = json.loads(path.read_text('utf-8'))
++        if data.get('schemaVersion') != 'smartcar.stop-trace/1':
++            raise ValueError('Unsupported trace schema')
++        checks = validate_trace(data['info'], data['rows'])
++        loaded.append((path, data, checks))
++    if output.exists():
++        raise ValueError('Output must be a new directory')
++    family = os.environ.get('SMARTCAR_TEST_COMPILER', 'gcc'); mode = os.environ.get('SMARTCAR_TEST_MODE', 'optimized')
++    if family not in ('gcc', 'msvc') or mode not in ('optimized', 'asan'):
++        raise ValueError('Unsupported compiler family/mode')
++    compiler = compiler or os.environ.get('SMARTCAR_TEST_COMPILER_PATH') or shutil.which('cl' if family == 'msvc' else 'gcc')
++    if not compiler:
++        raise ValueError('Existing compiler required')
++    output.mkdir(parents=True)
++    sources = [ROOT/'tools/speed_planning/metric_odom_runner.c', ROOT/'demo/code/vision_metric_io.c',
++               ROOT/'tools/speed_planning/vision_adapter.c', ROOT/'tools/speed_planning/speed_planner.c']
++    exe = output/'metric-odom.exe'; command = compile_command(str(compiler), family, mode, sources,
++                                                               [ROOT/'demo/code'], exe)
++    subprocess.run(command, cwd=output, check=True, capture_output=True, timeout=60)
++    reports = []
++    for case, (path, data, checks) in enumerate(loaded):
++        source = output/f'input-{case}.csv'; destination = output/f'output-{case}.csv'
++        with source.open('w', encoding='utf-8', newline='') as file:
++            writer = csv.writer(file);writer.writerow(['sequence', 'ms', 'totalLeft', 'totalRight'])
++            writer.writerows((r['seq'], r['ms'], r['tl'], r['tr']) for r in data['rows'])
++        subprocess.run([exe, source, destination, str(left_scale), str(right_scale)], cwd=output, check=True, timeout=15)
++        with destination.open(encoding='utf-8', newline='') as file:
++            actual = list(csv.DictReader(file))
++        if len(actual) != len(data['rows']):
++            raise AssertionError('Incomplete native odometry output')
++        travelled_l, travelled_r, previous_distance = 0, 0, 0.
++        for index, (row, got) in enumerate(zip(data['rows'], actual)):
++            dt = 0 if not index else (row['ms']-data['rows'][index-1]['ms']) & 0xffffffff
++            dl = 0 if not index else -(row['tl']-data['rows'][index-1]['tl'])
++            dr = 0 if not index else row['tr']-data['rows'][index-1]['tr']
++            travelled_l += abs(dl); travelled_r += abs(dr)
++            distance = .5*(travelled_l/left_scale+travelled_r/right_scale)
++            left_v, right_v = (dl/left_scale*1000/dt, dr/right_scale*1000/dt) if dt else (0., 0.)
++            expected = {'odometerM': distance, 'leftSpeedMps': left_v, 'rightSpeedMps': right_v,
++                        'speedMps': .5*(abs(left_v)+abs(right_v))}
++            if (int(got['index']), int(got['sequence']), int(got['ms'])) != (index, row['seq'], row['ms']):
++                raise AssertionError('Native identity mismatch')
++            if int(got['captureStatus']) != 0:
++                raise AssertionError('Known midpoint bracket was rejected')
++            fraction = ((int(got['captureMs'])-data['rows'][index-1]['ms']) & 0xffffffff)/dt if dt else 0
++            expected['captureOdometerM'] = previous_distance+fraction*(distance-previous_distance)
++            for key, value in expected.items():
++                if not math.isclose(float(got[key]), value, rel_tol=2e-5, abs_tol=1e-6):
++                    raise AssertionError(f'{path.name} row{index} {key}: {got[key]} != {value}')
++            previous_distance = distance
++        reports.append({'source': str(path), 'sourceSha256': hashlib.sha256(path.read_bytes()).hexdigest(),
++                        'rows': len(actual), 'rawTraceCrcVerified': checks['crc_verified'],
++                        'allRowsMatchIndependentOracle': True, 'totalWheelPathM': previous_distance,
++                        'csvSha256': hashlib.sha256(destination.read_bytes()).hexdigest()})
++    result = {'schemaVersion': 'smartcar.metric-odometry-replay/1', 'hardwareAccessed': False,
++              'productionApproved': False, 'leftTicksPerM': left_scale, 'rightTicksPerM': right_scale,
++              'experiments': reports, 'compilerFamily': family, 'compilerMode': mode, 'compileCommand': command,
++              'sourcesSha256': {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
++                               for p in sources+[Path(__file__), ROOT/'demo/code/vision_metric_io.h']},
++              'limits': ['Wheel path magnitude; not independent ground displacement or slip measurement.',
++                         'Candidate scales are explicit inputs, not approved calibration.',
++                         'Capture midpoint queries are synthetic interpolation tests, not measured camera timestamps.',
++                         'No new PI, PWM, motion command, physical stopping or target timing evidence.']}
++    (output/'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
++    print(json.dumps({'traces': len(reports), 'rows': sum(r['rows'] for r in reports), 'productionApproved': False}))
++    return result
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('traces', type=Path, nargs='+')
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--left-ticks-per-m', type=float, required=True)
++    parser.add_argument('--right-ticks-per-m', type=float, required=True)
++    parser.add_argument('--compiler')
++    args = parser.parse_args()
++    run(args.traces, args.output, args.left_ticks_per_m, args.right_ticks_per_m, args.compiler)
+diff --git a/tests/planning/test_metric_control.c b/tests/planning/test_metric_control.c
+--- /dev/null
++++ b/tests/planning/test_metric_control.c
+@@ -0,0 +1,219 @@
++#include "vision_metric_pi.h"
++#include <limits.h>
++#include <math.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++static unsigned checks;
++#define CHECK(x) do{++checks;if(!(x)){fprintf(stderr,"metric:%d %s\n",__LINE__,#x);exit(1);}}while(0)
++static vm_odom_config_t odom_config(void)
++{vm_odom_config_t c={1,30,20,1000,2000,-1,1};return c;}
++static vm_encoder_t encoder(uint32_t seq,uint32_t ms,int32_t left,int32_t right)
++{vm_encoder_t e={seq,ms,left,right,-1,1,1};return e;}
++static vm_vision_config_t vision_config(void)
++{
++    vm_vision_config_t c;memset(&c,0,sizeof(c));c.homography[0]=.01f;c.homography[2]=-.93f;
++    c.homography[4]=-.01f;c.homography[5]=1.2f;c.homography[8]=1;
++    c.min_x_m=-.2f;c.max_x_m=.2f;c.min_y_m=0;c.max_y_m=1;c.max_step_m=.5f;
++    c.near_count=c.full_count=5;c.min_confidence=50;c.revision=1;c.max_age_ms=100;
++    for(unsigned j=0;j<5;++j){c.near_rows[j]=(uint8_t)(110-j*10);c.full_rows[j]=(uint8_t)(110-j*15);}return c;
++}
++static vision_result_t lane(void)
++{
++    vision_result_t r;memset(&r,0,sizeof(r));r.valid=1;r.status=VISION_TRACK;r.confidence=90;
++    for(unsigned y=0;y<VISION_HEIGHT;++y){r.left[y]=60;r.right[y]=126;r.center[y]=93;r.row_flags[y]=3;}return r;
++}
++static vps_config_t planner_config(void)
++{
++    vps_config_t c;memset(&c,0,sizeof(c));c.planner.revision=1;
++    c.planner.limits=(sp_limits_t){SP_SIMULATION,3,1,2,1,2,4,6,.02f,.02f,.0001f,.05f};
++    c.planner.ticks_per_metre_left=1000;c.planner.ticks_per_metre_right=2000;
++    c.planner.max_left_ticks_10ms=c.planner.max_right_ticks_10ms=1000;
++    c.planner.frame_max_age_ms=100;c.planner.encoder_max_age_ms=30;c.planner.candidate_max_age_ms=20;
++    c.policy=(sp_policy_t){100,30,300,1000,1000,3,3,3,1,.01f};return c;
++}
++static void native_and_history(void)
++{
++    vm_odom_t s;vm_motion_t m;vm_odom_config_t c=odom_config();float x;
++    vd_speed_info_t raw;memset(&raw,0,sizeof(raw));raw.signs_confirmed=1;raw.sign3=-1;raw.sign4=1;
++    raw.total3=100;raw.total4=-100;raw.sample_ms=100;raw.raw3=123;raw.raw4=456;
++    vm_encoder_t e;CHECK(!vm_encoder_from_speed(&raw,0,&e));CHECK(vm_encoder_from_speed(&raw,1,&e));
++    CHECK(e.total_left==100&&e.total_right==-100&&e.sequence==0);
++    CHECK(vm_odom_init(&s,&c));CHECK(vm_odom_current(&s,100,&m)==VM_WAIT);
++    CHECK(vm_odom_push(&s,&e)==VM_OK);CHECK(vm_odom_current(&s,100,&m)==VM_OK&&!m.velocity_valid);
++    e=encoder(1,110,90,-80);CHECK(vm_odom_push(&s,&e)==VM_OK);CHECK(vm_odom_current(&s,110,&m)==VM_OK);
++    CHECK(m.delta_left==10&&m.delta_right==20&&m.elapsed_ms==10&&m.sequence_span==1);
++    CHECK(fabsf(m.left_speed_m_s-1)<1e-6f&&fabsf(m.right_speed_m_s-1)<1e-6f);
++    CHECK(fabsf(m.odometer_m-.01f)<1e-6f);
++    CHECK(vm_odom_at_capture(&s,105,110,&x)==VM_OK&&fabsf(x-.005f)<1e-6f);
++    CHECK(vm_odom_at_capture(&s,110,110,&x)==VM_OK&&fabsf(x-.01f)<1e-6f);
++    CHECK(vm_odom_at_capture(&s,115,115,&x)==VM_WAIT);
++    CHECK(vm_odom_at_capture(&s,120,115,&x)==VM_BAD_SOURCE);
++    CHECK(vm_odom_current(&s,140,&m)==VM_EXPIRED);CHECK(!m.odometer_m);
++    uint32_t revision=s.revision;CHECK(vm_odom_push(&s,&e)==VM_DUPLICATE&&s.revision==revision);
++    e.total_left--;CHECK(vm_odom_push(&s,&e)==VM_CONFLICT&&s.revision==revision);
++    e=encoder(0,100,100,-100);CHECK(vm_odom_push(&s,&e)==VM_OLD);
++    e=encoder(2,120,91,-79);CHECK(vm_odom_push(&s,&e)==VM_OK);CHECK(vm_odom_current(&s,120,&m)==VM_OK);
++    CHECK(m.left_speed_m_s<0&&m.right_speed_m_s>0&&m.odometer_m>.01f);
++    e=encoder(4,140,71,-39);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    CHECK(vm_odom_at_capture(&s,130,140,&x)==VM_NO_BRACKET);CHECK(vm_odom_current(&s,140,&m)==VM_OK&&m.sequence_span==2);
++    CHECK(vm_odom_at_capture(&s,140,140,&x)==VM_OK);
++    e=encoder(5,150,INT32_MIN,0);CHECK(vm_odom_push(&s,&e)==VM_BAD_SOURCE);
++    raw.faults=1;CHECK(!vm_encoder_from_speed(&raw,1,&e));
++    for(unsigned j=0;j<40;++j){e=encoder(5+j,150+j*10,61-(int32_t)j*10,-19+(int32_t)j*20);CHECK(vm_odom_push(&s,&e)==VM_OK);}
++    CHECK(s.count==VM_HISTORY_CAPACITY);CHECK(vm_odom_at_capture(&s,150,540,&x)==VM_NO_BRACKET);
++    CHECK(vm_odom_at_capture(&s,535,540,&x)==VM_OK);
++    CHECK(vm_odom_init(&s,&c));e=encoder(UINT32_MAX,UINT32_MAX-5,0,0);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    e=encoder(0,4,-10,20);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    CHECK(vm_odom_at_capture(&s,UINT32_MAX,4,&x)==VM_OK&&fabsf(x-.005f)<1e-6f);
++    c.ticks_per_metre_left=NAN;CHECK(!vm_odom_init(&s,&c));CHECK(vm_odom_push(&s,&e)==VM_BAD_CONFIG);
++    c=odom_config();CHECK(vm_odom_init(&s,&c));e=encoder(0,0,0,0);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    e=encoder(1,UINT32_C(0x70000000),0,0);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    e=encoder(2,UINT32_C(0xe0000000),0,0);CHECK(vm_odom_push(&s,&e)==VM_OK);
++    CHECK(s.count==2); /* The sample at0 is no longer in the clock half-domain. */
++}
++static void vision_and_bridge(void)
++{
++    vm_vision_t s;vm_vision_init(&s);vm_vision_config_t c=vision_config();vision_result_t road=lane();vm_frame_t f;
++    CHECK(vm_vision_frame(&s,&c,&road,1,105,110,&f));CHECK(f.near_valid&&f.far_valid&&f.domain_valid);
++    CHECK(f.near_preview.units==SP_METRES&&f.near_preview.sequence==1);
++    CHECK(fabsf(f.near_preview.distance[4]-.4f)<1e-5f);
++    road.row_flags[50]=1;CHECK(vm_vision_frame(&s,&c,&road,2,115,120,&f));CHECK(f.near_valid&&!f.far_valid);
++    road.row_flags[110]=1;CHECK(vm_vision_frame(&s,&c,&road,3,125,130,&f));CHECK(!f.near_valid);
++    road=lane();c.min_x_m=.1f;CHECK(vm_vision_frame(&s,&c,&road,4,135,140,&f));CHECK(!f.domain_valid);
++    c=vision_config();++c.revision;CHECK(!vm_vision_frame(&s,&c,&road,4,135,140,&f));
++    vm_vision_init(&s);CHECK(vm_vision_frame(&s,&c,&road,4,135,140,&f)&&f.near_valid);
++    vm_odom_t odom;vm_odom_config_t oc=odom_config();vm_encoder_t e=encoder(0,100,0,0);CHECK(vm_odom_init(&odom,&oc));
++    CHECK(vm_odom_push(&odom,&e)==VM_OK);e=encoder(1,110,-10,20);CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    vm_vision_init(&s);c=vision_config();CHECK(vm_vision_frame(&s,&c,&road,1,105,110,&f));
++    vp_stamp_t id;memset(&id,0,sizeof(id));id.config_revision=1;id.output_epoch=9;
++    vps_input_t in;CHECK(vm_shadow_input(&odom,&f,1,id,110,1,1,&in)==VM_OK);
++    CHECK(in.observation.new_frame&&in.observation.capture_odometer_valid&&in.valid==VP_VALID_ALL);
++    CHECK(fabsf(in.observation.odometer_at_capture_m-.005f)<1e-6f&&in.observation.encoder_seq==1);
++    CHECK(in.identity.capture_ms==105&&in.identity.encoder_ms==110);
++    f.capture_ms=115;CHECK(vm_shadow_input(&odom,&f,1,id,115,1,1,&in)==VM_WAIT);
++    CHECK(!in.observation.capture_odometer_valid&&!in.observation.encoder_valid);
++    e=encoder(2,120,-20,40);CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    CHECK(vm_shadow_input(&odom,&f,1,id,120,1,1,&in)==VM_OK);
++}
++static void metric_pi_chain(void)
++{
++    vm_odom_t odom;vm_odom_config_t oc=odom_config();vm_vision_t vision;vm_vision_init(&vision);
++    vm_vision_config_t vc=vision_config();vision_result_t road=lane();vm_frame_t frame;vm_motion_t motion;
++    vm_encoder_t e=encoder(0,100,0,0);CHECK(vm_odom_init(&odom,&oc));CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    e=encoder(1,110,-10,20);CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    vp_stamp_t id;memset(&id,0,sizeof(id));id.config_revision=1;id.output_epoch=9;
++    CHECK(vm_vision_frame(&vision,&vc,&road,1,105,110,&frame));
++    vps_input_t input;CHECK(vm_shadow_input(&odom,&frame,1,id,110,1,1,&input)==VM_OK);
++    vps_state_t planner;vps_config_t pc=planner_config();CHECK(vps_init(&planner,VP_SHADOW,&pc));CHECK(vps_arm(&planner,&input));
++    CHECK(vm_odom_current(&odom,110,&motion)==VM_OK);
++    vm_pi_state_t pi;vm_pi_config_t config={1,256,12,512,24,600,500};
++    CHECK(vm_pi_init(&pi,&config,123,&motion));ws_pi_t left={0},right={0};
++    for(unsigned j=0;j<200;++j){
++        unsigned dt=j%3?10:20;int32_t measured_l=8+(int32_t)(j%5),measured_r=18+(int32_t)(j%3);
++        e.sequence++;e.ms+=dt;e.total_left-=measured_l*(int32_t)(dt/10);e.total_right+=measured_r*(int32_t)(dt/10);
++        CHECK(vm_odom_push(&odom,&e)==VM_OK);
++        CHECK(vm_vision_frame(&vision,&vc,&road,e.sequence,e.ms-5,e.ms,&frame));
++        CHECK(vm_shadow_input(&odom,&frame,1,id,e.ms,1,1,&input)==VM_OK);
++        vps_result_t result;CHECK(vps_tick(&planner,&input,&result)==VPS_READY);
++        CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);
++        vm_pi_candidate_t candidate;CHECK(vm_pi_prepare(&pi,&planner,&result,&motion,&input.identity,e.ms,700,80,&candidate)==VM_PI_READY);
++        CHECK(candidate.target_left==10&&candidate.target_right==20);
++        CHECK(candidate.measured_left==measured_l&&candidate.measured_right==measured_r);
++        ws_pi_step_ff_ms(&left,10,measured_l,256,12,600,dt,700);ws_pi_step_ff_ms(&right,20,measured_r,512,24,500,dt,80);
++        CHECK(candidate.left.output==left.output&&candidate.right.output==right.output);
++        CHECK(candidate.left.integral_q8==left.integral_q8&&candidate.right.integral_q8==right.integral_q8);
++        CHECK(vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate));
++        CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate));
++        vm_pi_candidate_t duplicate;CHECK(vm_pi_prepare(&pi,&planner,&result,&motion,&input.identity,e.ms,0,0,&duplicate)==VM_PI_WAIT);
++        CHECK(!duplicate.left.output&&!duplicate.right.output);
++    }
++    /* Prepare one more result, then exercise publication rejection. */
++    e.sequence++;e.ms+=10;e.total_left-=10;e.total_right+=20;CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    CHECK(vm_vision_frame(&vision,&vc,&road,e.sequence,e.ms-5,e.ms,&frame));
++    CHECK(vm_shadow_input(&odom,&frame,1,id,e.ms,1,1,&input)==VM_OK);
++    vps_result_t result;CHECK(vps_tick(&planner,&input,&result)==VPS_READY);CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);
++    vm_pi_candidate_t candidate;CHECK(vm_pi_prepare(&pi,&planner,&result,&motion,&input.identity,e.ms,20,20,&candidate)==VM_PI_READY);
++    vp_stamp_t changed=input.identity;changed.output_epoch++;
++    CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&changed,e.ms,&candidate));
++    CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms+20,&candidate));
++    vm_motion_t changed_feedback=motion;changed_feedback.revision++;
++    CHECK(!vm_pi_commit(&pi,&planner,&result,&changed_feedback,&input.identity,e.ms,&candidate));
++    changed_feedback=motion;changed_feedback.ms++;changed_feedback.elapsed_ms++;
++    CHECK(!vm_pi_commit(&pi,&planner,&result,&changed_feedback,&input.identity,e.ms+1,&candidate));
++    vm_pi_stop(&pi,NULL);CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate));
++    vm_pi_stop(&pi,&motion);CHECK(!pi.left.output&&!pi.right.output&&!pi.left.integral_q8&&!pi.right.integral_q8);
++    CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate));
++    CHECK(vm_pi_init(&pi,&config,124,&motion));CHECK(!vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate));
++    /* The composed facade must clear PI on a near-invalid result even if
++     * there is no new feedback sample to advance a normal control step. */
++    pi.left.output=200;pi.right.output=300;pi.left.integral_q8=1234;pi.right.integral_q8=2345;
++    e.sequence++;e.ms+=10;e.total_left-=10;e.total_right+=20;CHECK(vm_odom_push(&odom,&e)==VM_OK);
++    road.valid=0;CHECK(vm_vision_frame(&vision,&vc,&road,e.sequence,e.ms-5,e.ms,&frame));
++    CHECK(vm_shadow_input(&odom,&frame,1,id,e.ms,1,1,&input)==VM_OK);
++    CHECK(vps_tick(&planner,&input,&result)==VPS_ZERO);CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);
++    CHECK(vm_pi_apply_shadow(&pi,&planner,&result,&motion,&input.identity,e.ms,100,100,&candidate)==VM_PI_ZERO);
++    CHECK(!pi.left.output&&!pi.right.output&&!pi.left.integral_q8&&!pi.right.integral_q8);
++    road=lane();
++    for(unsigned j=0;j<3;++j){
++        e.sequence++;e.ms+=10;e.total_left-=10;e.total_right+=20;CHECK(vm_odom_push(&odom,&e)==VM_OK);
++        CHECK(vm_vision_frame(&vision,&vc,&road,e.sequence,e.ms-5,e.ms,&frame));
++        CHECK(vm_shadow_input(&odom,&frame,1,id,e.ms,1,1,&input)==VM_OK);(void)vps_tick(&planner,&input,&result);
++        CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);
++        (void)vm_pi_apply_shadow(&pi,&planner,&result,&motion,&input.identity,e.ms,100,100,&candidate);
++    }
++    CHECK(result.status==VPS_READY&&candidate.status==VM_PI_READY);
++    uint16_t held_l=pi.left.output,held_r=pi.right.output;
++    CHECK(vps_tick(&planner,&input,&result)==VPS_WAIT);
++    CHECK(vm_pi_apply_shadow(&pi,&planner,&result,&motion,&input.identity,e.ms,0,0,&candidate)==VM_PI_WAIT);
++    CHECK(pi.left.output==held_l&&pi.right.output==held_r);
++}
++static void synthetic_closed_loop(void)
++{
++    /* Three distinct first-order plants exercise the whole adapter chain,
++     * including quantized counters, different wheel scales and target drops.
++     * These dynamics/gains are fixtures, never vehicle-tuning proposals. */
++    for(unsigned plant=0;plant<3;++plant){
++        vm_odom_t odom;vm_odom_config_t oc=odom_config();CHECK(vm_odom_init(&odom,&oc));
++        vm_vision_t vision;vm_vision_init(&vision);vm_vision_config_t vc=vision_config();
++        vision_result_t road=lane();vm_frame_t frame;vm_motion_t motion;
++        vm_encoder_t e=encoder(0,100,0,0);CHECK(vm_odom_push(&odom,&e)==VM_OK);
++        e.sequence++;e.ms+=10;CHECK(vm_odom_push(&odom,&e)==VM_OK);
++        vp_stamp_t id={0};id.config_revision=1;id.output_epoch=9;
++        vps_input_t input;CHECK(vm_vision_frame(&vision,&vc,&road,1,105,110,&frame));
++        CHECK(vm_shadow_input(&odom,&frame,1,id,110,.4f,1,&input)==VM_OK);
++        vps_state_t planner;vps_config_t pc=planner_config();CHECK(vps_init(&planner,VP_SHADOW,&pc));CHECK(vps_arm(&planner,&input));
++        CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);
++        vm_pi_config_t config={1,5*256,128,5*256,128,600,600};vm_pi_state_t pi;
++        CHECK(vm_pi_init(&pi,&config,(uint64_t)plant+1,&motion));
++        double velocity_l=0,velocity_r=0,counts_l=0,counts_r=0;
++        double gain_l=.003+.001*plant,gain_r=.005-.001*plant;
++        for(unsigned stage=0;stage<3;++stage){
++            float target=stage==0?.4f:stage==1?.7f:.3f;
++            double mean_l=0,mean_r=0;
++            for(unsigned j=0;j<600;++j){
++                velocity_l+=(gain_l*pi.left.output-velocity_l)*.1;
++                velocity_r+=(gain_r*pi.right.output-velocity_r)*.1;
++                counts_l+=velocity_l*oc.ticks_per_metre_left*.01;
++                counts_r+=velocity_r*oc.ticks_per_metre_right*.01;
++                e.sequence++;e.ms+=10;e.total_left=-(int32_t)counts_l;e.total_right=(int32_t)counts_r;
++                CHECK(vm_odom_push(&odom,&e)==VM_OK);
++                CHECK(vm_vision_frame(&vision,&vc,&road,e.sequence,e.ms-5,e.ms,&frame));
++                CHECK(vm_shadow_input(&odom,&frame,1,id,e.ms,target,1,&input)==VM_OK);
++                vps_result_t result;CHECK(vps_tick(&planner,&input,&result)==VPS_READY);
++                CHECK(vm_odom_current(&odom,e.ms,&motion)==VM_OK);vm_pi_candidate_t c;
++                CHECK(vm_pi_apply_shadow(&pi,&planner,&result,&motion,&input.identity,e.ms,0,0,&c)==VM_PI_READY);
++                CHECK(pi.left.output<=600&&pi.right.output<=600);
++                if(j>=500){mean_l+=velocity_l;mean_r+=velocity_r;}
++            }
++            mean_l/=100;mean_r/=100;
++            printf("SYNTHETIC METRIC PLANT %u target=%.2f left=%.4f right=%.4f\n",plant,(double)target,mean_l,mean_r);
++            CHECK(fabs(mean_l-target)<.025&&fabs(mean_r-target)<.025);
++        }
++    }
++}
++int main(void)
++{
++    native_and_history();vision_and_bridge();metric_pi_chain();synthetic_closed_loop();
++    printf("METRIC CONTROL PASS: %u checks; native snapshots and shared PI, diagnostic only.\n",checks);return 0;
++}
+diff --git a/tests/planning/test_metric_odom_replay.py b/tests/planning/test_metric_odom_replay.py
+--- /dev/null
++++ b/tests/planning/test_metric_odom_replay.py
+@@ -0,0 +1,41 @@
++"""Actual frozen counter traces, explicit candidate scales, native C conversion."""
++import json
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT))
++from tools.speed_planning.replay_metric_odom import run
++TRACES = [ROOT/f'docs/changes/phase2-calibration-20261108/evidence/stop-trace/{name}/trace.json'
++          for name in ('lower01', 'video02', 'video03')]
++
++
++class MetricReplay(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.temp = tempfile.TemporaryDirectory();cls.addClassCleanup(cls.temp.cleanup)
++        cls.folder = Path(cls.temp.name)
++        cls.report = run(TRACES, cls.folder/'native', 11394, 11389)
++
++    def test_counts_times_and_midpoint_history_match_independent_oracle(self):
++        self.assertEqual(len(self.report['experiments']), 3)
++        self.assertTrue(all(c['rawTraceCrcVerified'] and c['allRowsMatchIndependentOracle']
++                            for c in self.report['experiments']))
++        self.assertFalse(self.report['productionApproved']);self.assertFalse(self.report['hardwareAccessed'])
++
++    def test_counter_tamper_rejected_before_artifacts(self):
++        bad = self.folder/'bad.json';data = json.loads(TRACES[0].read_text('utf-8'))
++        data['rows'][3]['tl'] += 1;bad.write_text(json.dumps(data), encoding='utf-8')
++        with self.assertRaisesRegex(ValueError, 'CRC32'):
++            run([bad], self.folder/'not-created', 11394, 11389)
++        self.assertFalse((self.folder/'not-created').exists())
++
++    def test_unknown_scale_not_guessed(self):
++        with self.assertRaises(ValueError):
++            run(TRACES, self.folder/'unknown', 0, 11389)
++        self.assertFalse((self.folder/'unknown').exists())
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+diff --git a/tools/speed_planning/audit_build.py b/tools/speed_planning/audit_build.py
+--- a/tools/speed_planning/audit_build.py
++++ b/tools/speed_planning/audit_build.py
+@@ -47,7 +47,7 @@
+     # The actual primary project compiles the single shared planner kernel;
+     # copy only its native sources, never the tooling or calibration datasets.
+     shared=workspace/'tools/speed_planning';shared.mkdir(parents=True)
+-    for name in ('speed_planner.c','speed_planner.h'):
++    for name in ('speed_planner.c','speed_planner.h','vision_adapter.c','vision_adapter.h'):
+         shutil.copyfile(ROOT/'tools/speed_planning'/name,shared/name)
+     for key,folder in [('OutputDirectory',out/'Objects'),('ListingPath',out/'Listings')]:
+         folder.mkdir();target.find('./TargetOption/TargetCommonOption/'+key).text=str(folder)+os.sep
+diff --git a/tests/suites/catalog.json b/tests/suites/catalog.json
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3727,6 +3727,83 @@
+         "artifacts/**"
+       ],
+       "scope": "Hybrid measured visual metadata and explicitly synthetic metric/zero-motion input; no physical stopping, PI or runtime scheduling claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "metric-control",
++      "name": "Native metric snapshots, odometer history and direct PI units",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/planning/test_metric_control.c",
++              "demo/code/vision_planner.c",
++              "tools/speed_planning/speed_planner.c",
++              "demo/code/vision_planner_shadow.c",
++              "demo/code/vision_metric_io.c",
++              "demo/code/vision_metric_pi.c",
++              "demo/code/wheel_speed.c",
++              "tools/speed_planning/vision_adapter.c"
++            ],
++            "includeDirectories": [
++              "demo/code",
++              "tools/speed_planning"
++            ],
++            "defines": []
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 120,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Synthetic native snapshot/vision inputs and unchanged wheel_speed PI algorithm; no active driver state, real PWM, firmware timing or physical calibration claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "metric-odom-replay",
++      "name": "Frozen wheel counter traces through native metric adapter",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/planning/test_metric_odom_replay.py"
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 120,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Measured cumulative counters and explicit candidate scales, independent conversion/interpolation oracle; no ground truth, live camera alignment, PWM or physical stopping claim"
+     }
+   ]
+ }
+diff --git a/demo/mdk/competition/MPC_20261106.uvprojx b/demo/mdk/competition/MPC_20261106.uvprojx
+--- a/demo/mdk/competition/MPC_20261106.uvprojx
++++ b/demo/mdk/competition/MPC_20261106.uvprojx
+@@ -2340,6 +2340,36 @@
+           <GroupName>Phase3 planner shadow interface</GroupName>
+           <Files>
+             <File>
++              <FileName>vision_metric_io.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\code\vision_metric_io.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_metric_io.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_metric_io.h</FilePath>
++            </File>
++            <File>
++              <FileName>vision_metric_pi.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\code\vision_metric_pi.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_metric_pi.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_metric_pi.h</FilePath>
++            </File>
++            <File>
++              <FileName>vision_adapter.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\..\tools\speed_planning\vision_adapter.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_adapter.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\..\tools\speed_planning\vision_adapter.h</FilePath>
++            </File>
++            <File>
+               <FileName>vision_planner_shadow.c</FileName>
+               <FileType>1</FileType>
+               <FilePath>..\..\code\vision_planner_shadow.c</FilePath>

@@ -1,0 +1,57 @@
+{
+  "scope": "Windows GCC C clock() elapsed measurements; host scheduling/load and architecture apply. Each run processes 750 original images five times, excludes file loading, includes reset between passes. Not ARM timing, pure CPU cycles or WCET.",
+  "runs": [
+    {
+      "name": "before",
+      "round": 0,
+      "milliseconds": 549.0,
+      "frames": 3750,
+      "checksum": 573475
+    },
+    {
+      "name": "after-prefix",
+      "round": 0,
+      "milliseconds": 751.0,
+      "frames": 3750,
+      "checksum": 602790
+    },
+    {
+      "name": "after-prefix",
+      "round": 1,
+      "milliseconds": 720.0,
+      "frames": 3750,
+      "checksum": 602790
+    },
+    {
+      "name": "before",
+      "round": 1,
+      "milliseconds": 582.0,
+      "frames": 3750,
+      "checksum": 573475
+    },
+    {
+      "name": "before",
+      "round": 2,
+      "milliseconds": 558.0,
+      "frames": 3750,
+      "checksum": 573475
+    },
+    {
+      "name": "after-prefix",
+      "round": 2,
+      "milliseconds": 714.0,
+      "frames": 3750,
+      "checksum": 602790
+    }
+  ],
+  "medianMilliseconds": {
+    "before": 558.0,
+    "after-prefix": 720.0
+  },
+  "ratio": 1.2903225806451613,
+  "millisecondsPerImage": {
+    "before": 0.1488,
+    "after-prefix": 0.192
+  },
+  "boardTimingVerified": false
+}

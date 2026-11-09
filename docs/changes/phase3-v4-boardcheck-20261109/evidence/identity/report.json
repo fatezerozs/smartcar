@@ -1,0 +1,16 @@
+{
+  "time": "2026-11-09T11:57:26.866730+08:00",
+  "port": "COM10",
+  "operatorReportedFlashed": true,
+  "expectedBuild": "PHASE3_C26_SHADOW_20261109_4",
+  "expectedProfile": "C26-SHADOW-8CA1CE06",
+  "motionCommandSent": false,
+  "identityVerified": true,
+  "stop": "[LINK] STOP",
+  "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+  "claim": "[LINK] port=radio owner=radio rx=5 tx=141816 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+  "status": "[FIELD] build=PHASE3_C26_SHADOW_20261109_4 version=MIDTERM_C26_31 ready=1 cam=1 hw=1 servo=1550/1430/1670 sign=-1 kp=1.2000 kd=0.0250 kh=1.2000 cruise=0.1450 cap=0.1800 rise=0.2000 axis=0.4968/0.4983 limit_ms=0",
+  "planner": "[PLANNER] profile=C26-SHADOW-8CA1CE06 configured=0 mode=0 metric_active=0 source=0 session=0 plans=0 waits=0 seen=0 near_geometry=0 full_geometry=0 status=0 supervisor=0 run=0 count=0 frozen=0 overwritten=0 cycles=0 cpu_hz=600000000 poll_max_cycles=0 observe_max_cycles=0; references=engineering-only; query stops; legacy PI/gains/PWM unchanged",
+  "encoder": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-1536 total4=964 samples=4856 sample_ms=48877 sign3=-1 sign4=1 confirmed=1",
+  "speed": "[SPEED] enabled=1 max_ticks=132 kp=1.0000 ki=0.0469 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops"
+}

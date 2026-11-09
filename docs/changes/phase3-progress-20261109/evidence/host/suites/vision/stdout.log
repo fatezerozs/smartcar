@@ -1,0 +1,32 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_DUAL_UART_ENABLE=0 C:\shengchanli\smartCar\smartcar\tests\vision\test_vision.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\vision\artifacts\default\vision.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\vision\artifacts\default\vision.exe
+straight             valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+bright floor object  valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+three-class floor    valid=1 state=TRACK q=91 both=80 inferred=0 err=0.50 bend=0.00
+thin black edges     valid=1 state=TRACK q=100 both=87 inferred=0 err=0.00 bend=0.00
+left displacement    valid=1 state=TRACK q=100 both=87 inferred=0 err=-24.50 bend=0.00
+right displacement   valid=1 state=TRACK q=100 both=87 inferred=0 err=25.50 bend=0.00
+left bend            valid=1 state=TRACK q=100 both=87 inferred=0 err=-15.14 bend=-19.00
+right bend           valid=1 state=TRACK q=100 both=87 inferred=0 err=16.14 bend=19.00
+bottom occlusion     valid=1 state=TRACK q=85 both=74 inferred=0 err=0.50 bend=0.00
+noise                valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+half shadow          valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+horizontal shadow    valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+brightness slope     valid=1 state=TRACK q=100 both=87 inferred=0 err=-15.14 bend=-19.00
+all white            valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+all black            valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+low contrast         valid=0 state=LOW_CONTRAST q=0 both=0 inferred=0 err=0.00 bend=0.00
+one edge learned     valid=1 state=TRACK q=50 both=0 inferred=87 err=28.50 bend=0.00
+one edge expired     valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+history quarantine   valid=1 state=TRACK q=50 both=0 inferred=87 err=26.40 bend=0.00
+right contradiction  valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+left contradiction   valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+rightmost inference  valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+side distractor      valid=1 state=TRACK q=100 both=87 inferred=0 err=0.50 bend=0.00
+equal candidates     valid=0 state=NO_LANE q=0 both=0 inferred=0 err=0.00 bend=0.00
+symmetric background valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+right false branch   valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+left false branch    valid=1 state=TRACK q=47 both=41 inferred=0 err=0.00 bend=0.00
+bend with row gap    valid=1 state=TRACK q=96 both=84 inferred=0 err=42.33 bend=34.00
+RESULT: 638668 checks, 0 failures (synthetic fixtures, not real-track validation)
+[PASS] Completed within declared software evidence scope

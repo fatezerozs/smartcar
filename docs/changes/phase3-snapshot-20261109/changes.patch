@@ -1,0 +1,619 @@
+diff --git a/demo/code/vision_actuator.c b/demo/code/vision_actuator.c
+--- a/demo/code/vision_actuator.c
++++ b/demo/code/vision_actuator.c
+@@ -66,7 +66,7 @@
+         if(!app_mode_allows(APP_MODE_DRIVE) || app_mode_change_pending() ||
+            !vd.hardware_ready || !vd.control.configured ||
+ 
+-#if !VISION_MIDTERM_C31_AUTONOMOUS
++#if !VISION_MIDTERM_C31_AUTONOMOUS && !VISION_ROUTE_SWITCH
+            !vision_drive_profile_ready(&vd.profile) ||
+ #endif
+            vd.probe_active || vd.motion.phase ||
+@@ -218,15 +218,23 @@
+     }
+ }
+ 
++/* Rejection belongs to the captured lease too: an interrupted old candidate
++ * must neither publish output nor fault/zero a subsequently granted lease. */
++static void output_reject(uint32_t epoch,uint32_t faults,uint32_t mask)
++{
++    __disable_irq();
++    if(epoch==vd.output_epoch) {
++        if(faults){vd.guard_faults|=faults;vc_trip(&vd.control,faults);}
++        vd_output_zero();
++    }
++    __DMB();__set_PRIMASK(mask);
++}
++
+ void vd_output_apply(void)
+ {
+     if (!vd.initialized) return;
+     uint32_t mask = __get_PRIMASK();
+-#if VISION_MIDTERM_C31_AUTONOMOUS
+-    uint32_t epoch=vd.output_epoch; /* Control owns preparation; ISR only revokes. */
+-#else
+     __disable_irq();
+-#endif
+     if(vd.motion.phase) {
+         vd_motion_tick(timer_get(GPT_TIM_1));
+         if(vd.motion.phase)motion_apply();else vd_output_zero();
+@@ -252,81 +260,78 @@
+         vd.guard_running = 0;
+         vd_output_zero();
+     } else {
+-#if VISION_MIDTERM_C31_AUTONOMOUS
+-        /* Profile validation includes floats; configuration is task-owned and
+-         * immutable while running. Final commit rechecks scalar authority. */
+-        if(!vision_drive_profile_ready(&vd.profile)){vd_output_zero();return;}
+-#endif
+-        if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
+-            vd_output_zero();__set_PRIMASK(mask);return;
+-        }
+-        if(!(vd.control.output.steering>=-1 && vd.control.output.steering<=1) ||
+-           !(vd.control.output.duty>=0 && vd.control.output.duty<=vd.profile.control.duty_cap) ||
+-           !(vd.control.output.lateral>=-3 && vd.control.output.lateral<=3) ||
+-           !(vd.control.output.heading>=-10 && vd.control.output.heading<=10) ||
+-           !(vd.control.recovery_steer>=-1 && vd.control.recovery_steer<=1) ||
+-           !(vd.control.output.paired_support>=0 && vd.control.output.paired_support<=1) ||
+-           !(vd.control.output.edge_support>=0 && vd.control.output.edge_support<=1)) {
+-            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
+-            vd_output_zero();__set_PRIMASK(mask);return;
+-        }
+-        float steer = vd.control.output.steering * vd.profile.right_sign;
++        /* One foreground owner updates control/profile; PIT can only revoke
++         * or sample. Copy the complete inputs before doing float preparation.
++         * Diagnostic motion/probe branches above keep their existing mask. */
++        uint32_t epoch=vd.output_epoch;
++        vc_controller_t control=vd.control;
++        vd_profile_t profile=vd.profile;
++        uint16_t speed_cap;
++#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
++        __set_PRIMASK(mask);
++#ifdef VISION_HOST_OUTPUT_HOOK
++        {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(4);}
++#endif
++#endif
++        /* Configuration changes revoke the lease; validate this immutable
++         * profile outside the mask, then recheck live authority at commit. */
++        if(!vision_drive_profile_ready(&profile)) {
++            output_reject(epoch,0,mask);return;
++        }
++        if(!(control.output.steering>=-1 && control.output.steering<=1) ||
++           !(control.output.duty>=0 && control.output.duty<=profile.control.duty_cap) ||
++           !(control.output.lateral>=-3 && control.output.lateral<=3) ||
++           !(control.output.heading>=-10 && control.output.heading<=10) ||
++           !(control.recovery_steer>=-1 && control.recovery_steer<=1) ||
++           !(control.output.paired_support>=0 && control.output.paired_support<=1) ||
++           !(control.output.edge_support>=0 && control.output.edge_support<=1)) {
++            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
++        }
++        float steer = control.output.steering * profile.right_sign;
+ #if VISION_ROUTE_SWITCH
+         /* Keep about the previous center slope while adding bend authority:
+          * for the 120us span, offset = 80*u + 40*u^3 microseconds. Continuous,
+          * monotonic and symmetric; endpoints remain the validated profile. */
+-        steer=vs_steering_shape(vd.control.output.steering)*vd.profile.right_sign;
+-#endif
+-        float pulse = vd.profile.servo_center_us + steer * (steer >= 0 ?
+-            vd.profile.servo_max_us - vd.profile.servo_center_us :
+-            vd.profile.servo_center_us - vd.profile.servo_min_us);
++        steer=vs_steering_shape(control.output.steering)*profile.right_sign;
++#endif
++        float pulse = profile.servo_center_us + steer * (steer >= 0 ?
++            profile.servo_max_us - profile.servo_center_us :
++            profile.servo_center_us - profile.servo_min_us);
+         float motor1, motor2;
+-        if (!mol_split(vd.control.output.duty, vd.profile.control.duty_cap,
+-                       vd.profile.motor1_scale, vd.profile.motor2_scale, &motor1, &motor2)) {
+-            vd.guard_faults |= VC_FAULT_NUMERIC;
+-            vc_trip(&vd.control, VC_FAULT_NUMERIC);
+-            vd.guard_running = 0;
+-            vd_output_zero();
+-            __DMB(); __set_PRIMASK(mask);
+-            return;
++        if (!mol_split(control.output.duty, profile.control.duty_cap,
++                       profile.motor1_scale, profile.motor2_scale, &motor1, &motor2)) {
++            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
+         }
+ #if VISION_ROUTE_SWITCH
+         /* M1 RIGHT, M2 LEFT. Let the inner wheel run slower with the steering
+          * command; equal closed-loop wheel targets can fight a tight bend.
+          * Never boost the outer wheel or exceed the existing duty cap. */
+         {
+-         float offset=vd.control.output.lateral;
++         float offset=control.output.lateral;
+          if(offset<0)offset=-offset;
+-         if(vd.control.output.observation_valid&&offset>1.0f) {
++         if(control.output.observation_valid&&offset>1.0f) {
+             float slow=1.0f-.20f*(offset-1.0f);
+             if(slow<.75f)slow=.75f;
+             motor1*=slow;motor2*=slow;
+          }
+-         vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
+-        if(!vd.control.output.observation_valid) {
++         vs_steering_mix(vs_steering_shape(control.output.steering),&motor1,&motor2);}
++        if(!control.output.observation_valid) {
+             motor1=motor2=0;
+-#if VISION_ENCODER_ENABLE
+-            vd_speed_stop(); /* Clear targets and PI before publishing zero. */
+-#endif
+         }
+ #endif
+         /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
+-        if(!(pulse>=vd.profile.servo_min_us && pulse<=vd.profile.servo_max_us) ||
+-           !(motor1>=0 && motor1<=vd.profile.control.duty_cap) ||
+-           !(motor2>=0 && motor2<=vd.profile.control.duty_cap)) {
+-            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
+-            vd_output_zero();__set_PRIMASK(mask);return;
+-        }
++        if(!(pulse>=profile.servo_min_us && pulse<=profile.servo_max_us) ||
++           !(motor1>=0 && motor1<=profile.control.duty_cap) ||
++           !(motor2>=0 && motor2<=profile.control.duty_cap)) {
++            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
++        }
++        speed_cap=(uint16_t)(profile.control.duty_cap*1000.0f+0.001f);
+         uint32_t servo_duty = (uint32_t)(pulse * SERVO_MOTOR_FREQ * PWM_DUTY_MAX / 1000000.0f);
+         uint32_t right_duty,left_duty;
+ #if VISION_ENCODER_ENABLE
+         uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
+-        if(!vd_speed_output(right,left,0,(uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left)) {
+-            __DMB();__set_PRIMASK(mask);return;
+-        }
+-        right_duty=(uint32_t)right*PWM_DUTY_MAX/1000U;
+-        left_duty=(uint32_t)left*PWM_DUTY_MAX/1000U;
+ #else
++        (void)speed_cap;
+         /* Open-loop duty maps directly to PWM without permille quantization. */
+         right_duty=(uint32_t)(motor1*PWM_DUTY_MAX);
+         left_duty=(uint32_t)(motor2*PWM_DUTY_MAX);
+@@ -334,21 +339,33 @@
+         /* Controller outputs are bounded; vd.profile validates pulse range first.
+          * This short critical section prevents foreground from re-enabling
+          * PWM after a safety ISR has latched a stop. No UART/float in ISR. */
+-#if VISION_MIDTERM_C31_AUTONOMOUS
++#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+ #ifdef VISION_HOST_OUTPUT_HOOK
+         {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(1);}
+ #endif
+         __disable_irq();
+         if(epoch!=vd.output_epoch){__set_PRIMASK(mask);return;}
+ #endif
+-        gpio_set_level(MOTOR1_DIR, vd.profile.motor1_forward_level);
+-        gpio_set_level(MOTOR2_DIR, vd.profile.motor2_forward_level);
++        if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
++            vd_output_zero();__set_PRIMASK(mask);return;
++        }
++#if VISION_ENCODER_ENABLE
++        /* Publish only after the lease recheck. A STOP during preparation
++         * must not leave even a pending nonzero speed request behind. */
++        if(!vd_speed_output(right,left,0,speed_cap,&right,&left)) {
++            __DMB();__set_PRIMASK(mask);return;
++        }
++        right_duty=(uint32_t)right*PWM_DUTY_MAX/1000U;
++        left_duty=(uint32_t)left*PWM_DUTY_MAX/1000U;
++#endif
++        gpio_set_level(MOTOR1_DIR, profile.motor1_forward_level);
++        gpio_set_level(MOTOR2_DIR, profile.motor2_forward_level);
+         output_commit(VD_OUTPUT_DRIVE,right_duty,left_duty,servo_duty);
+         if(!vd.output_authorized){__set_PRIMASK(mask);return;}
+-        vd.guard_frame_ms = vd.control.last_frame_ms;
+-        vd.guard_command_ms = vd.control.last_command_ms;
+-        vd.guard_armed_ms = vd.control.armed_ms;
+-        vd.guard_local = vd.control.local_run;
++        vd.guard_frame_ms = control.last_frame_ms;
++        vd.guard_command_ms = control.last_command_ms;
++        vd.guard_armed_ms = control.armed_ms;
++        vd.guard_local = control.local_run;
+         vd.guard_running = 1;
+     }
+     __DMB();
+diff --git a/demo/code/vision_speed.c b/demo/code/vision_speed.c
+--- a/demo/code/vision_speed.c
++++ b/demo/code/vision_speed.c
+@@ -16,8 +16,8 @@
+     return detail<sizeof(names)/sizeof(names[0])?names[detail]:"unknown";
+ }
+ #if VISION_ENCODER_ENABLE
+-/* Foreground control service runs PI under an IRQ mask. The 10ms ISR samples
+- * modular counters and may cut output; it never starts motors or parses UART. */
++/* The C26/C31 foreground owns PI preparation. PIT only samples/revokes;
++ * version-checked publication is the only way speculative PI becomes live. */
+ static ws_pi_t pi[2];
+ static uint16_t previous[2];
+ static uint32_t consumed,last_control;
+@@ -26,6 +26,7 @@
+ static unsigned backwards[2],stalled[2];
+ static uint16_t request_right,request_left,request_cap;
+ static int request_reverse;
++static volatile uint32_t request_generation;
+ #if VISION_ROUTE_SWITCH
+ static unsigned slow_backwards[2];
+ #endif
+@@ -55,14 +56,18 @@
+ #if VISION_ENCODER_ENABLE
+     board_encoder_read(&previous[0],&previous[1]);
+     consumed=last_control=sample_interval=0;active=0;reset_pending=1;
++    request_generation=0;
+ #endif
+ }
+ void vd_speed_stop(void)
+ {
+ #if VISION_ENCODER_ENABLE
++    uint32_t mask=__get_PRIMASK();__disable_irq();
++    ++request_generation;
+     active=0;reset_pending=1;request_right=request_left=request_cap=0;
+     ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]); /* Integer-only, including from PIT1 STOP. */
+     speed.target_right=speed.target_left=0;speed.pwm_right=speed.pwm_left=0;
++    __DMB();__set_PRIMASK(mask);
+ #endif
+ }
+ void vd_speed_sample_tick(uint32_t now)
+@@ -133,6 +138,9 @@
+     unsigned backwards[2],stalled[2];
+ #if VISION_ROUTE_SWITCH
+     unsigned slow_backwards[2];
++    uint8_t track,speed_boost,straight_tracking;
++    uint32_t straight_since_ms;
++    float steering,recovery_steer,lateral,paired_support,edge_support;
+ #endif
+ } speed_work_t;
+ static void work_trip(speed_work_t *w,unsigned detail,uint32_t now)
+@@ -148,19 +156,19 @@
+     }
+     w->speed.faults|=VC_FAULT_ENCODER;
+ }
+-static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
++static int speed_control_output(speed_work_t *w,uint32_t now,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
+ {
+     *out_right=right;*out_left=left;
+ #if VISION_ENCODER_ENABLE
+     if(w->speed.enabled) {
+-        uint32_t now=timer_get(GPT_TIM_1),seq=w->speed.samples,periods=seq-w->consumed;
++        uint32_t seq=w->speed.samples,periods=seq-w->consumed;
+         uint16_t pwm_cap=cap;
+ #if VISION_ROUTE_SWITCH
+-        if(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active)
++        if(w->track)
+             pwm_cap=MT_ROUTE_PWM_FULL_SCALE;
+ #endif
+         *out_right=*out_left=0;
+-        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
++        if(!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
+         if((uint32_t)(now-w->speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){work_trip(w,VS_FAULT_STALE,now);return 0;}
+         if(w->reset_pending){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);memset(w->backwards,0,sizeof(w->backwards));
+             memset(w->stalled,0,sizeof(w->stalled));
+@@ -177,10 +185,9 @@
+         if(periods) {
+             unsigned target_ticks=w->speed.max_ticks;
+ #if VISION_ROUTE_SWITCH
+-            int track=vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active;
++            int track=w->track;
+             if(track)target_ticks=vt_route_ticks(target_ticks,
+-                vd.control.output.steering,vd.control.recovery_steer,vd.control.output.lateral,
+-                vd.control.output.paired_support,vd.control.output.edge_support);
++                w->steering,w->recovery_steer,w->lateral,w->paired_support,w->edge_support);
+ #endif
+             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
+             int32_t measured[2]={(int32_t)w->speed.raw4*w->speed.sign4,(int32_t)w->speed.raw3*w->speed.sign3};
+@@ -191,8 +198,8 @@
+ #if VISION_ROUTE_SWITCH
+             if(track){
+                 unsigned rise=1;
+-                if(vd.control.output.speed_boost==1&&vd.control.straight_tracking&&
+-                   (uint32_t)(now-vd.control.straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
++                if(w->speed_boost==1&&w->straight_tracking&&
++                   (uint32_t)(now-w->straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
+                     rise=MT_ROUTE_STRAIGHT_TARGET_RISE;
+                 vt_ramp_targets(targets,w->speed.target_right,w->speed.target_left,periods*rise);
+             }
+@@ -267,6 +274,8 @@
+             trip(VS_FAULT_OUTPUT,now);return 0;
+         }
+         if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
++        if(request_right!=right || request_left!=left || request_reverse!=reverse || request_cap!=cap)
++            ++request_generation;
+         request_right=right;request_left=left;request_reverse=reverse;request_cap=cap;
+         /* Zero targets take effect immediately, without waiting for service. */
+         if(!right&&!left) {
+@@ -289,26 +298,36 @@
+ void vd_speed_control_poll(uint32_t now)
+ {
+ #if VISION_ENCODER_ENABLE
+-    uint32_t mask=__get_PRIMASK(),epoch,seq;uint16_t right,left,cap,req_r,req_l;
++    uint32_t mask=__get_PRIMASK(),epoch,seq,generation;uint16_t right,left,cap,req_r,req_l;
+     int reverse;speed_work_t w;
+     __disable_irq();
+     if(!speed.enabled || !request_cap || speed.faults || vd.guard_faults){__set_PRIMASK(mask);return;}
+     if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
+         trip(VS_FAULT_STALE,now);__set_PRIMASK(mask);return;
+     }
+-    epoch=vd.output_epoch;seq=speed.samples;
++    epoch=vd.output_epoch;seq=speed.samples;generation=request_generation;
++    now=timer_get(GPT_TIM_1);
+     w.speed=speed;memcpy(w.pi,pi,sizeof(pi));w.consumed=consumed;w.last_control=last_control;
+     w.sample_interval=sample_interval;w.active=active;w.reset_pending=reset_pending;
+     memcpy(w.backwards,backwards,sizeof(backwards));memcpy(w.stalled,stalled,sizeof(stalled));
+ #if VISION_ROUTE_SWITCH
+     memcpy(w.slow_backwards,slow_backwards,sizeof(slow_backwards));
++    w.track=(uint8_t)(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active);
++    w.speed_boost=vd.control.output.speed_boost;w.straight_tracking=vd.control.straight_tracking;
++    w.straight_since_ms=vd.control.straight_since_ms;
++    w.steering=vd.control.output.steering;w.recovery_steer=vd.control.recovery_steer;
++    w.lateral=vd.control.output.lateral;w.paired_support=vd.control.output.paired_support;
++    w.edge_support=vd.control.output.edge_support;
+ #endif
+     req_r=request_right;req_l=request_left;cap=request_cap;reverse=request_reverse;
+-#if VISION_MIDTERM_C31_AUTONOMOUS
++#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+     __set_PRIMASK(mask);
+ #endif
+-    (void)speed_control_output(&w,req_r,req_l,reverse,cap,&right,&left);
+-#if VISION_MIDTERM_C31_AUTONOMOUS
++#ifdef VISION_HOST_OUTPUT_HOOK
++    {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(3);}
++#endif
++    (void)speed_control_output(&w,now,req_r,req_l,reverse,cap,&right,&left);
++#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+ #ifdef VISION_HOST_OUTPUT_HOOK
+     {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(2);}
+ #endif
+@@ -316,8 +335,14 @@
+ #endif
+     /* A stop/reset or a newer sample invalidates all speculative PI state.
+      * Never overwrite an ISR's newer counts or resurrect its cleared PI. */
+-    if(epoch==vd.output_epoch && seq==speed.samples && cap==request_cap &&
+-       req_r==request_right && req_l==request_left && !vd.guard_faults) {
++    if(epoch==vd.output_epoch && seq==speed.samples && generation==request_generation &&
++       cap==request_cap && reverse==request_reverse && req_r==request_right && req_l==request_left &&
++       !vd.guard_faults && !vd.mode_stop_pending && !app_mode_change_pending()) {
++        /* Preparation can itself take long enough to expire the sample. Do
++         * not refresh last_control or publish a stale cache on that path. */
++        if((uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
++            trip(VS_FAULT_STALE,timer_get(GPT_TIM_1));__set_PRIMASK(mask);return;
++        }
+         speed=w.speed;memcpy(pi,w.pi,sizeof(pi));consumed=w.consumed;last_control=w.last_control;
+         active=w.active;reset_pending=w.reset_pending;
+         memcpy(backwards,w.backwards,sizeof(backwards));memcpy(stalled,w.stalled,sizeof(stalled));
+diff --git a/demo/code/vision_startup.c b/demo/code/vision_startup.c
+--- a/demo/code/vision_startup.c
++++ b/demo/code/vision_startup.c
+@@ -158,11 +158,12 @@
+     if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
+        vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
+     {
+-        uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
++        /* The arm facade owns its atomic gate; output preparation must not
++         * inherit an outer IRQ mask. Final publication rechecks the lease. */
++        int accepted;
+         accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
+             vd_output_arm(now,1);
+         if(accepted)vd_output_apply();
+-        __set_PRIMASK(mask);
+     }
+ #endif
+ }
+diff --git a/tests/planning/test_c26_snapshot.c b/tests/planning/test_c26_snapshot.c
+--- /dev/null
++++ b/tests/planning/test_c26_snapshot.c
+@@ -0,0 +1,146 @@
++/* Exercise real facade/PI publication with deterministic ISR interleavings.
++ * Host-only hooks do not exist in target builds; no physical timing claim. */
++#define pwm_set_duty fixture_pwm_set_duty
++#define gpio_set_level fixture_gpio_set_level
++#include "../support/fixtures/switch_io.h"
++#undef pwm_set_duty
++#undef gpio_set_level
++#include "vision_drive_internal.h"
++#include <math.h>
++
++static unsigned pwm_writes,stage_hits[5],inject_stage,action,expected_mask;
++static vd_speed_info_t interrupted;
++enum { NONE, STOP, SWITCH_OFF, MODE_CHANGE, SAMPLE, REQUEST, REQUEST_ABA,
++       REVERSE_REQUEST, ZERO_REQUEST, EXPIRE, REVOKE, SNAPSHOT_INPUT };
++
++void pwm_set_duty(int channel,uint32_t duty)
++{
++    CHECK(mask==1);++pwm_writes;fixture_pwm_set_duty(channel,duty);
++}
++void gpio_set_level(int pin,int level)
++{
++    CHECK(mask==1);fixture_gpio_set_level(pin,level);
++}
++static void publish(uint16_t right,uint16_t left,int reverse)
++{
++    uint16_t r,l;CHECK(vd_speed_output(right,left,reverse,180,&r,&l));
++}
++void vision_test_output_hook(unsigned stage)
++{
++    unsigned selected=action;
++    CHECK(stage>0&&stage<5);++stage_hits[stage];CHECK(mask==expected_mask);
++    if(stage!=inject_stage||!selected)return;
++    action=NONE; /* Stop paths may call back into the output facade. */
++    switch(selected) {
++    case STOP: vision_drive_stop();break;
++    case SWITCH_OFF: vision_drive_switch_sample(0);break;
++    case MODE_CHANGE: app_mode_sample(1,1,now);break;
++    case SAMPLE:
++        now+=10;raw3=(uint16_t)(raw3-7);raw4=(uint16_t)(raw4+9);
++        vd_speed_sample_tick(now);break;
++    case REQUEST: publish(50,60,0);break;
++    case REQUEST_ABA: publish(50,60,0);publish(90,100,0);break;
++    case REVERSE_REQUEST: publish(90,100,1);break;
++    case ZERO_REQUEST: publish(0,0,0);break;
++    case EXPIRE: now+=VD_SPEED_SAMPLE_MAX_AGE_MS+1U;break;
++    case REVOKE: vd_output_zero();break;
++    case SNAPSHOT_INPUT:
++        /* Deliberate test-only mutation of task-owned values. The current
++         * preparation must use its captured steering/support, not mix reads.
++         * Production still requires a single serialized foreground owner. */
++        vd.control.output.steering=.8f;vd.control.output.lateral=2.0f;
++        vd.control.output.paired_support=0;vd.control.output.edge_support=1;break;
++    default: CHECK(0);
++    }
++    interrupted=info();
++}
++static void zero(void)
++{
++    vd_speed_info_t s=info();
++    CHECK(!pwm[0]&&!pwm[1]);
++    CHECK(!s.target_right&&!s.target_left&&!s.pwm_right&&!s.pwm_left);
++}
++static void boot_running(void)
++{
++    action=NONE;expected_mask=0;inject_stage=0;
++    switch_boot(0);switch_wait(30,1);CHECK(vision_drive_is_local());
++    CHECK(vd.output_authorized&&pwm[0]&&pwm[1]);CHECK(!mask);
++}
++static void pending_sample(void)
++{
++    boot_running();switch_wait(100,1); /* Clear the launch ramp before comparing geometry. */
++    vd.control.output.steering=0;vd.control.recovery_steer=0;vd.control.output.lateral=0;
++    vd.control.output.paired_support=1;vd.control.output.edge_support=0;
++    publish(90,100,0);vd_speed_control_poll(now);
++    now+=10;raw3=(uint16_t)(raw3-12);raw4=(uint16_t)(raw4+12);
++    vd_speed_sample_tick(now);
++}
++static void same_control(vd_speed_info_t a,vd_speed_info_t b)
++{
++    CHECK(a.target_right==b.target_right&&a.target_left==b.target_left);
++    CHECK(a.pwm_right==b.pwm_right&&a.pwm_left==b.pwm_left);
++}
++static void output_interleavings(void)
++{
++    const unsigned cases[]={STOP,SWITCH_OFF,MODE_CHANGE,REVOKE,EXPIRE};
++    for(unsigned stage=1;stage<=4;stage+=3)for(unsigned n=0;n<sizeof(cases)/sizeof(cases[0]);++n) {
++        boot_running();unsigned before=pwm_writes;
++        inject_stage=stage;action=cases[n];vd_output_apply();
++        CHECK(!action&&!mask&&!vd.output_authorized);zero();
++        /* STOP may write zero more than once, but must never recreate PWM. */
++        CHECK(pwm_writes>=before);vd_speed_control_poll(now);zero();
++        vd_output_apply();zero();
++    }
++    /* Startup used to inherit an outer PRIMASK across the whole output path. */
++    CHECK(stage_hits[1]&&stage_hits[4]);
++    boot_running();uint32_t original=pwm[2];
++    inject_stage=4;action=SNAPSHOT_INPUT;vd_output_apply();
++    CHECK(pwm[2]==original); /* Steering preparation used the captured input. */
++    boot_running();vd.control.output.steering=NAN;vd_output_apply();
++    CHECK(vd.guard_faults&VC_FAULT_NUMERIC);zero();CHECK(!mask);
++    boot_running();expected_mask=1;mask=1;vd_output_apply();CHECK(mask==1);
++    mask=0;expected_mask=0;
++}
++static void pi_interleavings(void)
++{
++    const unsigned cases[]={STOP,SWITCH_OFF,MODE_CHANGE,SAMPLE,REQUEST,REQUEST_ABA,
++                            REVERSE_REQUEST,ZERO_REQUEST,EXPIRE,REVOKE};
++    for(unsigned stage=2;stage<=3;++stage)for(unsigned n=0;n<sizeof(cases)/sizeof(cases[0]);++n) {
++        pending_sample();vd_speed_info_t before=info();
++        inject_stage=stage;action=cases[n];vd_speed_control_poll(now);
++        vd_speed_info_t after=info();CHECK(!action&&!mask);
++        if(cases[n]==STOP||cases[n]==SWITCH_OFF||cases[n]==REVOKE||cases[n]==EXPIRE) {
++            zero();CHECK(!vd.output_authorized);
++            if(cases[n]==EXPIRE)CHECK(after.fault_detail==VS_FAULT_STALE);
++        } else if(cases[n]==ZERO_REQUEST) {
++            same_control(after,interrupted); /* No epoch change: request version matters. */
++            CHECK(!after.target_left&&!after.target_right&&!after.pwm_left&&!after.pwm_right);
++        } else {
++            same_control(after,before); /* Discard the entire speculative PI state. */
++            CHECK(after.samples==interrupted.samples&&after.total3==interrupted.total3&&after.total4==interrupted.total4);
++            if(cases[n]==SAMPLE) {
++                CHECK(after.samples==before.samples+1&&after.raw3==-7&&after.raw4==9);
++                /* The newest sample cannot cover the now-missed prior sample. */
++                vd_speed_control_poll(now);CHECK(info().fault_detail==VS_FAULT_BACKLOG);zero();
++            }
++        }
++    }
++    pending_sample();vd_speed_info_t before=info();vd_speed_control_poll(now);
++    vd_speed_info_t after=info();CHECK(!after.faults);
++    CHECK(after.target_right!=before.target_right||after.target_left!=before.target_left);
++    vd_speed_control_poll(now);same_control(info(),after); /* At most once per sample. */
++    /* A test-only live geometry change during calculation cannot mix inputs. */
++    pending_sample();inject_stage=3;action=SNAPSHOT_INPUT;vd_speed_control_poll(now);
++    same_control(info(),after);
++    /* ABA rejection must not consume a sample or change the hidden integral. */
++    pending_sample();inject_stage=2;action=REQUEST_ABA;vd_speed_control_poll(now);
++    vd_speed_control_poll(now);same_control(info(),after);
++    pending_sample();expected_mask=1;mask=1;vd_speed_control_poll(now);CHECK(mask==1);
++    mask=0;expected_mask=0;
++}
++int main(void)
++{
++    output_interleavings();pi_interleavings();
++    printf("C26 SNAPSHOT PASS: %u checks; ISR interleavings and mask restoration, no target timing claim.\n",checks);
++    return 0;
++}
+diff --git a/tests/suites/catalog.json b/tests/suites/catalog.json
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3534,6 +3534,70 @@
+         "artifacts/**"
+       ],
+       "scope": "C26 startup, physical fault acknowledgement, severe-fault retention and near-invalid zero-output boundaries; historical id retained, not full calibrated planner acceptance"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "c26-snapshot",
++      "name": "C26 immutable preparation and versioned publication",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/planning/test_c26_snapshot.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c"
++            ],
++            "includeDirectories": [
++              "tests/vision/stubs",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=0",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_HOST_OUTPUT_HOOK=1"
++            ]
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 300,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Host ISR interleavings for output/PI snapshot, STOP/mode/sample/request invalidation and IRQ mask restoration; no measured WCET or calibrated planning claim"
+     }
+   ]
+ }

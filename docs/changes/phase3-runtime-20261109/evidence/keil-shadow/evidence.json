@@ -1,0 +1,78 @@
+{
+  "buildOnly": true,
+  "sourceProjectSha256": "04e5a0737c83f735d9ccc7b653b5027be69223fc7632b8731cfb150b22cf1f32",
+  "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+  "effectiveDefines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED,VISION_PLANNER_RUNTIME=1,VISION_PLANNER_ACTIVE=0,VISION_PLANNER_PROFILE_REVIEWED=0",
+  "plannerMode": "shadow",
+  "syntheticReviewDeclaration": false,
+  "physicalProfileApproved": false,
+  "target": "nor_sdram_zf_dtcm",
+  "processes": [
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\UV4\\UV4.exe",
+        "-r",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\workspace\\demo\\mdk\\competition\\MPC_20261106.uvprojx",
+        "-t",
+        "nor_sdram_zf_dtcm",
+        "-j0",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\build.log"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 13.390155
+    },
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+        "--bincombined",
+        "--output",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\rt1064.bin",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\Objects\\rt1064.axf"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.054286
+    },
+    {
+      "command": [
+        "E:\\ElecTronic\\Keil\\ARM\\ARMCLANG\\bin\\fromelf.exe",
+        "--text",
+        "-c",
+        "-s",
+        "--output",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\disassembly.txt",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\Objects\\rt1064.axf"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-runtime-20261109\\keil-verified-shadow\\workspace\\demo\\mdk\\competition",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.210418
+    }
+  ],
+  "zeroErrorsWarnings": true,
+  "artifacts": {
+    "Objects\\rt1064.axf": {
+      "bytes": 1302660,
+      "sha256": "e9d4c39125e570ca4177a821a4009993077d0362dec2143f099a7a7fe7f58d49"
+    },
+    "rt1064.bin": {
+      "bytes": 121920,
+      "sha256": "3fe2348b8b8eccae31451681a0c973cbad128eed9b7f573da0d68930e5ddfd99"
+    },
+    "disassembly.txt": {
+      "bytes": 2841521,
+      "sha256": "6125051774fe91f34b9d0ea350dff50f4d2ac71d94b8211ed7a5825075e541f0"
+    },
+    "Listings\\rt1064.map": {
+      "bytes": 2142903,
+      "sha256": "c40873540043cb6039480d13a48d704df946983a07dabb55a86c2f0f3733d032"
+    }
+  }
+}

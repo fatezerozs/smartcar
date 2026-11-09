@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "smartcar.shadow-visual-replay/1",
+  "sourceFrames": 750,
+  "sourceSessionSha256": "6464a1a579d4419df95235452682ffb79116765f56e3e95d4e70065f2a74d970",
+  "hardwareAccessed": false,
+  "productionApproved": false,
+  "runtimeConnected": false,
+  "evidence": "measured-visual-metadata-with-synthetic-metric-and-zero-motion-inputs",
+  "syntheticInputs": {
+    "measuredSpeedMps": 0,
+    "referenceSpeedMps": 0,
+    "odometerM": 0,
+    "leftTicksPerM": 11000,
+    "rightTicksPerM": 12000,
+    "geometry": "straight near2.25m/full3.75m, not image-derived"
+  },
+  "experiments": [
+    {
+      "case": "initial-admission-only",
+      "rows": 750,
+      "supervisorMatchesIndependentOracle": true,
+      "readyCandidates": 0,
+      "controlledStopCandidates": 0,
+      "inhibitedRows": 750,
+      "csvSha256": "5c092d624cbb6b354203522699ac7e5ed82748fb2ee8bc7ebddc46decec4ab93"
+    },
+    {
+      "case": "reference-time-budget",
+      "rows": 750,
+      "supervisorMatchesIndependentOracle": true,
+      "readyCandidates": 222,
+      "controlledStopCandidates": 3,
+      "inhibitedRows": 527,
+      "csvSha256": "56b537c2a07913e38b788d633cbe9f7c8ce8deafc75dba2153472d9eca4f9c91"
+    },
+    {
+      "case": "diagnostic-recovery-1",
+      "rows": 750,
+      "supervisorMatchesIndependentOracle": true,
+      "readyCandidates": 646,
+      "controlledStopCandidates": 0,
+      "inhibitedRows": 103,
+      "csvSha256": "d329543aa38ef23085fb6fe0616860e78de0e731455eaece80a6b7867d3fca03"
+    },
+    {
+      "case": "diagnostic-recovery-3",
+      "rows": 750,
+      "supervisorMatchesIndependentOracle": true,
+      "readyCandidates": 646,
+      "controlledStopCandidates": 0,
+      "inhibitedRows": 103,
+      "csvSha256": "48ec1e1fffbdf73b0a7ea2197188ee44c4723bf8c49d7cef8c0997da0519cef0"
+    },
+    {
+      "case": "diagnostic-recovery-5",
+      "rows": 750,
+      "supervisorMatchesIndependentOracle": true,
+      "readyCandidates": 646,
+      "controlledStopCandidates": 0,
+      "inhibitedRows": 103,
+      "csvSha256": "7f8ec7f242bc1030a23bea7a1ef0094fd42a46846f72bd6390f17c393b9a56ed"
+    }
+  ],
+  "compilerFamily": "gcc",
+  "compilerMode": "optimized",
+  "compileCommand": [
+    "C:/Program Files/mingw64/bin/gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-shadow-20261109\\visual-performance-final\\supervisor",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\shadow_visual_runner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-shadow-20261109\\visual-performance-final\\shadow-visual.exe"
+  ],
+  "sourcesSha256": {
+    "tools\\speed_planning\\shadow_visual_runner.c": "53c3d11cc70fcf8e439ac6cb8d9a257340ac9a2ea1e238ce24fcbe9e6206275f",
+    "demo\\code\\vision_planner_shadow.c": "8bc89fb4d8c542584156056d779f0ac488ce03d91f684b8bf8bb98280143a7aa",
+    "demo\\code\\vision_planner.c": "ac3e74aba4f360314ce702b70004c7e60c54d650552f5c09f20f18d15a132e98",
+    "tools\\speed_planning\\speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448",
+    "tools\\speed_planning\\replay_shadow_visual.py": "eaddeae59161ef61c734b01405df378171fec71772cb0d03d284b4fbfcf0eeed",
+    "demo\\code\\vision_planner_shadow.h": "3f014bc7c899d6e0b82368b7c2d3e4088ac459e3a6e0ab5b72bea96a21363ee0",
+    "demo\\code\\vision_planner.h": "5d5408a4ad45a914daba8513144a5ed4dea441a2d4acc801c57e7e074d448ba6",
+    "tools\\speed_planning\\speed_planner.h": "ba75a27b3a81497aec424461b8f2012a99573b1261d885a0fb7988d5aeb9efaf"
+  },
+  "limits": [
+    "No image algorithm or measured metric preview.",
+    "Motion, scales and zero-speed confirmations are synthetic.",
+    "No live scheduler, PI, PWM, C26 admission or production threshold approval."
+  ]
+}

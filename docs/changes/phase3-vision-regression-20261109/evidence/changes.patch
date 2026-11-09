@@ -1,0 +1,303 @@
+--- before/demo/code/vision_midterm.c
++++ after/demo/code/vision_midterm.c
+@@ -67,15 +67,15 @@
+     }
+ }
+ 
+-static uint8_t otsu(const uint32_t *hist, uint32_t count)
++static uint8_t otsu_from(const uint32_t *hist, uint32_t count, unsigned start)
+ {
+     /* 沿用原例程大津法思路，跳过空类别，避免全黑/全白时除零。 */
+     uint32_t total_sum = 0, back_count = 0, back_sum = 0;
+     double best = -1.0;
+     int first = 0, last = 0, current_is_best = 0;
+     int t;
+-    for (t = 0; t < 256; ++t) total_sum += hist[t] * (uint32_t)t;
+-    for (t = 0; t < 255; ++t) {
++    for (t = (int)start; t < 256; ++t) total_sum += hist[t] * (uint32_t)t;
++    for (t = (int)start; t < 255; ++t) {
+         double numerator, score;
+         back_count += hist[t];
+         back_sum += hist[t] * (uint32_t)t;
+@@ -95,6 +95,79 @@
+     /* Midpoint of an equally good threshold plateau avoids choosing the dark
+      * class value itself on an almost binary image. No smoothing across scenes. */
+     return (uint8_t)((first + last) / 2);
++}
++
++static uint8_t otsu(const uint32_t *hist,uint32_t count)
++{return otsu_from(hist,count,0);}
++
++/* Row counts are bounded by 188. Compare exact rational between-class
++ * scores with uint64_t cross-products (<5e16), avoiding software double
++ * divisions on the MCU. The full-image Otsu above keeps its larger bounds. */
++static uint8_t row_otsu_from(const uint32_t *prefix,unsigned start)
++{
++    uint32_t base=start?prefix[start-1]:0,packed=prefix[255]-base;
++    uint32_t count=packed&255U,total=packed>>8,best_den=1,previous_count=0;uint64_t best_num=0;
++    unsigned first=0,last=0;int have=0,current=0;
++    for(unsigned t=start;t<255;++t){
++        packed=prefix[t]-base;uint32_t n=packed&255U,sum=packed>>8;
++        if(!n||n==count)continue;
++        if(n==previous_count){if(current)last=t;continue;}
++        previous_count=n;
++        uint32_t delta=total*n-sum*count,den=n*(count-n);
++        uint64_t numerator=(uint64_t)delta*delta;
++        uint64_t candidate=numerator*best_den,previous=best_num*den;
++        if(!have||candidate>previous){best_num=numerator;best_den=den;first=last=t;have=1;current=1;}
++        else if(candidate==previous){last=t;current=1;}else current=0;
++    }
++    return (uint8_t)((first+last)/2);
++}
++
++/* A dark object can make row Otsu separate dark/background from BOTH bright
++ * floor and white road. Refine the bright class using the SAME histogram.
++ * Two-class rows and weak/noisy subclusters retain the original threshold.
++ * The current axis-connected run's midpoint must survive: splitting its
++ * shadowed half into "floor" is not a supported refinement. This checks only
++ * current gray pixels; it does not infer edges, change coverage or use history. */
++static uint8_t refine_road_otsu(const uint32_t *prefix,const uint8_t *row,uint8_t first)
++{
++    uint8_t second;
++    uint32_t base=prefix[first],total=prefix[255]-base;
++    uint32_t n=total&255U,a,b,sa,sb;unsigned low=(unsigned)first+1,high=255;
++    if(n<2U*VISION_MIN_WIDTH)return first;
++    while(low<256&&(prefix[low]&255U)==(base&255U))++low;
++    while(high>low&&(prefix[high]&255U)==(prefix[high-1]&255U))--high;
++    if(high-low<VISION_MIN_CONTRAST)return first;
++    second=row_otsu_from(prefix,(unsigned)first+1);
++    uint32_t middle=prefix[second]-base,white=prefix[255]-prefix[second];
++    a=middle&255U;sa=middle>>8;b=white&255U;sb=white>>8;
++    if(a<VISION_MIN_WIDTH||b<VISION_MIN_WIDTH)return first;
++    /* All cross-products are < 4*255*188^2: 32-bit integer comparisons.
++     * Refine only distinct, adjacent bright classes (middle mean >=3/4 of
++     * the white mean), not a large illumination step across the road. */
++    if(sb*a-sa*b<VISION_MIN_CONTRAST*a*b||sa*4U*b<sb*3U*a)return first;
++    int l=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),r=l;
++    if(row[l]<=first)return first;
++    while(l>0&&row[l-1]>first)--l;
++    while(r+1<VISION_WIDTH&&row[r+1]>first)++r;
++    if(row[(l+r)/2]<=second)return first;
++    return second;
++}
++
++static uint8_t road_otsu(uint32_t *hist,const uint8_t *row)
++{
++    /* A row has only 188 pixels: pack cumulative count (8 bits) and gray sum
++     * (16 bits) into the existing histogram. All class statistics are then
++     * constant-time lookups, with no extra buffer or repeated sum scans. */
++    uint32_t count=0,sum=0;
++    for(unsigned t=0;t<256;++t){count+=hist[t];sum+=hist[t]*t;hist[t]=(sum<<8)|count;}
++    uint8_t threshold=row_otsu_from(hist,0);
++    /* Bounded at two refinements: a floor gradient can occupy two bright
++     * populations. Stop immediately when there is no supported refinement. */
++    for(unsigned pass=0;pass<2;++pass){
++        uint8_t next=refine_road_otsu(hist,row,threshold);
++        if(next==threshold)break;threshold=next;
++    }
++    return threshold;
+ }
+ 
+ static void gray_range(const uint32_t *hist, uint32_t count, uint8_t *low, uint8_t *high)
+@@ -152,14 +225,9 @@
+             for (x = 0; x < VISION_WIDTH; ++x) ++hist[gray[y * VISION_WIDTH + x]];
+             gray_range(hist, VISION_WIDTH, &low, &high);
+             if (high - low >= VISION_MIN_CONTRAST) {
+-                /* 当前行自己估计明暗两类，而不是把整图阈值按极值拉伸。
+-                 * 场地中亮灰地板和白赛道旁可能有少量很暗的物体，极值
+-                 * 拉伸会被暗物体拉低，将亮灰地板并进赛道、吞掉真实边界。
+-                 * Otsu 利用行内各灰度的实际占比，不预设地板亮度、边界
+-                 * 像素位置或赛道宽度。全图与行内对比度仍须通过检查；
+-                 * 后续双边实测、连续性及覆盖门槛保持不变。
+-                 * hist 已由该行建立，复用它，不新增逐像素邻域遍历。 */
+-                threshold = otsu(hist, VISION_WIDTH);
++                /* Reuse this row histogram; bright-class refinement has no
++                 * extra image-sized buffer or neighboring-pixel filtering. */
++                threshold = road_otsu(hist,gray_row);
+                 if (threshold != out->threshold) ++out->adaptive_rows;
+             }
+         }
+--- before/profiles/phase3-c26-shadow-20261109.json
++++ after/profiles/phase3-c26-shadow-20261109.json
+@@ -1,7 +1,7 @@
+ {
+   "schemaVersion": "smartcar.phase3-shadow-profile/1",
+-  "profileId": "C26-SHADOW-FA161BDE",
+-  "revision": 4195752926,
++  "profileId": "C26-SHADOW-8CA1CE06",
++  "revision": 2359414278,
+   "mode": "shadow",
+   "productionApproved": false,
+   "activeMetricControlAllowed": false,
+@@ -19,7 +19,7 @@
+     "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-2500-01/review.json": "6973a1bbbd234743cf4daa3da10870b0baf548b557d38236e90608cc51fd42cf",
+     "profiles/encoder-production-20261106.json": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
+     "profiles/c1-host-reference-v0.3.json": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
+-    "demo/code/vision_midterm.c": "f657b32f0802fafc9f3e91f29dd9dc05b05f158a7399fcab5cc4b2332d5d2586",
++    "demo/code/vision_midterm.c": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+     "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
+     "demo/code/vision_profile.h": "ff08cd0778ab0172bde37a0e32813e8002ff94c26045abec51c279e577d80b6e",
+     "docs/changes/phase2-calibration-20261108/evidence/visual-supervisor-replay04/visual_policy.h": "aa4e7a5873734cb96140fcc25c208f84e6ac7d1363d8dfbc06a67a72e08095b8",
+--- before/tests/vision/test_equivalence.c
++++ after/tests/vision/test_equivalence.c
+@@ -6,7 +6,7 @@
+ 
+ /* Layered preprocessing contract; reference remains the old mapping/deadband
+  * baseline. Spatially uniform two-class scenes and all gray pairs stay equal.
+- * Spatial illumination, noise and outliers intentionally use row-local Otsu:
++ * Spatial illumination, noise and outliers use bounded row-local refinement:
+  * validate them independently, never bless a mismatch by observing outputs.
+  * Global statistics and gray previews remain equal for EVERY scene. Tracking
+  * and overlays are excluded (tie rejection/edge continuity changed separately).
+@@ -51,34 +51,61 @@
+     return (int)*(const uint8_t *)a - (int)*(const uint8_t *)b;
+ }
+ 
+-static int row_oracle(const uint8_t *row, int global, int global_contrast)
+-{
+-    uint8_t sorted[VISION_WIDTH];
++static int sorted_split(const uint8_t *sorted,int begin,int count)
++{
+     uint64_t total = 0, left = 0, best_num = 0, best_den = 1;
+     int k, first = 0, last = 0;
+-    if (global_contrast < VISION_MIN_CONTRAST) return global;
+-    memcpy(sorted, row, sizeof(sorted));
+-    qsort(sorted, VISION_WIDTH, sizeof(sorted[0]), compare_gray);
+-    if (sorted[VISION_WIDTH * (VISION_GRAY_PERCENTILE_DENOMINATOR - 1) /
+-               VISION_GRAY_PERCENTILE_DENOMINATOR - 1] -
+-        sorted[VISION_WIDTH / VISION_GRAY_PERCENTILE_DENOMINATOR - 1] < VISION_MIN_CONTRAST)
+-        return global;
+-    for (k = 0; k < VISION_WIDTH; ++k) total += sorted[k];
+-    for (k = 1; k < VISION_WIDTH; ++k) {
++    for (k = 0; k < count; ++k) total += sorted[begin+k];
++    for (k = 1; k < count; ++k) {
+         uint64_t right, num, den;
+-        left += sorted[k - 1];
+-        if (sorted[k - 1] == sorted[k]) continue;
++        left += sorted[begin+k - 1];
++        if (sorted[begin+k - 1] == sorted[begin+k]) continue;
+         right = total - left;
+-        num = left * left * (VISION_WIDTH - k) + right * right * k;
+-        den = (uint64_t)k * (VISION_WIDTH - k);
++        num = left * left * (count - k) + right * right * k;
++        den = (uint64_t)k * (count - k);
+         if (num * best_den > best_num * den) {
+             best_num = num; best_den = den;
+-            first = sorted[k - 1]; last = sorted[k] - 1;
+-        } else if (num * best_den == best_num * den) last = sorted[k] - 1;
++            first = sorted[begin+k - 1]; last = sorted[begin+k] - 1;
++        } else if (num * best_den == best_num * den) last = sorted[begin+k] - 1;
+     }
+     return (first + last) / 2;
+ }
+ 
++static int row_oracle(const uint8_t *row, int global, int global_contrast)
++{
++    uint8_t sorted[VISION_WIDTH];int at=0,split=0;
++    uint64_t middle_sum=0,white_sum=0;int middle_count,white_count;
++    if(global_contrast<VISION_MIN_CONTRAST)return global;
++    memcpy(sorted,row,sizeof(sorted));qsort(sorted,VISION_WIDTH,sizeof(sorted[0]),compare_gray);
++    if(sorted[VISION_WIDTH*(VISION_GRAY_PERCENTILE_DENOMINATOR-1)/VISION_GRAY_PERCENTILE_DENOMINATOR-1]-
++       sorted[VISION_WIDTH/VISION_GRAY_PERCENTILE_DENOMINATOR-1]<VISION_MIN_CONTRAST)return global;
++    int first=sorted_split(sorted,0,VISION_WIDTH);
++    for(int pass=0;pass<2;++pass){
++        at=0;middle_sum=white_sum=0;
++        while(at<VISION_WIDTH&&sorted[at]<=first)++at;
++        if(VISION_WIDTH-at<2*VISION_MIN_WIDTH||sorted[VISION_WIDTH-1]-sorted[at]<VISION_MIN_CONTRAST)return first;
++        int second=sorted_split(sorted,at,VISION_WIDTH-at);split=at;
++        while(split<VISION_WIDTH&&sorted[split]<=second)middle_sum+=sorted[split++];
++        for(int k=split;k<VISION_WIDTH;++k)white_sum+=sorted[k];
++        middle_count=split-at;white_count=VISION_WIDTH-split;
++        if(middle_count<VISION_MIN_WIDTH||white_count<VISION_MIN_WIDTH||
++           white_sum*middle_count-middle_sum*white_count<(uint64_t)VISION_MIN_CONTRAST*middle_count*white_count||
++           4*middle_sum*white_count<3*white_sum*middle_count)return first;
++        /* Independently enumerate connected runs; the native implementation scans
++         * outward from its seed instead. Only that run's midpoint may qualify. */
++        int seed=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),supported=0;
++        for(int x=0;x<VISION_WIDTH;){
++            if(row[x]<=first){++x;continue;}
++            int left=x;while(x<VISION_WIDTH&&row[x]>first)++x;
++            if(left<=seed&&seed<x){
++                supported=row[(left+x-1)/2]>second;break;
++            }
++        }
++        if(!supported)return first;
++        first=second;
++    }
++    return first;
++}
+ static int check_frame(int frame, int strict)
+ {
+     int mode, x, y, adaptive = 0;
+--- before/tests/vision/test_vision.c
++++ after/tests/vision/test_vision.c
+@@ -137,6 +137,33 @@
+           "bright gray floor and remote dark object must not erase a real white lane");
+     check(result.row_flags[90]==3 && result.left[90]>20 && result.right[90]<170,
+           "local illumination uses the track boundary, not the remote dark object");
++    /* Reproduces the three gray populations in the native frame regression:
++     * dark object, a bright floor gradient and the white corridor. Check the
++     * actual known edges; valid/coverage alone can pass a merged floor. */
++    vision_midterm_reset();
++    for(y=0;y<VISION_HEIGHT;++y)for(x=0;x<VISION_WIDTH;++x){
++        int width=40+y*3/4,left=94-width/2,right=94+width/2;
++        int floor=180+x/3;
++        gray[y*VISION_WIDTH+x]=(uint8_t)(x>=left&&x<=right?255:(x<20?30:floor));
++    }
++    run();summary("three-class floor");
++    check(result.valid,"three-class floor retains visible corridor");
++    for(y=50;y<=100;y+=10){
++        int width=40+y*3/4;
++        check(result.row_flags[y]==3&&absf((float)result.left[y]-(94-width/2))<=2&&
++              absf((float)result.right[y]-(94+width/2))<=2,
++              "bright floor refinement preserves physical fixture edges");
++    }
++    /* A split shadow must retain BOTH halves, including mild illumination
++     * differences that also form three histogram populations. */
++    /* 40--55% already fail in the original algorithm; this guardrail covers
++     * its established 60--95% range, not a new all-shadow correctness claim. */
++    for(int shade=60;shade<=95;shade+=5){
++        vision_midterm_reset();road(0,0,0);
++        for(y=0;y<VISION_HEIGHT;++y)for(x=VISION_WIDTH/2;x<VISION_WIDTH;++x)
++            gray[y*VISION_WIDTH+x]=(uint8_t)(gray[y*VISION_WIDTH+x]*shade/100);
++        run();check(result.valid&&absf(result.error_px)<3,"split-shadow sweep keeps complete road");
++    }
+     /* White floor both inside and outside two thin black boundary lines. */
+     vision_midterm_reset();
+     memset(gray, 210, sizeof(gray));
+--- before/tests/planning/test_shadow_preparation.py
++++ after/tests/planning/test_shadow_preparation.py
+@@ -98,14 +98,17 @@
+         with destination.open() as file:rows=list(csv.DictReader(file))
+         self.assertEqual(len(rows),750)
+         near=sum(int(r['near_accepted']) for r in rows);full=sum(int(r['full_accepted']) for r in rows)
+-        self.assertEqual((near,full),(36,3)) # Frozen scene/profile; not recognition ground truth.
+-        self.assertEqual([int(r['index']) for r in rows if r['arm_event']=='1'],[560])
++        self.assertEqual((near,full),(470,376)) # Frozen scene/profile; not recognition ground truth.
++        self.assertEqual([int(r['index']) for r in rows if r['arm_event']=='1'],[0])
+         # Uniform 20ms timestamps and explicit stationary synthetic encoder:
+         # accepted real geometry must survive the legal maximum sample period.
+-        self.assertEqual(rows[561]['planner_status'],'2') # VPS_READY, formerly VPS_FAULT.
+-        self.assertFalse(any(r['planner_status']=='4' for r in rows))
++        self.assertEqual(rows[1]['planner_status'],'2') # VPS_READY at the exact 20ms boundary.
+         self.assertTrue(any(int(r['target_right'])>0 and int(r['target_left'])>0 for r in rows))
+-        self.assertEqual(rows[-1]['supervisor_mode'],'5') # STOP_LATCHED; no automatic rearm.
++        # Later real geometry outages are retained. A latched supervisor must
++        # not silently rearm when subsequent images look usable again.
++        first_fault=next(i for i,r in enumerate(rows) if r['planner_status']=='4')
++        self.assertGreater(first_fault,1)
++        self.assertTrue(all(r['planner_status']=='4' for r in rows[first_fault:]))
+ 
+ 
+ if __name__=='__main__':unittest.main(verbosity=2)
+--- before/tools/prepare_phase3_shadow.py
++++ after/tools/prepare_phase3_shadow.py
+@@ -19,7 +19,7 @@
+ sys.path.insert(0,str(ROOT/'tools/testing'))
+ from process_runner import run_process
+ 
+-VERSION='PHASE3_C26_SHADOW_20261109_3'
++VERSION='PHASE3_C26_SHADOW_20261109_4'
+ 
+ 
+ def replace_once(text,old,new):

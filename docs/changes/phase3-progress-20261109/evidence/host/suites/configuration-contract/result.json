@@ -1,0 +1,347 @@
+{
+  "schemaVersion": "1.0",
+  "id": "configuration-contract",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "configuration-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 1.124838,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:13.727+00:00",
+  "finishedAt": "2026-11-09T10:09:14.852+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\default\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.113623,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\default\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.067888,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MOTION_DIAG=1",
+        "-DVISION_MOTOR_THRESHOLD_DIAG=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\motion\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\motion",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.114949,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\motion\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\motion",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.055537,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\train\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\train",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.131531,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\train\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\train",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.060743,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\route\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\route",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.114889,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\route\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\route",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.064215,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\switch\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\switch",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.13069,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\switch\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\switch",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.080033,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DVISION_MIDTERM_AUTO_TRACK=1",
+        "-DEXPECT_C31_AUTONOMOUS=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\auto-track\\configuration-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\auto-track",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.122314,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\auto-track\\configuration-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract\\artifacts\\auto-track",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.058202,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "motion",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MOTION_DIAG=1",
+        "VISION_MOTOR_THRESHOLD_DIAG=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "train",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_TRAINING=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "route",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_MIDTERM_ROUTE_TRIAL=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "switch",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_MIDTERM_ROUTE_TRIAL=1",
+        "VISION_ROUTE_SWITCH=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "auto-track",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_MIDTERM_ROUTE_TRIAL=1",
+        "VISION_ROUTE_SWITCH=1",
+        "VISION_MIDTERM_AUTONOMOUS=1",
+        "VISION_MIDTERM_AUTO_TRACK=1",
+        "EXPECT_C31_AUTONOMOUS=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\configuration-contract",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/auto-track/configuration-contract.exe",
+    "artifacts/default/configuration-contract.exe",
+    "artifacts/motion/configuration-contract.exe",
+    "artifacts/route/configuration-contract.exe",
+    "artifacts/switch/configuration-contract.exe",
+    "artifacts/train/configuration-contract.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "host_compile",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

@@ -1,0 +1,836 @@
+diff --git a/demo/code/vision_planner_shadow.c b/demo/code/vision_planner_shadow.c
+--- /dev/null
++++ b/demo/code/vision_planner_shadow.c
+@@ -0,0 +1,122 @@
++#include "vision_planner_shadow.h"
++#include <string.h>
++static int finite_range(float x,float lo,float hi){return x>=lo&&x<=hi;}
++static int coherent(const vps_state_t *s,const vps_input_t *in)
++{
++    const sp_input_t *i=&in->observation;const vp_stamp_t *id=&in->identity;
++    return id->config_revision==s->config.planner.revision&&id->frame_seq==i->frame_seq&&
++        id->encoder_seq==i->encoder_seq&&id->capture_ms==i->capture_ms&&id->encoder_ms==i->encoder_ms&&
++        in->external_admitted<=1&&i->new_frame<=1&&i->near_valid<=1&&i->far_valid<=1&&
++        i->encoder_valid<=1&&i->hard_stop<=1&&i->severe_fault<=1&&i->capture_odometer_valid<=1&&
++        !(in->valid&~VP_VALID_ALL)&&finite_range(i->measured_speed,0,s->config.planner.limits.maximum_speed)&&
++        finite_range(in->requested_speed_m_s,0,s->config.planner.limits.maximum_speed);
++}
++static int aligned(const sp_input_t *i)
++{
++    return i->capture_odometer_valid&&finite_range(i->odometer_m,0,1e9f)&&
++        finite_range(i->odometer_at_capture_m,0,i->odometer_m);
++}
++static int preview_valid(const sp_preview_t *v,const sp_input_t *i)
++{
++    return v->sequence==i->frame_seq&&v->capture_ms==i->capture_ms&&aligned(i)&&
++        sp_preview_valid(v)&&i->odometer_m-i->odometer_at_capture_m<v->distance[v->count-1]-.000001f;
++}
++static void reset_trajectory(vps_state_t *s)
++{memset(&s->trajectory,0,sizeof(s->trajectory));++s->control_revision;s->seed_required=1;}
++static void fault(vps_state_t *s,sp_input_t *i)
++{i->severe_fault=1;sp_supervise(&s->supervisor,&s->config.policy,i);reset_trajectory(s);}
++static vps_status_t finish(vps_state_t *s,vps_result_t *out,vps_status_t status)
++{
++    out->status=status;out->revision=s->revision;out->supervisor_mode=s->supervisor.mode;
++    out->supervisor_generation=s->supervisor.generation;return status;
++}
++int vps_init(vps_state_t *s,vp_mode_t mode,const vps_config_t *c)
++{
++    if(!s)return 0;memset(s,0,sizeof(*s));sp_supervisor_init(&s->supervisor);
++    if(mode!=VP_SHADOW||!c||!vp_config_valid(&c->planner)||!sp_policy_valid(&c->policy)||
++       c->planner.frame_max_age_ms>c->policy.frame_timeout_ms||
++       c->planner.encoder_max_age_ms>c->policy.encoder_timeout_ms)return 0;
++    s->config=*c;s->configured=1;s->seed_required=1;return 1;
++}
++int vps_arm(vps_state_t *s,const vps_input_t *in)
++{
++    if(!s||!in||!s->configured||s->supervisor.mode!=SP_DISARMED||!in->external_admitted||
++       !coherent(s,in)||in->valid!=VP_VALID_ALL||!preview_valid(&in->near_preview,&in->observation)||
++       !preview_valid(&in->full_preview,&in->observation)||
++       (uint32_t)(in->observation.now_ms-in->observation.capture_ms)>=s->config.planner.frame_max_age_ms||
++       (uint32_t)(in->observation.now_ms-in->observation.encoder_ms)>=s->config.planner.encoder_max_age_ms||
++       !sp_supervisor_arm(&s->supervisor,&s->config.policy,&in->observation))return 0;
++    s->near_preview=in->near_preview;s->full_preview=in->full_preview;s->have_near=s->have_full=1;
++    s->near_odometer=s->full_odometer=in->observation.odometer_at_capture_m;
++    s->identity=in->identity;s->latest_observation=in->observation;
++    s->last_control_ms=in->observation.now_ms;s->consumed_encoder=in->observation.encoder_seq;
++    reset_trajectory(s);s->trajectory.speed=in->observation.measured_speed;s->seed_required=0;++s->revision;
++    return 1;
++}
++vps_status_t vps_tick(vps_state_t *s,const vps_input_t *in,vps_result_t *out)
++{
++    sp_input_t i;uint32_t previous_frame,dt;vp_input_t plan;sp_preview_t rebased;const sp_preview_t *selected;
++    if(!out)return VPS_FAULT;memset(out,0,sizeof(*out));
++    if(!s||!s->configured){out->status=VPS_INACTIVE;return VPS_INACTIVE;}
++    ++s->revision;
++    if(!in){i=s->latest_observation;fault(s,&i);return finish(s,out,VPS_FAULT);}
++    i=in->observation;
++    if(!s->supervisor.authorized)return finish(s,out,s->supervisor.mode==SP_FAULT_LATCHED?VPS_FAULT:VPS_ZERO);
++    if(!coherent(s,in)){fault(s,&i);return finish(s,out,VPS_FAULT);}
++    if(!(in->valid&VP_VALID_ENCODER))i.encoder_valid=0;
++    if(!in->external_admitted||in->identity.output_epoch!=s->identity.output_epoch)i.hard_stop=1;
++    if(i.new_frame&&i.near_valid&&((in->valid&VP_VALID_ALL)!=VP_VALID_ALL||
++       !preview_valid(&in->near_preview,&i)))i.near_valid=0;
++    if(i.new_frame&&i.far_valid&&!preview_valid(&in->full_preview,&i))i.far_valid=0;
++    previous_frame=s->supervisor.last_frame_seq;
++    sp_supervise(&s->supervisor,&s->config.policy,&i);
++    s->latest_observation=i;s->identity=in->identity;
++    if(previous_frame!=s->supervisor.last_frame_seq){
++        s->have_near=i.near_valid;s->have_full=i.near_valid&&i.far_valid;
++        if(s->have_near){s->near_preview=in->near_preview;s->near_odometer=i.odometer_at_capture_m;}
++        if(s->have_full){s->full_preview=in->full_preview;s->full_odometer=i.odometer_at_capture_m;}
++    }
++    if(!s->supervisor.authorized||s->supervisor.motor_inhibit){
++        reset_trajectory(s);s->consumed_encoder=i.encoder_seq;s->last_control_ms=i.now_ms;
++        return finish(s,out,s->supervisor.mode==SP_FAULT_LATCHED?VPS_FAULT:VPS_ZERO);
++    }
++    dt=i.now_ms-s->last_control_ms;
++    if(!dt||i.encoder_seq==s->consumed_encoder)return finish(s,out,VPS_WAIT);
++    if(i.encoder_seq-s->consumed_encoder!=1||!finite_range((float)dt*.001f,.00001f,s->config.planner.limits.max_dt_s)){
++        fault(s,&i);return finish(s,out,VPS_FAULT);
++    }
++    selected=s->supervisor.far_active?&s->near_preview:&s->full_preview;
++    if(!(s->supervisor.far_active?s->have_near:s->have_full)||
++       !sp_preview_advance(selected,i.odometer_m-(s->supervisor.far_active?s->near_odometer:s->full_odometer),&rebased)){
++        fault(s,&i);return finish(s,out,VPS_FAULT);
++    }
++    memset(&plan,0,sizeof(plan));plan.stamp=in->identity;
++    /* The cached accepted frame is authoritative between camera publications.
++     * Duplicate/rejected frames cannot renew its identity or geometry. */
++    plan.stamp.frame_seq=s->supervisor.last_frame_seq;plan.stamp.capture_ms=s->supervisor.last_capture_ms;
++    plan.stamp.control_revision=s->control_revision;plan.now_ms=i.now_ms;plan.valid=VP_VALID_ALL;
++    plan.action=s->supervisor.stop_active?VP_CONTROLLED_STOP:VP_TRACK;
++    plan.near_only=s->supervisor.far_active;plan.preview_scope=plan.near_only?VP_NEAR_PREVIEW:VP_FULL_PREVIEW;
++    plan.preview=rebased;plan.trajectory=s->trajectory;
++    if(s->seed_required){plan.trajectory.speed=i.measured_speed;plan.trajectory.accel=0;}
++    plan.measured_speed_m_s=i.measured_speed;plan.requested_speed_m_s=in->requested_speed_m_s;plan.dt_s=(float)dt*.001f;
++    if(vp_prepare(VP_SHADOW,&s->config.planner,&plan,&out->candidate)!=VP_READY){
++        fault(s,&i);return finish(s,out,VPS_FAULT);
++    }
++    s->trajectory=out->candidate.trajectory;++s->control_revision;s->seed_required=0;
++    s->consumed_encoder=i.encoder_seq;s->last_control_ms=i.now_ms;
++    out->candidate.stamp.control_revision=s->control_revision;
++    s->identity=out->candidate.stamp;
++    return finish(s,out,VPS_READY);
++}
++int vps_result_matches(const vps_state_t *s,const vps_result_t *out,const vp_stamp_t *current,uint32_t now)
++{
++    sp_supervisor_t check;sp_input_t i;vp_stamp_t identity;
++    if(!s||!out||!current||!s->configured||out->status!=VPS_READY||out->revision!=s->revision||
++       out->supervisor_generation!=s->supervisor.generation)return 0;
++    identity=*current;identity.control_revision=s->control_revision;
++    if(!vp_candidate_matches(VP_SHADOW,&out->candidate,&identity,now))return 0;
++    check=s->supervisor;i=s->latest_observation;i.new_frame=0;i.now_ms=now;
++    sp_supervise(&check,&s->config.policy,&i);
++    return sp_candidate_allowed(&check,out->supervisor_generation)&&check.mode==out->supervisor_mode;
++}
+diff --git a/demo/code/vision_planner_shadow.h b/demo/code/vision_planner_shadow.h
+--- /dev/null
++++ b/demo/code/vision_planner_shadow.h
+@@ -0,0 +1,42 @@
++#ifndef SMARTCAR_VISION_PLANNER_SHADOW_H
++#define SMARTCAR_VISION_PLANNER_SHADOW_H
++#include "vision_planner.h"
++/* Single serialized foreground owner, shadow session only. No C26 admission,
++ * PI, output lease, interrupt or device access. init is an explicit NEW session,
++ * not an automatic recovery/clear operation for a running production vehicle. */
++typedef struct {vp_config_t planner;sp_policy_t policy;} vps_config_t;
++typedef struct {
++    sp_input_t observation;
++    vp_stamp_t identity; /* control_revision is owned by this executor. */
++    sp_preview_t near_preview,full_preview; /* Capture-aligned metric horizons. */
++    uint32_t valid;
++    float requested_speed_m_s;
++    uint8_t external_admitted; /* Caller assertion, never physical authorization. */
++} vps_input_t;
++typedef enum { VPS_INACTIVE=0,VPS_WAIT,VPS_READY,VPS_ZERO,VPS_FAULT } vps_status_t;
++typedef struct {
++    vp_candidate_t candidate;
++    uint32_t revision,supervisor_generation;
++    sp_mode_t supervisor_mode;
++    vps_status_t status;
++} vps_result_t;
++typedef struct {
++    vps_config_t config;
++    sp_supervisor_t supervisor;
++    sp_trajectory_t trajectory;
++    sp_preview_t near_preview,full_preview;
++    sp_input_t latest_observation;
++    vp_stamp_t identity;
++    float near_odometer,full_odometer;
++    uint32_t revision,control_revision,last_control_ms,consumed_encoder;
++    uint8_t configured,have_near,have_full,seed_required;
++} vps_state_t;
++int vps_init(vps_state_t *state,vp_mode_t mode,const vps_config_t *config);
++int vps_arm(vps_state_t *state,const vps_input_t *input);
++vps_status_t vps_tick(vps_state_t *state,const vps_input_t *input,vps_result_t *out);
++/* A result describes already-adopted SHADOW trajectory state, never PWM.
++ * Exact identity, state revision, ages and supervisor deadlines are checked.
++ * Calling this does not advance live state; tick must still run every cycle. */
++int vps_result_matches(const vps_state_t *state,const vps_result_t *result,
++                         const vp_stamp_t *current,uint32_t now_ms);
++#endif
+diff --git a/demo/code/vision_planner.c b/demo/code/vision_planner.c
+--- a/demo/code/vision_planner.c
++++ b/demo/code/vision_planner.c
+@@ -17,7 +17,7 @@
+     /* A reused output buffer cannot retain stale drive or trajectory values. */
+     memset(out,0,sizeof(*out));out->status=status;return status;
+ }
+-static int config_valid(const vp_config_t *c)
++int vp_config_valid(const vp_config_t *c)
+ {
+     return c&&c->revision&&sp_limits_valid(&c->limits)&&
+         bounded(c->ticks_per_metre_left,1e-6f,1e6f)&&bounded(c->ticks_per_metre_right,1e-6f,1e6f)&&
+@@ -36,7 +36,7 @@
+     if(!in)return reject(out,VP_BAD_INPUT);
+     if(in->action==VP_ZERO_NOW)return reject(out,VP_ZERO);
+     if(mode!=VP_SHADOW)return reject(out,VP_OFF);
+-    if(!config_valid(c)||in->stamp.config_revision!=c->revision)return reject(out,VP_BAD_CONFIG);
++    if(!vp_config_valid(c)||in->stamp.config_revision!=c->revision)return reject(out,VP_BAD_CONFIG);
+     if((in->action!=VP_TRACK&&in->action!=VP_CONTROLLED_STOP)||in->near_only>1||
+        in->valid!=VP_VALID_ALL||!bounded(in->measured_speed_m_s,0,c->limits.maximum_speed)||
+        !bounded(in->requested_speed_m_s,0,c->limits.maximum_speed)||
+diff --git a/demo/code/vision_planner.h b/demo/code/vision_planner.h
+--- a/demo/code/vision_planner.h
++++ b/demo/code/vision_planner.h
+@@ -66,6 +66,7 @@
+  * the upstream owner. This API does not infer them from a provenance label. */
+ vp_status_t vp_prepare(vp_mode_t mode,const vp_config_t *config,
+                        const vp_input_t *input,vp_candidate_t *out);
++int vp_config_valid(const vp_config_t *config);
+ /* Diagnostic publication check only: recheck exact identities and all ages.
+  * Does NOT authorize motors, enforce a supervisor deadline or mutate state.
+  * Consumer must discard on false; actual control still uses the old path. */
+diff --git a/tools/speed_planning/speed_planner.c b/tools/speed_planning/speed_planner.c
+--- a/tools/speed_planning/speed_planner.c
++++ b/tools/speed_planning/speed_planner.c
+@@ -61,16 +61,23 @@
+ }
+ static void limit(float cap,uint32_t reason,float *value,uint32_t *why)
+ {if(cap<*value){*value=cap;*why=reason;}else if(cap==*value)*why|=reason;}
++int sp_preview_valid(const sp_preview_t *p)
++{
++    unsigned i;
++    if(!p||p->units!=SP_METRES||p->count<2||p->count>SP_CAPACITY)return 0;
++    for(i=0;i<p->count;++i)
++        if(!finite_f(p->distance[i])||!finite_f(p->curvature[i])||p->distance[i]<0||p->distance[i]>10000||
++           (i&&p->distance[i]<=p->distance[i-1])||(!i&&p->distance[i]!=0))return 0;
++    return 1;
++}
+ int sp_plan(const sp_preview_t *p,const sp_limits_t *c,float measured,int near_only,float terminal,sp_plan_t *out)
+ {
+     sp_plan_t plan;unsigned i;
+-    if(!p||!out||!sp_limits_valid(c)||p->units!=SP_METRES||p->count<2||p->count>SP_CAPACITY||
++    if(!out||!sp_limits_valid(c)||!sp_preview_valid(p)||
+        !finite_f(measured)||measured<0||measured>100||!finite_f(terminal)||terminal<0||terminal>c->maximum_speed)return 0;
+     memset(&plan,0,sizeof(plan));plan.count=p->count;
+     for(i=0;i<p->count;++i){
+         float usable,bt,brake_cap,curve;
+-        if(!finite_f(p->distance[i])||!finite_f(p->curvature[i])||p->distance[i]<0||p->distance[i]>10000||
+-           (i&&p->distance[i]<=p->distance[i-1])||(!i&&p->distance[i]!=0))return 0;
+         curve=sqrtf(c->lateral_accel/(abs_f(p->curvature[i])+c->curvature_epsilon));
+         plan.speed[i]=c->maximum_speed;plan.reason[i]=SP_LIMIT_MAX;
+         limit(curve,SP_LIMIT_CURVE,&plan.speed[i],&plan.reason[i]);
+@@ -150,7 +157,7 @@
+             (map[i].angle_rad-map[i-1].angle_rad);return 1;}
+     return 0;
+ }
+-static int policy_valid(const sp_policy_t *p)
++int sp_policy_valid(const sp_policy_t *p)
+ {return p&&p->frame_timeout_ms&&p->frame_timeout_ms<UINT32_C(0x80000000)&&
+  p->encoder_timeout_ms&&p->encoder_timeout_ms<UINT32_C(0x80000000)&&
+  p->stop_timeout_ms&&p->stop_timeout_ms<UINT32_C(0x80000000)&&p->near_window_ms&&
+@@ -162,7 +169,7 @@
+ {if(s->authorized)++s->generation;s->authorized=0;s->motor_inhibit=1;s->faults|=fault;s->mode=mode;}
+ int sp_supervisor_arm(sp_supervisor_t *s,const sp_policy_t *p,const sp_input_t *i)
+ {
+-    if(!s||!i||!policy_valid(p)||s->mode!=SP_DISARMED||i->hard_stop||i->severe_fault||!i->new_frame||
++    if(!s||!i||!sp_policy_valid(p)||s->mode!=SP_DISARMED||i->hard_stop||i->severe_fault||!i->new_frame||
+        !i->near_valid||!i->far_valid||!i->encoder_valid||!finite_f(i->odometer_m)||i->odometer_m<0||
+        !finite_f(i->measured_speed)||!fresh(i->now_ms,i->capture_ms,p->frame_timeout_ms)||
+        !fresh(i->now_ms,i->encoder_ms,p->encoder_timeout_ms))return 0;
+@@ -177,7 +184,7 @@
+     if(!s||!i)return;
+     if(i->hard_stop||i->severe_fault){latch(s,(i->severe_fault||s->faults)?SP_FAULT_LATCHED:SP_STOP_LATCHED,i->severe_fault?SP_FAULT_CONTROL:0);return;}
+     if(!s->authorized)return;
+-    if(!policy_valid(p)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONFIG);return;}
++    if(!sp_policy_valid(p)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONFIG);return;}
+     if((uint32_t)(i->now_ms-s->last_now_ms)>=UINT32_C(0x80000000)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONTROL);return;}
+     s->last_now_ms=i->now_ms;previous=s->mode;
+     if(!i->encoder_valid||!finite_f(i->odometer_m)||i->odometer_m<s->last_odometer_m||
+@@ -240,3 +247,18 @@
+ }
+ int sp_candidate_allowed(const sp_supervisor_t *s,uint32_t epoch)
+ {return s&&s->authorized&&!s->motor_inhibit&&s->generation==epoch;}
++
++int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out)
++{
++    unsigned next=1;float fraction;sp_preview_t v;
++    if(!out||!sp_preview_valid(source)||
++       !finite_f(travelled)||travelled<0||travelled>=source->distance[source->count-1]-.000001f)return 0;
++    while(next<source->count&&source->distance[next]<=travelled)++next;
++    if(next>=source->count)return 0;
++    v=*source;v.count=1;v.distance[0]=0;
++    fraction=(travelled-source->distance[next-1])/(source->distance[next]-source->distance[next-1]);
++    v.curvature[0]=source->curvature[next-1]+fraction*(source->curvature[next]-source->curvature[next-1]);
++    for(unsigned j=next;j<source->count;++j){v.distance[v.count]=source->distance[j]-travelled;
++        v.curvature[v.count]=source->curvature[j];++v.count;}
++    if(v.count<2)return 0;*out=v;return 1;
++}
+diff --git a/tools/speed_planning/speed_planner.h b/tools/speed_planning/speed_planner.h
+--- a/tools/speed_planning/speed_planner.h
++++ b/tools/speed_planning/speed_planner.h
+@@ -36,10 +36,15 @@
+        SP_LIMIT_NEAR=8, SP_LIMIT_FORWARD=16, SP_LIMIT_BACKWARD=32 };
+ typedef struct { unsigned count;float current_cap,speed[SP_CAPACITY];uint32_t reason[SP_CAPACITY]; } sp_plan_t;
+ int sp_limits_valid(const sp_limits_t *limits);
++/* O(N), structural/finite/range check only; no square roots or speed plan. */
++int sp_preview_valid(const sp_preview_t *preview);
+ /* Explicit terminal speed at the last trusted point; current_speed is measured.
+  * Normalized geometry is rejected: pixels cannot enter a metres braking model. */
+ int sp_plan(const sp_preview_t *preview,const sp_limits_t *limits,float current_speed,
+             int near_only,float terminal_speed,sp_plan_t *out);
++/* Rebase a capture-aligned metric preview by measured forward travel. Reject
++ * an exhausted horizon; caller owns origin/odometer calibration and validity. */
++int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out);
+ typedef struct { float speed,accel;uint8_t brake_override,infeasible; } sp_trajectory_t;
+ /* hard_stop clears immediately. Otherwise dt must be (0,max_dt_s]. The cap
+  * outranks jerk; infeasible marks a cap requiring >brake deceleration. */
+@@ -61,6 +66,7 @@
+     unsigned near_frames,far_frames,zero_samples;
+     float far_distance_m,zero_speed_m_s;
+ } sp_policy_t; /* Caller-supplied simulation or reviewed project policy. */
++int sp_policy_valid(const sp_policy_t *policy);
+ typedef struct {
+     uint32_t now_ms,frame_seq,capture_ms,encoder_seq,encoder_ms;
+     float odometer_m,measured_speed,odometer_at_capture_m;
+diff --git a/tools/speed_planning/pipeline.c b/tools/speed_planning/pipeline.c
+--- a/tools/speed_planning/pipeline.c
++++ b/tools/speed_planning/pipeline.c
+@@ -33,22 +33,6 @@
+         if(v->distance[j]<=distance&&curve<cap)cap=curve;
+     }
+     return cap;
+-}
+-int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out)
+-{
+-    unsigned next=1;float fraction;sp_preview_t v;
+-    if(!source||!out||source->count<2||source->count>SP_CAPACITY||source->units!=SP_METRES||
+-       !isfinite(travelled)||travelled<0||travelled>=source->distance[source->count-1]-.000001f)return 0;
+-    for(unsigned j=0;j<source->count;++j)if(!isfinite(source->distance[j])||!isfinite(source->curvature[j])||
+-        (!j&&source->distance[j]!=0)||(j&&source->distance[j]<=source->distance[j-1]))return 0;
+-    while(next<source->count&&source->distance[next]<=travelled)++next;
+-    if(next>=source->count)return 0;
+-    v=*source;v.count=1;v.distance[0]=0;
+-    fraction=(travelled-source->distance[next-1])/(source->distance[next]-source->distance[next-1]);
+-    v.curvature[0]=source->curvature[next-1]+fraction*(source->curvature[next]-source->curvature[next-1]);
+-    for(unsigned j=next;j<source->count;++j){v.distance[v.count]=source->distance[j]-travelled;
+-        v.curvature[v.count]=source->curvature[j];++v.count;}
+-    if(v.count<2)return 0;*out=v;return 1;
+ }
+ int sp_pipeline_init(sp_pipeline_t *p,const sp_pipeline_config_t *c,uint64_t session)
+ {
+diff --git a/tools/speed_planning/pipeline.h b/tools/speed_planning/pipeline.h
+--- a/tools/speed_planning/pipeline.h
++++ b/tools/speed_planning/pipeline.h
+@@ -47,7 +47,6 @@
+ } sp_pipeline_t;
+ /* Rebase still-fresh metric geometry using travelled distance since capture.
+  * No new image identity is minted. Exhausted preview is rejected. */
+-int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out);
+ /* Caller supplies a nonzero session identity, unique while old candidates can
+  * exist. Init is a new offline session, not a runtime fault-clear API. */
+ int sp_pipeline_init(sp_pipeline_t *p,const sp_pipeline_config_t *config,uint64_t session);
+diff --git a/tools/speed_planning/shadow_visual_runner.c b/tools/speed_planning/shadow_visual_runner.c
+--- /dev/null
++++ b/tools/speed_planning/shadow_visual_runner.c
+@@ -0,0 +1,56 @@
++/* Hybrid fixture: measured visual flags/times; all geometry and motion are
++ * explicitly synthetic. Executes target shadow code, never PI or hardware. */
++#ifdef _MSC_VER
++#define _CRT_SECURE_NO_WARNINGS
++#endif
++#include "vision_planner_shadow.h"
++#include "visual_policy.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++int main(int argc,char **argv)
++{
++    FILE *input,*output;char line[512];unsigned index,seq,cap,now,near_ok,far_ok;
++    unsigned arm_index;vps_state_t state;vps_config_t config;vps_input_t in;vps_result_t result;
++    if(argc!=6)return 2;arm_index=(unsigned)strtoul(argv[3],NULL,10);
++    memset(&config,0,sizeof(config));config.policy=(sp_policy_t)VISUAL_POLICY;
++    config.policy.far_budget_ms=(uint32_t)strtoul(argv[4],NULL,10);
++    config.policy.far_frames=(unsigned)strtoul(argv[5],NULL,10);
++    config.planner.revision=1;
++    config.planner.limits=(sp_limits_t){SP_SIMULATION,3,1,2,1,2,4,6,.02f,.02f,.0001f,.05f};
++    config.planner.ticks_per_metre_left=11000;config.planner.ticks_per_metre_right=12000;
++    config.planner.max_left_ticks_10ms=config.planner.max_right_ticks_10ms=1000;
++    config.planner.frame_max_age_ms=100;config.planner.encoder_max_age_ms=30;config.planner.candidate_max_age_ms=20;
++    if(!vps_init(&state,VP_SHADOW,&config))return 3;
++    input=fopen(argv[1],"r");if(!input)return 3;output=fopen(argv[2],"w");if(!output){fclose(input);return 3;}
++    fprintf(output,"index,mode,authorized,inhibit,farActive,farStreak,farStartedMs,stopActive,faults,generation,armAttempt,armAccepted,status,action,leftTicks10ms,rightTicks10ms,matches\n");
++    if(!fgets(line,sizeof(line),input))return 4;
++    while(fgets(line,sizeof(line),input)){
++        int attempt,accepted=0;
++        if(sscanf(line,"%u,%u,%u,%u,%u,%u",&index,&seq,&cap,&now,&near_ok,&far_ok)!=6)return 4;
++        memset(&in,0,sizeof(in));memset(&result,0,sizeof(result));
++        in.identity=(vp_stamp_t){9,1,1,seq,index+1,cap,now,0};in.external_admitted=1;in.valid=VP_VALID_ALL;
++        in.observation.now_ms=now;in.observation.capture_ms=cap;in.observation.frame_seq=seq;
++        in.observation.near_valid=(uint8_t)near_ok;in.observation.far_valid=(uint8_t)far_ok;
++        in.observation.new_frame=in.observation.encoder_valid=in.observation.capture_odometer_valid=1;
++        in.observation.encoder_seq=index+1;in.observation.encoder_ms=now;
++        /* Not image-derived or calibrated: straight 2.25m/3.75m fixtures,
++         * zero measured/reference speed and zero distance for this replay. */
++        in.near_preview.units=in.full_preview.units=SP_METRES;
++        in.near_preview.count=in.full_preview.count=SP_CAPACITY;
++        in.near_preview.sequence=in.full_preview.sequence=seq;
++        in.near_preview.capture_ms=in.full_preview.capture_ms=cap;
++        for(unsigned j=0;j<SP_CAPACITY;++j){in.near_preview.distance[j]=(float)j*.15f;in.full_preview.distance[j]=(float)j*.25f;}
++        attempt=index==arm_index;
++        if(attempt)accepted=vps_arm(&state,&in);else (void)vps_tick(&state,&in,&result);
++        fprintf(output,"%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%u,%u,%u,%u,%d\n",index,
++            (unsigned)state.supervisor.mode,(unsigned)state.supervisor.authorized,(unsigned)state.supervisor.motor_inhibit,
++            (unsigned)state.supervisor.far_active,state.supervisor.far_streak,(unsigned)state.supervisor.far_started_ms,
++            (unsigned)state.supervisor.stop_active,(unsigned)state.supervisor.faults,(unsigned)state.supervisor.generation,
++            attempt,accepted,(unsigned)result.status,(unsigned)result.candidate.action,
++            (unsigned)result.candidate.left_ticks_10ms,(unsigned)result.candidate.right_ticks_10ms,
++            vps_result_matches(&state,&result,&in.identity,now));
++    }
++    if(ferror(input)||ferror(output)){fclose(input);fclose(output);return 5;}
++    fclose(input);return fclose(output)?5:0;
++}
+diff --git a/tools/speed_planning/replay_shadow_visual.py b/tools/speed_planning/replay_shadow_visual.py
+--- /dev/null
++++ b/tools/speed_planning/replay_shadow_visual.py
+@@ -0,0 +1,98 @@
++"""Offline target-shadow replay over verified visual metadata; synthetic motion/geometry."""
++import argparse
++import csv
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++
++from tools.speed_planning.analyze_visual_trace import analyze
++from tools.speed_planning.replay_visual_supervisor import run as run_supervisor
++from tools.speed_planning.replay import compile_command
++from tools.speed_planning.vehicle_model import ROOT
++
++
++def run(session, output, compiler=None):
++    session, output = Path(session).resolve(), Path(output).resolve()
++    analyze(session)  # CRC/SHA/complete-session checks before creating artifacts.
++    if output.exists():
++        raise ValueError('Output must be a new directory')
++    family = os.environ.get('SMARTCAR_TEST_COMPILER', 'gcc')
++    mode = os.environ.get('SMARTCAR_TEST_MODE', 'optimized')
++    if family not in ('gcc', 'msvc') or mode not in ('optimized', 'asan'):
++        raise ValueError('Unsupported compiler family/mode')
++    compiler = compiler or os.environ.get('SMARTCAR_TEST_COMPILER_PATH') or shutil.which('cl' if family == 'msvc' else 'gcc')
++    if not compiler:
++        raise ValueError('Existing compiler required')
++    output.mkdir(parents=True)
++    # Reuses source verification + independent Python oracle, not a second
++    # implementation of production supervisor rules or image recognition.
++    baseline = output/'supervisor'
++    reference = run_supervisor(session, baseline, compiler)
++    sources = [ROOT/'tools/speed_planning/shadow_visual_runner.c', ROOT/'demo/code/vision_planner_shadow.c',
++               ROOT/'demo/code/vision_planner.c', ROOT/'tools/speed_planning/speed_planner.c']
++    exe = output/'shadow-visual.exe'
++    command = compile_command(str(compiler), family, mode, sources, [ROOT/'demo/code', baseline], exe)
++    subprocess.run(command, cwd=output, check=True, capture_output=True, timeout=60)
++    reports = []
++    columns = ['index', 'mode', 'authorized', 'inhibit', 'farActive', 'farStreak', 'farStartedMs',
++               'stopActive', 'faults', 'generation', 'armAttempt', 'armAccepted']
++    for case in reference['experiments']:
++        path = output/(case['case']+'.csv')
++        subprocess.run([exe, baseline/'observations.csv', path, str(case['explicitArmIndex']),
++                        str(case['farBudgetMs']), str(case['farRecoveryFrames'])], cwd=output, check=True, timeout=15)
++        with path.open(newline='', encoding='utf-8') as file:
++            actual = list(csv.DictReader(file))
++        with (baseline/path.name).open(newline='', encoding='utf-8') as file:
++            expected = list(csv.DictReader(file))
++        if len(actual) != 750 or len(actual) != len(expected):
++            raise AssertionError('Incomplete target shadow replay')
++        ready, controlled, inhibited = 0, 0, 0
++        for got, want in zip(actual, expected):
++            if any(got[k] != want[k] for k in columns):
++                raise AssertionError(f"{case['case']} row {got['index']}: supervisor mismatch")
++            if int(got['leftTicks10ms']) or int(got['rightTicks10ms']):
++                raise AssertionError('Synthetic zero-speed fixture produced nonzero integer targets')
++            if got['status'] == '2':  # VPS_READY
++                ready += 1
++                if got['matches'] != '1':
++                    raise AssertionError('Fresh shadow candidate failed publication check')
++                if got['mode'] == '4':
++                    controlled += 1
++                    if got['action'] != '2':
++                        raise AssertionError('Controlled stop did not shape zero target')
++            if got['inhibit'] == '1':
++                inhibited += 1
++                if got['matches'] != '0' or got['action'] != '0':
++                    raise AssertionError('Inhibited state retained a consumable candidate')
++        reports.append({'case': case['case'], 'rows': len(actual), 'supervisorMatchesIndependentOracle': True,
++                        'readyCandidates': ready, 'controlledStopCandidates': controlled, 'inhibitedRows': inhibited,
++                        'csvSha256': hashlib.sha256(path.read_bytes()).hexdigest()})
++    result = {'schemaVersion': 'smartcar.shadow-visual-replay/1', 'sourceFrames': 750,
++              'sourceSessionSha256': reference['sourceSessionSha256'], 'hardwareAccessed': False,
++              'productionApproved': False, 'runtimeConnected': False,
++              'evidence': 'measured-visual-metadata-with-synthetic-metric-and-zero-motion-inputs',
++              'syntheticInputs': {'measuredSpeedMps': 0, 'referenceSpeedMps': 0, 'odometerM': 0,
++                                  'leftTicksPerM': 11000, 'rightTicksPerM': 12000,
++                                  'geometry': 'straight near2.25m/full3.75m, not image-derived'},
++              'experiments': reports, 'compilerFamily': family, 'compilerMode': mode, 'compileCommand': command,
++              'sourcesSha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
++                               for p in sources + [Path(__file__), ROOT/'demo/code/vision_planner_shadow.h',
++                                                  ROOT/'demo/code/vision_planner.h', ROOT/'tools/speed_planning/speed_planner.h']},
++              'limits': ['No image algorithm or measured metric preview.', 'Motion, scales and zero-speed confirmations are synthetic.',
++                         'No live scheduler, PI, PWM, C26 admission or production threshold approval.']}
++    (output/'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
++    print(json.dumps({'frames': 750, 'cases': len(reports), 'rows': sum(c['rows'] for c in reports),
++                      'productionApproved': False}))
++    return result
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('session', type=Path)
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--compiler')
++    args = parser.parse_args()
++    run(args.session, args.output, args.compiler)
+diff --git a/tests/planning/test_planner_shadow.c b/tests/planning/test_planner_shadow.c
+--- /dev/null
++++ b/tests/planning/test_planner_shadow.c
+@@ -0,0 +1,171 @@
++#include "vision_planner_shadow.h"
++#include <math.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++static unsigned checks;
++#define CHECK(x) do{++checks;if(!(x)){fprintf(stderr,"shadow:%d %s\n",__LINE__,#x);exit(1);}}while(0)
++static vps_config_t config(void)
++{
++    vps_config_t c;memset(&c,0,sizeof(c));c.planner.revision=1;
++    c.planner.limits=(sp_limits_t){SP_SIMULATION,3,1,2,1,2,4,6,.02f,.02f,.0001f,.05f};
++    c.planner.ticks_per_metre_left=11000;c.planner.ticks_per_metre_right=12000;
++    c.planner.max_left_ticks_10ms=c.planner.max_right_ticks_10ms=1000;
++    c.planner.frame_max_age_ms=100;c.planner.encoder_max_age_ms=30;c.planner.candidate_max_age_ms=20;
++    c.policy=(sp_policy_t){100,30,300,60,1000,3,3,3,1,.01f};return c;
++}
++static void sync(vps_input_t *in)
++{
++    sp_input_t *i=&in->observation;
++    in->identity.frame_seq=i->frame_seq;in->identity.capture_ms=i->capture_ms;
++    in->identity.encoder_seq=i->encoder_seq;in->identity.encoder_ms=i->encoder_ms;
++    in->near_preview.sequence=in->full_preview.sequence=i->frame_seq;
++    in->near_preview.capture_ms=in->full_preview.capture_ms=i->capture_ms;
++}
++static vps_input_t input(void)
++{
++    vps_input_t in;memset(&in,0,sizeof(in));in.valid=VP_VALID_ALL;in.external_admitted=1;
++    in.identity.output_epoch=9;in.identity.config_revision=1;
++    in.requested_speed_m_s=1;
++    in.observation.new_frame=in.observation.near_valid=in.observation.far_valid=1;
++    in.observation.encoder_valid=in.observation.capture_odometer_valid=1;
++    in.observation.measured_speed=.5f;in.observation.now_ms=100;
++    in.observation.capture_ms=in.observation.encoder_ms=100;
++    in.near_preview.units=in.full_preview.units=SP_METRES;
++    in.near_preview.count=in.full_preview.count=SP_CAPACITY;
++    for(unsigned j=0;j<SP_CAPACITY;++j){in.near_preview.distance[j]=(float)j*.15f;in.full_preview.distance[j]=(float)j*.25f;}
++    sync(&in);return in;
++}
++static void step(vps_input_t *in,int near_ok,int far_ok)
++{
++    sp_input_t *i=&in->observation;i->now_ms+=10;i->capture_ms=i->encoder_ms=i->now_ms;
++    ++i->frame_seq;++i->encoder_seq;i->new_frame=1;i->near_valid=(uint8_t)near_ok;i->far_valid=(uint8_t)far_ok;
++    i->odometer_m+=.005f;i->odometer_at_capture_m=i->odometer_m;sync(in);
++}
++static void arm(vps_state_t *s,vps_input_t *in,vps_config_t c)
++{*in=input();CHECK(vps_init(s,VP_SHADOW,&c));CHECK(vps_arm(s,in));}
++static void zero(vps_result_t r)
++{CHECK(!r.candidate.left_ticks_s&&!r.candidate.right_ticks_s&&!r.candidate.left_ticks_10ms&&!r.candidate.right_ticks_10ms);}
++static void admission(void)
++{
++    vps_state_t s;vps_config_t c=config();vps_input_t in=input();vps_result_t r;
++    CHECK(!vps_init(&s,VP_DISABLED,&c));CHECK(vps_tick(&s,&in,&r)==VPS_INACTIVE);zero(r);
++    c.policy.far_frames=0;CHECK(!vps_init(&s,VP_SHADOW,&c));c=config();
++    CHECK(vps_init(&s,VP_SHADOW,&c));in.external_admitted=0;CHECK(!vps_arm(&s,&in));
++    in.external_admitted=1;in.observation.far_valid=0;CHECK(!vps_arm(&s,&in));
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);CHECK(s.supervisor.mode==SP_DISARMED);zero(r);
++    CHECK(vps_arm(&s,&in));CHECK(!vps_arm(&s,&in));
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    CHECK(vps_result_matches(&s,&r,&in.identity,in.observation.now_ms));
++    in.external_admitted=0;step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);
++    CHECK(s.supervisor.mode==SP_STOP_LATCHED);in.external_admitted=1;CHECK(!vps_arm(&s,&in));
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);zero(r);
++    arm(&s,&in,c);in.identity.output_epoch++;step(&in,1,1);
++    CHECK(vps_tick(&s,&in,&r)==VPS_ZERO&&s.supervisor.mode==SP_STOP_LATCHED);
++    arm(&s,&in,c);step(&in,1,1);in.identity.config_revision++;
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);CHECK(!vps_arm(&s,&in));zero(r);
++    arm(&s,&in,c);CHECK(vps_tick(&s,NULL,&r)==VPS_FAULT);zero(r);
++    CHECK(vps_tick(NULL,NULL,&r)==VPS_INACTIVE);CHECK(vps_tick(NULL,NULL,NULL)==VPS_FAULT);
++}
++static void state_and_samples(void)
++{
++    vps_state_t s;vps_input_t in;vps_result_t r,previous;vps_config_t c=config();arm(&s,&in,c);
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_READY);previous=r;
++    CHECK(s.trajectory.speed>.5f&&s.control_revision==r.candidate.stamp.control_revision);
++    CHECK(vps_tick(&s,&in,&r)==VPS_WAIT);zero(r);
++    CHECK(!vps_result_matches(&s,&previous,&in.identity,in.observation.now_ms));
++    float held=s.trajectory.speed;step(&in,1,1);in.observation.new_frame=0;
++    in.observation.frame_seq=s.supervisor.last_frame_seq;in.observation.capture_ms=s.supervisor.last_capture_ms;sync(&in);
++    CHECK(vps_tick(&s,&in,&r)==VPS_READY&&s.trajectory.speed>held);
++    CHECK(r.candidate.stamp.frame_seq==s.supervisor.last_frame_seq);
++    /* Encoder gaps cannot replay one measurement as two control steps. */
++    step(&in,1,1);++in.observation.encoder_seq;sync(&in);
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    arm(&s,&in,c);step(&in,1,1);in.observation.encoder_seq=0;sync(&in);
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    arm(&s,&in,c);step(&in,1,1);in.valid&=~VP_VALID_ENCODER;
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    arm(&s,&in,c);step(&in,1,1);in.identity.frame_seq++;
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    /* Both sequence and time wraps are valid forward progress. */
++    in=input();in.observation.frame_seq=in.observation.encoder_seq=UINT32_MAX;
++    in.observation.now_ms=in.observation.capture_ms=in.observation.encoder_ms=UINT32_MAX-5;sync(&in);
++    CHECK(vps_init(&s,VP_SHADOW,&c)&&vps_arm(&s,&in));step(&in,1,1);
++    CHECK(vps_tick(&s,&in,&r)==VPS_READY&&r.candidate.stamp.encoder_seq==0);
++}
++static void degradation(void)
++{
++    vps_state_t s;vps_input_t in;vps_result_t r;vps_config_t c=config();arm(&s,&in,c);
++    step(&in,1,0);CHECK(vps_tick(&s,&in,&r)==VPS_READY);CHECK(s.supervisor.far_active);
++    CHECK(r.candidate.cap_m_s<=c.planner.limits.near_cap);
++    vp_stamp_t id=in.identity;id.request_revision++;CHECK(!vps_result_matches(&s,&r,&id,in.observation.now_ms));
++    /* Keep a candidate just before far deadline; expiry outranks publication. */
++    for(unsigned j=0;j<5;++j){step(&in,1,0);CHECK(vps_tick(&s,&in,&r)==VPS_READY);}
++    CHECK(vps_result_matches(&s,&r,&in.identity,in.observation.now_ms));
++    CHECK(!vps_result_matches(&s,&r,&in.identity,in.observation.now_ms+10));
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    CHECK(s.supervisor.mode==SP_CONTROLLED_STOP&&r.candidate.action==VP_CONTROLLED_STOP);
++    CHECK(s.trajectory.speed>0); /* No immediate zero disguised as controlled stop. */
++    for(unsigned j=0;j<3;++j){step(&in,1,1);in.observation.measured_speed=0;(void)vps_tick(&s,&in,&r);}
++    CHECK(s.supervisor.mode==SP_STOP_LATCHED);zero(r);CHECK(!vps_arm(&s,&in));
++    /* Near recovery retains far budget and reseeds from actual measured speed. */
++    c.policy.far_budget_ms=500;arm(&s,&in,c);step(&in,1,0);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    uint32_t start=s.supervisor.far_started_ms;
++    step(&in,0,0);CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);CHECK(s.supervisor.motor_inhibit);zero(r);
++    for(unsigned j=0;j<3;++j){step(&in,1,0);(void)vps_tick(&s,&in,&r);}
++    CHECK(r.status==VPS_READY&&s.supervisor.far_started_ms==start);CHECK(s.trajectory.speed>=.5f);
++    /* Time budgets continue without a new image publication. */
++    step(&in,1,0);in.observation.new_frame=0;sync(&in);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    c=config();c.policy.far_distance_m=.01f;arm(&s,&in,c);step(&in,1,0);
++    in.observation.odometer_at_capture_m=0;in.observation.odometer_m=.02f;
++    CHECK(vps_tick(&s,&in,&r)==VPS_READY&&s.supervisor.mode==SP_CONTROLLED_STOP);
++}
++static void geometry_and_deadlines(void)
++{
++    vps_state_t s;vps_input_t in;vps_result_t r;vps_config_t c=config();arm(&s,&in,c);
++    step(&in,1,1);in.observation.capture_ms=100;in.observation.odometer_at_capture_m=0;sync(&in);
++    /* Duplicate frame is ignored; the cached horizon still advances by odometry. */
++    in.observation.frame_seq=0;sync(&in);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    CHECK(s.supervisor.last_capture_ms==100);
++    sp_preview_t rebased;CHECK(sp_preview_advance(&in.full_preview,.5f,&rebased));
++    CHECK(fabsf(rebased.distance[rebased.count-1]-3.25f)<1e-6f);
++    CHECK(!sp_preview_advance(&in.full_preview,3.75f,&rebased));
++    step(&in,1,1);in.observation.new_frame=0;in.observation.odometer_m=10;sync(&in);
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    arm(&s,&in,c);step(&in,1,1);in.near_preview.units=SP_NORMALIZED;
++    CHECK(vps_tick(&s,&in,&r)==VPS_ZERO&&s.supervisor.motor_inhibit);zero(r);
++    arm(&s,&in,c);step(&in,1,0);in.observation.capture_odometer_valid=0;
++    CHECK(vps_tick(&s,&in,&r)!=VPS_READY);zero(r);
++    arm(&s,&in,c);step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_READY);
++    CHECK(!vps_result_matches(&s,&r,&in.identity,in.observation.now_ms+20));
++    in.observation.now_ms+=100;CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++    arm(&s,&in,c);step(&in,1,1);in.requested_speed_m_s=NAN;
++    CHECK(vps_tick(&s,&in,&r)==VPS_FAULT);zero(r);
++}
++static void independent_timeouts(void)
++{
++    vps_state_t s;vps_input_t in;vps_result_t r;vps_config_t c=config();
++    c.policy.near_window_ms=20;arm(&s,&in,c);step(&in,0,0);
++    CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);
++    for(unsigned j=0;j<2;++j){step(&in,1,1);(void)vps_tick(&s,&in,&r);}
++    CHECK(s.supervisor.mode==SP_FAULT_LATCHED&&(s.supervisor.faults&SP_FAULT_NEAR));zero(r);
++    c=config();c.policy.far_budget_ms=10;c.policy.stop_timeout_ms=30;arm(&s,&in,c);
++    for(unsigned j=0;j<5;++j){step(&in,1,0);(void)vps_tick(&s,&in,&r);}
++    CHECK(s.supervisor.mode==SP_FAULT_LATCHED&&(s.supervisor.faults&SP_FAULT_CONTROL));zero(r);
++    c=config();c.policy.far_budget_ms=1000;arm(&s,&in,c);
++    for(unsigned j=0;j<10;++j){
++        step(&in,1,1);in.observation.new_frame=0;
++        in.observation.frame_seq=0;in.observation.capture_ms=100;sync(&in);
++        (void)vps_tick(&s,&in,&r);
++    }
++    CHECK(s.supervisor.mode==SP_FAULT_LATCHED&&(s.supervisor.faults&SP_FAULT_FRAME));zero(r);
++    /* Captured origin is required even for a normal full preview, not only
++     * the initial far-loss budget calculation in the supervisor. */
++    arm(&s,&in,c);in.observation.capture_odometer_valid=0;CHECK(!vps_arm(&s,&in));
++    step(&in,1,1);CHECK(vps_tick(&s,&in,&r)==VPS_ZERO);zero(r);
++}
++int main(void)
++{
++    admission();state_and_samples();degradation();geometry_and_deadlines();independent_timeouts();
++    printf("PLANNER SHADOW PASS: %u checks; no PI, motor or real-time claim.\n",checks);return 0;
++}
+diff --git a/tests/planning/test_shadow_visual_replay.py b/tests/planning/test_shadow_visual_replay.py
+--- /dev/null
++++ b/tests/planning/test_shadow_visual_replay.py
+@@ -0,0 +1,48 @@
++"""Hybrid visual metadata regression for the exact portable target shadow code."""
++import json
++import os
++from pathlib import Path
++import shutil
++import sys
++import tempfile
++import unittest
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT))
++from tools.speed_planning.replay_shadow_visual import run
++SESSION = ROOT/'docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04'
++
++
++class ShadowReplay(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.temp = tempfile.TemporaryDirectory(); cls.addClassCleanup(cls.temp.cleanup)
++        cls.folder = Path(cls.temp.name)
++        cls.report = run(SESSION, cls.folder/'replay')
++
++    def test_all_rows_and_explicit_synthetic_limits(self):
++        self.assertEqual(sum(c['rows'] for c in self.report['experiments']), 3750)
++        self.assertTrue(all(c['supervisorMatchesIndependentOracle'] for c in self.report['experiments']))
++        self.assertFalse(self.report['productionApproved'])
++        self.assertFalse(self.report['hardwareAccessed'])
++        self.assertFalse(self.report['runtimeConnected'])
++        self.assertEqual(self.report['syntheticInputs']['referenceSpeedMps'], 0)
++
++    def test_stop_and_disarmed_candidates(self):
++        cases = {c['case']: c for c in self.report['experiments']}
++        self.assertEqual(cases['initial-admission-only']['readyCandidates'], 0)
++        self.assertGreater(cases['reference-time-budget']['controlledStopCandidates'], 0)
++        self.assertGreater(cases['reference-time-budget']['inhibitedRows'], 0)
++
++    def test_tamper_rejected_without_artifact_creation(self):
++        bad = self.folder/'bad'; bad.mkdir()
++        shutil.copyfile(SESSION/'session.json', bad/'session.json')
++        data = bytearray((SESSION/'frame-0000.vqf').read_bytes()); data[-1] ^= 1
++        (bad/'frame-0000.vqf').write_bytes(data)
++        out = self.folder/'not-created'
++        with self.assertRaisesRegex(ValueError, 'hash mismatch'):
++            run(bad, out)
++        self.assertFalse(out.exists())
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+diff --git a/tests/suites/catalog.json b/tests/suites/catalog.json
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3654,6 +3654,79 @@
+         "artifacts/**"
+       ],
+       "scope": "Synthetic metric inputs, shared native kernel and shadow-only candidate contract; no actuator, PI integration, measured stopping or production approval"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "planner-shadow",
++      "name": "Stateful supervisor and metric shadow executor",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/planning/test_planner_shadow.c",
++              "demo/code/vision_planner.c",
++              "tools/speed_planning/speed_planner.c",
++              "demo/code/vision_planner_shadow.c"
++            ],
++            "includeDirectories": [
++              "demo/code",
++              "tools/speed_planning"
++            ],
++            "defines": []
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 120,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Synthetic snapshots, shared supervisor/planner, capture-aligned preview advancement and serialized trajectory state; no hardware, PI or production calibration claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "planner-shadow-replay",
++      "name": "Verified visual metadata through target shadow executor",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/planning/test_shadow_visual_replay.py"
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 120,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Hybrid measured visual metadata and explicitly synthetic metric/zero-motion input; no physical stopping, PI or runtime scheduling claim"
+     }
+   ]
+ }
+diff --git a/demo/mdk/competition/MPC_20261106.uvprojx b/demo/mdk/competition/MPC_20261106.uvprojx
+--- a/demo/mdk/competition/MPC_20261106.uvprojx
++++ b/demo/mdk/competition/MPC_20261106.uvprojx
+@@ -2340,6 +2340,16 @@
+           <GroupName>Phase3 planner shadow interface</GroupName>
+           <Files>
+             <File>
++              <FileName>vision_planner_shadow.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\code\vision_planner_shadow.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_planner_shadow.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_planner_shadow.h</FilePath>
++            </File>
++            <File>
+               <FileName>vision_planner.c</FileName>
+               <FileType>1</FileType>
+               <FilePath>..\..\code\vision_planner.c</FilePath>

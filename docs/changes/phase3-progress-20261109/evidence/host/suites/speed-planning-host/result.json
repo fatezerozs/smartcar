@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0",
+  "id": "speed-planning-host",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 3.14176,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:21.698+00:00",
+  "finishedAt": "2026-11-09T10:09:24.840+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_offline.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\speed-planning-host\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 3.139426,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\speed-planning-host",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/work/planning/composed/pipeline-queue-0.5.csv",
+    "artifacts/work/planning/composed/pipeline-queue-1.0.csv",
+    "artifacts/work/planning/composed/pipeline-queue-2.0.csv",
+    "artifacts/work/planning/composed/pipeline-replay-0.5.csv",
+    "artifacts/work/planning/composed/pipeline-replay-1.0.csv",
+    "artifacts/work/planning/composed/pipeline-replay-2.0.csv",
+    "artifacts/work/planning/composed/pipeline.exe",
+    "artifacts/work/planning/composed/reference_config.h",
+    "artifacts/work/planning/composed/replay-report.json",
+    "artifacts/work/planning/data-input-audit.json",
+    "artifacts/work/planning/normal-performance.json",
+    "artifacts/work/planning/planning-replay.csv",
+    "artifacts/work/planning/planning.exe",
+    "artifacts/work/planning/vehicle-model.json"
+  ],
+  "details": {
+    "scope": "Synthetic SI model and strict offline sidecar tests only; no MCU integration or calibration claim",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

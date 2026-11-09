@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "smartcar.metric-odometry-replay/1",
+  "hardwareAccessed": false,
+  "productionApproved": false,
+  "leftTicksPerM": 11394.0,
+  "rightTicksPerM": 11389.0,
+  "experiments": [
+    {
+      "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\lower01\\trace.json",
+      "sourceSha256": "568f3770a93e5cf4064ee98673e638d2f24a007c2db5f8ba36f0a8f628ea0fa3",
+      "rows": 472,
+      "rawTraceCrcVerified": true,
+      "allRowsMatchIndependentOracle": true,
+      "totalWheelPathM": 0.380239950034472,
+      "csvSha256": "281c2ba664b756d9a07a3c4257f7414d02034ea5a8f9b837f66ae3de795ff1b5"
+    },
+    {
+      "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\video02\\trace.json",
+      "sourceSha256": "63ef63697031671b96cd8ad138d1e0be0ea219201eedd12e3dc87aec055bc1e1",
+      "rows": 522,
+      "rawTraceCrcVerified": true,
+      "allRowsMatchIndependentOracle": true,
+      "totalWheelPathM": 0.6079532025680696,
+      "csvSha256": "9dd844e1822af8b38f954004a96f85d4bdfa3a7c3072cb04543fe21b35243fb5"
+    },
+    {
+      "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\video03\\trace.json",
+      "sourceSha256": "235a48a0cc53f75327159b4c717c35fd7729ece7b64fb1aa57e40cde4a58bfd5",
+      "rows": 522,
+      "rawTraceCrcVerified": true,
+      "allRowsMatchIndependentOracle": true,
+      "totalWheelPathM": 0.895010163889589,
+      "csvSha256": "65b7d7942fc63af8f013799dde75bc432540e6ac92dc117b32d671c64b011a9c"
+    }
+  ],
+  "compilerFamily": "gcc",
+  "compilerMode": "optimized",
+  "compileCommand": [
+    "C:/Program Files/mingw64/bin/gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\metric_odom_runner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-metric-20261109\\counter-replay-verified\\metric-odom.exe"
+  ],
+  "sourcesSha256": {
+    "tools/speed_planning/metric_odom_runner.c": "392b2f67c125453487d728fcb65c5f4a1981160ecc522835f693bd9e70ae49d5",
+    "demo/code/vision_metric_io.c": "3fdf366ce554d8fd9f516f8b56645b6389ef0bb517bc18229cb46125b50d8675",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "tools/speed_planning/speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448",
+    "tools/speed_planning/replay_metric_odom.py": "4ea55dcc604e9b3cb13315506efcb7c321f61e5732100529c50aa4d5bfd93a20",
+    "demo/code/vision_metric_io.h": "b8705ae09fe5ccd0c3abba7e4425743f6e672aa96562d3ace0a7cd770f0bd4e8"
+  },
+  "limits": [
+    "Wheel path magnitude; not independent ground displacement or slip measurement.",
+    "Candidate scales are explicit inputs, not approved calibration.",
+    "Capture midpoint queries are synthetic interpolation tests, not measured camera timestamps.",
+    "No new PI, PWM, motion command, physical stopping or target timing evidence."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "time": "2026-11-09T11:01:23.668632+08:00",
+  "version": "PHASE3_C26_SHADOW_20261109_2",
+  "profile": "C26-SHADOW-FA161BDE",
+  "operatorDownloaderReadyConfirmed": true,
+  "operatorSwitchOffAndPowerIsolatedConfirmed": true,
+  "motionCommandSent": false,
+  "command": [
+    "E:/ElecTronic/Keil/UV4/UV4.exe",
+    "-f",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-boardbench-20261109\\delivery\\workspace\\demo\\mdk\\competition\\MPC_Phase3_Shadow_Download.uvprojx",
+    "-t",
+    "nor_sdram_zf_dtcm",
+    "-j0",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-boardbench-20261109\\flash-ready-20261109T030116Z\\flash.log"
+  ],
+  "exitCode": 0,
+  "programmingDone": true,
+  "verifyOk": true,
+  "flashLog": "Load \"C:\\\\shengchanli\\\\smartCar\\\\smartcar\\\\.build\\\\phase3-boardbench-20261109\\\\delivery\\\\Objects\\\\rt1064.axf\" \nErase Done.Programming Done.Verify OK.Flash Load finished at 11:01:23\n"
+}

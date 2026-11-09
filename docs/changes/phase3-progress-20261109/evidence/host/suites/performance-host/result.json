@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "id": "performance-host",
+  "status": "SKIPPED",
+  "evidenceClass": "pq_host",
+  "layer": "performance",
+  "category": "performance-quality",
+  "required": false,
+  "reason": "Dataset, versioned ground truth, measurement adapter and approved baseline await later integration; other suites remain independent.",
+  "durationSeconds": 0.525042,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:14.525+00:00",
+  "finishedAt": "2026-11-09T10:09:15.050+00:00",
+  "processes": [],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\performance-host",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "benchmark",
+    "effectiveResources": [],
+    "lastRawExitCode": null
+  }
+}

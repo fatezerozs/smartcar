@@ -1,0 +1,22 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_ROUTE_SWITCH=1 C:\shengchanli\smartCar\smartcar\tests\vision\test_roundabout_projection.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T035200-dbec095d66\suites\roundabout-projection\artifacts\default\roundabout-projection.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T035200-dbec095d66\suites\roundabout-projection\artifacts\default\roundabout-projection.exe
+TANGENT POSE mirror=0 pose=0 entered=1 guides=16
+TANGENT POSE mirror=0 pose=1 entered=1 guides=92
+TANGENT POSE mirror=0 pose=2 entered=1 guides=132
+TANGENT POSE mirror=0 pose=3 entered=1 guides=100
+TANGENT POSE mirror=0 pose=4 entered=1 guides=132
+TANGENT POSE mirror=0 pose=5 entered=1 guides=92
+TANGENT POSE mirror=0 pose=6 entered=1 guides=108
+TANGENT POSE mirror=0 pose=7 entered=1 guides=88
+TANGENT POSE mirror=0 pose=8 entered=1 guides=40
+TANGENT POSE mirror=1 pose=0 entered=1 guides=16
+TANGENT POSE mirror=1 pose=1 entered=1 guides=92
+TANGENT POSE mirror=1 pose=2 entered=1 guides=132
+TANGENT POSE mirror=1 pose=3 entered=1 guides=100
+TANGENT POSE mirror=1 pose=4 entered=1 guides=132
+TANGENT POSE mirror=1 pose=5 entered=1 guides=88
+TANGENT POSE mirror=1 pose=6 entered=1 guides=112
+TANGENT POSE mirror=1 pose=7 entered=1 guides=88
+TANGENT POSE mirror=1 pose=8 entered=1 guides=28
+MAP ENTRY: 40 perspective/mirror + 18 approach poses; 801869 checks, 0 failures, 12 original current-road fallbacks, 4766 original guided frames; no orbit claim
+[PASS] Completed within declared software evidence scope

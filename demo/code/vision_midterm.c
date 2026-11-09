@@ -67,15 +67,15 @@ const char *vision_midterm_status_name(vision_status_t status)
     }
 }
 
-static uint8_t otsu(const uint32_t *hist, uint32_t count)
+static uint8_t otsu_from(const uint32_t *hist, uint32_t count, unsigned start)
 {
     /* 沿用原例程大津法思路，跳过空类别，避免全黑/全白时除零。 */
     uint32_t total_sum = 0, back_count = 0, back_sum = 0;
     double best = -1.0;
     int first = 0, last = 0, current_is_best = 0;
     int t;
-    for (t = 0; t < 256; ++t) total_sum += hist[t] * (uint32_t)t;
-    for (t = 0; t < 255; ++t) {
+    for (t = (int)start; t < 256; ++t) total_sum += hist[t] * (uint32_t)t;
+    for (t = (int)start; t < 255; ++t) {
         double numerator, score;
         back_count += hist[t];
         back_sum += hist[t] * (uint32_t)t;
@@ -95,6 +95,79 @@ static uint8_t otsu(const uint32_t *hist, uint32_t count)
     /* Midpoint of an equally good threshold plateau avoids choosing the dark
      * class value itself on an almost binary image. No smoothing across scenes. */
     return (uint8_t)((first + last) / 2);
+}
+
+static uint8_t otsu(const uint32_t *hist,uint32_t count)
+{return otsu_from(hist,count,0);}
+
+/* Row counts are bounded by 188. Compare exact rational between-class
+ * scores with uint64_t cross-products (<5e16), avoiding software double
+ * divisions on the MCU. The full-image Otsu above keeps its larger bounds. */
+static uint8_t row_otsu_from(const uint32_t *prefix,unsigned start)
+{
+    uint32_t base=start?prefix[start-1]:0,packed=prefix[255]-base;
+    uint32_t count=packed&255U,total=packed>>8,best_den=1,previous_count=0;uint64_t best_num=0;
+    unsigned first=0,last=0;int have=0,current=0;
+    for(unsigned t=start;t<255;++t){
+        packed=prefix[t]-base;uint32_t n=packed&255U,sum=packed>>8;
+        if(!n||n==count)continue;
+        if(n==previous_count){if(current)last=t;continue;}
+        previous_count=n;
+        uint32_t delta=total*n-sum*count,den=n*(count-n);
+        uint64_t numerator=(uint64_t)delta*delta;
+        uint64_t candidate=numerator*best_den,previous=best_num*den;
+        if(!have||candidate>previous){best_num=numerator;best_den=den;first=last=t;have=1;current=1;}
+        else if(candidate==previous){last=t;current=1;}else current=0;
+    }
+    return (uint8_t)((first+last)/2);
+}
+
+/* A dark object can make row Otsu separate dark/background from BOTH bright
+ * floor and white road. Refine the bright class using the SAME histogram.
+ * Two-class rows and weak/noisy subclusters retain the original threshold.
+ * The current axis-connected run's midpoint must survive: splitting its
+ * shadowed half into "floor" is not a supported refinement. This checks only
+ * current gray pixels; it does not infer edges, change coverage or use history. */
+static uint8_t refine_road_otsu(const uint32_t *prefix,const uint8_t *row,uint8_t first)
+{
+    uint8_t second;
+    uint32_t base=prefix[first],total=prefix[255]-base;
+    uint32_t n=total&255U,a,b,sa,sb;unsigned low=(unsigned)first+1,high=255;
+    if(n<2U*VISION_MIN_WIDTH)return first;
+    while(low<256&&(prefix[low]&255U)==(base&255U))++low;
+    while(high>low&&(prefix[high]&255U)==(prefix[high-1]&255U))--high;
+    if(high-low<VISION_MIN_CONTRAST)return first;
+    second=row_otsu_from(prefix,(unsigned)first+1);
+    uint32_t middle=prefix[second]-base,white=prefix[255]-prefix[second];
+    a=middle&255U;sa=middle>>8;b=white&255U;sb=white>>8;
+    if(a<VISION_MIN_WIDTH||b<VISION_MIN_WIDTH)return first;
+    /* All cross-products are < 4*255*188^2: 32-bit integer comparisons.
+     * Refine only distinct, adjacent bright classes (middle mean >=3/4 of
+     * the white mean), not a large illumination step across the road. */
+    if(sb*a-sa*b<VISION_MIN_CONTRAST*a*b||sa*4U*b<sb*3U*a)return first;
+    int l=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),r=l;
+    if(row[l]<=first)return first;
+    while(l>0&&row[l-1]>first)--l;
+    while(r+1<VISION_WIDTH&&row[r+1]>first)++r;
+    if(row[(l+r)/2]<=second)return first;
+    return second;
+}
+
+static uint8_t road_otsu(uint32_t *hist,const uint8_t *row)
+{
+    /* A row has only 188 pixels: pack cumulative count (8 bits) and gray sum
+     * (16 bits) into the existing histogram. All class statistics are then
+     * constant-time lookups, with no extra buffer or repeated sum scans. */
+    uint32_t count=0,sum=0;
+    for(unsigned t=0;t<256;++t){count+=hist[t];sum+=hist[t]*t;hist[t]=(sum<<8)|count;}
+    uint8_t threshold=row_otsu_from(hist,0);
+    /* Bounded at two refinements: a floor gradient can occupy two bright
+     * populations. Stop immediately when there is no supported refinement. */
+    for(unsigned pass=0;pass<2;++pass){
+        uint8_t next=refine_road_otsu(hist,row,threshold);
+        if(next==threshold)break;threshold=next;
+    }
+    return threshold;
 }
 
 static void gray_range(const uint32_t *hist, uint32_t count, uint8_t *low, uint8_t *high)
@@ -152,14 +225,9 @@ void vision_midterm_process(const uint8_t *gray, uint8_t *binary, vision_result_
             for (x = 0; x < VISION_WIDTH; ++x) ++hist[gray[y * VISION_WIDTH + x]];
             gray_range(hist, VISION_WIDTH, &low, &high);
             if (high - low >= VISION_MIN_CONTRAST) {
-                /* 当前行自己估计明暗两类，而不是把整图阈值按极值拉伸。
-                 * 场地中亮灰地板和白赛道旁可能有少量很暗的物体，极值
-                 * 拉伸会被暗物体拉低，将亮灰地板并进赛道、吞掉真实边界。
-                 * Otsu 利用行内各灰度的实际占比，不预设地板亮度、边界
-                 * 像素位置或赛道宽度。全图与行内对比度仍须通过检查；
-                 * 后续双边实测、连续性及覆盖门槛保持不变。
-                 * hist 已由该行建立，复用它，不新增逐像素邻域遍历。 */
-                threshold = otsu(hist, VISION_WIDTH);
+                /* Reuse this row histogram; bright-class refinement has no
+                 * extra image-sized buffer or neighboring-pixel filtering. */
+                threshold = road_otsu(hist,gray_row);
                 if (threshold != out->threshold) ++out->adaptive_rows;
             }
         }

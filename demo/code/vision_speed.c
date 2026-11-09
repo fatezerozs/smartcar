@@ -16,8 +16,8 @@ const char *vision_drive_speed_fault_name(unsigned detail)
     return detail<sizeof(names)/sizeof(names[0])?names[detail]:"unknown";
 }
 #if VISION_ENCODER_ENABLE
-/* Foreground control service runs PI under an IRQ mask. The 10ms ISR samples
- * modular counters and may cut output; it never starts motors or parses UART. */
+/* The C26/C31 foreground owns PI preparation. PIT only samples/revokes;
+ * version-checked publication is the only way speculative PI becomes live. */
 static ws_pi_t pi[2];
 static uint16_t previous[2];
 static uint32_t consumed,last_control;
@@ -26,6 +26,11 @@ static volatile uint8_t active,reset_pending;
 static unsigned backwards[2],stalled[2];
 static uint16_t request_right,request_left,request_cap;
 static int request_reverse;
+static volatile uint32_t request_generation;
+#if VISION_PLANNER_ACTIVE
+static uint8_t metric_source;
+static uint16_t metric_ff_right,metric_ff_left;
+#endif
 #if VISION_ROUTE_SWITCH
 static unsigned slow_backwards[2];
 #endif
@@ -55,14 +60,21 @@ void vd_speed_init(uint32_t now)
 #if VISION_ENCODER_ENABLE
     board_encoder_read(&previous[0],&previous[1]);
     consumed=last_control=sample_interval=0;active=0;reset_pending=1;
+    request_generation=0;
+#if VISION_PLANNER_ACTIVE
+    metric_source=0;metric_ff_right=metric_ff_left=0;
+#endif
 #endif
 }
 void vd_speed_stop(void)
 {
 #if VISION_ENCODER_ENABLE
+    uint32_t mask=__get_PRIMASK();__disable_irq();
+    ++request_generation;
     active=0;reset_pending=1;request_right=request_left=request_cap=0;
     ws_pi_reset(&pi[0]);ws_pi_reset(&pi[1]); /* Integer-only, including from PIT1 STOP. */
     speed.target_right=speed.target_left=0;speed.pwm_right=speed.pwm_left=0;
+    __DMB();__set_PRIMASK(mask);
 #endif
 }
 void vd_speed_sample_tick(uint32_t now)
@@ -131,8 +143,15 @@ typedef struct {
     uint32_t consumed,last_control,sample_interval;
     uint8_t active,reset_pending;
     unsigned backwards[2],stalled[2];
+#if VISION_PLANNER_ACTIVE
+    uint8_t metric;
+    uint16_t ff_right,ff_left;
+#endif
 #if VISION_ROUTE_SWITCH
     unsigned slow_backwards[2];
+    uint8_t track,speed_boost,straight_tracking;
+    uint32_t straight_since_ms;
+    float steering,recovery_steer,lateral,paired_support,edge_support;
 #endif
 } speed_work_t;
 static void work_trip(speed_work_t *w,unsigned detail,uint32_t now)
@@ -148,19 +167,23 @@ static void work_trip(speed_work_t *w,unsigned detail,uint32_t now)
     }
     w->speed.faults|=VC_FAULT_ENCODER;
 }
-static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
+static int speed_control_output(speed_work_t *w,uint32_t now,uint16_t right,uint16_t left,int reverse,uint16_t cap,uint16_t *out_right,uint16_t *out_left)
 {
     *out_right=right;*out_left=left;
 #if VISION_ENCODER_ENABLE
     if(w->speed.enabled) {
-        uint32_t now=timer_get(GPT_TIM_1),seq=w->speed.samples,periods=seq-w->consumed;
+        uint32_t seq=w->speed.samples,periods=seq-w->consumed;
         uint16_t pwm_cap=cap;
 #if VISION_ROUTE_SWITCH
-        if(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active)
+        if(w->track)
             pwm_cap=MT_ROUTE_PWM_FULL_SCALE;
 #endif
         *out_right=*out_left=0;
-        if(vd.guard_faults||!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
+#if VISION_PLANNER_ACTIVE
+        if(w->metric){if(!cap||cap>1000U){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}}
+        else
+#endif
+        if(!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
         if((uint32_t)(now-w->speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){work_trip(w,VS_FAULT_STALE,now);return 0;}
         if(w->reset_pending){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);memset(w->backwards,0,sizeof(w->backwards));
             memset(w->stalled,0,sizeof(w->stalled));
@@ -177,12 +200,14 @@ static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int
         if(periods) {
             unsigned target_ticks=w->speed.max_ticks;
 #if VISION_ROUTE_SWITCH
-            int track=vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active;
+            int track=w->track;
             if(track)target_ticks=vt_route_ticks(target_ticks,
-                vd.control.output.steering,vd.control.recovery_steer,vd.control.output.lateral,
-                vd.control.output.paired_support,vd.control.output.edge_support);
+                w->steering,w->recovery_steer,w->lateral,w->paired_support,w->edge_support);
 #endif
             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
+#if VISION_PLANNER_ACTIVE
+            if(w->metric){targets[0]=right;targets[1]=left;}
+#endif
             int32_t measured[2]={(int32_t)w->speed.raw4*w->speed.sign4,(int32_t)w->speed.raw3*w->speed.sign3};
             /* No queue: the latest count cannot stand in for missed measurements. */
             if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){work_trip(w,VS_FAULT_BACKLOG,now);return 0;}
@@ -191,8 +216,8 @@ static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int
 #if VISION_ROUTE_SWITCH
             if(track){
                 unsigned rise=1;
-                if(vd.control.output.speed_boost==1&&vd.control.straight_tracking&&
-                   (uint32_t)(now-vd.control.straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
+                if(w->speed_boost==1&&w->straight_tracking&&
+                   (uint32_t)(now-w->straight_since_ms)>=MT_ROUTE_STRAIGHT_CONFIRM_MS)
                     rise=MT_ROUTE_STRAIGHT_TARGET_RISE;
                 vt_ramp_targets(targets,w->speed.target_right,w->speed.target_left,periods*rise);
             }
@@ -229,6 +254,9 @@ static int speed_control_output(speed_work_t *w,uint16_t right,uint16_t left,int
 #if VISION_ROUTE_SWITCH
                 {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:w->speed.max_ticks));
                  uint16_t effort=track?vp_effort_limit(w->pi[i].output,periods):pwm_cap;
+#if VISION_PLANNER_ACTIVE
+                 if(w->metric)ff=i?w->ff_left:w->ff_right;
+#endif
                  ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,effort,w->sample_interval,ff);}
 #else
                 ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,pwm_cap,w->sample_interval,0);
@@ -258,6 +286,9 @@ static int speed_publish(uint16_t right,uint16_t left,int reverse,uint16_t cap,
                     uint16_t *out_right,uint16_t *out_left)
 {
     *out_right=right;*out_left=left;
+#if VISION_PLANNER_ACTIVE
+    if(metric_source){*out_right=*out_left=0;return 0;}
+#endif
 #if VISION_ENCODER_ENABLE
     if(speed.enabled) {
         uint32_t now=timer_get(GPT_TIM_1);
@@ -267,6 +298,8 @@ static int speed_publish(uint16_t right,uint16_t left,int reverse,uint16_t cap,
             trip(VS_FAULT_OUTPUT,now);return 0;
         }
         if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){trip(VS_FAULT_STALE,now);return 0;}
+        if(request_right!=right || request_left!=left || request_reverse!=reverse || request_cap!=cap)
+            ++request_generation;
         request_right=right;request_left=left;request_reverse=reverse;request_cap=cap;
         /* Zero targets take effect immediately, without waiting for service. */
         if(!right&&!left) {
@@ -289,26 +322,40 @@ int vd_speed_output(uint16_t right,uint16_t left,int reverse,uint16_t cap,
 void vd_speed_control_poll(uint32_t now)
 {
 #if VISION_ENCODER_ENABLE
-    uint32_t mask=__get_PRIMASK(),epoch,seq;uint16_t right,left,cap,req_r,req_l;
+    uint32_t mask=__get_PRIMASK(),epoch,seq,generation;uint16_t right,left,cap,req_r,req_l;
     int reverse;speed_work_t w;
     __disable_irq();
     if(!speed.enabled || !request_cap || speed.faults || vd.guard_faults){__set_PRIMASK(mask);return;}
     if((uint32_t)(now-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
         trip(VS_FAULT_STALE,now);__set_PRIMASK(mask);return;
     }
-    epoch=vd.output_epoch;seq=speed.samples;
+    epoch=vd.output_epoch;seq=speed.samples;generation=request_generation;
+    now=timer_get(GPT_TIM_1);
     w.speed=speed;memcpy(w.pi,pi,sizeof(pi));w.consumed=consumed;w.last_control=last_control;
     w.sample_interval=sample_interval;w.active=active;w.reset_pending=reset_pending;
     memcpy(w.backwards,backwards,sizeof(backwards));memcpy(w.stalled,stalled,sizeof(stalled));
 #if VISION_ROUTE_SWITCH
     memcpy(w.slow_backwards,slow_backwards,sizeof(slow_backwards));
+    w.track=(uint8_t)(vd.control.output.state==VC_RUNNING&&!vd.motion.phase&&!vd.probe_active);
+    w.speed_boost=vd.control.output.speed_boost;w.straight_tracking=vd.control.straight_tracking;
+    w.straight_since_ms=vd.control.straight_since_ms;
+    w.steering=vd.control.output.steering;w.recovery_steer=vd.control.recovery_steer;
+    w.lateral=vd.control.output.lateral;w.paired_support=vd.control.output.paired_support;
+    w.edge_support=vd.control.output.edge_support;
+#endif
+#if VISION_PLANNER_ACTIVE
+    w.metric=metric_source;w.ff_right=metric_ff_right;w.ff_left=metric_ff_left;
+    if(w.metric)w.track=0; /* Metric shaper/geometry already owns target shaping. */
 #endif
     req_r=request_right;req_l=request_left;cap=request_cap;reverse=request_reverse;
-#if VISION_MIDTERM_C31_AUTONOMOUS
+#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
     __set_PRIMASK(mask);
 #endif
-    (void)speed_control_output(&w,req_r,req_l,reverse,cap,&right,&left);
-#if VISION_MIDTERM_C31_AUTONOMOUS
+#ifdef VISION_HOST_OUTPUT_HOOK
+    {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(3);}
+#endif
+    (void)speed_control_output(&w,now,req_r,req_l,reverse,cap,&right,&left);
+#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
 #ifdef VISION_HOST_OUTPUT_HOOK
     {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(2);}
 #endif
@@ -316,8 +363,14 @@ void vd_speed_control_poll(uint32_t now)
 #endif
     /* A stop/reset or a newer sample invalidates all speculative PI state.
      * Never overwrite an ISR's newer counts or resurrect its cleared PI. */
-    if(epoch==vd.output_epoch && seq==speed.samples && cap==request_cap &&
-       req_r==request_right && req_l==request_left && !vd.guard_faults) {
+    if(epoch==vd.output_epoch && seq==speed.samples && generation==request_generation &&
+       cap==request_cap && reverse==request_reverse && req_r==request_right && req_l==request_left &&
+       !vd.guard_faults && !vd.mode_stop_pending && !app_mode_change_pending()) {
+        /* Preparation can itself take long enough to expire the sample. Do
+         * not refresh last_control or publish a stale cache on that path. */
+        if((uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS) {
+            trip(VS_FAULT_STALE,timer_get(GPT_TIM_1));__set_PRIMASK(mask);return;
+        }
         speed=w.speed;memcpy(pi,w.pi,sizeof(pi));consumed=w.consumed;last_control=w.last_control;
         active=w.active;reset_pending=w.reset_pending;
         memcpy(backwards,w.backwards,sizeof(backwards));memcpy(stalled,w.stalled,sizeof(stalled));
@@ -329,5 +382,71 @@ void vd_speed_control_poll(uint32_t now)
     __DMB();__set_PRIMASK(mask);
 #else
     (void)now;
+#endif
+}
+unsigned vd_speed_source(void)
+{
+#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
+    return metric_source?VD_SPEED_METRIC:VD_SPEED_LEGACY;
+#else
+    return VD_SPEED_LEGACY;
+#endif
+}
+int vd_speed_select_source(unsigned source)
+{
+#if VISION_ENCODER_ENABLE
+    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
+    if(source<=VD_SPEED_METRIC&&stopped()&&!vd.output_authorized){
+        if(source==VD_SPEED_LEGACY
+#if VISION_PLANNER_ACTIVE
+           ||source==VD_SPEED_METRIC
+#endif
+           ){
+            vd_speed_stop();
+#if VISION_PLANNER_ACTIVE
+            metric_source=(uint8_t)(source==VD_SPEED_METRIC);
+#endif
+            ok=1;
+        }
+    }
+    __DMB();__set_PRIMASK(mask);return ok;
+#else
+    return source==VD_SPEED_LEGACY;
+#endif
+}
+int vd_speed_metric_request(uint16_t right,uint16_t left,uint16_t cap,uint16_t ff_right,uint16_t ff_left,
+                              uint32_t epoch,uint32_t seq,uint32_t *version)
+{
+#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
+    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
+    if(version&&metric_source&&speed.enabled&&!speed.faults&&!vd.guard_faults&&
+       epoch==vd.output_epoch&&vd.output_authorized&&vd.control.output.state==VC_RUNNING&&
+       !vd.mode_stop_pending&&!app_mode_change_pending()&&seq==speed.samples&&
+       (uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)<VD_SPEED_SAMPLE_MAX_AGE_MS&&
+       cap&&cap<=1000&&right<=speed.max_ticks&&left<=speed.max_ticks){
+        if(request_right!=right||request_left!=left||request_cap!=cap||
+           metric_ff_right!=ff_right||metric_ff_left!=ff_left)++request_generation;
+        request_right=right;request_left=left;request_cap=cap;request_reverse=0;
+        metric_ff_right=ff_right;metric_ff_left=ff_left;
+        if(!right&&!left)vd_speed_stop();
+        *version=request_generation;ok=1;
+    }
+    __DMB();__set_PRIMASK(mask);return ok;
+#else
+    (void)right;(void)left;(void)cap;(void)ff_right;(void)ff_left;(void)epoch;(void)seq;(void)version;return 0;
+#endif
+}
+int vd_speed_metric_cached(uint32_t version,uint32_t seq,uint16_t *right,uint16_t *left)
+{
+    if(!right||!left)return 0;*right=*left=0;
+#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
+    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
+    if(metric_source&&version==request_generation&&seq==speed.samples&&!speed.faults&&!vd.guard_faults&&
+       (uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)<VD_SPEED_SAMPLE_MAX_AGE_MS){
+        *right=speed.pwm_right;*left=speed.pwm_left;ok=1;
+    }
+    __set_PRIMASK(mask);return ok;
+#else
+    (void)version;(void)seq;return 0;
 #endif
 }

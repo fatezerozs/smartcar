@@ -1,5 +1,7 @@
 # Phase 3 首批安全边界改动：不依赖物理标定的子集
 
+**2026-11-09进度更新：** [Phase3最新进度](../phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。
+
 2026-11-07入口说明：本页正文与JSON保留Phase 3当时的工作区身份及46 PASS/3 FAIL/1 SKIPPED，不是当前main结果。后续测试/源码锁失配及MSVC告警已修正，main `00bb7a4`的optimized/ASan各49 PASS / 1 SKIPPED，见[主线同步记录](../2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。该更新不把规划器接入、标定或Phase 3整体状态改为已完成。
 
 日期：2026-11-06，Asia/Shanghai。用户询问是否可以在Phase 2未完成时推进独立内容，本轮据此完成以下软件子集。**Phase 2与Phase 3并行推进；不是Phase 2已通过，也不是Phase 3全部完成。**

@@ -137,6 +137,33 @@ int main(void)
           "bright gray floor and remote dark object must not erase a real white lane");
     check(result.row_flags[90]==3 && result.left[90]>20 && result.right[90]<170,
           "local illumination uses the track boundary, not the remote dark object");
+    /* Reproduces the three gray populations in the native frame regression:
+     * dark object, a bright floor gradient and the white corridor. Check the
+     * actual known edges; valid/coverage alone can pass a merged floor. */
+    vision_midterm_reset();
+    for(y=0;y<VISION_HEIGHT;++y)for(x=0;x<VISION_WIDTH;++x){
+        int width=40+y*3/4,left=94-width/2,right=94+width/2;
+        int floor=180+x/3;
+        gray[y*VISION_WIDTH+x]=(uint8_t)(x>=left&&x<=right?255:(x<20?30:floor));
+    }
+    run();summary("three-class floor");
+    check(result.valid,"three-class floor retains visible corridor");
+    for(y=50;y<=100;y+=10){
+        int width=40+y*3/4;
+        check(result.row_flags[y]==3&&absf((float)result.left[y]-(94-width/2))<=2&&
+              absf((float)result.right[y]-(94+width/2))<=2,
+              "bright floor refinement preserves physical fixture edges");
+    }
+    /* A split shadow must retain BOTH halves, including mild illumination
+     * differences that also form three histogram populations. */
+    /* 40--55% already fail in the original algorithm; this guardrail covers
+     * its established 60--95% range, not a new all-shadow correctness claim. */
+    for(int shade=60;shade<=95;shade+=5){
+        vision_midterm_reset();road(0,0,0);
+        for(y=0;y<VISION_HEIGHT;++y)for(x=VISION_WIDTH/2;x<VISION_WIDTH;++x)
+            gray[y*VISION_WIDTH+x]=(uint8_t)(gray[y*VISION_WIDTH+x]*shade/100);
+        run();check(result.valid&&absf(result.error_px)<3,"split-shadow sweep keeps complete road");
+    }
     /* White floor both inside and outside two thin black boundary lines. */
     vision_midterm_reset();
     memset(gray, 210, sizeof(gray));

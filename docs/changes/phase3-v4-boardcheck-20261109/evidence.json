@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "smartcar.phase3-v4-boardcheck/1",
+  "layers": [
+    "structured_parsed",
+    "computed"
+  ],
+  "version": "PHASE3_C26_SHADOW_20261109_4",
+  "profileId": "C26-SHADOW-8CA1CE06",
+  "operatorReportedFlashed": true,
+  "runtimeIdentityVerified": true,
+  "flashLogVerifiedByAgent": false,
+  "stoppedBenchPasses": 3,
+  "stoppedVisionObservedMs": [
+    3,
+    4
+  ],
+  "processingTelemetrySamples": 6,
+  "fpsReported": 50,
+  "staticImages": 6,
+  "observedFrames": 304,
+  "nearAccepted": 0,
+  "fullAccepted": 0,
+  "nativeFullResolutionCaptured": false,
+  "onSessionAttempted": false,
+  "motionCommandSent": false,
+  "metricActive": false,
+  "productionApproved": false,
+  "filesSha256": {
+    "evidence/candidate.json": "6e088bf5c5d7047e3097ecae94ac348f26bdc4891762e074fd3d2904868c5f84",
+    "evidence/identity/report.json": "007283c0281330c6520bee1df75a40a297221a7c881259f8334c9eb2ca565330",
+    "evidence/identity/serial-raw.jsonl": "7bcf7f8092c3762a8a816089e5a3ed6122b0eee5f50bb3df525a612f7c2feafa",
+    "evidence/preview-model/report.json": "4fc986f8512f2a287f628d14ad294bac8d7898e9455d77e38529c5a1fe3d3765",
+    "evidence/preview-model/rows.csv": "b702333bc80ff6635421afdb6275c6732528698591740354c38477989fc19789",
+    "evidence/static/analysis.json": "3db50901f17d1e22fe3489b7b222e1ac1c055fd86aa456566991fd01cabb908d",
+    "evidence/static/b-0.gray": "b5d8813199262fa3a3123002fa53149ad6afa7952514d5255cd06c4cfe6fffde",
+    "evidence/static/b-0.gray.png": "38410eeb1a68ebbd4c80121ea9d9918f542c4b9fed252d5e6324395fb8e8e6f0",
+    "evidence/static/b-1.gray": "3a64065619049d8e470e94be092d71386e9ea48b105f3b983667e58824f05440",
+    "evidence/static/b-1.gray.png": "a32b96905540f14b4c98c7f32c26c6e44c8b898a9f4950d8b0dd14c635423141",
+    "evidence/static/g-0.gray": "b5df31c0a149767310ce89f4184d314f547f9fe76b4d42056123d23609896d83",
+    "evidence/static/g-0.gray.png": "ed92a667c4c4100ce86bef407ac68452033a10ee93b60bc4d384cc536a05044c",
+    "evidence/static/g-1.gray": "a773420dbec460c921c50ca88df9792cfa986dd7ec30d17537a5dc3b0500921c",
+    "evidence/static/g-1.gray.png": "20f19c7ca912f5072c4aaf5ca85a3007e44c6fe8a245af626b628da97443d58e",
+    "evidence/static/o-0.gray": "103342286979f399cc6cb40f8e1b722b8ca05c31324b5c7258a8c5d1af1f3dd9",
+    "evidence/static/o-0.gray.png": "028057647120e9c2dddf40d46d05da2274217580a0b1c45d27169e5d159cdf85",
+    "evidence/static/o-1.gray": "532a7f97d3853f7d6bbfd191fe1c5c40d9dce314b6040762cbed7e9c3acacc79",
+    "evidence/static/o-1.gray.png": "b3a1c54dcb976b8da49492387bb72176767e607568af1203e0646d097539064b",
+    "evidence/static/report.json": "0cfde2f0187739a05db0f505b9dd5924c2e19cca2dd5348b3b864f38eb9d4869",
+    "evidence/static/serial-raw.jsonl": "e2b18ef3f285bc012d36bf638fa93d45c50ee7a5185c95de9a3455236c51bf2e"
+  }
+}

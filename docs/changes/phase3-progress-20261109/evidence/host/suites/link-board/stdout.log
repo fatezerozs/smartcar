@@ -1,0 +1,4 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs\link_board -IC:\shengchanli\smartCar\smartcar\demo\code C:\shengchanli\smartCar\smartcar\tests\vision\test_link_board.c C:\shengchanli\smartCar\smartcar\demo\code\app_link.c C:\shengchanli\smartCar\smartcar\demo\code\app_link_board.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\link-board\artifacts\default\link-board.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\link-board\artifacts\default\link-board.exe
+UART IRQ ADAPTER PASS: 32-word budget, per-byte frame/parity/noise rejection, clean STOP preserved, error counters, empty FIFO, TX-ready and RTS gates.
+[PASS] Completed within declared software evidence scope

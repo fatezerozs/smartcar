@@ -1,0 +1,14 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_ENCODER_ENABLE=1 -DVISION_MIDTERM_TRAINING=1 -DVISION_MIDTERM_AUTONOMOUS=0 -DVISION_MIDTERM_ROUTE_TRIAL=1 -DVISION_ROUTE_SWITCH=1 C:\shengchanli\smartCar\smartcar\tests\vision\test_tangent_preview.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c C:\shengchanli\smartCar\smartcar\demo\code\vision_control.c C:\shengchanli\smartCar\smartcar\demo\code\midterm_open_loop.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\tangent-preview\artifacts\default\tangent-preview.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\tangent-preview\artifacts\default\tangent-preview.exe
+FIELD STATIC frame=40 mirror=0 state=1 side=-1 guide=68 steer=-0.670
+FIELD STATIC frame=40 mirror=1 state=1 side=1 guide=66 steer=0.694
+FIELD STATIC frame=41 mirror=0 state=1 side=-1 guide=66 steer=-0.938
+FIELD STATIC frame=41 mirror=1 state=1 side=1 guide=64 steer=0.961
+FIELD STATIC frame=43 mirror=0 state=1 side=-1 guide=66 steer=-0.916
+FIELD STATIC frame=43 mirror=1 state=1 side=1 guide=66 steer=0.940
+FIELD STATIC frame=44 mirror=0 state=1 side=-1 guide=66 steer=-0.931
+FIELD STATIC frame=44 mirror=1 state=1 side=1 guide=64 steer=0.955
+FIELD STATIC frame=45 mirror=0 state=1 side=-1 guide=62 steer=-0.845
+FIELD STATIC frame=45 mirror=1 state=1 side=1 guide=62 steer=0.870
+FIELD PREVIEW PASS: 40270 checks, 0 failures; independent poses, no physical timing claim
+[PASS] Completed within declared software evidence scope

@@ -1,0 +1,1235 @@
+--- a/demo/code/vision_speed.c
++++ b/demo/code/vision_speed.c
+@@ -27,6 +27,10 @@
+ static uint16_t request_right,request_left,request_cap;
+ static int request_reverse;
+ static volatile uint32_t request_generation;
++#if VISION_PLANNER_ACTIVE
++static uint8_t metric_source;
++static uint16_t metric_ff_right,metric_ff_left;
++#endif
+ #if VISION_ROUTE_SWITCH
+ static unsigned slow_backwards[2];
+ #endif
+@@ -57,6 +61,9 @@
+     board_encoder_read(&previous[0],&previous[1]);
+     consumed=last_control=sample_interval=0;active=0;reset_pending=1;
+     request_generation=0;
++#if VISION_PLANNER_ACTIVE
++    metric_source=0;metric_ff_right=metric_ff_left=0;
++#endif
+ #endif
+ }
+ void vd_speed_stop(void)
+@@ -136,6 +143,10 @@
+     uint32_t consumed,last_control,sample_interval;
+     uint8_t active,reset_pending;
+     unsigned backwards[2],stalled[2];
++#if VISION_PLANNER_ACTIVE
++    uint8_t metric;
++    uint16_t ff_right,ff_left;
++#endif
+ #if VISION_ROUTE_SWITCH
+     unsigned slow_backwards[2];
+     uint8_t track,speed_boost,straight_tracking;
+@@ -168,6 +179,10 @@
+             pwm_cap=MT_ROUTE_PWM_FULL_SCALE;
+ #endif
+         *out_right=*out_left=0;
++#if VISION_PLANNER_ACTIVE
++        if(w->metric){if(!cap||cap>1000U){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}}
++        else
++#endif
+         if(!cap||cap>(VISION_ROUTE_SWITCH?180U:150U)){work_trip(w,VS_FAULT_OUTPUT,now);return 0;}
+         if((uint32_t)(now-w->speed.sample_ms)>VD_SPEED_SAMPLE_MAX_AGE_MS){work_trip(w,VS_FAULT_STALE,now);return 0;}
+         if(w->reset_pending){ws_pi_reset(&w->pi[0]);ws_pi_reset(&w->pi[1]);memset(w->backwards,0,sizeof(w->backwards));
+@@ -190,6 +205,9 @@
+                 w->steering,w->recovery_steer,w->lateral,w->paired_support,w->edge_support);
+ #endif
+             int32_t targets[2]={(int32_t)right*target_ticks/cap,(int32_t)left*target_ticks/cap};
++#if VISION_PLANNER_ACTIVE
++            if(w->metric){targets[0]=right;targets[1]=left;}
++#endif
+             int32_t measured[2]={(int32_t)w->speed.raw4*w->speed.sign4,(int32_t)w->speed.raw3*w->speed.sign3};
+             /* No queue: the latest count cannot stand in for missed measurements. */
+             if(periods>VD_SPEED_MAX_UNCONSUMED_SAMPLES){work_trip(w,VS_FAULT_BACKLOG,now);return 0;}
+@@ -236,6 +254,9 @@
+ #if VISION_ROUTE_SWITCH
+                 {uint16_t ff=(uint16_t)((uint32_t)targets[i]*cap/(track?MT_ROUTE_BASE_TICKS:w->speed.max_ticks));
+                  uint16_t effort=track?vp_effort_limit(w->pi[i].output,periods):pwm_cap;
++#if VISION_PLANNER_ACTIVE
++                 if(w->metric)ff=i?w->ff_left:w->ff_right;
++#endif
+                  ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,effort,w->sample_interval,ff);}
+ #else
+                 ws_pi_step_ff_ms(&w->pi[i],targets[i],measured[i],w->speed.kp_q8,w->speed.ki_q8,pwm_cap,w->sample_interval,0);
+@@ -265,6 +286,9 @@
+                     uint16_t *out_right,uint16_t *out_left)
+ {
+     *out_right=right;*out_left=left;
++#if VISION_PLANNER_ACTIVE
++    if(metric_source){*out_right=*out_left=0;return 0;}
++#endif
+ #if VISION_ENCODER_ENABLE
+     if(speed.enabled) {
+         uint32_t now=timer_get(GPT_TIM_1);
+@@ -319,6 +343,10 @@
+     w.lateral=vd.control.output.lateral;w.paired_support=vd.control.output.paired_support;
+     w.edge_support=vd.control.output.edge_support;
+ #endif
++#if VISION_PLANNER_ACTIVE
++    w.metric=metric_source;w.ff_right=metric_ff_right;w.ff_left=metric_ff_left;
++    if(w.metric)w.track=0; /* Metric shaper/geometry already owns target shaping. */
++#endif
+     req_r=request_right;req_l=request_left;cap=request_cap;reverse=request_reverse;
+ #if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+     __set_PRIMASK(mask);
+@@ -356,3 +384,69 @@
+     (void)now;
+ #endif
+ }
++unsigned vd_speed_source(void)
++{
++#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
++    return metric_source?VD_SPEED_METRIC:VD_SPEED_LEGACY;
++#else
++    return VD_SPEED_LEGACY;
++#endif
++}
++int vd_speed_select_source(unsigned source)
++{
++#if VISION_ENCODER_ENABLE
++    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
++    if(source<=VD_SPEED_METRIC&&stopped()&&!vd.output_authorized){
++        if(source==VD_SPEED_LEGACY
++#if VISION_PLANNER_ACTIVE
++           ||source==VD_SPEED_METRIC
++#endif
++           ){
++            vd_speed_stop();
++#if VISION_PLANNER_ACTIVE
++            metric_source=(uint8_t)(source==VD_SPEED_METRIC);
++#endif
++            ok=1;
++        }
++    }
++    __DMB();__set_PRIMASK(mask);return ok;
++#else
++    return source==VD_SPEED_LEGACY;
++#endif
++}
++int vd_speed_metric_request(uint16_t right,uint16_t left,uint16_t cap,uint16_t ff_right,uint16_t ff_left,
++                              uint32_t epoch,uint32_t seq,uint32_t *version)
++{
++#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
++    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
++    if(version&&metric_source&&speed.enabled&&!speed.faults&&!vd.guard_faults&&
++       epoch==vd.output_epoch&&vd.output_authorized&&vd.control.output.state==VC_RUNNING&&
++       !vd.mode_stop_pending&&!app_mode_change_pending()&&seq==speed.samples&&
++       (uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)<VD_SPEED_SAMPLE_MAX_AGE_MS&&
++       cap&&cap<=1000&&right<=speed.max_ticks&&left<=speed.max_ticks){
++        if(request_right!=right||request_left!=left||request_cap!=cap||
++           metric_ff_right!=ff_right||metric_ff_left!=ff_left)++request_generation;
++        request_right=right;request_left=left;request_cap=cap;request_reverse=0;
++        metric_ff_right=ff_right;metric_ff_left=ff_left;
++        if(!right&&!left)vd_speed_stop();
++        *version=request_generation;ok=1;
++    }
++    __DMB();__set_PRIMASK(mask);return ok;
++#else
++    (void)right;(void)left;(void)cap;(void)ff_right;(void)ff_left;(void)epoch;(void)seq;(void)version;return 0;
++#endif
++}
++int vd_speed_metric_cached(uint32_t version,uint32_t seq,uint16_t *right,uint16_t *left)
++{
++    if(!right||!left)return 0;*right=*left=0;
++#if VISION_ENCODER_ENABLE && VISION_PLANNER_ACTIVE
++    uint32_t mask=__get_PRIMASK();int ok=0;__disable_irq();
++    if(metric_source&&version==request_generation&&seq==speed.samples&&!speed.faults&&!vd.guard_faults&&
++       (uint32_t)(timer_get(GPT_TIM_1)-speed.sample_ms)<VD_SPEED_SAMPLE_MAX_AGE_MS){
++        *right=speed.pwm_right;*left=speed.pwm_left;ok=1;
++    }
++    __set_PRIMASK(mask);return ok;
++#else
++    (void)version;(void)seq;return 0;
++#endif
++}
+--- a/demo/code/vision_speed.h
++++ b/demo/code/vision_speed.h
+@@ -1,6 +1,7 @@
+ #ifndef VISION_SPEED_H
+ #define VISION_SPEED_H
+ #include <stdint.h>
++#include "vision_planner_build.h"
+ 
+ /* Software timing contract for the foreground PI service and PIT sampling.
+  * These are fail-closed limits, not a claim of hard real-time scheduling.
+@@ -43,4 +44,13 @@
+  * fail closed; never replay the latest measurement as multiple PI steps.
+  * Not a guaranteed fixed-period scheduler; PIT1 remains sample/cutoff only. */
+ void vd_speed_control_poll(uint32_t now_ms);
++enum { VD_SPEED_LEGACY=0,VD_SPEED_METRIC=1 };
++/* Source selection is stopped-only, never a running fallback. Metric requests
++ * are counts/10ms directly, with independent explicit PWM/FF permille caps. */
++int vd_speed_select_source(unsigned source);
++unsigned vd_speed_source(void);
++int vd_speed_metric_request(uint16_t right_ticks,uint16_t left_ticks,uint16_t pwm_cap,
++                              uint16_t ff_right,uint16_t ff_left,uint32_t output_epoch,
++                              uint32_t sample_sequence,uint32_t *request_version);
++int vd_speed_metric_cached(uint32_t request_version,uint32_t sample_sequence,uint16_t *right,uint16_t *left);
+ #endif
+--- a/demo/code/vision_drive.c
++++ b/demo/code/vision_drive.c
+@@ -1,4 +1,7 @@
+ #include "vision_drive_internal.h"
++#if VISION_PLANNER_RUNTIME
++#include "vision_planner_runtime.h"
++#endif
+ 
+ /* Lifecycle and command facade; IO, guard, startup, probing and profile
+  * validation live in their own implementation units. */
+@@ -129,6 +132,9 @@
+ #if VISION_ENCODER_ENABLE
+     vd_speed_init(now);
+ #endif
++#if VISION_PLANNER_RUNTIME
++    vd_planner_runtime_init();
++#endif
+     vd_output_zero();
+ #if VISION_ROUTE_SWITCH
+     vd_route_switch_init();
+@@ -202,6 +208,9 @@
+     }
+ #endif
+ #if VISION_ENCODER_ENABLE
++#if VISION_PLANNER_RUNTIME
++    vd_planner_runtime_poll(now);
++#endif
+     vd_speed_control_poll(now); /* Independent of visual-frame publication. */
+ #endif
+     vd_startup_poll_switch(now);
+@@ -240,6 +249,11 @@
+     trace_visual.entry_guide_rows=r->entry_guide_rows;
+ #endif
+     vc_observe(&vd.control, r, sequence, frame_ms, now);
++#if VISION_PLANNER_RUNTIME
++    vd_planner_runtime_observe(r,sequence,frame_ms,now);
++    vd_planner_runtime_poll(now);
++    vd_speed_control_poll(now);
++#endif
+     /* The controller owns bounded visual recovery. Missing far preview or a
+      * recoverable observation does not revoke the existing driving lease.
+      * This grants no new arm/clear authority to C26, UART or old frames. */
+--- a/demo/code/vision_actuator.c
++++ b/demo/code/vision_actuator.c
+@@ -1,5 +1,8 @@
+ #include "vision_drive_internal.h"
+ #include "vision_steering.h"
++#if VISION_PLANNER_RUNTIME
++#include "vision_planner_runtime.h"
++#endif
+ 
+ #if VISION_DRIVE_ENABLE
+ void vd_output_zero(void)
+@@ -147,6 +150,9 @@
+ int vd_output_bench_start(void)
+ {
+     uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
++#if VISION_PLANNER_ACTIVE
++    if(vd_speed_source()==VD_SPEED_METRIC){vd_output_zero();__set_PRIMASK(mask);return 0;}
++#endif
+     /* Only explicit probe/start/reverse requests call this, never poll or ISR. */
+     vd.output_authorized=vd.motion.phase?VD_OUTPUT_MOTION:VD_OUTPUT_PROBE;
+     if(output_allowed(vd.output_authorized,timer_get(GPT_TIM_1))) {
+@@ -165,6 +171,12 @@
+     if(source==VD_OUTPUT_DRIVE)cap=(uint32_t)(vd.profile.control.duty_cap*PWM_DUTY_MAX);
+ #endif
+     if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
++#if VISION_PLANNER_ACTIVE
++    if(source==VD_OUTPUT_DRIVE&&vd_speed_source()==VD_SPEED_METRIC){
++        uint32_t metric_cap=(uint32_t)vd_planner_runtime_cap()*PWM_DUTY_MAX/1000U;
++        if(cap>metric_cap)cap=metric_cap;
++    }
++#endif
+     /* Bound PI's actual result independently of its target/speed cap. C31
+      * deliberately retains its existing full physical PWM headroom. */
+ #if VISION_ROUTE_SWITCH
+@@ -298,6 +310,10 @@
+             profile.servo_max_us - profile.servo_center_us :
+             profile.servo_center_us - profile.servo_min_us);
+         float motor1, motor2;
++#if VISION_PLANNER_ACTIVE
++        motor1=motor2=0;
++        if(vd_speed_source()!=VD_SPEED_METRIC){
++#endif
+         if (!mol_split(control.output.duty, profile.control.duty_cap,
+                        profile.motor1_scale, profile.motor2_scale, &motor1, &motor2)) {
+             output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
+@@ -319,6 +335,9 @@
+             motor1=motor2=0;
+         }
+ #endif
++#if VISION_PLANNER_ACTIVE
++        }
++#endif
+         /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
+         if(!(pulse>=profile.servo_min_us && pulse<=profile.servo_max_us) ||
+            !(motor1>=0 && motor1<=profile.control.duty_cap) ||
+@@ -328,6 +347,10 @@
+         speed_cap=(uint16_t)(profile.control.duty_cap*1000.0f+0.001f);
+         uint32_t servo_duty = (uint32_t)(pulse * SERVO_MOTOR_FREQ * PWM_DUTY_MAX / 1000000.0f);
+         uint32_t right_duty,left_duty;
++#if VISION_PLANNER_ACTIVE
++        vdr_output_t planner_output;
++        vd_planner_runtime_prepare(epoch,&planner_output);
++#endif
+ #if VISION_ENCODER_ENABLE
+         uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
+ #else
+@@ -352,6 +375,11 @@
+ #if VISION_ENCODER_ENABLE
+         /* Publish only after the lease recheck. A STOP during preparation
+          * must not leave even a pending nonzero speed request behind. */
++#if VISION_PLANNER_ACTIVE
++        if(vd_speed_source()==VD_SPEED_METRIC){
++            if(!vd_planner_runtime_output(&planner_output,&right,&left)){right=left=0;vd_speed_stop();}
++        }else
++#endif
+         if(!vd_speed_output(right,left,0,speed_cap,&right,&left)) {
+             __DMB();__set_PRIMASK(mask);return;
+         }
+--- a/demo/code/vision_planner.h
++++ b/demo/code/vision_planner.h
+@@ -5,12 +5,7 @@
+  * PWM, changes PI state or supplies production calibration defaults. */
+ #include "../../tools/speed_planning/speed_planner.h"
+ 
+-#ifndef VISION_PLANNER_ACTIVE
+-#define VISION_PLANNER_ACTIVE 0
+-#endif
+-#if VISION_PLANNER_ACTIVE != 0
+-#error "Active metric planner requires reviewed PI/supervisor integration; shadow only."
+-#endif
++#include "vision_planner_build.h"
+ 
+ typedef enum { VP_DISABLED=0,VP_SHADOW=1 } vp_mode_t;
+ typedef enum { VP_ZERO_NOW=0,VP_TRACK=1,VP_CONTROLLED_STOP=2 } vp_action_t;
+--- a/demo/mdk/competition/MPC_20261106.uvprojx
++++ b/demo/mdk/competition/MPC_20261106.uvprojx
+@@ -2340,6 +2340,21 @@
+           <GroupName>Phase3 planner shadow interface</GroupName>
+           <Files>
+             <File>
++              <FileName>vision_planner_runtime.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\code\vision_planner_runtime.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_planner_runtime.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_planner_runtime.h</FilePath>
++            </File>
++            <File>
++              <FileName>vision_planner_build.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_planner_build.h</FilePath>
++            </File>
++            <File>
+               <FileName>vision_metric_io.c</FileName>
+               <FileType>1</FileType>
+               <FilePath>..\..\code\vision_metric_io.c</FilePath>
+--- a/demo/recorder/sdk_sources.lock.json
++++ b/demo/recorder/sdk_sources.lock.json
+@@ -5,7 +5,7 @@
+   "libraries/components/sdmmc/host/usdhc/fsl_sdmmc_host.h": "b7d6b7b40ab4849691dd0a9b8c3657b5fb0982e99c15ef575e98f588d7e52b9d",
+   "libraries/components/sdmmc/sdmmc_config.c": "c8f8ea7f015e5669ab32b84da56a46e201adb1653c1412f0cfe868b9096b1877",
+   "libraries/sdk/drives/fsl_usdhc.c": "fb721f248c10a2ebcab616ccaf4346a3930cb91f069dfe6cd7bc765c097aea02",
+-  "demo/code/vision_drive.c": "d7c62227d2f27a37d6510d1a3e58e020b98c92a2aec50fa885e0746576ee1280",
++  "demo/code/vision_drive.c": "051343aee13c2ec673f4c757dec047fe83dc31f1dfec976ba122b3bcb46774bd",
+   "libraries/components/fatfs/source/ff.c": "a6938c99498603df619eac8fc9fb1155da50023aefb12afa5d7bbf1d0f4b6590",
+   "libraries/components/fatfs/source/ff.h": "46e9a88e181289ff68a5bf7faf63a6ac2cc0f04f49f6cbd94073e42720960d95",
+   "libraries/components/fatfs/source/ffconf.h": "69708d2849cbad0638407bb8680bbc1fd56bfe60d72acd16292e8af39d15961c",
+--- a/tests/planning/test_speed_response.c
++++ b/tests/planning/test_speed_response.c
+@@ -1,25 +1,4 @@
+-/* Actual isolated candidate modules with fake counters/timer/PWM only. */
+-#include "../support/fixtures/speed_helpers.h"
+-#include "vision_drive_internal.h"
+-#include "stop_trace.h"
+-void board_buzzer_set(int on){CHECK(on==0||on==1);}
+-static void setup(int closed)
+-{
+- vd_profile_t p;now=0;raw3=raw4=0;mask=0;memset(pwm,0,sizeof(pwm));
+- vision_drive_init(0);app_mode_init(0,0,0);app_mode_sample(0,0,30);(void)app_mode_take_change();
+- vision_drive_get_profile(&p);p.servo_center_us=1550;p.servo_min_us=1430;p.servo_max_us=1670;
+- p.right_sign=1;p.hardware_confirmed=1;p.motor_direction_confirmed=1;
+- p.motor1_forward_level=p.motor2_forward_level=1;p.motor1_scale=p.motor2_scale=1;
+- p.control.cruise_duty=0;p.control.duty_cap=.6f;CHECK(vision_drive_configure(&p));
+- tick(0,0,0);CHECK(vision_drive_encoder_signs(-1,1));
+- CHECK(!vision_drive_speed_config(61,2,.1f));CHECK(!vision_drive_speed_config(23,6,.1f));
+- CHECK(!vision_drive_speed_config(23,2,.3f));CHECK(vision_drive_speed_config(23,2,.1f));
+- CHECK(vision_drive_speed_enable(closed));
+-}
+-static st_info_t trace_info(void){st_info_t x;st_info(&x);return x;}
+-static void run_ticks(unsigned count,int left,int right,int heartbeat)
+-{for(unsigned i=0;i<count;++i){tick(left,right,heartbeat);CHECK(pwm[0]<=6000&&pwm[1]<=6000);}}
+-static void freeze(void){run_ticks(220,0,0,0);CHECK(trace_info().frozen&&!trace_info().overflow);}
++#include "../support/fixtures/response_io.h"
+ int main(void)
+ {
+  st_row_t row;vf_parser_t parser;char reply[VF_RESPONSE_CAPACITY];unsigned peak=0;
+--- a/tests/planning/test_heartbeat_response.c
++++ b/tests/planning/test_heartbeat_response.c
+@@ -1,7 +1,5 @@
+ /* Run existing response protections against the actual instrumented adapters. */
+-#define main baseline_response_main
+-#include "test_speed_response.c"
+-#undef main
++#include "../support/fixtures/response_io.h"
+ #include "heartbeat_diag.h"
+ #include "app_link.h"
+ void app_link_board_init(void){}
+@@ -10,7 +8,6 @@
+ {
+     char out[VF_RESPONSE_CAPACITY],saved[VF_RESPONSE_CAPACITY];
+     hd_event_t e={0};hd_state_t live={0},snapshot={0};
+-    CHECK(baseline_response_main()==0);
+     /* Modulo timer rollover and frozen snapshot independence. */
+     hd_event(&e,0xfffffff0U);hd_event(&e,0x10U);CHECK(e.count==2&&e.max_gap_ms==32);
+     live.accepted=e;hd_capture(&snapshot,&live,0x20,0x10,3);
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3804,6 +3804,122 @@
+         "artifacts/**"
+       ],
+       "scope": "Measured cumulative counters and explicit candidate scales, independent conversion/interpolation oracle; no ground truth, live camera alignment, PWM or physical stopping claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "planner-runtime",
++      "name": "C26 metric target source, live PI and sole writer integration",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "control",
++            "sources": [
++              "tests/planning/test_planner_runtime.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c",
++              "demo/code/vision_planner_runtime.c",
++              "demo/code/vision_metric_io.c",
++              "demo/code/vision_planner_shadow.c",
++              "demo/code/vision_planner.c",
++              "tools/speed_planning/speed_planner.c",
++              "tools/speed_planning/vision_adapter.c"
++            ],
++            "includeDirectories": [
++              "tests/vision/stubs",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=0",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_HOST_OUTPUT_HOOK=1",
++              "VISION_PLANNER_RUNTIME=1",
++              "VISION_PLANNER_ACTIVE=1",
++              "VISION_PLANNER_PROFILE_REVIEWED=1"
++            ]
++          },
++          {
++            "id": "shadow",
++            "sources": [
++              "tests/planning/test_planner_runtime.c",
++              "demo/code/vision_speed.c",
++              "demo/code/wheel_speed.c",
++              "demo/code/vision_motion.c",
++              "demo/code/vision_drive.c",
++              "demo/code/vision_actuator.c",
++              "demo/code/vision_guard.c",
++              "demo/code/vision_probe.c",
++              "demo/code/vision_startup.c",
++              "demo/code/vision_vehicle_profile.c",
++              "demo/code/vision_control.c",
++              "demo/code/midterm_open_loop.c",
++              "demo/code/app_mode.c",
++              "demo/code/vision_field.c",
++              "demo/code/vision_storage.c",
++              "demo/code/vision_planner_runtime.c",
++              "demo/code/vision_metric_io.c",
++              "demo/code/vision_planner_shadow.c",
++              "demo/code/vision_planner.c",
++              "tools/speed_planning/speed_planner.c",
++              "tools/speed_planning/vision_adapter.c"
++            ],
++            "includeDirectories": [
++              "tests/vision/stubs",
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_ENCODER_ENABLE=1",
++              "VISION_MIDTERM_TRAINING=1",
++              "VISION_MIDTERM_AUTONOMOUS=0",
++              "VISION_MIDTERM_ROUTE_TRIAL=1",
++              "VISION_ROUTE_SWITCH=1",
++              "VISION_DRIVE_ENABLE=1",
++              "VISION_START_SWITCH_ENABLE=0",
++              "VISION_HOST_OUTPUT_HOOK=1",
++              "VISION_PLANNER_RUNTIME=1",
++              "VISION_PLANNER_ACTIVE=0",
++              "VISION_PLANNER_PROFILE_REVIEWED=0"
++            ]
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 300,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Actual C26 scheduler/PI/writer with simulated native IO, explicit synthetic calibration; no board timing or vehicle authorization"
+     }
+   ]
+ }
+--- a/tools/check_phase2_response.py
++++ b/tools/check_phase2_response.py
+@@ -12,25 +12,39 @@
+ from tools.speed_planning.export_speed_response import FIELDS,SIGNED,validate_trace
+ 
+ 
+-def check(candidate,compiler):
++def check(candidate,compiler,output=None):
+     p=Path(candidate).resolve();manifest=json.loads((p/'candidate.json').read_text(encoding='utf-8'))
+-    heartbeat_diag=manifest['version'] in ('PHASE2_HEARTBEAT_DIAG_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_2')
+-    if not p.is_relative_to(ROOT/'.build/phase2-calibration-20261108') or manifest['version'] not in ('PHASE2_SPEED_RESPONSE_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_2'):
++    turn_diag=manifest['version'] in ('PHASE2_TURN_GEOMETRY_20261109_1','PHASE2_TURN_GEOMETRY_20261109_2')
++    heartbeat_diag=turn_diag or manifest['version'] in ('PHASE2_HEARTBEAT_DIAG_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_2')
++    if not p.is_relative_to(ROOT/'.build/phase2-calibration-20261108') or manifest['version'] not in ('PHASE2_SPEED_RESPONSE_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_1','PHASE2_HEARTBEAT_DIAG_20261109_2','PHASE2_TURN_GEOMETRY_20261109_1','PHASE2_TURN_GEOMETRY_20261109_2'):
+         raise ValueError('Wrong isolated candidate')
+     suite=next(s for s in json.loads((ROOT/'tests/suites/catalog.json').read_text(encoding='utf-8'))['suites'] if s['id']=='speed')
+-    variant=suite['entrypoint']['variants'][0];out=p/'host';out.mkdir(exist_ok=True)
+-    test_source='test_heartbeat_response.c' if heartbeat_diag else 'test_speed_response.c'
+-    sources=[ROOT/'tests/planning'/test_source]+[p/Path(x) for x in variant['sources'][1:]]+[p/'demo/code/stop_trace.c']
+-    if heartbeat_diag:sources.append(p/'demo/code/app_link.c')
+-    command=[str(compiler),'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wno-misleading-indentation',
+-             *['-D'+x for x in variant['defines']],'-I'+str(ROOT/'tests/vision/stubs'),'-I'+str(p/'demo/code'),
+-             *map(str,sources),'-lm','-o',str(out/'response-test.exe')]
+-    result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+-    (out/'build.log').write_text(result.stdout+result.stderr,encoding='utf-8')
+-    if result.returncode:raise RuntimeError(result.stderr)
+-    result=subprocess.run([out/'response-test.exe'],cwd=out,capture_output=True,text=True,timeout=30)
+-    (out/'run.log').write_text(result.stdout+result.stderr,encoding='utf-8')
+-    if result.returncode:raise RuntimeError(result.stdout+result.stderr)
++    variant=suite['entrypoint']['variants'][0];out=Path(output).resolve() if output else p/'host'
++    if output and (not out.is_relative_to(ROOT/'.build') or out.exists()):raise ValueError('Output must be a new .build directory')
++    out.mkdir(parents=True,exist_ok=not bool(output));commands=[];logs=[];sources=[]
++    # Keep all baseline scenarios as their own executable, rather than include
++    # another test C/main and inherit its mutable fixture state.
++    programs=['test_speed_response.c']+(['test_heartbeat_response.c'] if heartbeat_diag else [])
++    if turn_diag:programs.append('test_turn_response.c')
++    for test_source in programs:
++        inputs=[ROOT/'tests/planning'/test_source]+[p/Path(x) for x in variant['sources'][1:]]+[p/'demo/code/stop_trace.c']
++        if heartbeat_diag:inputs.append(p/'demo/code/app_link.c')
++        if heartbeat_diag and test_source=='test_speed_response.c':
++            board_stub=out/'response-link-board-stub.c'
++            board_stub.write_text('#include "app_link.h"\nvoid app_link_board_init(void){}\nint app_link_board_try_tx(unsigned channel,uint8_t byte){(void)channel;(void)byte;return 1;}\n',encoding='utf-8')
++            inputs.append(board_stub)
++        exe=out/(Path(test_source).stem+'.exe')
++        command=[str(compiler),'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wno-misleading-indentation',
++                 *['-D'+x for x in variant['defines']],'-I'+str(ROOT/'tests/vision/stubs'),'-I'+str(p/'demo/code'),
++                 *map(str,inputs),'-lm','-o',str(exe)]
++        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
++        (out/(Path(test_source).stem+'.build.log')).write_text(result.stdout+result.stderr,encoding='utf-8')
++        if result.returncode:raise RuntimeError(result.stderr)
++        result=subprocess.run([exe],cwd=out,capture_output=True,text=True,timeout=30)
++        (out/(Path(test_source).stem+'.run.log')).write_text(result.stdout+result.stderr,encoding='utf-8')
++        if result.returncode:raise RuntimeError(result.stdout+result.stderr)
++        commands.append(command);logs.append(result.stdout);sources+=inputs
++    (out/'run.log').write_text(''.join(logs),encoding='utf-8')
+     native=(out/'response-native.bin').read_bytes();magic,generation,count,stop,crc=struct.unpack_from('<5I',native)
+     if magic!=0x31505352 or len(native)!=60+count*88:raise ValueError('Bad native trace')
+     config=list(struct.unpack_from('<10I',native,20))
+@@ -39,15 +53,16 @@
+         raw=struct.unpack_from('<22I',native,60+index*88)
+         rows.append({key:value-0x100000000 if key in SIGNED and value>=0x80000000 else value for key,value in zip(FIELDS,raw)})
+     verified=validate_trace({'generation':generation,'count':count,'stop_ms':stop,'crc32':crc},rows,config)
+-    report={'hostPassed':True,'compiler':str(compiler),'compileCommand':command,'nativeTraceVerification':verified,
+-            'stdout':result.stdout,'scope':'Actual private adapters and PI with fake timer/counters/PWM; no hardware.',
+-            'sourcesSha256':{str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in sources},
++    report={'hostPassed':True,'compiler':str(compiler),'compileCommand':command,'compileCommands':commands,'testPrograms':programs,'nativeTraceVerification':verified,
++            'stdout':''.join(logs),'scope':'Actual private adapters and PI with fake timer/counters/PWM; no hardware.',
++            'sourcesSha256':{str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in sources+[ROOT/'tests/support/fixtures/response_io.h']},
+             'flashed':False,'productionApproved':False}
+     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+-    print(result.stdout.strip());print(json.dumps(verified))
++    print(''.join(logs).strip());print(json.dumps(verified))
+     return report
+ 
+ 
+ if __name__=='__main__':
+     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--candidate',type=Path,required=True);parser.add_argument('--compiler',required=True)
+-    args=parser.parse_args();check(args.candidate,args.compiler)
++    parser.add_argument('--output',type=Path)
++    args=parser.parse_args();check(args.candidate,args.compiler,args.output)
+--- a/tools/speed_planning/audit_build.py
++++ b/tools/speed_planning/audit_build.py
+@@ -1,7 +1,8 @@
+ """Pure isolated build of the actual C26 project; never downloads firmware.
+ 
+ The output must be a new directory below this repository's .build. Original
+-project macros, sources and hooks are inspected; only output paths are changed.
++project macros, sources and hooks are inspected. Optional planner switches are
++set ONLY in the isolated copy; a control build is not physical profile approval.
+ """
+ import argparse
+ import hashlib
+@@ -22,6 +23,7 @@
+     parser.add_argument('--output',type=Path,required=True)
+     parser.add_argument('--uv4',type=Path,required=True)
+     parser.add_argument('--arm-bin',type=Path,required=True)
++    parser.add_argument('--planner-mode',choices=('off','shadow','control'),default='off')
+     args=parser.parse_args();out=args.output.resolve()
+     if not out.is_relative_to((ROOT/'.build').resolve()) or out==(ROOT/'.build').resolve() or out.exists():
+         raise ValueError('Output must be a NEW directory under repository .build')
+@@ -40,6 +42,13 @@
+     for section in ('BeforeMake','BeforeCompile','AfterMake'):
+         for key in ('RunUserProg1','RunUserProg2'):
+             if target.findtext('.//'+section+'/'+key)!='0':raise ValueError('Enabled build hook: '+section+'/'+key)
++    effective_defines=defines
++    if args.planner_mode!='off':
++        switches={'VISION_PLANNER_RUNTIME':'1','VISION_PLANNER_ACTIVE':'1' if args.planner_mode=='control' else '0',
++                  'VISION_PLANNER_PROFILE_REVIEWED':'1' if args.planner_mode=='control' else '0'}
++        parts=[s for s in defines.split(',') if s.strip().split('=')[0].strip() not in switches]
++        effective_defines=','.join(parts+[name+'='+value for name,value in switches.items()])
++        target.find('.//Cads/VariousControls/Define').text=effective_defines
+     out.mkdir(parents=True)
+     workspace=out/'workspace'
+     for name in ('demo','libraries'):
+@@ -54,7 +63,9 @@
+     project=workspace/'demo/mdk/competition/MPC_20261106.uvprojx'
+     ET.ElementTree(tree).write(project,encoding='utf-8',xml_declaration=True)
+     evidence={'buildOnly':True,'sourceProjectSha256':hashlib.sha256(source_bytes).hexdigest(),
+-              'defines':defines,'target':target.findtext('TargetName'),'processes':[]}
++              'defines':defines,'effectiveDefines':effective_defines,'plannerMode':args.planner_mode,
++              'syntheticReviewDeclaration':args.planner_mode=='control','physicalProfileApproved':False,
++              'target':target.findtext('TargetName'),'processes':[]}
+     with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:
+         def run(command):
+             result=run_process(list(map(str,command)),project.parent,dict(os.environ),600,stdout,stderr)
+--- a/demo/code/vision_metric_io.c
++++ b/demo/code/vision_metric_io.c
+@@ -94,7 +94,7 @@
+         if(j+1<s->count){
+             const vm_history_t *a=&s->history[(index+VM_HISTORY_CAPACITY-1)%VM_HISTORY_CAPACITY];
+             uint32_t width=b->ms-a->ms,offset=capture-a->ms;
+-            if(duration(width)&&offset<width){
++            if(duration(width)&&offset&&offset<width){
+                 if(!b->continuous)return VM_NO_BRACKET;
+                 float fraction=(float)offset/(float)width;
+                 *out=distance(s,a->travel_left,a->travel_right)+fraction*distance(s,b->travel_left-a->travel_left,b->travel_right-a->travel_right);
+@@ -104,7 +104,7 @@
+     }
+     return VM_NO_BRACKET;
+ }
+-static int vision_config(const vm_vision_config_t *c)
++int vm_vision_config_valid(const vm_vision_config_t *c)
+ {
+     if(!c||!c->revision||!duration(c->max_age_ms)||c->near_count<5||c->near_count>SP_CAPACITY||
+        c->full_count<5||c->full_count>SP_CAPACITY||c->min_confidence>100||
+@@ -125,7 +125,7 @@
+ {
+     sp_geometry_history_t near_history,full_history;
+     if(!out)return 0;memset(out,0,sizeof(*out));out->sequence=seq;out->capture_ms=capture;
+-    if(!s||!vision_config(c)||(s->revision&&s->revision!=c->revision))return 0;
++    if(!s||!vm_vision_config_valid(c)||(s->revision&&s->revision!=c->revision))return 0;
+     s->revision=c->revision;
+     out->config_revision=c->revision;
+     near_history=s->near_history;full_history=s->full_history;
+--- a/demo/code/vision_metric_io.h
++++ b/demo/code/vision_metric_io.h
+@@ -68,6 +68,7 @@
+ int vm_vision_frame(vm_vision_t *state,const vm_vision_config_t *config,
+                      const vision_result_t *source,uint32_t sequence,uint32_t capture_ms,
+                      uint32_t now_ms,vm_frame_t *out);
++int vm_vision_config_valid(const vm_vision_config_t *config);
+ void vm_vision_init(vm_vision_t *state); /* New geometry session only. */
+ /* Builds the actual vps input from an accepted frame + cumulative counts.
+  * If a NEW usable frame lacks an odometer bracket, return WAIT and let the caller
+--- /dev/null
++++ b/demo/code/vision_planner_build.h
+@@ -0,0 +1,21 @@
++#ifndef SMARTCAR_VISION_PLANNER_BUILD_H
++#define SMARTCAR_VISION_PLANNER_BUILD_H
++/* Lightweight switches also used by the legacy driver and private builds. */
++#ifndef VISION_PLANNER_ACTIVE
++#define VISION_PLANNER_ACTIVE 0
++#endif
++#ifndef VISION_PLANNER_RUNTIME
++#define VISION_PLANNER_RUNTIME 0
++#endif
++#ifndef VISION_PLANNER_PROFILE_REVIEWED
++#define VISION_PLANNER_PROFILE_REVIEWED 0
++#endif
++#if (VISION_PLANNER_ACTIVE != 0 && VISION_PLANNER_ACTIVE != 1) || \
++    (VISION_PLANNER_RUNTIME != 0 && VISION_PLANNER_RUNTIME != 1) || \
++    (VISION_PLANNER_PROFILE_REVIEWED != 0 && VISION_PLANNER_PROFILE_REVIEWED != 1)
++#error "Planner modes must be zero or one."
++#endif
++#if VISION_PLANNER_ACTIVE && (!VISION_PLANNER_RUNTIME || !VISION_PLANNER_PROFILE_REVIEWED)
++#error "Active metric planner requires reviewed PI/supervisor integration; shadow only."
++#endif
++#endif
+--- /dev/null
++++ b/demo/code/vision_planner_runtime.c
+@@ -0,0 +1,228 @@
++#include "vision_drive_internal.h"
++#include "vision_planner_runtime.h"
++#include <string.h>
++#if VISION_PLANNER_RUNTIME
++static vdr_config_t configuration;
++static vdr_info_t info;
++static vm_odom_t odometry;
++static vm_vision_t geometry;
++static vm_frame_t pending_frame,accepted_frame;
++static vps_state_t planner;
++static vps_result_t result;
++static vp_stamp_t identity;
++static uint32_t last_sample;
++static uint8_t pending,have_frame,have_sample,have_result;
++static uint32_t observed_sequence,observed_capture;
++static uint8_t have_observation;
++static int eligible(void);
++static void reset_session(void)
++{
++    (void)vm_odom_init(&odometry,&configuration.odometry);vm_vision_init(&geometry);
++    (void)vps_init(&planner,VP_SHADOW,&configuration.planning);
++    pending=have_frame=have_sample=have_result=have_observation=0;info.session_active=0;
++    memset(&identity,0,sizeof(identity));identity.config_revision=configuration.planning.planner.revision;
++}
++static void revoke(void)
++{int owned=have_result||info.session_active;have_result=0;info.session_active=0;if(info.mode==VDR_CONTROL&&owned)vd_speed_stop();}
++static void runtime_trip(uint32_t reason)
++{
++    /* Internal diagnosis keeps existing recoverable/severe classes. The public
++     * vision_drive_trip API intentionally adds EXTERNAL for external callers. */
++    uint32_t mask=__get_PRIMASK();__disable_irq();vd.guard_faults|=reason;vd_output_zero();
++    __DMB();__set_PRIMASK(mask);vd_route_switch_cancel();vc_trip(&vd.control,reason);
++}
++static void input_fault(vm_status_t status)
++{
++    info.planning_status=status==VM_BAD_CONFIG?VP_BAD_CONFIG:VP_BAD_INPUT;revoke();
++    if(info.mode==VDR_CONTROL&&eligible())runtime_trip(status==VM_BAD_CONFIG?VC_FAULT_CONFIG:VC_FAULT_ENCODER);
++}
++static uint32_t mapped_fault(uint32_t faults)
++{
++    uint32_t mapped=0;
++    if(faults&SP_FAULT_FRAME)mapped|=VC_FAULT_FRAME;
++    if(faults&SP_FAULT_NEAR)mapped|=VC_FAULT_VISION;
++    if(faults&SP_FAULT_ENCODER)mapped|=VC_FAULT_ENCODER;
++    if(faults&SP_FAULT_CONTROL)mapped|=VC_FAULT_RUNTIME;
++    if(faults&SP_FAULT_CONFIG)mapped|=VC_FAULT_CONFIG;
++    return mapped?mapped:VC_FAULT_CONFIG;
++}
++static int eligible(void)
++{
++    return vd.control.output.state==VC_RUNNING&&vd.output_authorized&&!vd.guard_faults&&!vd.control.output.faults&&
++        !vd.mode_stop_pending&&!vd.probe_active&&!vd.motion.phase&&app_mode_allows(APP_MODE_DRIVE)&&!app_mode_change_pending();
++}
++#endif
++void vd_planner_runtime_init(void)
++{
++#if VISION_PLANNER_RUNTIME
++    memset(&info,0,sizeof(info));pending=have_frame=have_sample=have_result=have_observation=0;
++#endif
++}
++int vision_drive_planner_configure(vdr_mode_t mode,const vdr_config_t *c)
++{
++#if VISION_PLANNER_RUNTIME
++    vd_speed_info_t speed;vision_drive_speed_get(&speed);
++    if(vd.control.output.state!=VC_DISARMED||vd.output_authorized||vd.guard_faults||vd.probe_active||vd.motion.phase)return 0;
++    if(mode==VDR_OFF){if(!vd_speed_select_source(VD_SPEED_LEGACY))return 0;vd_planner_runtime_init();return 1;}
++    if((mode!=VDR_SHADOW&&mode!=VDR_CONTROL)||!c||!vp_config_valid(&c->planning.planner)||
++       !sp_policy_valid(&c->planning.policy)||!vm_vision_config_valid(&c->vision)||!speed.enabled||speed.faults||
++       !speed.signs_confirmed||speed.sign3!=c->odometry.sign_left||speed.sign4!=c->odometry.sign_right||
++       c->odometry.revision!=c->planning.planner.revision||c->vision.revision!=c->odometry.revision||
++       c->odometry.ticks_per_metre_left!=c->planning.planner.ticks_per_metre_left||
++       c->odometry.ticks_per_metre_right!=c->planning.planner.ticks_per_metre_right||
++       !(c->requested_speed_m_s>=0&&c->requested_speed_m_s<=c->planning.planner.limits.maximum_speed)||
++       !c->pwm_cap||c->pwm_cap>1000||c->planning.planner.max_left_ticks_10ms>speed.max_ticks||
++       c->planning.planner.max_right_ticks_10ms>speed.max_ticks)return 0;
++    vm_odom_t checked;vps_state_t check;
++    if(!vm_odom_init(&checked,&c->odometry)||!vps_init(&check,VP_SHADOW,&c->planning))return 0;
++#if !VISION_PLANNER_ACTIVE
++    if(mode==VDR_CONTROL)return 0;
++#endif
++    if(!vd_speed_select_source(mode==VDR_CONTROL?VD_SPEED_METRIC:VD_SPEED_LEGACY))return 0;
++    configuration=*c;memset(&info,0,sizeof(info));info.mode=mode;info.configured=1;reset_session();return 1;
++#else
++    (void)mode;(void)c;return 0;
++#endif
++}
++void vd_planner_runtime_observe(const vision_result_t *road,uint32_t seq,uint32_t capture,uint32_t now)
++{
++#if VISION_PLANNER_RUNTIME
++    if(!info.configured)return;
++    if((uint32_t)(now-capture)>=configuration.vision.max_age_ms)return;
++    if(have_observation&&(!(uint32_t)(seq-observed_sequence)||(uint32_t)(seq-observed_sequence)>=UINT32_C(0x80000000)||
++       !(uint32_t)(capture-observed_capture)||(uint32_t)(capture-observed_capture)>=UINT32_C(0x80000000)))return;
++    if(vm_vision_frame(&geometry,&configuration.vision,road,seq,capture,now,&pending_frame)){
++        pending=have_observation=1;observed_sequence=seq;observed_capture=capture;
++    }
++#else
++    (void)road;(void)seq;(void)capture;(void)now;
++#endif
++}
++void vd_planner_runtime_poll(uint32_t now)
++{
++#if VISION_PLANNER_RUNTIME
++    vd_speed_info_t speed;vm_encoder_t sample;vps_input_t input;vm_status_t status;int changed=0;
++    if(!info.configured)return;++info.polls;
++    vision_drive_speed_get(&speed);
++    if(!vm_encoder_from_speed(&speed,speed.samples!=0||have_sample,&sample)){
++        input_fault(VM_BAD_SOURCE);return;
++    }
++    if(!have_sample||sample.sequence!=last_sample){
++        status=vm_odom_push(&odometry,&sample);
++        if(status!=VM_OK&&status!=VM_DUPLICATE){input_fault(status);return;}
++        have_sample=1;last_sample=sample.sequence;
++        changed=1;
++    }
++    if(!eligible()){revoke();return;}
++    /* A new physical lease starts an explicit new supervisor session. A
++     * latched supervisor never re-arms under the same held-ON lease. */
++    if(identity.output_epoch!=vd.output_epoch){
++        (void)vps_init(&planner,VP_SHADOW,&configuration.planning);
++        info.session_active=0;have_result=0;identity.output_epoch=vd.output_epoch;
++    }
++    if(!changed&&!pending&&info.session_active)return;
++    if(pending){
++        status=vm_shadow_input(&odometry,&pending_frame,1,identity,now,configuration.requested_speed_m_s,1,&input);
++        if(status==VM_OK){accepted_frame=pending_frame;have_frame=1;pending=0;}
++        else if(status==VM_WAIT){++info.frame_waits;}
++        else if(status==VM_NO_BRACKET){pending=0;} /* Discard unalignable frame, retain the previous horizon. */
++        else{input_fault(status);return;}
++    } else status=VM_WAIT;
++    if(status!=VM_OK){
++        if(!have_frame)return;
++        status=vm_shadow_input(&odometry,&accepted_frame,0,identity,now,configuration.requested_speed_m_s,1,&input);
++        if(status!=VM_OK){input_fault(status);return;}
++    }
++    if(!info.session_active){
++        if(!vps_arm(&planner,&input))return;
++        info.session_active=1;have_result=0;return;
++    }
++    vps_result_t next;vps_status_t prepared=vps_tick(&planner,&input,&next);
++    info.supervisor_mode=planner.supervisor.mode;++info.revision;
++    if(prepared==VPS_READY){
++        result=next;
++        ++info.plans;have_result=1;identity=result.candidate.stamp;info.planning_status=VP_READY;
++        if(info.mode==VDR_CONTROL){
++            if(!vd_speed_metric_request(result.candidate.right_ticks_10ms,result.candidate.left_ticks_10ms,
++                configuration.pwm_cap,configuration.feedforward_right,configuration.feedforward_left,
++                identity.output_epoch,identity.encoder_seq,&info.source_version))have_result=0;
++        }
++    } else if(prepared!=VPS_WAIT){
++        result=next;
++        have_result=0;info.planning_status=result.candidate.status;
++        if(info.mode==VDR_CONTROL)vd_speed_stop();
++        if(prepared==VPS_FAULT){if(info.mode==VDR_CONTROL)runtime_trip(mapped_fault(planner.supervisor.faults));}
++        else if(planner.supervisor.mode==SP_STOP_LATCHED&&info.mode==VDR_CONTROL)vision_drive_stop();
++    } else if(have_result){
++        if(result.supervisor_mode==planner.supervisor.mode&&result.supervisor_generation==planner.supervisor.generation)
++            result.revision=planner.revision; /* Held PI, no duplicate integral step. */
++        else have_result=0;
++    }
++#else
++    (void)now;
++#endif
++}
++uint16_t vd_planner_runtime_cap(void)
++{
++#if VISION_PLANNER_RUNTIME && VISION_PLANNER_ACTIVE
++    return info.configured&&info.mode==VDR_CONTROL?configuration.pwm_cap:0;
++#else
++    return 0;
++#endif
++}
++#if VISION_PLANNER_RUNTIME && VISION_PLANNER_ACTIVE
++static void limit_budget(vdr_output_t *t,uint32_t now,uint32_t started,uint32_t duration)
++{
++    uint32_t elapsed=now-started;
++    if(elapsed>=duration)t->valid_for_ms=0;
++    else if(duration-elapsed<t->valid_for_ms)t->valid_for_ms=duration-elapsed;
++}
++#endif
++void vd_planner_runtime_prepare(uint32_t epoch,vdr_output_t *t)
++{
++    if(!t)return;memset(t,0,sizeof(*t));
++#if VISION_PLANNER_RUNTIME && VISION_PLANNER_ACTIVE
++    if(!info.configured||info.mode!=VDR_CONTROL||!have_result||epoch!=identity.output_epoch||!eligible())return;
++    vp_stamp_t current=identity;vd_speed_info_t speed;vision_drive_speed_get(&speed);
++    uint32_t now=timer_get(GPT_TIM_1);
++    current.encoder_seq=speed.samples;current.encoder_ms=speed.sample_ms;
++    if(!vps_result_matches(&planner,&result,&current,now))return;
++    t->epoch=epoch;t->revision=planner.revision;t->source_version=info.source_version;
++    t->sample_sequence=speed.samples;t->prepared_ms=now;t->valid_for_ms=UINT32_C(0x7fffffff);
++    limit_budget(t,now,result.candidate.prepared_ms,result.candidate.candidate_max_age_ms);
++    limit_budget(t,now,result.candidate.stamp.capture_ms,result.candidate.frame_max_age_ms);
++    limit_budget(t,now,result.candidate.stamp.encoder_ms,result.candidate.encoder_max_age_ms);
++    limit_budget(t,now,planner.supervisor.last_capture_ms,configuration.planning.policy.frame_timeout_ms);
++    limit_budget(t,now,planner.supervisor.last_encoder_ms,configuration.planning.policy.encoder_timeout_ms);
++    if(planner.supervisor.near_active)
++        limit_budget(t,now,planner.supervisor.near_started_ms,configuration.planning.policy.near_window_ms);
++    if(planner.supervisor.stop_active)
++        limit_budget(t,now,planner.supervisor.stop_started_ms,configuration.planning.policy.stop_timeout_ms);
++    if(planner.supervisor.far_active&&planner.supervisor.mode!=SP_CONTROLLED_STOP)
++        limit_budget(t,now,planner.supervisor.far_started_ms,configuration.planning.policy.far_budget_ms);
++    t->valid=t->valid_for_ms!=0;
++#else
++    (void)epoch;
++#endif
++}
++int vd_planner_runtime_output(const vdr_output_t *t,uint16_t *right,uint16_t *left)
++{
++    if(!right||!left)return 0;*right=*left=0;
++#if VISION_PLANNER_RUNTIME && VISION_PLANNER_ACTIVE
++    if(!t||!t->valid||!info.configured||info.mode!=VDR_CONTROL||!have_result||
++       t->epoch!=vd.output_epoch||t->epoch!=identity.output_epoch||t->revision!=planner.revision||
++       (uint32_t)(timer_get(GPT_TIM_1)-t->prepared_ms)>=t->valid_for_ms||!eligible())return 0;
++    return vd_speed_metric_cached(t->source_version,t->sample_sequence,right,left);
++#else
++    (void)t;return 0;
++#endif
++}
++void vision_drive_planner_info(vdr_info_t *out)
++{
++    if(!out)return;
++#if VISION_PLANNER_RUNTIME
++    *out=info;
++#else
++    memset(out,0,sizeof(*out));
++#endif
++}
+--- /dev/null
++++ b/demo/code/vision_planner_runtime.h
+@@ -0,0 +1,38 @@
++#ifndef SMARTCAR_VISION_PLANNER_RUNTIME_H
++#define SMARTCAR_VISION_PLANNER_RUNTIME_H
++#include "vision_metric_io.h"
++#if VISION_PLANNER_RUNTIME && (!VISION_ROUTE_SWITCH || !VISION_ENCODER_ENABLE || VISION_MIDTERM_AUTONOMOUS)
++#error "Planner runtime currently requires the C26 route with encoder, not autonomous."
++#endif
++typedef enum { VDR_OFF=0,VDR_SHADOW=1,VDR_CONTROL=2 } vdr_mode_t;
++typedef struct {
++    vps_config_t planning;
++    vm_odom_config_t odometry;
++    vm_vision_config_t vision;
++    float requested_speed_m_s;
++    uint16_t pwm_cap,feedforward_right,feedforward_left;
++} vdr_config_t;
++typedef struct {
++    vdr_mode_t mode;
++    uint32_t polls,plans,frame_waits,revision,source_version;
++    vp_status_t planning_status;
++    sp_mode_t supervisor_mode;
++    uint8_t configured,session_active;
++} vdr_info_t;
++void vd_planner_runtime_init(void);
++/* Explicit stopped-only RAM configuration. No saved/default calibration,
++ * implicit arm, runtime serial command or automatic target-source fallback. */
++int vision_drive_planner_configure(vdr_mode_t mode,const vdr_config_t *config);
++void vd_planner_runtime_observe(const vision_result_t *result,uint32_t sequence,uint32_t capture,uint32_t now);
++void vd_planner_runtime_poll(uint32_t now);
++void vision_drive_planner_info(vdr_info_t *out);
++/* Prepare outside the output mask; final commit only checks integer identity
++ * and the remaining time budget. No geometry/supervisor/float work in commit. */
++typedef struct {
++    uint32_t epoch,revision,source_version,sample_sequence,prepared_ms,valid_for_ms;
++    uint8_t valid;
++} vdr_output_t;
++void vd_planner_runtime_prepare(uint32_t epoch,vdr_output_t *token);
++int vd_planner_runtime_output(const vdr_output_t *token,uint16_t *right,uint16_t *left);
++uint16_t vd_planner_runtime_cap(void);
++#endif
+--- /dev/null
++++ b/tests/planning/test_planner_runtime.c
+@@ -0,0 +1,159 @@
++/* Actual C26 scheduler, PI instances and final writer, simulated IO only. */
++#define pwm_set_duty fixture_pwm_set_duty
++#include "../support/fixtures/switch_io.h"
++#undef pwm_set_duty
++#include "vision_drive_internal.h"
++#include "vision_planner_runtime.h"
++static unsigned inject,stage,nonzero_writes;
++void pwm_set_duty(int channel,uint32_t duty)
++{CHECK(mask==1);if(channel<2&&duty)++nonzero_writes;fixture_pwm_set_duty(channel,duty);}
++void vision_test_output_hook(unsigned at)
++{
++    if(inject&&stage==at){unsigned action=inject;inject=0;
++        if(action==1)vision_drive_stop();
++        else if(action==2){app_mode_sample(1,1,now);vision_drive_safety_tick();}
++        else if(action==3){now+=10;raw3=(uint16_t)(raw3-5);raw4=(uint16_t)(raw4+10);vd_speed_sample_tick(now);}
++    }
++}
++static vdr_config_t config(void)
++{
++    vdr_config_t c;memset(&c,0,sizeof(c));c.planning.planner.revision=1;
++    c.planning.planner.limits=(sp_limits_t){SP_SIMULATION,2,1,2,1,2,4,6,.02f,.02f,.0001f,.05f};
++    c.planning.planner.ticks_per_metre_left=1000;c.planning.planner.ticks_per_metre_right=2000;
++    c.planning.planner.max_left_ticks_10ms=c.planning.planner.max_right_ticks_10ms=100;
++    c.planning.planner.frame_max_age_ms=100;c.planning.planner.encoder_max_age_ms=30;c.planning.planner.candidate_max_age_ms=20;
++    c.planning.policy=(sp_policy_t){100,30,300,200,1000,3,3,3,1,.01f};
++    c.odometry=(vm_odom_config_t){1,30,20,1000,2000,-1,1};
++    c.vision.homography[0]=.01f;c.vision.homography[2]=-.93f;c.vision.homography[4]=-.01f;
++    c.vision.homography[5]=1.2f;c.vision.homography[8]=1;
++    c.vision.min_x_m=-1;c.vision.max_x_m=1;c.vision.min_y_m=0;c.vision.max_y_m=1;
++    c.vision.max_step_m=.5f;c.vision.near_count=c.vision.full_count=5;c.vision.min_confidence=50;
++    c.vision.revision=1;c.vision.max_age_ms=100;
++    for(unsigned j=0;j<5;++j){c.vision.near_rows[j]=(uint8_t)(110-j*10);c.vision.full_rows[j]=(uint8_t)(110-j*15);}
++    c.requested_speed_m_s=.5f;c.pwm_cap=200;c.feedforward_left=100;c.feedforward_right=110;return c;
++}
++static vdr_info_t runtime(void){vdr_info_t s;vision_drive_planner_info(&s);return s;}
++static void zero(void)
++{CHECK(!pwm[0]&&!pwm[1]&&!info().pwm_left&&!info().pwm_right&&!info().target_left&&!info().target_right);}
++static void boot(vdr_mode_t mode)
++{
++    inject=0;switch_boot(1);switch_wait(10,1);switch_delta_left=-5;switch_delta_right=10;
++    vdr_config_t c=config();CHECK(vision_drive_planner_configure(mode,&c));
++    CHECK(vd_speed_source()==(mode==VDR_CONTROL?VD_SPEED_METRIC:VD_SPEED_LEGACY));
++    switch_a=0;switch_wait(40,1);CHECK(vision_drive_is_local());
++}
++#if VISION_PLANNER_ACTIVE
++static void source_and_writer(void)
++{
++    boot(VDR_CONTROL);CHECK(pwm[0]&&pwm[1]);
++    CHECK(info().target_left==5&&info().target_right==10);
++    CHECK(info().pwm_left<=200&&info().pwm_right<=200&&pwm[0]<=2000&&pwm[1]<=2000);
++    CHECK(!vd_speed_select_source(VD_SPEED_LEGACY));
++    CHECK(!vision_drive_planner_configure(VDR_OFF,NULL));
++    uint16_t r=123,l=123;CHECK(!vd_speed_output(100,100,0,180,&r,&l));CHECK(!r&&!l);
++    /* Running the public poll repeatedly must hold output and never advance PI. */
++    vd_speed_info_t before=info();uint32_t plans=runtime().plans;
++    for(unsigned j=0;j<100;++j)vision_drive_poll(now);
++    CHECK(runtime().plans==plans&&info().pwm_left==before.pwm_left&&info().pwm_right==before.pwm_right);
++    /* A change to legacy visual motor demand/mix must not change direct targets. */
++    vd.control.output.duty=.01f;vd.control.output.steering=.8f;vd_output_apply();
++    CHECK(info().target_left==5&&info().target_right==10);
++    vision_drive_stop();zero();CHECK(!vd.output_authorized);
++    vd.control.output.state=VC_RUNNING;vd.control.output.observation_valid=1;vd_output_apply();zero();
++    switch_a=1;switch_wait(10,1);CHECK(vision_drive_planner_configure(VDR_OFF,NULL));
++    CHECK(vd_speed_source()==VD_SPEED_LEGACY);
++    switch_a=0;switch_wait(40,1);CHECK(vision_drive_is_local()&&info().target_left>5);
++    boot(VDR_SHADOW);CHECK(vd_speed_source()==VD_SPEED_LEGACY&&runtime().plans>0&&pwm[0]&&pwm[1]);
++}
++static void faults_and_recovery(void)
++{
++    boot(VDR_CONTROL);uint32_t epoch=vd.output_epoch;
++    route_lane.row_flags[110]=0;switch_wait(4,1);zero();
++    CHECK(vd.output_epoch==epoch); /* Brief near loss inhibits without revoking. */
++    set_lane(0);switch_wait(15,1);CHECK(pwm[0]&&pwm[1]);
++    route_lane.row_flags[50]=0;switch_wait(40,1);
++    CHECK(runtime().supervisor_mode==SP_CONTROLLED_STOP);
++    switch_delta_left=switch_delta_right=0;switch_wait(6,1);
++    CHECK(!vision_drive_is_local());zero();CHECK(!vd.output_authorized);
++    set_lane(0);switch_wait(30,1);zero(); /* Held ON cannot restart. */
++    switch_delta_left=-5;switch_delta_right=10;
++    switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(40,1);CHECK(pwm[0]&&pwm[1]);
++    vision_drive_trip(VC_FAULT_ENCODER);zero();switch_a=1;switch_wait(10,1);switch_a=0;switch_wait(40,1);
++    CHECK(vd.guard_faults&VC_FAULT_ENCODER);zero();
++}
++static void interruptions(void)
++{
++    for(unsigned event=1;event<=2;++event)for(unsigned at=1;at<=4;++at){
++        boot(VDR_CONTROL);stage=at;inject=event;
++        unsigned before=nonzero_writes;
++        if(at==2||at==3){
++            now+=10;raw3=(uint16_t)(raw3-5);raw4=(uint16_t)(raw4+10);vd_speed_sample_tick(now);
++            vd_speed_control_poll(now);
++        }else vd_output_apply();
++        CHECK(!inject&&!mask);zero();CHECK(nonzero_writes==before);
++        vd_output_apply();zero();
++    }
++    boot(VDR_CONTROL);stage=2;inject=3;
++    now+=10;raw3=(uint16_t)(raw3-5);raw4=(uint16_t)(raw4+10);vd_speed_sample_tick(now);
++    vd_speed_info_t before=info();vd_speed_control_poll(now);
++    CHECK(!inject&&info().samples==before.samples+1&&info().target_left==before.target_left);
++    vision_drive_stop();zero();
++}
++static void configuration_and_deadlines(void)
++{
++    switch_boot(1);switch_wait(10,1);vdr_config_t c=config(),bad=c;
++    bad.vision.max_age_ms=0;CHECK(!vision_drive_planner_configure(VDR_CONTROL,&bad));
++    bad=c;bad.odometry.revision=2;CHECK(!vision_drive_planner_configure(VDR_CONTROL,&bad));
++    bad=c;bad.planning.planner.max_left_ticks_10ms=1000;CHECK(!vision_drive_planner_configure(VDR_CONTROL,&bad));
++    bad=c;bad.pwm_cap=1001;CHECK(!vision_drive_planner_configure(VDR_CONTROL,&bad));
++    CHECK(vd_speed_source()==VD_SPEED_LEGACY);
++    /* Saturated feedforward must respect the independent final PWM cap. */
++    c.feedforward_right=c.feedforward_left=800;
++    CHECK(vision_drive_planner_configure(VDR_CONTROL,&c));
++    switch_delta_left=-5;switch_delta_right=10;switch_a=0;switch_wait(40,1);
++    CHECK(pwm[0]==2000&&pwm[1]==2000);
++    vdr_output_t t;vd_planner_runtime_prepare(vd.output_epoch,&t);CHECK(t.valid&&t.valid_for_ms);
++    uint16_t r=0,l=0;CHECK(vd_planner_runtime_output(&t,&r,&l)&&r&&l);
++    /* Deadline may expire after unmasked preparation, before commit. */
++    now+=t.valid_for_ms;CHECK(!vd_planner_runtime_output(&t,&r,&l)&&!r&&!l);
++    boot(VDR_CONTROL);vd_planner_runtime_prepare(vd.output_epoch,&t);CHECK(t.valid);
++    now+=10;raw3=(uint16_t)(raw3-5);raw4=(uint16_t)(raw4+10);vd_speed_sample_tick(now);
++    CHECK(!vd_planner_runtime_output(&t,&r,&l)&&!r&&!l);
++    boot(VDR_CONTROL);vd_planner_runtime_prepare(vd.output_epoch,&t);CHECK(t.valid);
++    vision_drive_stop();CHECK(!vd_planner_runtime_output(&t,&r,&l)&&!r&&!l);zero();
++    boot(VDR_CONTROL);stage=1;inject=3;unsigned before=nonzero_writes;
++    vd_output_apply();CHECK(!inject&&nonzero_writes==before);zero();
++    vision_drive_poll(now); /* Consume the injected sample before the next ISR. */
++    switch_wait(4,1);CHECK(pwm[0]&&pwm[1]); /* New feedback resumes normally. */
++}
++static void visual_fault_classification(void)
++{
++    switch_boot(1);switch_wait(10,1);vdr_config_t c=config();
++    c.planning.planner.frame_max_age_ms=c.planning.policy.frame_timeout_ms=50;c.vision.max_age_ms=50;
++    c.odometry.interpolation_gap_ms=5; /* Exact captures work, midpoint spans are rejected. */
++    CHECK(vision_drive_planner_configure(VDR_CONTROL,&c));
++    switch_delta_left=-5;switch_delta_right=10;switch_a=0;switch_wait(40,1);CHECK(pwm[0]&&pwm[1]);
++    uint32_t epoch=vd.output_epoch;
++    vd_planner_runtime_observe(&route_lane,++route_sequence,now-5,now);vision_drive_poll(now);vd_output_apply();
++    CHECK(!vd.guard_faults&&runtime().session_active&&vd.output_epoch==epoch&&pwm[0]&&pwm[1]);
++    switch_wait(6,0);CHECK(vd.guard_faults&VC_FAULT_FRAME);
++    CHECK(!(vd.guard_faults&(VC_FAULT_CONFIG|VC_FAULT_RUNTIME)));zero();
++    switch_wait(20,1);zero(); /* Fresh frames cannot clear a held-ON fault. */
++    switch_a=1;switch_wait(10,1);CHECK(!vd.guard_faults);
++    switch_a=0;switch_wait(40,1);CHECK(pwm[0]&&pwm[1]);
++}
++#endif
++int main(void)
++{
++#if VISION_PLANNER_ACTIVE
++    source_and_writer();faults_and_recovery();interruptions();configuration_and_deadlines();visual_fault_classification();
++#else
++    boot(VDR_SHADOW);CHECK(runtime().mode==VDR_SHADOW&&runtime().plans>0);
++    CHECK(vd_speed_source()==VD_SPEED_LEGACY&&pwm[0]&&pwm[1]);
++    switch_a=1;switch_wait(10,1);vdr_config_t c=config();
++    CHECK(!vision_drive_planner_configure(VDR_CONTROL,&c));
++    CHECK(!vd_speed_select_source(VD_SPEED_METRIC));
++    CHECK(vision_drive_planner_configure(VDR_OFF,NULL));vision_drive_stop();zero();
++#endif
++    printf("PLANNER RUNTIME PASS %u checks; actual C26/PI/writer, simulated hardware.\n",checks);return 0;
++}
+--- /dev/null
++++ b/tests/support/fixtures/response_io.h
+@@ -0,0 +1,25 @@
++#ifndef SMARTCAR_RESPONSE_IO_H
++#define SMARTCAR_RESPONSE_IO_H
++/* Actual isolated candidate modules with fake counters/timer/PWM only. */
++#include "speed_helpers.h"
++#include "vision_drive_internal.h"
++#include "stop_trace.h"
++void board_buzzer_set(int on){CHECK(on==0||on==1);}
++static void setup(int closed)
++{
++ vd_profile_t p;now=0;raw3=raw4=0;mask=0;memset(pwm,0,sizeof(pwm));
++ vision_drive_init(0);app_mode_init(0,0,0);app_mode_sample(0,0,30);(void)app_mode_take_change();
++ vision_drive_get_profile(&p);p.servo_center_us=1550;p.servo_min_us=1430;p.servo_max_us=1670;
++ p.right_sign=1;p.hardware_confirmed=1;p.motor_direction_confirmed=1;
++ p.motor1_forward_level=p.motor2_forward_level=1;p.motor1_scale=p.motor2_scale=1;
++ p.control.cruise_duty=0;p.control.duty_cap=.6f;CHECK(vision_drive_configure(&p));
++ tick(0,0,0);CHECK(vision_drive_encoder_signs(-1,1));
++ CHECK(!vision_drive_speed_config(61,2,.1f));CHECK(!vision_drive_speed_config(23,6,.1f));
++ CHECK(!vision_drive_speed_config(23,2,.3f));CHECK(vision_drive_speed_config(23,2,.1f));
++ CHECK(vision_drive_speed_enable(closed));
++}
++static st_info_t trace_info(void){st_info_t x;st_info(&x);return x;}
++static void run_ticks(unsigned count,int left,int right,int heartbeat)
++{for(unsigned i=0;i<count;++i){tick(left,right,heartbeat);CHECK(pwm[0]<=6000&&pwm[1]<=6000);}}
++static void freeze(void){run_ticks(220,0,0,0);CHECK(trace_info().frozen&&!trace_info().overflow);}
++#endif
+--- /dev/null
++++ b/docs/changes/phase3-runtime-20261109/README.md
+@@ -0,0 +1,58 @@
++# Phase 3：C26调度、原运行PI与唯一最终writer的软件接线
++
++2026-11-09，北京时间。完成了前轮剩余的主要软件接线：原生快照→capture历史→共享监督/规划→原`vision_speed.c`中的双PI实例→原唯一最终writer。**这是可选编译、显式配置的运行链路，已通过Host模拟和目标构建；主工程默认关闭，尚未上板运行。** 工作仍在`docs/main-documentation-20261107`未提交工作区，不是main已合入或板载固件更新。
++
++用户要求减少过度保护、优先性能和稳定运行。本轮没有调整生产增益、速度、采样/故障超时或恢复门限；计算尽量留在前台和IRQ屏蔽区外，不增加UART/SD写入、任务、动态分配或第二个PWM writer。
++
++## 连接与所有权
++
++| 位置 | 本轮行为 |
++| --- | --- |
++| `vision_planner_runtime` | `vision_drive_poll/observe`中的同一前台所有者处理视觉与已有编码器快照；采样序号不变且无新帧时跳过规划，不重复积分。有效新帧缺capture路程括号时保留上一接受帧，明确near失效立即转交监督层。 |
++| 配置与目标源 | `vision_drive_planner_configure`只接受停止、无输出授权/故障/探针/诊断运动的状态。OFF/SHADOW选择旧源，CONTROL选择米制源；运行中不可切换，无自动回退。地图、路程、规划必须同一revision；配置显式提供，无固化标定或串口启用命令。 |
++| 原运行PI | 复用原`pi[2]`、`ws_pi_step_ff_ms`及已有采样/严重故障处理。米制目标直接采用ticks/10ms，绕开旧permille换算、经验转向分配和旧目标斜坡；显式分轮前馈/PWM cap，前一轮的诊断PI模块不参与实际输出。舵机仍由原视觉控制路径提供有界指令。 |
++| 最终输出 | 只在原`vision_actuator.c`写PWM。监督/候选复核在IRQ屏蔽区外完成，生成版本/序号/剩余时限token；区内只检查整数身份、时限、物理授权并读取原PI缓存。独立实际PWM cap、near无效清双PI、STOP/模式切换优先全部保留。 |
++| 撤销与重新准入 | 新物理输出epoch建立新监督会话；STOP锁存不能在同一ON授权内自行重启，需原C26 OFF→ON。严重encoder故障保留；原探针/诊断运动不能与米制目标源同时占用输出。 |
++| 查询 | `vision_drive_planner_info`提供内存状态和调用/规划/等待计数。本轮没有新增板端遥测或真实时序测量。 |
++
++`vision_planner_build.h`仅提供轻量开关，避免旧诊断构建经`vision_speed.h`引入共享内核的相对路径依赖。默认`VISION_PLANNER_RUNTIME=0`、`VISION_PLANNER_ACTIVE=0`、`VISION_PLANNER_PROFILE_REVIEWED=0`。影子构建只启用runtime；控制构建还需active及profile开关，随后仍需RAM配置和原物理准入。Host/隔离控制构建中的review开关是显式测试声明，不是本车标定或实车批准。
++
++## 验证与兼容性
++
++- 完整GCC optimized Host：`20261109T010440-a3ed2835fc`，**57 PASS / 1 SKIPPED**。`performance-host`仍缺数据集、Ground Truth和批准基线，未产生性能结论。没有新增MSVC/ASan或完整PreFlash通过结论。
++- 新`planner-runtime`包含CONTROL和SHADOW两个真实宏构型，分别6442/413条断言通过。覆盖原运行PI的直接5/10计数目标、100次重复poll不增加规划/改变PI输出、独立200‰上限、停止中切源、near清零与恢复、far受控停止及实际零反馈确认、OFF→ON、严重故障保留；还在输出/PI四个阶段插入STOP和模式切换，并验证提交前新采样、时限到期均拒绝旧结果。
++- 上述几何、尺度、前馈、速度和监督预算全部是显式合成测试输入，不建议用于实车。测试没有证明轮速跟踪、物理制动、误停率或MCU耗时。
++- 选择运行`static-safety/project-structure`：`20261109T010440-89dbb0ce8e`，连同environment共**3 PASS**；这不是整个PreFlash profile。
++- 修复前轮静态失败项：将`test_speed_response.c`和`test_heartbeat_response.c`的共有IO setup移至`response_io.h`，删除测试C互相包含/重命名main。检查工具现在分别执行完整响应和心跳场景。既有冻结候选与本轮最终源码重新生成的私有候选均通过：响应14414、心跳815条断言，451行native trace CRC通过。使用新输出目录，保留原候选Host证据。
++- `Recorder`源码锁因新增条件编译hook按预期拒绝了driver变更。审核后，在相同当前头文件下，对比本轮前/后的driver和actuator，C26及Recorder默认关闭构型共4项预处理结果相同；仅更新`demo/recorder/sdk_sources.lock.json`中driver哈希。SDK/FreeRTOS锁和校验机制未放宽。完整Host中的Recorder生成回归随后通过。
++- 首次完整回归也发现无编码器旧构型出现新链接依赖；已将探针处目标源检查放入ACTIVE条件编译，最终完整Host通过。自查另修复监督故障类别映射：视觉过期仍按原视觉/帧故障OFF→ON恢复，编码器/配置/控制故障保留；不经带EXTERNAL标签的外部trip入口。新增中点无法对齐时丢弃该帧继续上一视野、精确历史端点不被后来断档误拒的回归；`metric-control`现40792条断言通过。首次失败运行`20261109T005114-19691b8278`保留，不作为验收证据。
++
++实际C26工程隔离完整Keil构建，三个构型均**0错误、0警告**：
++
++| 构型 | Code | RO-data | RW-data | ZI-data |
++| --- | ---: | ---: | ---: | ---: |
++| 默认关闭 | 89824 | 13792 | 212 | 196648 |
++| 影子 | 101264 | 13792 | 212 | 199772 |
++| 控制 | 102840 | 13792 | 212 | 199772 |
++
++单位均为字节，来自各自build.log。默认关闭的大小与前轮相同，不声称BIN逐字节相同。新增常驻runtime状态在启用时占用额外3124字节ZI；这不是栈使用量或WCET测量。`audit_build.py --planner-mode`只覆盖隔离工程副本的开关，不修改主工程宏、不下载固件。
++
++复现（仓库根目录，不访问设备）：
++
++```powershell
++python tools/testing/run_tests.py --profile Host --suite planner-runtime --compiler gcc --jobs 2
++python tools/testing/run_tests.py --profile Host --compiler gcc --jobs 3
++python tools/testing/run_tests.py --profile PreFlash --suite static-safety --suite project-structure --compiler gcc --jobs 2
++# 仅构建副本；off/shadow/control分别使用新的输出目录。
++python tools/speed_planning/audit_build.py --output .build/phase3-runtime-repro-control --uv4 E:/ElecTronic/Keil/UV4/UV4.exe --arm-bin E:/ElecTronic/Keil/ARM/ARMCLANG/bin --planner-mode control
++```
++
++冻结摘要、输入及产物哈希见`evidence.json`；精简日志和源码锁审核见`evidence/`。完整私有构建在`.build/phase3-runtime-20261109/keil-verified-*`。`changes.patch`基于本轮开始前的相关文件副本，LF归一化；共享响应checker保留了并行工作新增的turn候选兼容分支。其他Phase2/Recorder现场进展有各自记录，不由本报告补作验收。
++
++## 阶段位置与自查
++
++Phase3已从独立诊断链路推进到**主C26运行链路的软件集成完成、等待配置与上板验证**。仍需Phase2给出映射适用域/盲区、速度与制动、轮角/轮距、完整延迟、near/far失效恢复预算和误判依据；随后在实际构型测影子开销、PI调度抖动、输出时限、负载跟踪与故障恢复。其他构型接入、训练遥测和真实A/B/赛道验收仍有独立工作，不能称所有离线及Phase3工作全部完成。
++
++自查：唯一writer及原C26授权未增加旁路；控制目标源和旧目标源互斥；原PI算法/生产参数不变；最终提交区无规划、几何或监督浮点计算；源码哈希对应最终Host/三种目标副本；旧回归、源码锁和静态检查保留。没有串口访问、烧录、复位或运动操作；全局配置、技能及持久Agent行为未修改。
++
++证据层：原生C、Keil XML、JSON及日志为`structured_parsed`；编译、预处理对比、断言、CRC与哈希为`computed`。没有仅依赖`md_extracted`的关键数值，没有新增`pdf_verified`物理测量。主要准确性边界是合成输入、尚无本车配置/实时与实车结果。

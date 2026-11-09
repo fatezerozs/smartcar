@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "vision-image-regression",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 7.136468,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:02:44.117+00:00",
+  "finishedAt": "2026-11-09T10:02:51.254+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_image_regression.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100243-e1a183b3da\\suites\\vision-image-regression\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 7.131528,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100243-e1a183b3da\\suites\\vision-image-regression",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "750 CRC/SHA verified native-resolution original frames; 28 local visually reviewed boundary bands selected after experiments and metric coverage. Not a full labelled accuracy benchmark, independent holdout or vehicle approval.",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

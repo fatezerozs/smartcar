@@ -1,0 +1,275 @@
+{
+  "schemaVersion": "smartcar.phase3-vision-diagnosis/1",
+  "layers": [
+    "structured_parsed",
+    "computed",
+    "original_image_visually_reviewed"
+  ],
+  "domainM": [
+    -0.1,
+    0.1,
+    0.6970000000000001,
+    1.297
+  ],
+  "profileId": "C26-SHADOW-FA161BDE",
+  "images": {
+    "time": "2026-11-09T11:29:28.751930+08:00",
+    "port": "COM10",
+    "motionCommandSent": false,
+    "modes": {
+      "g": [
+        {
+          "file": "g-0.gray",
+          "sha256": "d71c61e1d9d1c17f8741602286a2b4cee136b712af4e9ff8e5804cee50f99685"
+        },
+        {
+          "file": "g-1.gray",
+          "sha256": "323d2219cf662e77505b5376782aa0ac2b0d5a1f6e1ddbfe1b5308e4e167aad8"
+        }
+      ],
+      "o": [
+        {
+          "file": "o-0.gray",
+          "sha256": "2c5736483d3ea08112fb1d19636e591f2652eb0eaf8a0b7b619b7fbe29502034"
+        },
+        {
+          "file": "o-1.gray",
+          "sha256": "46fdc91867e15f75133ca5d485fa63b6b76e8caf418163af17a056f2c7a55f57"
+        }
+      ],
+      "b": [
+        {
+          "file": "b-0.gray",
+          "sha256": "7e287a692422bc0b3914d6037fa9ba825abee15f94b03b83f71d7d31b18cd09c"
+        },
+        {
+          "file": "b-1.gray",
+          "sha256": "91f4fdebb4351ce046e4e4b8a2601e0af95ea254dec5e2e02a545d4a53876868"
+        }
+      ]
+    },
+    "protocol": "fixed header and length only; no payload CRC or image sequence; separate modes are not simultaneous",
+    "stop": "[LINK] STOP",
+    "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+    "claim": "[LINK] port=radio owner=radio rx=2153 tx=1493730 overflow=0 errors=1 tx_rejected=46; x=claim while stopped",
+    "complete": true,
+    "binaryCaptureAt": "2026-11-09T11:31:56.682814+08:00"
+  },
+  "overlayRows": [
+    {
+      "file": "o-0.gray",
+      "rawImageRow": 70,
+      "overlayEdgesAtPreviewX": [
+        33,
+        73
+      ],
+      "centreMarkPreviewX": [
+        52,
+        53
+      ],
+      "rawCentreQuantizationInterval": [
+        106,
+        107
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.026573954493342353,
+        -0.02036862556832228
+      ],
+      "rawCentreProjectedYIntervalM": [
+        0.7680665573963843,
+        0.7699265617747816
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-0.gray",
+      "rawImageRow": 58,
+      "overlayEdgesAtPreviewX": [
+        19,
+        73
+      ],
+      "centreMarkPreviewX": [
+        45,
+        46
+      ],
+      "rawCentreQuantizationInterval": [
+        92,
+        93
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.13791477157295842,
+        -0.13039847657728584
+      ],
+      "rawCentreProjectedYIntervalM": [
+        0.9417584209035496,
+        0.9442046904214979
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-0.gray",
+      "rawImageRow": 54,
+      "overlayEdgesAtPreviewX": [
+        24,
+        71
+      ],
+      "centreMarkPreviewX": [
+        46,
+        47
+      ],
+      "rawCentreQuantizationInterval": [
+        94,
+        95
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.13301885656945903,
+        -0.1248241476959414
+      ],
+      "rawCentreProjectedYIntervalM": [
+        1.0369590903047046,
+        1.0397213774889236
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-0.gray",
+      "rawImageRow": 52,
+      "overlayEdgesAtPreviewX": [
+        28,
+        70
+      ],
+      "centreMarkPreviewX": [
+        48,
+        49
+      ],
+      "rawCentreQuantizationInterval": [
+        98,
+        99
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.10442586721098178,
+        -0.09578878935519686
+      ],
+      "rawCentreProjectedYIntervalM": [
+        1.1001174035563157,
+        1.1030859832602393
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-1.gray",
+      "rawImageRow": 70,
+      "overlayEdgesAtPreviewX": [
+        32,
+        73
+      ],
+      "centreMarkPreviewX": [
+        52,
+        53
+      ],
+      "rawCentreQuantizationInterval": [
+        106,
+        107
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.026573954493342353,
+        -0.02036862556832228
+      ],
+      "rawCentreProjectedYIntervalM": [
+        0.7680665573963843,
+        0.7699265617747816
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-1.gray",
+      "rawImageRow": 58,
+      "overlayEdgesAtPreviewX": [
+        19,
+        73
+      ],
+      "centreMarkPreviewX": [
+        45,
+        46
+      ],
+      "rawCentreQuantizationInterval": [
+        92,
+        93
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.13791477157295842,
+        -0.13039847657728584
+      ],
+      "rawCentreProjectedYIntervalM": [
+        0.9417584209035496,
+        0.9442046904214979
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-1.gray",
+      "rawImageRow": 54,
+      "overlayEdgesAtPreviewX": [
+        24,
+        71
+      ],
+      "centreMarkPreviewX": [
+        46,
+        47
+      ],
+      "rawCentreQuantizationInterval": [
+        94,
+        95
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.13301885656945903,
+        -0.1248241476959414
+      ],
+      "rawCentreProjectedYIntervalM": [
+        1.0369590903047046,
+        1.0397213774889236
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    },
+    {
+      "file": "o-1.gray",
+      "rawImageRow": 52,
+      "overlayEdgesAtPreviewX": [
+        28,
+        70
+      ],
+      "centreMarkPreviewX": [
+        48,
+        49
+      ],
+      "rawCentreQuantizationInterval": [
+        98,
+        99
+      ],
+      "rawCentreProjectedXIntervalM": [
+        -0.10442586721098178,
+        -0.09578878935519686
+      ],
+      "rawCentreProjectedYIntervalM": [
+        1.1001174035563157,
+        1.1030859832602393
+      ],
+      "scope": "Encoded rounded centre only; adapter uses unrounded edge midpoint and spatial median. Row54 is the near endpoint; do not treat as an exact native coordinate dump."
+    }
+  ],
+  "diagnosis": {
+    "brightFloorClassifiedWhite": true,
+    "localBoundaryTrackingErrorVisuallyObserved": true,
+    "wholeModuleNonfunctional": false,
+    "currentMetricInputBlocked": true,
+    "groundMappingPhysicalAccuracyFullyVerified": false,
+    "independentNoCountFault": "no_count_left under operator-confirmed power isolation"
+  },
+  "limits": [
+    "Gray/binary/overlay modes captured sequentially, not the same exposure.",
+    "94x60 preview is decimated from 188x120; no raw reconstruction used.",
+    "Fixed header/length provides no pixel CRC or frame counter.",
+    "Visual boundary inspection is local qualitative evidence, not a labelled accuracy benchmark.",
+    "Mapping is the existing candidate with known held-out/marker residuals."
+  ]
+}

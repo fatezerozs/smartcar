@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "smartcar.visual-reference-bands/1",
+  "sourceSession": "docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04",
+  "width": 188,
+  "height": 120,
+  "labelMethod": "Local visual review against original-layout raw images; approximate +/-3px bands around the visible white/gray transitions, not pixel-exact full-image ground truth. Selected after algorithm experiments; not an independent holdout.",
+  "reviewRows": [
+    49,
+    54,
+    61,
+    70
+  ],
+  "referenceCentresLeftRight": [
+    [
+      80,
+      124
+    ],
+    [
+      77,
+      126
+    ],
+    [
+      72,
+      130
+    ],
+    [
+      66,
+      135
+    ]
+  ],
+  "tolerancePixels": 3,
+  "frames": [
+    {
+      "index": 0,
+      "file": "frame-0000.vqf",
+      "sha256": "86f81609591f73258a68e505666f698da348101b88f3b2455641e3bdc7d99fd3"
+    },
+    {
+      "index": 50,
+      "file": "frame-0050.vqf",
+      "sha256": "f4f3627cccbd6d142f70331ed00f4e5daf70b09c030dc3e262f998ab8b4186dd"
+    },
+    {
+      "index": 150,
+      "file": "frame-0150.vqf",
+      "sha256": "4426e58f571df424474da23296af82b07d794445b4cfc34ac187d773b323b019"
+    },
+    {
+      "index": 256,
+      "file": "frame-0256.vqf",
+      "sha256": "30ab9ba8a461b21afddd07dcdb4f2f512302ff4b24bcd28dfa1feac686c10f4e"
+    },
+    {
+      "index": 560,
+      "file": "frame-0560.vqf",
+      "sha256": "3e0d6fb046ffb5ac41910972b2f2760fb824a9ac45a7c3b373deca291255b743"
+    },
+    {
+      "index": 650,
+      "file": "frame-0650.vqf",
+      "sha256": "c0f3471b97ea49848ffdec574e5864f8e7fa71e2b946a1c74954a5443954b938"
+    },
+    {
+      "index": 749,
+      "file": "frame-0749.vqf",
+      "sha256": "286b65f8c6c0d6141b51a670f5495b30b7cffaa1dbbd684c65a73182c36bfbd3"
+    }
+  ],
+  "notMeasured": [
+    "full-image accuracy",
+    "dynamic scene generalization",
+    "physical ground mapping accuracy"
+  ]
+}

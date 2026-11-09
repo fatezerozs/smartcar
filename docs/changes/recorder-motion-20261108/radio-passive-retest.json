@@ -1,0 +1,16 @@
+{
+  "receive_only": true,
+  "seconds": 10,
+  "bytes": 48052,
+  "chunks": 290,
+  "identity_prefix_present": false,
+  "source_digest_present": false,
+  "ascii_runs": [
+    "(<>433='o>C'o>C`"
+  ],
+  "last_chunk": "2026-11-08T13:50:15.6241433Z,9992,47932,120",
+  "sha256": "864dc745a801679dbd2b6f13887e26b47375351b34c6331a3c9f5dd93a92e73c",
+  "capture": "C:\\shengchanli\\smartCar\\wireless_diagnostics\\wireless-20261108-215005-496805",
+  "start_sent": false,
+  "arm_sent": false
+}

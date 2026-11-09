@@ -1,7 +1,8 @@
 #ifndef SMARTCAR_HOST_SPEED_PLANNER_H
 #define SMARTCAR_HOST_SPEED_PLANNER_H
-/* Phase 1/2 HOST prototype. No PWM, authorization or MCU integration.
- * All physical parameters are caller-supplied; there are no production defaults. */
+/* Single portable planning kernel, shared by Host and the MCU shadow interface.
+ * No PWM or motor authorization. All physical parameters are caller-supplied;
+ * there are no production defaults or active production integration here. */
 #include <stdint.h>
 #define SP_CAPACITY 16U
 typedef enum { SP_NORMALIZED=0, SP_METRES=1 } sp_units_t;
@@ -35,10 +36,15 @@ enum { SP_LIMIT_MAX=1, SP_LIMIT_CURVE=2, SP_LIMIT_HORIZON=4,
        SP_LIMIT_NEAR=8, SP_LIMIT_FORWARD=16, SP_LIMIT_BACKWARD=32 };
 typedef struct { unsigned count;float current_cap,speed[SP_CAPACITY];uint32_t reason[SP_CAPACITY]; } sp_plan_t;
 int sp_limits_valid(const sp_limits_t *limits);
+/* O(N), structural/finite/range check only; no square roots or speed plan. */
+int sp_preview_valid(const sp_preview_t *preview);
 /* Explicit terminal speed at the last trusted point; current_speed is measured.
  * Normalized geometry is rejected: pixels cannot enter a metres braking model. */
 int sp_plan(const sp_preview_t *preview,const sp_limits_t *limits,float current_speed,
             int near_only,float terminal_speed,sp_plan_t *out);
+/* Rebase a capture-aligned metric preview by measured forward travel. Reject
+ * an exhausted horizon; caller owns origin/odometer calibration and validity. */
+int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out);
 typedef struct { float speed,accel;uint8_t brake_override,infeasible; } sp_trajectory_t;
 /* hard_stop clears immediately. Otherwise dt must be (0,max_dt_s]. The cap
  * outranks jerk; infeasible marks a cap requiring >brake deceleration. */
@@ -60,6 +66,7 @@ typedef struct {
     unsigned near_frames,far_frames,zero_samples;
     float far_distance_m,zero_speed_m_s;
 } sp_policy_t; /* Caller-supplied simulation or reviewed project policy. */
+int sp_policy_valid(const sp_policy_t *policy);
 typedef struct {
     uint32_t now_ms,frame_seq,capture_ms,encoder_seq,encoder_ms;
     float odometer_m,measured_speed,odometer_at_capture_m;

@@ -1,6 +1,7 @@
 #ifndef VISION_SPEED_H
 #define VISION_SPEED_H
 #include <stdint.h>
+#include "vision_planner_build.h"
 
 /* Software timing contract for the foreground PI service and PIT sampling.
  * These are fail-closed limits, not a claim of hard real-time scheduling.
@@ -43,4 +44,13 @@ int vd_speed_output(uint16_t request_right,uint16_t request_left,int reverse,
  * fail closed; never replay the latest measurement as multiple PI steps.
  * Not a guaranteed fixed-period scheduler; PIT1 remains sample/cutoff only. */
 void vd_speed_control_poll(uint32_t now_ms);
+enum { VD_SPEED_LEGACY=0,VD_SPEED_METRIC=1 };
+/* Source selection is stopped-only, never a running fallback. Metric requests
+ * are counts/10ms directly, with independent explicit PWM/FF permille caps. */
+int vd_speed_select_source(unsigned source);
+unsigned vd_speed_source(void);
+int vd_speed_metric_request(uint16_t right_ticks,uint16_t left_ticks,uint16_t pwm_cap,
+                              uint16_t ff_right,uint16_t ff_left,uint32_t output_epoch,
+                              uint32_t sample_sequence,uint32_t *request_version);
+int vd_speed_metric_cached(uint32_t request_version,uint32_t sample_sequence,uint16_t *right,uint16_t *left);
 #endif

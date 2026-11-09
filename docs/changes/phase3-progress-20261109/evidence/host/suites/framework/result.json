@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "framework",
+  "status": "PASS",
+  "evidenceClass": "host",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 11.446014,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:15.901+00:00",
+  "finishedAt": "2026-11-09T10:09:27.347+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\framework\\test_framework.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\framework\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 11.443491,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\framework",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "python",
+    "effectiveResources": [
+      "framework-selftest"
+    ],
+    "lastRawExitCode": 0
+  }
+}

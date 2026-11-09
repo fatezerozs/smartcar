@@ -1,0 +1,16 @@
+{
+  "role": "AUTHORIZED_EXPERIMENT_NOT_VALIDATED",
+  "source_digest": "74a82b33dcf2cf1707eebf0966cd07c317df20e626446ee40752a45f58cf5262",
+  "limit_ms": 2900,
+  "motor_pwm_cap_permille": 200,
+  "max_speed_ticks_per_10ms": 20,
+  "C26_OFF_cuts_outputs": true,
+  "one_shot_until_reset": true,
+  "visual_protections_preserved": true,
+  "PI_effectiveness": "USER_WAIVED_NOT_MEASURED_PASS",
+  "start_requires": "MOTION START then MOTION ARM while OFF then physical C26 ON",
+  "build_passed": true,
+  "hardware_tested": false,
+  "axf_sha256": "c32f76feaa1e774d1ccbce83692c5722739f256ba8fcfa1261be2de75e141c38",
+  "bin_sha256": "45cf31184dbaae4b0fb69023917157a68e53079d757012ccad4416ee9c46579a"
+}

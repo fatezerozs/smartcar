@@ -1,0 +1,30 @@
+{
+  "module": "main ASCII radio communication",
+  "passed": false,
+  "source": "c20c8126df7cbb52490432146b04a0f4505283e021888a718bb8affdc5e38c0b",
+  "changed_project_inputs": [
+    ".build\\recorder-joint-20261106\\motion-radio-20261108T140141769996Z\\candidate.uvprojx"
+  ],
+  "local_axf_sha256": "f30cb44f9e322c7ac68e82ca32e7e66a2c205a3506faf31688ff79d6b94de25f",
+  "valid_identity_count": 0,
+  "bytes": 155060,
+  "raw_sha256": "2f918a980a73f1b8d84f3a01f0223177dd6d27d19a8d9745c259a67ac00cace1",
+  "start_sent": false,
+  "arm_sent": false,
+  "motion_tested": false,
+  "port_closed": true,
+  "criteria": "at least two complete matching idle/OFF identity lines during five STATUS queries",
+  "limitations": "Native main ASCII transport has no frame CRC; matching lines do not exclude interference or prove future reliability",
+  "stderr": "",
+  "image_audit": "All source inputs unchanged; candidate project saved/rebuilt. Same-size local load image differs from frozen BIN only at 3 bytes of __TIME__ string 22:02:06 -> 22:05:43; board Flash not independently read.",
+  "ascii_fragments": [
+    "[LINK] RX_ERROR; discarded until newline",
+    "[LINK] port=radio owner=usb rx=747 tx=119 overflow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=usb rx=751 tx=124 overflow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio ow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=usb rx=815 tx=188 overflow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=usb rx=823 tx=196 overflow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=usb rx=868 tx=668 overflow=157 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] REJECT not owner; x=claim while stopped"
+  ]
+}

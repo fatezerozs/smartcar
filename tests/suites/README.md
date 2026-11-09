@@ -16,6 +16,39 @@ It is validated against `../schemas/suite.schema.json` with PowerShell 7 `Test-J
   and near-invalid motor inhibition after the first Phase 3 changes; it is not
   acceptance of the calibrated planner. See
   [the stage report](../../docs/changes/c31-speed-planning-20261105/README.md).
+- L2: `c26-snapshot` exercises real output/PI modules with simulated interrupt
+  interleavings, request generations, sample/lease invalidation, immutable
+  geometry preparation and IRQ-mask restoration. It does not measure WCET,
+  electrical PWM timing or calibrated planning/physical stopping performance.
+- L2: `planner-interface` exercises the shared metric planner through the MCU
+  shadow API, including data/identity/age checks, stop semantics and explicit
+  counts/s to counts/10ms quantization. Its target code is compiled in the main
+  project; the primary defaults disable its optional runtime.
+  `invalid-configuration` checks the active planner guard; no production
+  parameters or physical actuator authorization are added by these tests.
+- L2: `planner-shadow` exercises the serialized supervisor/trajectory composition
+  and capture-aligned horizon advancement. `planner-shadow-replay` verifies 750
+  native visual records and replays 5 scenarios with explicitly synthetic motion
+  and metric geometry; it provides no PI/PWM, live scheduling or hardware result.
+- L2: `metric-control` connects native cumulative snapshots, bounded odometry
+  history, the existing paired-row vision adapter and shared shadow planner to
+  caller-owned diagnostic instances of the unchanged wheel PI. It includes
+  synthetic closed-loop plants. `metric-odom-replay` checks 1516 frozen count
+  records against an independent conversion/interpolation oracle; wheel scales
+  are explicit candidates and capture queries are synthetic midpoint times.
+- L2: `planner-runtime` runs both control and shadow macro variants through
+  actual C26 scheduling, the original live PI instances and the sole writer.
+  Synthetic geometry/scales exercise direct counts, independent PWM cap,
+  near/far transitions, held-ON latches, IRQ interleavings and commit deadlines.
+  The test-only review macro is not physical calibration or board timing evidence.
+- L2: `phase3-shadow-preparation` pins measured Phase2 inputs and labelled
+  reference values, checks preview/raw pixel and mm/metre transforms, builds
+  an isolated candidate, compares legacy PWM sequences, exercises stop-only
+  retained rows, and replays all 750 real images to expose geometry coverage.
+- L2: `vision-image-regression` verifies all 750 original full-resolution image
+  CRC/SHA records, native C vision/metric coverage and 28 locally reviewed
+  paired boundary bands. These bands were selected after algorithm experiments;
+  they are not a complete accuracy benchmark or an independent holdout.
 - L2: `recorder` adds 17 capture/storage/SCRAW synthetic integration cases, using
   the selected Host compiler/mode; `recorder-tools` checks incremental generation
   without starting a firmware build. Both are required in Host and PreFlash.

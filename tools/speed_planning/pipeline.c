@@ -34,22 +34,6 @@ static float anticipate_curve(const sp_pipeline_t *p,const sp_preview_t *v,float
     }
     return cap;
 }
-int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out)
-{
-    unsigned next=1;float fraction;sp_preview_t v;
-    if(!source||!out||source->count<2||source->count>SP_CAPACITY||source->units!=SP_METRES||
-       !isfinite(travelled)||travelled<0||travelled>=source->distance[source->count-1]-.000001f)return 0;
-    for(unsigned j=0;j<source->count;++j)if(!isfinite(source->distance[j])||!isfinite(source->curvature[j])||
-        (!j&&source->distance[j]!=0)||(j&&source->distance[j]<=source->distance[j-1]))return 0;
-    while(next<source->count&&source->distance[next]<=travelled)++next;
-    if(next>=source->count)return 0;
-    v=*source;v.count=1;v.distance[0]=0;
-    fraction=(travelled-source->distance[next-1])/(source->distance[next]-source->distance[next-1]);
-    v.curvature[0]=source->curvature[next-1]+fraction*(source->curvature[next]-source->curvature[next-1]);
-    for(unsigned j=next;j<source->count;++j){v.distance[v.count]=source->distance[j]-travelled;
-        v.curvature[v.count]=source->curvature[j];++v.count;}
-    if(v.count<2)return 0;*out=v;return 1;
-}
 int sp_pipeline_init(sp_pipeline_t *p,const sp_pipeline_config_t *c,uint64_t session)
 {
     if(!p||!c)return 0;memset(p,0,sizeof(*p));sp_supervisor_init(&p->supervisor);

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.0",
+  "id": "vision-contract",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "algorithm-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 11.07319,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:10.349+00:00",
+  "finishedAt": "2026-11-09T10:09:21.422+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-Dvision_midterm_reset=reference_reset",
+        "-Dvision_midterm_process=reference_process",
+        "-Dvision_midterm_preview=reference_preview",
+        "-Dvision_midterm_status_name=reference_status_name",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\reference\\vision_reference.c",
+        "-c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default\\reference.obj"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.197487,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_equivalence.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default\\reference.obj",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default\\vision-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.509765,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default\\vision-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 10.362426,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_equivalence.c",
+        "demo/code/vision_midterm.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [],
+      "reference": {
+        "source": "tests/vision/reference/vision_reference.c",
+        "defines": [
+          "vision_midterm_reset=reference_reset",
+          "vision_midterm_process=reference_process",
+          "vision_midterm_preview=reference_preview",
+          "vision_midterm_status_name=reference_status_name"
+        ]
+      },
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\vision-contract",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/reference.obj",
+    "artifacts/default/vision-contract.exe"
+  ],
+  "details": {
+    "scope": "Global statistics/gray previews, uniform-scene historical equivalence and independent row-Otsu oracle; tracking/overlays excluded.",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

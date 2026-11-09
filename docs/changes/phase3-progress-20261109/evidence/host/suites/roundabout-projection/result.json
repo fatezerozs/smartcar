@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0",
+  "id": "roundabout-projection",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 7.10535,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:02.251+00:00",
+  "finishedAt": "2026-11-09T10:09:09.356+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\stubs",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ROUTE_SWITCH=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_roundabout_projection.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\roundabout-projection\\artifacts\\default\\roundabout-projection.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\roundabout-projection\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.106658,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\roundabout-projection\\artifacts\\default\\roundabout-projection.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\roundabout-projection\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 5.995868,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_roundabout_projection.c",
+        "demo/code/vision_midterm.c"
+      ],
+      "includeDirectories": [
+        "tests/vision/stubs",
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ROUTE_SWITCH=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\roundabout-projection",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/roundabout-projection.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

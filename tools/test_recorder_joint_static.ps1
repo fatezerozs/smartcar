@@ -1,10 +1,11 @@
-param([string]$Port='COM14',[switch]$CheckOnly,[switch]$C26TransitionTest)
+param([string]$Port='COM14',[switch]$CheckOnly,[switch]$C26TransitionTest,[string]$BuildDirectory='')
 $ErrorActionPreference='Stop'
 Add-Type -Path (Join-Path $PSScriptRoot 'JointStaticClient.cs')
 [JointStaticClient]::SelfTest()
 if($CheckOnly){exit 0}
 $repo=Split-Path $PSScriptRoot -Parent
-$build=(Get-Content -LiteralPath (Join-Path $repo 'docs/changes/recorder-b3-20261106/encoder-joint-static-20261106/current-candidate.txt') -Raw).Trim()
+$build=$BuildDirectory
+if(!$build){$build=(Get-Content -LiteralPath (Join-Path $repo 'docs/changes/recorder-b3-20261106/encoder-joint-static-20261106/current-candidate.txt') -Raw).Trim()}
 $identity=(Get-Content -LiteralPath (Join-Path $build 'inputs.json') -Raw|ConvertFrom-Json).manifest_digest
 $out=Join-Path (Split-Path $repo -Parent) ('joint_static_'+[DateTime]::UtcNow.ToString('yyyyMMddTHHmmssfffZ'))
 New-Item -ItemType Directory -Path $out|Out-Null

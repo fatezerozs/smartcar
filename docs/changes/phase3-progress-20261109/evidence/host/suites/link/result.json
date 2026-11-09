@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "id": "link",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.397262,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:08:55.472+00:00",
+  "finishedAt": "2026-11-09T10:08:55.869+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_link.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_link.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link\\artifacts\\default\\link.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.300458,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link\\artifacts\\default\\link.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.092496,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_link.c",
+        "demo/code/app_link.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/link.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

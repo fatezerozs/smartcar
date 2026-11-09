@@ -2336,6 +2336,86 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>Phase3 planner shadow interface</GroupName>
+          <Files>
+            <File>
+              <FileName>vision_planner_runtime.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\code\vision_planner_runtime.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner_runtime.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_planner_runtime.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner_build.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_planner_build.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_metric_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\code\vision_metric_io.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_metric_io.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_metric_io.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_metric_pi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\code\vision_metric_pi.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_metric_pi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_metric_pi.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_adapter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\tools\speed_planning\vision_adapter.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_adapter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\tools\speed_planning\vision_adapter.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner_shadow.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\code\vision_planner_shadow.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner_shadow.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_planner_shadow.h</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\code\vision_planner.c</FilePath>
+            </File>
+            <File>
+              <FileName>vision_planner.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\code\vision_planner.h</FilePath>
+            </File>
+            <File>
+              <FileName>speed_planner.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\tools\speed_planning\speed_planner.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_planner.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\tools\speed_planning\speed_planner.h</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>

@@ -1,0 +1,26 @@
+[
+  {
+    "mutation": "publication-deadline",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "shadow:105 !vps_result_matches(&s,&r,&in.identity,in.observation.now_ms+10)"
+  },
+  {
+    "mutation": "encoder-gap",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "shadow:83 vps_tick(&s,&in,&r)==VPS_FAULT"
+  },
+  {
+    "mutation": "trajectory-state",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "shadow:74 s.trajectory.speed>.5f&&s.control_revision==r.candidate.stamp.control_revision"
+  },
+  {
+    "mutation": "horizon-travel",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "shadow:134 vps_tick(&s,&in,&r)==VPS_FAULT"
+  }
+]

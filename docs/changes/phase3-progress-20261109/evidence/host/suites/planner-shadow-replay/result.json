@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "planner-shadow-replay",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 2.070415,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:27.453+00:00",
+  "finishedAt": "2026-11-09T10:09:29.523+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_shadow_visual_replay.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow-replay\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 2.068045,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow-replay",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Hybrid measured visual metadata and explicitly synthetic metric/zero-motion input; no physical stopping, PI or runtime scheduling claim",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

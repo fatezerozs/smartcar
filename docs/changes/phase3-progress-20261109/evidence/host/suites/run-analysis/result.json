@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "run-analysis",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.163055,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:12.038+00:00",
+  "finishedAt": "2026-11-09T10:09:12.201+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_run_analysis.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\run-analysis\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.161091,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\run-analysis",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "python",
+    "effectiveResources": [
+      "offline-python"
+    ],
+    "lastRawExitCode": 0
+  }
+}

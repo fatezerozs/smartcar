@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "id": "link-board",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.451004,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:08:55.532+00:00",
+  "finishedAt": "2026-11-09T10:08:55.983+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\stubs\\link_board",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_link_board.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_link.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_link_board.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link-board\\artifacts\\default\\link-board.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link-board\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.368875,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link-board\\artifacts\\default\\link-board.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link-board\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.076275,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_link_board.c",
+        "demo/code/app_link.c",
+        "demo/code/app_link_board.c"
+      ],
+      "includeDirectories": [
+        "tests/vision/stubs/link_board",
+        "demo/code"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\link-board",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/link-board.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

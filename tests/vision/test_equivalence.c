@@ -6,7 +6,7 @@
 
 /* Layered preprocessing contract; reference remains the old mapping/deadband
  * baseline. Spatially uniform two-class scenes and all gray pairs stay equal.
- * Spatial illumination, noise and outliers intentionally use row-local Otsu:
+ * Spatial illumination, noise and outliers use bounded row-local refinement:
  * validate them independently, never bless a mismatch by observing outputs.
  * Global statistics and gray previews remain equal for EVERY scene. Tracking
  * and overlays are excluded (tie rejection/edge continuity changed separately).
@@ -51,34 +51,61 @@ static int compare_gray(const void *a, const void *b)
     return (int)*(const uint8_t *)a - (int)*(const uint8_t *)b;
 }
 
-static int row_oracle(const uint8_t *row, int global, int global_contrast)
+static int sorted_split(const uint8_t *sorted,int begin,int count)
 {
-    uint8_t sorted[VISION_WIDTH];
     uint64_t total = 0, left = 0, best_num = 0, best_den = 1;
     int k, first = 0, last = 0;
-    if (global_contrast < VISION_MIN_CONTRAST) return global;
-    memcpy(sorted, row, sizeof(sorted));
-    qsort(sorted, VISION_WIDTH, sizeof(sorted[0]), compare_gray);
-    if (sorted[VISION_WIDTH * (VISION_GRAY_PERCENTILE_DENOMINATOR - 1) /
-               VISION_GRAY_PERCENTILE_DENOMINATOR - 1] -
-        sorted[VISION_WIDTH / VISION_GRAY_PERCENTILE_DENOMINATOR - 1] < VISION_MIN_CONTRAST)
-        return global;
-    for (k = 0; k < VISION_WIDTH; ++k) total += sorted[k];
-    for (k = 1; k < VISION_WIDTH; ++k) {
+    for (k = 0; k < count; ++k) total += sorted[begin+k];
+    for (k = 1; k < count; ++k) {
         uint64_t right, num, den;
-        left += sorted[k - 1];
-        if (sorted[k - 1] == sorted[k]) continue;
+        left += sorted[begin+k - 1];
+        if (sorted[begin+k - 1] == sorted[begin+k]) continue;
         right = total - left;
-        num = left * left * (VISION_WIDTH - k) + right * right * k;
-        den = (uint64_t)k * (VISION_WIDTH - k);
+        num = left * left * (count - k) + right * right * k;
+        den = (uint64_t)k * (count - k);
         if (num * best_den > best_num * den) {
             best_num = num; best_den = den;
-            first = sorted[k - 1]; last = sorted[k] - 1;
-        } else if (num * best_den == best_num * den) last = sorted[k] - 1;
+            first = sorted[begin+k - 1]; last = sorted[begin+k] - 1;
+        } else if (num * best_den == best_num * den) last = sorted[begin+k] - 1;
     }
     return (first + last) / 2;
 }
 
+static int row_oracle(const uint8_t *row, int global, int global_contrast)
+{
+    uint8_t sorted[VISION_WIDTH];int at=0,split=0;
+    uint64_t middle_sum=0,white_sum=0;int middle_count,white_count;
+    if(global_contrast<VISION_MIN_CONTRAST)return global;
+    memcpy(sorted,row,sizeof(sorted));qsort(sorted,VISION_WIDTH,sizeof(sorted[0]),compare_gray);
+    if(sorted[VISION_WIDTH*(VISION_GRAY_PERCENTILE_DENOMINATOR-1)/VISION_GRAY_PERCENTILE_DENOMINATOR-1]-
+       sorted[VISION_WIDTH/VISION_GRAY_PERCENTILE_DENOMINATOR-1]<VISION_MIN_CONTRAST)return global;
+    int first=sorted_split(sorted,0,VISION_WIDTH);
+    for(int pass=0;pass<2;++pass){
+        at=0;middle_sum=white_sum=0;
+        while(at<VISION_WIDTH&&sorted[at]<=first)++at;
+        if(VISION_WIDTH-at<2*VISION_MIN_WIDTH||sorted[VISION_WIDTH-1]-sorted[at]<VISION_MIN_CONTRAST)return first;
+        int second=sorted_split(sorted,at,VISION_WIDTH-at);split=at;
+        while(split<VISION_WIDTH&&sorted[split]<=second)middle_sum+=sorted[split++];
+        for(int k=split;k<VISION_WIDTH;++k)white_sum+=sorted[k];
+        middle_count=split-at;white_count=VISION_WIDTH-split;
+        if(middle_count<VISION_MIN_WIDTH||white_count<VISION_MIN_WIDTH||
+           white_sum*middle_count-middle_sum*white_count<(uint64_t)VISION_MIN_CONTRAST*middle_count*white_count||
+           4*middle_sum*white_count<3*white_sum*middle_count)return first;
+        /* Independently enumerate connected runs; the native implementation scans
+         * outward from its seed instead. Only that run's midpoint may qualify. */
+        int seed=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),supported=0;
+        for(int x=0;x<VISION_WIDTH;){
+            if(row[x]<=first){++x;continue;}
+            int left=x;while(x<VISION_WIDTH&&row[x]>first)++x;
+            if(left<=seed&&seed<x){
+                supported=row[(left+x-1)/2]>second;break;
+            }
+        }
+        if(!supported)return first;
+        first=second;
+    }
+    return first;
+}
 static int check_frame(int frame, int strict)
 {
     int mode, x, y, adaptive = 0;

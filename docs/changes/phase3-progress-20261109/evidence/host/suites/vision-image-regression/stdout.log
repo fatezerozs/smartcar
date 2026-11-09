@@ -1,0 +1,6 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\vision\test_image_regression.py
+VISION IMAGE PROBE: 750 frames; original native threshold, row geometry and metric acceptance.
+
+Original 750 frames: near=470/full=376; coverage, not accuracy.
+Local reviewed bands: 28 paired rows; selected after experiments, no holdout claim.
+[PASS] Completed within declared software evidence scope

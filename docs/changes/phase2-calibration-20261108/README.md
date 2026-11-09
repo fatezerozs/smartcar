@@ -1,12 +1,16 @@
 # Phase2 标定、实测与离线回归
 
-当前事实统一登记于[CURRENT_STATUS.json](CURRENT_STATUS.json)，摘要见[成果与交接](DELIVERY_STATUS.md)。历史会话保持原值；“未定参/未验收”不等于“未测量”，现场状态不能由历史身份推定。
+**2026-11-09进度更新：** [Phase3与板载V4后续进展](../phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。
+
+当前事实统一登记于[CURRENT_STATUS.json](CURRENT_STATUS.json)，阅读摘要见[成果与交接](DELIVERY_STATUS.md)。历史会话保持原值，“未定参/未验收”不等于“未测量”；现场状态须下次操作重新确认。
 
 更新：2026-11-09（北京时间）。**[成果整理与交接总览](DELIVERY_STATUS.md)** 是当前状态入口：Phase2部分完成、生产参数未批准。已完成尺寸/尺度候选、视觉时序与失效记录、直线负载响应与停车观测、无线定位与软回调实机验证；地面转弯尚未执行。
 
 [返回工程总索引](../../PROJECT_INDEX.md) · [最新交付总览](DELIVERY_STATUS.md) · [剩余任务](PHASE2_REMAINING.md) · [主标定登记](../c31-speed-planning-20261105/CALIBRATION.md)
 
 ## 当前应看什么
+
+**Phase3影子工程已单独整理：** [数据更新与下载入口](../phase3-shadow-preparation-20261109/README.md)。已有测量汇入候选包；不把未最终定参误列为缺测，不改本页历史实板身份。
 
 | 目的 | 入口 | 当前核定范围 |
 | --- | --- | --- |

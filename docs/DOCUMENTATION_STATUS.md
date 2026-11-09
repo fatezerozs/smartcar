@@ -1,5 +1,7 @@
 # 仓库文档维护总览
 
+**2026-11-09进度更新：** [Phase3当前进度与交接](changes/phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。
+
 更新：2026-11-09（北京时间）。本页统一全库维护口径，避免将历史参数、最新实测、工作区实现和生产验收混用。
 
 [主页](../README.md) · [文档目录](INDEX.md) · [工程关系与入口](PROJECT_INDEX.md) · [演进档案](PROJECT_EVOLUTION.md) · [全库逐文档核查清单](changes/2026-11-09_REPOSITORY_DOCUMENTATION_AUDIT.json)
@@ -8,8 +10,8 @@
 
 | 问题 | 当前事实入口 | 使用限制 |
 | --- | --- | --- |
-| 哪些成果已发布 | [Phase2交付与交接](changes/phase2-calibration-20261108/DELIVERY_STATUS.md)，对应main提交`bd94f27` | 本次新增的是测量证据及诊断工具，没有发布其他工作区的Phase3/Recorder功能 |
-| 最后核对的板载是什么 | [CURRENT_STATUS.json](changes/phase2-calibration-20261108/CURRENT_STATUS.json) | 最后观察为PHASE2_TURN_GEOMETRY_20261109_2；不代表此刻已供电或可直接启动 |
+| Phase2此前发布成果 | [Phase2交付与交接](changes/phase2-calibration-20261108/DELIVERY_STATUS.md)，对应main提交`bd94f27` | 对应此前Phase2发布范围；本轮Phase3/Recorder源码与证据归档见页首最新进度 |
+| 最后核对的板载是什么 | [V4停机核对](changes/phase3-v4-boardcheck-20261109/README.md) | 已确认PHASE3_C26_SHADOW_20261109_4；Phase2 CURRENT_STATUS仅记录其独立诊断构型，不能代替最新板载身份 |
 | 工程之间是什么关系 | [工程导航](PROJECT_INDEX.md) | 主工程MPC_20261106、隔离Phase2诊断、Recorder/B2/B3、工作区Phase3分别构建/验收 |
 | 哪些测过、哪些只是未定参 | [剩余数据与定参清单](changes/phase2-calibration-20261108/PHASE2_REMAINING.md) | 已有尺寸/左偏轮角/候选尺度/局部落地及停车，不再泛称全部缺测；缺的是适用范围、误差和具体未覆盖条件 |
 | 软回调是否已正常 | [软回调说明](changes/phase2-calibration-20261108/TURN_SOFT_CONTROL.md) | 普通越界不锁停已验证；右轮前进—暂停—再前进，持续性未通过。左右独立回调尚未实现 |
@@ -41,7 +43,7 @@ flowchart TB
 
 全库核查覆盖项目自有Markdown，包括操作参考、阶段说明、历史档案及源码快照中的文档。第三方SDK原文不编辑；归档历史、`before-main-documents`和冻结证据只登记范围，不更改原字节。逐页分类、链接检查、排除项与文件摘要见[核查清单](changes/2026-11-09_REPOSITORY_DOCUMENTATION_AUDIT.json)。
 
-其他聊天正在维护的Phase3/Recorder工作区内容保留，不能把本轮文档同步当作其代码审核。相关页面若链接未提交文件，是工作区入口，不作为本次已发布交付。提交文档时只带入本轮适用说明，既有未提交实现叙述留在工作区单独处理。
+上述全库文档核查描述此前维护轮次。本轮另行归档Phase3/Recorder源码、测试和证据，参见页首当前进度；代码推送不等于板载更新或实车验收。冻结证据与历史结论保持原始身份。
 
 ## 仍须保留的限制
 

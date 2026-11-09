@@ -1,0 +1,32 @@
+[
+  {
+    "mutation": "wheel-mapping",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "metric:41 e.total_left==100&&e.total_right==-100&&e.sequence==0"
+  },
+  {
+    "mutation": "capture-interpolation",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "metric:48 vm_odom_at_capture(&s,105,110,&x)==VM_OK&&fabsf(x-.005f)<1e-6f"
+  },
+  {
+    "mutation": "feedback-units",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "metric:122 candidate.measured_left==measured_l&&candidate.measured_right==measured_r"
+  },
+  {
+    "mutation": "stop-generation",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "metric:144 !vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate)"
+  },
+  {
+    "mutation": "inhibit-clear",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "metric:156 !pi.left.output&&!pi.right.output&&!pi.left.integral_q8&&!pi.right.integral_q8"
+  }
+]

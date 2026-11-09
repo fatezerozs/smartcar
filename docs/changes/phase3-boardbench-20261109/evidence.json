@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "scope": "Phase3 stopped on-board supervisor/planner computation verification; upper-station development cancelled",
+  "gitAtHostRun": {
+    "sha": "71338813afb555d1d2cdbe51ea4c491e4f14e68d",
+    "branch": "docs/main-documentation-20261107",
+    "dirty": true
+  },
+  "sourcesSha256": {
+    "demo/candidates/phase3-shadow/vision_planner_shadow_diag.c": "6d1a505dbb1f6c3226e7566ca91e6840edb86b19ff84753700085d9d48094a13",
+    "tools/prepare_phase3_shadow.py": "f2a1c8937f64ebd481252b9dd63f16dd99730bebe3484422fe5088cbffb7160a",
+    "tests/planning/test_shadow_candidate.c": "6dc2931da216fa538c3122ecd4c6e7d174c724e4bd2a507e177d898c0d6276c3",
+    "tests/planning/test_shadow_preparation.py": "ac17261d9ab5d0bd981092a3ccb5c94700675475c554919f4eaec51cf35c2c83"
+  },
+  "host": {
+    "runId": "20261109T025633-a98b7b0664",
+    "counts": {
+      "PASS": 58,
+      "SKIPPED": 1
+    },
+    "allInputHashesMatched": true
+  },
+  "static": {
+    "runId": "20261109T025633-a3e6980682",
+    "selectedSuitesPassed": true,
+    "completePreFlash": false
+  },
+  "candidate": {
+    "version": "PHASE3_C26_SHADOW_20261109_2",
+    "profileId": "C26-SHADOW-FA161BDE",
+    "buildPassed": true,
+    "flashed": true,
+    "runtimeIdentityVerified": true,
+    "activeMetricControl": false,
+    "artifactsSha256": {
+      "Objects/rt1064.axf": "31e2db4d5f61cb74605b8216fbb28919a3e5cde207c0a97d1f5f556df126138c",
+      "phase3-shadow.bin": "0abf58de60a37dbe8b20bc5b7e11f48ae71771f8ddeabef8b4e12f2cb4462965",
+      "build.log": "de8c3e31eb60802e549661e46127537e73acbd5d887af8e342a5898d4be01bc6",
+      "workspace/demo/mdk/competition/MPC_Phase3_Shadow.uvprojx": "64cd2022eeb2c81682f22854ff62b2b5c6833ccd646d328ddcbc3e06b490bcf5",
+      "workspace/demo/mdk/competition/MPC_Phase3_Shadow_Download.uvprojx": "b29d5e79a0888eab65975db978b8176b177eaaa17b4984fb928b8b10e3d1a30b"
+    },
+    "programBytes": {
+      "code": 104840,
+      "ro": 15520,
+      "rw": 212,
+      "zi": 211116
+    }
+  },
+  "hardware": {
+    "port": "COM10",
+    "cpuHz": 600000000,
+    "syntheticInput": true,
+    "previewPoints": 5,
+    "scenarios": [
+      "normal tracking",
+      "near loss and recovery",
+      "far budget controlled stop"
+    ],
+    "ticksPerRun": 192,
+    "readyPerRun": 174,
+    "zeroPerRun": 18,
+    "checksPerRun": 183,
+    "expiredRejectedPerRun": 174,
+    "runs": [
+      {
+        "passed": true,
+        "meanCycles": 21652,
+        "maxCycles": 43866,
+        "meanMicroseconds": 36.086666666666666,
+        "maxMicroseconds": 73.11
+      },
+      {
+        "passed": true,
+        "meanCycles": 21691,
+        "maxCycles": 35219,
+        "meanMicroseconds": 36.151666666666664,
+        "maxMicroseconds": 58.69833333333333
+      },
+      {
+        "passed": true,
+        "meanCycles": 21837,
+        "maxCycles": 38511,
+        "meanMicroseconds": 36.395,
+        "maxMicroseconds": 64.185
+      }
+    ],
+    "timeScope": "vps_tick only, synthetic five-point inputs; vision, PI, final writer, result recheck and UART excluded; not WCET",
+    "operatorSwitchOffAndPowerIsolationConfirmed": true,
+    "motionCommandSent": false,
+    "targetsAndPwmBeforeAfterZero": true,
+    "faultsBeforeAfterZero": true
+  },
+  "remaining": [
+    "Real-input metric geometry admission/coverage.",
+    "ON shadow scheduling with real feedback and legacy PI co-existence.",
+    "Complete running pipeline timing and reviewed active control/physical stopping acceptance."
+  ],
+  "trustLayers": {
+    "structured_parsed": [
+      "native C",
+      "Keil XML",
+      "JSON",
+      "raw serial bytes"
+    ],
+    "computed": [
+      "Host tests",
+      "Keil build",
+      "DWT cycle/time conversion",
+      "SHA256"
+    ],
+    "mdExtractedOnlyClaims": [],
+    "physicalActuationVerified": false
+  },
+  "upperStationFilesRemoved": [
+    "tools/host_station/__init__.py",
+    "tools/host_station/protocol.py",
+    "tools/host_station/datasets.py",
+    "tools/host_station/native_vision.c"
+  ],
+  "globalPersistentConfigurationChanged": false,
+  "evidenceSha256": {
+    "evidence/board/report.json": "a6e6160448aaa83bd3b5cc710ddd2eb5020b7f20efdcdfdc5f2fc953ae172f98",
+    "evidence/board/serial-raw.jsonl": "386912ddd9c197b1b3272da294a4e7b6f6c364d11d13f59af3ee23b26e54a6cc",
+    "evidence/candidate/build.log": "de8c3e31eb60802e549661e46127537e73acbd5d887af8e342a5898d4be01bc6",
+    "evidence/candidate/candidate.json": "d3ecdb7aa03daeaad246f866e9fada3f9cd7a2230dc48eb5de5263a069340072",
+    "evidence/candidate/code/phase3_shadow_profile.h": "ab21bb6cf4d763cc2df83baf9833070ae5f5c706ec049e59fff33040ef6ab67e",
+    "evidence/candidate/code/vision_planner_shadow_diag.c": "6d1a505dbb1f6c3226e7566ca91e6840edb86b19ff84753700085d9d48094a13",
+    "evidence/candidate/code/vision_planner_shadow_diag.h": "cdcdbe04bfe803d64b31d2068e73ad5d8e32a19930613580522206a475bea180",
+    "evidence/candidate/profile.json": "79afc16033dcc173b610267c6d68b7b8a5f727a7fbca78eb404dec9993b8e0d1",
+    "evidence/candidate/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/candidate/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/earlier-attempts/flash-20261109T025850Z/flash.log": "689265e6f7fbb5a8cd61c99eaef40701f6c258907ee94b6a37cfd817e6261f3e",
+    "evidence/earlier-attempts/flash-20261109T025850Z/preflash-serial.jsonl": "9eb3839d96eb376496c468c7c2bf060b72665640b37c3e98e38d94b369c86742",
+    "evidence/earlier-attempts/flash-20261109T025850Z/report.json": "05ccafb1d686c216ed9ee9096f743c6d526715ea2aa592059c30d21af0ef776f",
+    "evidence/earlier-attempts/flash-20261109T025850Z/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/earlier-attempts/flash-20261109T025850Z/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/earlier-attempts/runtime-20261109T030228Z/COM10-ready-probe.bin": "39f0e762077e8d424e5c89a33d25da5fb2cfe33dfa82c269043dc3c7beb7f537",
+    "evidence/earlier-attempts/runtime-20261109T030228Z/COM14-ready-probe.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/earlier-attempts/runtime-20261109T030228Z/ready-probe.json": "2a0b64f7b39c9d39c2dce2766ba8250c4fc78a7134d8e7902737040c5cb0fd56",
+    "evidence/earlier-attempts/runtime-20261109T030228Z/report.json": "57c2a90854a43fe6a1dec11f1aefa8a3426e2a0f346f51de98cb0e46148e879b",
+    "evidence/earlier-attempts/runtime-20261109T030228Z/serial-raw.jsonl": "4c5d0573131c2755dfcd7b195943d30fbe33a86ab5e813a8c6893392c60df567",
+    "evidence/flash-success/flash.log": "01467155693dd700228db7f5f266373ca260b4d567211b11c9aefac38d958b7f",
+    "evidence/flash-success/report.json": "c826fc74c326e7c49c6abe020173e755866788d957a12a7d80a66a6258cda526",
+    "evidence/host/native/stderr.log": "15cccb66097f02aac0a559a2bbb46c22dea214dcce5fe11623c50be6b02ca71f",
+    "evidence/host/native/stdout.log": "0b93738496199215dc6ce8fdd46705cabafea638319a8b44c7045c79650fa25a",
+    "evidence/host/run.json": "912b9eb7f296cd896a46de0412875e2b5976b9f65c69a1a5b29e02faac2b3248",
+    "evidence/host/summary.md": "f84b80eda5ae1b198be9ecd90512b2a2f6bb9c9a18394061a92ecd75a2251ea1",
+    "evidence/static/run.json": "26cfdb3a479d0cc77b2b3f7de35d17c7e0a236eff72b535a81269864dc422808",
+    "evidence/static/summary.md": "fc44f182db336c808d5536693d1d6b2990dada9a1ad0684e1fc860fddb3eca06"
+  },
+  "patchSha256": "5cdd9f508ff848d8f52aece0a04f4b4a5ee8d792e78777d1bcc639bac0386871"
+}

@@ -1,0 +1,33 @@
+{
+  "module": "native main wireless migration",
+  "source_commit": "f7fb5b9b8cecda8c5d366b12dd9b0adb0599fd41",
+  "reused_unchanged": {
+    "demo/code/app_transport.c": {
+      "sha256": "46bd68b354c573f9aa085090bf1c3eaae8a4b0c4492b42c42f6d4a0d15ba18a3",
+      "matches_origin_main_normalized_EOL": true
+    },
+    "demo/code/app_link.c": {
+      "sha256": "66ab2807c841f3238be8a680f5f4331a64bc534e1ea72049ca7a6d0ffdc7c165",
+      "matches_origin_main_normalized_EOL": true
+    },
+    "demo/code/app_link_board.c": {
+      "sha256": "e35911b1c5861cc416d7381999ff646f974e7f035999e516b07b24e161e94ac6",
+      "matches_origin_main_normalized_EOL": true
+    },
+    "demo/code/app_transport.h": {
+      "sha256": "e1303673ad851dcba2b257dbe0c254c7cf7765c6c9cd756b8d688e1274c878e4",
+      "matches_origin_main_normalized_EOL": true
+    },
+    "demo/code/app_link.h": {
+      "sha256": "0ecd9b4062a16f6aee0775e6e1069c687e1b7c96cd17099c632d3077638c4702",
+      "matches_origin_main_normalized_EOL": true
+    }
+  },
+  "candidate": "C:\\shengchanli\\smartCar\\smartcar\\.build\\recorder-joint-20261106\\motion-radio-20261108T140141769996Z",
+  "digest": "c20c8126df7cbb52490432146b04a0f4505283e021888a718bb8affdc5e38c0b",
+  "transport": "main_radio115200",
+  "host_report": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T140206-3f31b71fdf\\summary.md",
+  "custom_RMR1_active": false,
+  "hardware_tested": false,
+  "motion_tested": false
+}

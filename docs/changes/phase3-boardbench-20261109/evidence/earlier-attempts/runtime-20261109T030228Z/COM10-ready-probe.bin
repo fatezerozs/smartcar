@@ -1,0 +1,52 @@
+[LINK] STOP
+[LINK] STOP
+[LINK] REJECT busy/stop; stop first, then x
+[FIELD] STOP
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=80105 sample=7978 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[TURN] u=0.000 command_us=0 near_valid=1 far_valid=1 search=0 source=0 speed_mode=0; commanded PWM, not measured angle
+[LAST_STOP] seq=0 ms=0 run_ms=0 reason=0 faults=0 speed_detail=0 raw3_L=0 raw4_R=0 target_R/L=0/0 pwm_R/L=0/0 prev_e=0.000 prev_h=0.000 prev_u=0.000 prev_servo_us=0; retained_until_reset
+[DRIVE] ready=1 state=0 faults=0 near=0.107 heading=0.086 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.54259; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=STRAIGHT p=0.619 margin=0.515 entropy=0.558 accepted=0 trained=0
+[FEATURE] n=3977 ms=80095 mask=63 quality=0.463 heading=0.1419 curvature=-0.0396 open_left=0.0115 open_right=0.2299 split=0.2529 stripes=0.0599
+[VISION2] n=3977 fps=50.0 valid=1 state=TRACK q=100 thr=211 contrast=118 white=55
+[VISION2] both=86 inferred=1 err=4.6 raw=4.6 bend=-5.0 bend_ok=1 row90 L/M/R=53/102/151 width=99 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=10 proc_ms=5 history_reset=0 row90_thr=212 local_rows=82 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=80605 sample=8028 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[TURN] u=0.000 command_us=0 near_valid=1 far_valid=1 search=0 source=0 speed_mode=0; commanded PWM, not measured angle
+[LAST_STOP] seq=0 ms=0 run_ms=0 reason=0 faults=0 speed_detail=0 raw3_L=0 raw4_R=0 target_R/L=0/0 pwm_R/L=0/0 prev_e=0.000 prev_h=0.000 prev_u=0.000 prev_servo_us=0; retained_until_reset
+[DRIVE] ready=1 state=0 faults=0 near=0.107 heading=0.086 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.54258; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=STRAIGHT p=0.623 margin=0.521 entropy=0.555 accepted=0 trained=0
+[FEATURE] n=4002 ms=80594 mask=63 quality=0.463 heading=0.1439 curvature=-0.0402 open_left=0.0115 open_right=0.2299 split=0.2529 stripes=0.0591
+[VISION2] n=4002 fps=50.0 valid=1 state=TRACK q=100 thr=211 contrast=118 white=55
+[VISION2] both=86 inferred=1 err=4.5 raw=4.5 bend=-5.1 bend_ok=1 row90 L/M/R=53/102/151 width=99 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=5 history_reset=0 row90_thr=212 local_rows=82 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=81105 sample=8078 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[TURN] u=0.000 command_us=0 near_valid=1 far_valid=1 search=0 source=0 speed_mode=0; commanded PWM, not measured angle
+[LAST_STOP] seq=0 ms=0 run_ms=0 reason=0 faults=0 speed_detail=0 raw3_L=0 raw4_R=0 target_R/L=0/0 pwm_R/L=0/0 prev_e=0.000 prev_h=0.000 prev_u=0.000 prev_servo_us=0; retained_until_reset
+[DRIVE] ready=1 state=0 faults=0 near=0.107 heading=0.084 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.54227; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=STRAIGHT p=0.620 margin=0.516 entropy=0.557 accepted=0 trained=0
+[FEATURE] n=4027 ms=81094 mask=63 quality=0.467 heading=0.1378 curvature=-0.0437 open_left=0.0115 open_right=0.2299 split=0.2529 stripes=0.0607
+[VISION2] n=4027 fps=50.0 valid=1 state=TRACK q=100 thr=211 contrast=119 white=55
+[VISION2] both=86 inferred=1 err=4.5 raw=4.5 bend=-5.0 bend_ok=1 row90 L/M/R=53/102/151 width=99 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=5 history_reset=0 row90_thr=211 local_rows=81 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=81605 sample=8128 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[TURN] u=0.000 command_us=0 near_valid=1 far_valid=1 search=0 source=0 speed_mode=0; commanded PWM, not measured angle
+[LAST_STOP] seq=0 ms=0 run_ms=0 reason=0 faults=0 speed_detail=0 raw3_L=0 raw4_R=0 target_R/L=0/0 pwm_R/L=0/0 prev_e=0.000 prev_h=0.000 prev_u=0.000 prev_servo_us=0; retained_until_reset
+[DRIVE] ready=1 state=0 faults=0 near=0.107 heading=0.085 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.54238; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=STRAIGHT p=0.625 margin=0.524 entropy=0.554 accepted=0 trained=0
+[FEATURE] n=4052 ms=81594 mask=63 quality=0.463 heading=0.1419 curvature=-0.0422 open_left=0.0115 open_right=0.2184 split=0.2529 stripes=0.0587
+[VISION2] n=4052 fps=50.0 valid=1 state=TRACK q=100 thr=211 contrast=118 white=55
+[VISION2] both=86 inferred=1 err=4.5 raw=4.5 bend=-5.1 bend_ok=1 row90 L/M/R=53/102/151 width=99 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=5 history_reset=0 row90_thr=211 local_rows=83 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0

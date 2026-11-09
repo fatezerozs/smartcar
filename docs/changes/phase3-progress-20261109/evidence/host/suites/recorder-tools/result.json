@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "id": "recorder-tools",
+  "status": "PASS",
+  "evidenceClass": "host",
+  "layer": "contract",
+  "category": "build-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 1.043096,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:14.855+00:00",
+  "finishedAt": "2026-11-09T10:09:15.898+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\recorder\\test_build_tools.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-tools\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.041355,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-tools",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Isolated generated-byte/mtime and build-mode contracts only; no Keil or C compiler",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

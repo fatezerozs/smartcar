@@ -1,0 +1,17 @@
+{
+  "role": "AUTHORIZED_EXPERIMENT_NOT_VALIDATED",
+  "source_digest": "9312b356d53025ebbfde778b4c74877315aa06950e86e34ec2d2fba5a8f047e2",
+  "limit_ms": 2900,
+  "motor_pwm_cap_permille": 200,
+  "max_speed_ticks_per_10ms": 20,
+  "C26_OFF_cuts_outputs": true,
+  "one_shot_until_reset": true,
+  "visual_protections_preserved": true,
+  "PI_effectiveness": "USER_WAIVED_NOT_MEASURED_PASS",
+  "start_requires": "MOTION START then MOTION ARM while OFF then physical C26 ON",
+  "transport": "radio115200",
+  "build_passed": true,
+  "hardware_tested": false,
+  "axf_sha256": "9cdd1b0a01319884467fbdf978629b2030e1b02572c07a4bae49a38d5abee48e",
+  "bin_sha256": "fdd45e6a04d5afa168c074782217316958c646c526e008e4c450114e5ceaa8d6"
+}

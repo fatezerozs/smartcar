@@ -1,0 +1,8 @@
+test_identical_bytes_keep_timestamp_and_changed_bytes_are_written (__main__.BuildPreparationTests.test_identical_bytes_keep_timestamp_and_changed_bytes_are_written) ... ok
+test_peripheral_init_precedes_first_kernel_object (__main__.BuildPreparationTests.test_peripheral_init_precedes_first_kernel_object) ... ok
+test_repeated_preparation_preserves_all_generated_outputs (__main__.BuildPreparationTests.test_repeated_preparation_preserves_all_generated_outputs) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.909s
+
+OK

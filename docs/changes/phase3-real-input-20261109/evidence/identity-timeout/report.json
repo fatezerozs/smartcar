@@ -1,0 +1,7 @@
+{
+  "time": "2026-11-09T11:20:46.203484+08:00",
+  "port": "COM10",
+  "motionCommandSent": false,
+  "verified": false,
+  "error": "TimeoutError('Reply timeout; no movement command was sent')"
+}

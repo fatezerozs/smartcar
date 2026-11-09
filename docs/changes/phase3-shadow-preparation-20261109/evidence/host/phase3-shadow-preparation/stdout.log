@@ -1,0 +1,7 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\planning\test_shadow_preparation.py
+SHADOW CANDIDATE plans=126 source=0; identical legacy PWM sequence
+SHADOW CANDIDATE PASS 3498 checks; simulated IO and cycle counter
+
+SHADOW GEOMETRY frames=750 near=36 full=3; native replay, no physical validity claim
+
+[PASS] Completed within declared software evidence scope

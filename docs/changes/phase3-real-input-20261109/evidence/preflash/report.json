@@ -1,0 +1,12 @@
+{
+  "time": "2026-11-09T11:18:36.198916+08:00",
+  "port": "COM10",
+  "motionCommandSent": false,
+  "verified": true,
+  "stop": "[LINK] STOP",
+  "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+  "claim": "[LINK] port=radio owner=radio rx=138 tx=2527064 overflow=0 errors=1 tx_rejected=2670; x=claim while stopped",
+  "status": "[FIELD] build=PHASE3_C26_SHADOW_20261109_2 version=MIDTERM_C26_31 ready=1 cam=1 hw=1 servo=1550/1430/1670 sign=-1 kp=1.2000 kd=0.0250 kh=1.2000 cruise=0.1450 cap=0.1800 rise=0.2000 axis=0.4968/0.4983 limit_ms=0",
+  "encoder": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-334562 total4=359309 samples=89334 sample_ms=893657 sign3=-1 sign4=1 confirmed=1",
+  "speed": "[SPEED] enabled=1 max_ticks=132 kp=1.0000 ki=0.0469 target_R/L=0/0 measured_R/L=63/58 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops"
+}

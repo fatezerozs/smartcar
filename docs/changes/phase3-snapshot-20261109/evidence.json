@@ -1,0 +1,393 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "scope": "C26/C31 versioned foreground preparation, not calibrated planner integration",
+  "git": {
+    "sha": "f7fb5b9b8cecda8c5d366b12dd9b0adb0599fd41",
+    "branch": "docs/main-documentation-20261107",
+    "dirty": true
+  },
+  "committed": false,
+  "hardwareAccess": false,
+  "flashOrMotion": false,
+  "phase2Complete": false,
+  "phase3Complete": false,
+  "productionApproved": false,
+  "sources": {
+    "demo/code/vision_actuator.c": {
+      "sha256": "329387784565652d1223e6f78109ee574efdb1b406e31cd50dd9c89eb233f003",
+      "matchesFinalHostInput": true,
+      "matchesKeilCopy": true,
+      "preTurnSha256": "fada8628820e97fda0748a72f8314324e02bcbf45840a0a846f0bf325c78ac21"
+    },
+    "demo/code/vision_speed.c": {
+      "sha256": "f7a8f7c449bbad8f2e0df7baf850d10d7dfb11e12ed328b1e194f6af199f5b3d",
+      "matchesFinalHostInput": true,
+      "matchesKeilCopy": true,
+      "preTurnSha256": "3eb24f4a2c513f503df7235b5b833319305f0fe591a8ae0e50e77db1ab26e875"
+    },
+    "demo/code/vision_startup.c": {
+      "sha256": "8e6cadfdc5e84feb6bd35aab4f66ebd2f33793823b5dd599aaa82560d93fa906",
+      "matchesFinalHostInput": true,
+      "matchesKeilCopy": true,
+      "preTurnSha256": "df9cec8a36410d3f13b45bec4266d7628c931689d002e9d871e6fc339b70d02a"
+    },
+    "tests/planning/test_c26_snapshot.c": {
+      "sha256": "8da2e7a5cdb38764fe615af0df065e1d8e5c56e2b4b4c57677068a7c06e9825e",
+      "matchesFinalHostInput": true
+    },
+    "tests/suites/catalog.json": {
+      "sha256": "beb730d642a01ae338d802114c31be462c60abd624928496b74d28d8d310f14f",
+      "matchesFinalHostInput": true
+    }
+  },
+  "host": {
+    "runId": "20261108T211446-44245c7668",
+    "compiler": "gcc",
+    "mode": "optimized",
+    "status": "PASS",
+    "durationSeconds": 40.555852,
+    "counts": {
+      "PASS": 51,
+      "SKIPPED": 1
+    },
+    "releaseEligible": false,
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "control",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "bayes",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "field",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "servo-probe",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "motor-probe",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "startup",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "board-mode",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "drive",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "debug",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "link-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "transport",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "dual-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "encoder-board",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "route-trial",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "route-switch",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "switch-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "turn-route",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout-projection",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "tangent-preview",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "midterm-boot",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "midterm-runtime",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "auto-track",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "motion",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "motor-threshold",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "capture-vision",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "fit-model",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "restore-training-parameters",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "run-analysis",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "seekfree-import",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "track-trials",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "training-analysis",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "field-protocol",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "configuration-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "invalid-configuration",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "interface-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "performance-host",
+        "status": "SKIPPED",
+        "reason": "Dataset, versioned ground truth, measurement adapter and approved baseline await later integration; other suites remain independent."
+      },
+      {
+        "id": "recorder-tools",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "recorder",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "framework",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "recorder-startup",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "recorder-sd-pins",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed-planning-host",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "speed-planning-visual-trace",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "c26-baseline-characterization",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "c26-snapshot",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ]
+  },
+  "msvc": {
+    "runId": "20261108T210953-c9a1460a8d",
+    "status": "BLOCKED",
+    "reason": "MSVC toolchain unavailable; not a passing verification"
+  },
+  "asanExecuted": false,
+  "remoteCIExecuted": false,
+  "keil": {
+    "buildOnly": true,
+    "zeroErrorsWarnings": true,
+    "sourceProjectSha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+    "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+    "sizeBytes": {
+      "code": 89824,
+      "ro": 13792,
+      "rw": 212,
+      "zi": 196648
+    },
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1214500,
+        "sha256": "66ac0330b50f482f5b88e37a210e8b9e83d752baed26a6bf6d8788f0b00c9a2b"
+      },
+      "rt1064.bin": {
+        "bytes": 110528,
+        "sha256": "88a12d9641dbba81fbbff0bc9a1db6fef8d02b0b5946cf1e0dcdb4185e4094f2"
+      },
+      "disassembly.txt": {
+        "bytes": 2556430,
+        "sha256": "37f6f75e39c9460f38a490556a5fdcfa12c928820a7818717c3ac4af4baebedf"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2061668,
+        "sha256": "bc38276c3f39ca5ec3432062517788d7a36374e616f647a44a625c5124a122b7"
+      }
+    }
+  },
+  "mutationChecks": [
+    {
+      "mutation": "request-version",
+      "exitCode": 1,
+      "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+      "detected": true
+    },
+    {
+      "mutation": "sample-version",
+      "exitCode": 1,
+      "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+      "detected": true
+    },
+    {
+      "mutation": "immutable-steering",
+      "exitCode": 1,
+      "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+      "detected": true
+    }
+  ],
+  "remaining": [
+    "Metric planner/jerk/controlled-stop integration",
+    "Production calibration and visual budgets",
+    "Measured WCET/IRQ blackout and electrical capture-to-PWM timing",
+    "Single serialized foreground owner is required"
+  ],
+  "trustLayers": [
+    "structured_parsed",
+    "computed"
+  ],
+  "evidenceSha256": {
+    "evidence/c26-snapshot.stdout.log": "2c73477b95f6a6ee882e43a36407ac6071fd9aa131df3464634bfd39eaf6d599",
+    "evidence/host-summary.md": "7ccf127a41a4edbd7a014d7ed50b2f0e95af0eb628e6c0ff9ad2cb88b2f5c479",
+    "evidence/keil-artifacts.json": "4262d01a560fedbcb8a57bd639921592e486274fc9a72c452972974626373860",
+    "evidence/keil-build.log": "1d59ab2da77929e8dc6886bd576ce3fb8bc5c5e38b165d052a25f43a7632904c",
+    "evidence/msvc-summary.md": "023ff7de72c5650e3d81fd4460f0b3a293ec54db163074e3e1d473793de2c3cc",
+    "evidence/mutation-checks.json": "1135e4c78b41a79c3dd185f73aac1e03d48008b0caabde21ed92e74f08fa1d8e"
+  }
+}

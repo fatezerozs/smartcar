@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0",
+  "id": "bayes",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.59337,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:08:50.854+00:00",
+  "finishedAt": "2026-11-09T10:08:51.448+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_DUAL_UART_ENABLE=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_bayes.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\track_bayes.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_open_loop.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\bayes\\artifacts\\default\\bayes.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\bayes\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.525215,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\bayes\\artifacts\\default\\bayes.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\bayes\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.064569,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_bayes.c",
+        "demo/code/track_bayes.c",
+        "demo/code/midterm_open_loop.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_DUAL_UART_ENABLE=0"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\bayes",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/bayes.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

@@ -1,0 +1,13 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\demo\code -IC:\shengchanli\smartCar\smartcar\tools\speed_planning C:\shengchanli\smartCar\smartcar\tests\planning\test_metric_control.c C:\shengchanli\smartCar\smartcar\demo\code\vision_planner.c C:\shengchanli\smartCar\smartcar\tools\speed_planning\speed_planner.c C:\shengchanli\smartCar\smartcar\demo\code\vision_planner_shadow.c C:\shengchanli\smartCar\smartcar\demo\code\vision_metric_io.c C:\shengchanli\smartCar\smartcar\demo\code\vision_metric_pi.c C:\shengchanli\smartCar\smartcar\demo\code\wheel_speed.c C:\shengchanli\smartCar\smartcar\tools\speed_planning\vision_adapter.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100155-d611d2d95d\suites\metric-control\artifacts\default\metric-control.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100155-d611d2d95d\suites\metric-control\artifacts\default\metric-control.exe
+SYNTHETIC METRIC PLANT 0 target=0.40 left=0.3992 right=0.4000
+SYNTHETIC METRIC PLANT 0 target=0.70 left=0.6994 right=0.7000
+SYNTHETIC METRIC PLANT 0 target=0.30 left=0.3000 right=0.3000
+SYNTHETIC METRIC PLANT 1 target=0.40 left=0.4000 right=0.4000
+SYNTHETIC METRIC PLANT 1 target=0.70 left=0.7000 right=0.7000
+SYNTHETIC METRIC PLANT 1 target=0.30 left=0.3000 right=0.3000
+SYNTHETIC METRIC PLANT 2 target=0.40 left=0.4000 right=0.4000
+SYNTHETIC METRIC PLANT 2 target=0.70 left=0.7000 right=0.7000
+SYNTHETIC METRIC PLANT 2 target=0.30 left=0.3000 right=0.3000
+METRIC CONTROL PASS: 40804 checks; native snapshots and shared PI, diagnostic only.
+[PASS] Completed within declared software evidence scope

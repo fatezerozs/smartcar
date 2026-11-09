@@ -1,0 +1,9 @@
+[toolchain] "C:\Program Files\mingw64\bin\gcc.EXE" --version
+gcc.EXE (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 C:\shengchanli\smartCar\smartcar\.test-results\20261109T100243-e1a183b3da\suites\compiler-environment\artifacts\work\environment_probe.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100243-e1a183b3da\suites\compiler-environment\artifacts\work\environment_probe.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100243-e1a183b3da\suites\compiler-environment\artifacts\work\environment_probe.exe
+[PASS] Completed within declared software evidence scope

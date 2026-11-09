@@ -1,0 +1,40 @@
+{
+  "modelId": "C1-geometry-provisional-v0.1",
+  "purpose": "Host design only",
+  "productionApproved": false,
+  "nominalTireRadiusM": 0.032,
+  "computedNominalCircumferenceM": 0.20106192982974677,
+  "rollingCircumferenceMeasured": false,
+  "encoderConversion": {
+    "left": {
+      "available": false,
+      "reason": "left: wheel counts/rev and measured rolling circumference required; nominal 1024/diameter are insufficient"
+    },
+    "right": {
+      "available": false,
+      "reason": "right: wheel counts/rev and measured rolling circumference required; nominal 1024/diameter are insufficient"
+    }
+  },
+  "servoAngleMapAvailable": false,
+  "dynamicCalibrationMissing": [
+    "lateralAccelerationMps2",
+    "accelerationMps2",
+    "brakingDecelerationMps2",
+    "controlLatencyS",
+    "cameraGroundHomography",
+    "nearVisibleDistanceM",
+    "nearSpeedCapMps",
+    "farTimeBudgetMs",
+    "farDistanceBudgetM"
+  ],
+  "exampleRightTurn": {
+    "rearLeftMps": 1.076,
+    "rearRightMps": 0.924,
+    "requiredEffectiveSteeringRad": 0.20219859688286151,
+    "requiredFrontLeftRad": 0.18843522618204675,
+    "requiredFrontRightRad": 0.21809653609100987,
+    "provenance": "ideal-kinematics-with-provisional-geometry",
+    "productionApproved": false,
+    "servoPulseFromAngleUs": null
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "smartcar.phase3-shadow-preparation-evidence/1",
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "gitAtHostRun": {
+    "sha": "bd94f271e47bbdd0c80bce6e409e7acbad232a81",
+    "branch": "docs/main-documentation-20261107",
+    "dirty": true
+  },
+  "scope": "Data update and isolated main C26 SHADOW download preparation",
+  "hardwareAccessed": false,
+  "firmwareFlashed": false,
+  "productionApproved": false,
+  "activeMetricControlAllowed": false,
+  "profileId": "C26-SHADOW-FA161BDE",
+  "profileSha256": "79afc16033dcc173b610267c6d68b7b8a5f727a7fbca78eb404dec9993b8e0d1",
+  "measuredSourcesSha256": {
+    "docs/changes/phase2-calibration-20261108/reported-candidates.json": "424b0eb425cc5123661e0d510fc85db9d031748da8939ef183e6cad4e789f2bf",
+    "docs/changes/phase2-calibration-20261108/passive-distance-summary.json": "21089dd1d7e90bc8f2e7cbf6f055fdad036124072fb785cdfb9fcd7b71f6ca19",
+    "docs/changes/phase2-calibration-20261108/ground-homography-origin-corrected.json": "48b27f411f81926d304df033d61039e55286bbaf64eee11241f0a0eb27d17df9",
+    "docs/changes/phase2-calibration-20261108/ground-homography-candidate.json": "38bd65bf177d1f30d397bd4b72488f1afd6a105463b40053ae27f0b6738848ac",
+    "docs/changes/phase2-calibration-20261108/ground-centre250-check.json": "0d6a5ab4ee9273be0da5685a5b96b52939373fd37e63526f197d91c3c22202e1",
+    "docs/changes/phase2-calibration-20261108/evidence/latency-static/session01/analysis.json": "686bf5d6520c242fd7809eaac353f056ce1b2422274d1115cd55ceffb9f18617",
+    "docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04/analysis.json": "7ccdb59a2d12c44e7d08ef92f24143e4e93095ccc776beb1ce19c209eac7d1f9",
+    "docs/changes/phase2-calibration-20261108/stop-distance-candidate-reanalysis.json": "123b4e6301726568ba09bfbf1346b1a8603e0d067fa847d28827f076469543c4",
+    "docs/changes/phase2-calibration-20261108/coast-profile-review.json": "dc06faba691e496f4675cd69c94920e4688fc9005f3f0787c7d6650ac1d38c0c",
+    "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-1500-01/review.json": "2114b7cbfd7ec89230b67f220fc74d20293af4a1f587f739d4298185bf738e80",
+    "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-2500-01/review.json": "6973a1bbbd234743cf4daa3da10870b0baf548b557d38236e90608cc51fd42cf",
+    "profiles/encoder-production-20261106.json": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
+    "profiles/c1-host-reference-v0.3.json": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
+    "demo/code/vision_midterm.c": "f657b32f0802fafc9f3e91f29dd9dc05b05f158a7399fcab5cc4b2332d5d2586",
+    "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
+    "demo/code/vision_profile.h": "ff08cd0778ab0172bde37a0e32813e8002ff94c26045abec51c279e577d80b6e",
+    "docs/changes/phase2-calibration-20261108/evidence/visual-supervisor-replay04/visual_policy.h": "aa4e7a5873734cb96140fcc25c208f84e6ac7d1363d8dfbc06a67a72e08095b8",
+    "demo/code/midterm_route_profile.h": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a"
+  },
+  "candidate": {
+    "version": "PHASE3_C26_SHADOW_20261109_1",
+    "project": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-shadow-preparation-20261109\\delivery\\workspace\\demo\\mdk\\competition\\MPC_Phase3_Shadow.uvprojx",
+    "downloadProject": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-shadow-preparation-20261109\\delivery\\workspace\\demo\\mdk\\competition\\MPC_Phase3_Shadow_Download.uvprojx",
+    "buildPassed": true,
+    "zeroErrorsWarnings": true,
+    "programBytes": {
+      "code": 103672,
+      "ro": 14996,
+      "rw": 212,
+      "zi": 211116
+    },
+    "artifactsSha256": {
+      "Objects/rt1064.axf": "dde42e7e428f346f48041244e14ffee38d2a8bb77452fd13b707662b001e1160",
+      "phase3-shadow.bin": "2ca16e27b536a96ec23a4aa02ee62edcbd04ed65c7be273d2254ff80c11cd1fe",
+      "build.log": "35021d548eecbaabafc36e0ceb969d1b2d7fd2c74318472b24f35a6423681674",
+      "workspace/demo/mdk/competition/MPC_Phase3_Shadow.uvprojx": "22ef5d64de49d69df1ab26b056150893bd519c591c9d7f9888b4a7e3148088fe",
+      "workspace/demo/mdk/competition/MPC_Phase3_Shadow_Download.uvprojx": "0d08bb36707fa19e37dbc1c200cfcda5747366d632d6869cfff9a14bf00fea5e"
+    },
+    "autoLoadOrArm": false,
+    "legacyPiAndPwmLimitsChanged": false,
+    "nativeShadowSourceCopiesMatched": true,
+    "buildAndDownloadOnlyExpectedOptionDiffers": true
+  },
+  "host": {
+    "runId": "20261109T020349-ab0a2b1ce4",
+    "counts": {
+      "PASS": 58,
+      "SKIPPED": 1
+    },
+    "allCurrentRecordedInputHashesMatched": true,
+    "nativeCandidateAssertions": 3498,
+    "identicalLegacyPwmSamples": 200
+  },
+  "static": {
+    "runId": "20261109T020400-635e67c20c",
+    "selected": [
+      "environment",
+      "static-safety",
+      "project-structure"
+    ],
+    "passed": true,
+    "completePreFlash": false
+  },
+  "realImageReplay": {
+    "framesCrcVerified": 750,
+    "nearGeometryFrames": 36,
+    "fullGeometryFrames": 3,
+    "timestampModel": "synthetic uniform relative20ms; image bytes from actual session04",
+    "physicalValidityApproved": false,
+    "reasonForSeparateCoverageReport": "Original control-valid flags and strict metric paired-row/domain checks are different contracts."
+  },
+  "unresolvedPhysicalParameters": {
+    "runningEndToEndLatencyS": null,
+    "approvedBrakeMps2": null,
+    "approvedJerkMps3": null,
+    "approvedLateralAccelerationMps2": null,
+    "dynamicNearFarBudgets": null,
+    "groundTurningCurvature": null
+  },
+  "sourceSha256": {
+    "docs/PROJECT_INDEX.md": "63a07d8c54964a17089ccee0ec047e0d9081de6dd21f8a73c4b6b6f6788a2331",
+    "tests/suites/catalog.json": "27ab0407a037c98c7b4e6ca334c7f316de18d755617cb2bbc0cacc28431baaf0",
+    "tests/suites/README.md": "01973bcdab021edc577af8ac21455a440ddcbf6cb8fb8c518abd8d6f466c7f7d",
+    "docs/changes/phase2-calibration-20261108/PHASE2_REMAINING.md": "9fb0520f88b27564923bce47ba22d04add43168d5c2135a9c068d0f8a5ee2282",
+    "docs/changes/phase2-calibration-20261108/README.md": "37911573f79595500bdac5acc9ec0787d309c7c3df4d6628dab8582ced7c7cb6",
+    "demo/code/vision_planner_runtime.c": "c2d5620b2f98f944db9f528d80dce62137617c2b63c5b176df215473811b14e0",
+    "demo/code/vision_planner_runtime.h": "52577b6a6a8fba30358f87d4892829b1e0c195c2b890ded306576117f166d2c3",
+    "tools/speed_planning/phase3_profile.py": "402303df5b8f74b6c726f3601d0c2d704b76fde1523c12da3b04fc5da9c31b12",
+    "tools/prepare_phase3_shadow.py": "aa83e61eea90b931df953ad8a73bd80690d04416b6e9cfc1af6dc78a6eee9fb3",
+    "profiles/phase3-c26-shadow-20261109.json": "79afc16033dcc173b610267c6d68b7b8a5f727a7fbca78eb404dec9993b8e0d1",
+    "demo/candidates/phase3-shadow/vision_planner_shadow_diag.c": "9eb87ac52c510d1d5941422c5f464e2c0c01dfea3d3d9759769ce20d617a581a",
+    "demo/candidates/phase3-shadow/vision_planner_shadow_diag.h": "cdcdbe04bfe803d64b31d2068e73ad5d8e32a19930613580522206a475bea180",
+    "tests/planning/test_shadow_candidate.c": "5aec994843502e04a75ae4013836bd108ff0f7177903e36313915b42695cb0bd",
+    "tests/planning/test_shadow_preparation.py": "d77eb37ff42288b78a95502a649a933724fb177a4530d69e1c82ff74844d33f6",
+    "tests/planning/shadow_geometry_runner.c": "018acde12f68aba0fa3598e7002b70850e14b40183fcc1987d98ca8c368f3eae",
+    "docs/changes/phase3-shadow-preparation-20261109/README.md": "b8c3efbc5c55ed03019f091acd9308651f87e5a1c18fe9ff1de40298d271545e"
+  },
+  "review": [
+    "Existing measured candidates bundled, no claim that all Phase2 quantities are unmeasured.",
+    "Exact preview sampling and mm/metre homography conversion tested independently at measured image points.",
+    "Unresolved parameters null; engineering references labelled and compiled as SP_SIMULATION.",
+    "Runtime=1, active=0, profileReviewed=0; new diagnostics do not write PWM or grant output.",
+    "Real-image coverage is limited, even though synthetic integration/legacy equivalence tests pass.",
+    "STOP-only queries, bounded retained ring, explicit clear, no new running UART/SD writes.",
+    "Profile/candidate/source snapshots correspond to final Host and Keil inputs; old Phase2 projects retained."
+  ],
+  "trustLayers": {
+    "structured_parsed": [
+      "native C",
+      "JSON/CSV",
+      "original frame bytes",
+      "Keil XML"
+    ],
+    "computed": [
+      "source hashes",
+      "CRC",
+      "coordinate conversion",
+      "Host tests",
+      "Keil compilation",
+      "native real-image coverage"
+    ],
+    "md_extractedOnlyClaims": [],
+    "newPdfVerifiedEvidence": false
+  },
+  "msvcExecuted": false,
+  "asanExecuted": false,
+  "persistentGlobalConfigurationChanged": false,
+  "evidenceSha256": {
+    "evidence/candidate/build.log": "35021d548eecbaabafc36e0ceb969d1b2d7fd2c74318472b24f35a6423681674",
+    "evidence/candidate/candidate.json": "daa68be3e50a31d78c7600fb4e819dacc2860ffed660d2f1cb511cdbc8bf55b3",
+    "evidence/candidate/code/phase3_shadow_profile.h": "ab21bb6cf4d763cc2df83baf9833070ae5f5c706ec049e59fff33040ef6ab67e",
+    "evidence/candidate/code/vision_drive.c": "740733896e4f8e7266c4729f6ffa8d4da28208f9e803ce6cbace1f2197d17d91",
+    "evidence/candidate/code/vision_field.c": "5cdf18f63770333f712573ddc1db15453d3ebf5f9b38d6d0482634f9ff8abeab",
+    "evidence/candidate/code/vision_planner_runtime.c": "c2d5620b2f98f944db9f528d80dce62137617c2b63c5b176df215473811b14e0",
+    "evidence/candidate/code/vision_planner_runtime.h": "52577b6a6a8fba30358f87d4892829b1e0c195c2b890ded306576117f166d2c3",
+    "evidence/candidate/code/vision_planner_shadow_diag.c": "9eb87ac52c510d1d5941422c5f464e2c0c01dfea3d3d9759769ce20d617a581a",
+    "evidence/candidate/code/vision_planner_shadow_diag.h": "cdcdbe04bfe803d64b31d2068e73ad5d8e32a19930613580522206a475bea180",
+    "evidence/candidate/MPC_Phase3_Shadow.uvprojx": "22ef5d64de49d69df1ab26b056150893bd519c591c9d7f9888b4a7e3148088fe",
+    "evidence/candidate/MPC_Phase3_Shadow_Download.uvprojx": "0d08bb36707fa19e37dbc1c200cfcda5747366d632d6869cfff9a14bf00fea5e",
+    "evidence/candidate/profile.json": "79afc16033dcc173b610267c6d68b7b8a5f727a7fbca78eb404dec9993b8e0d1",
+    "evidence/candidate/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/candidate/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/host/metric-control/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/host/metric-control/stdout.log": "0f5070e2c2a2a7736034a433754ee29b0d8dfe87e3335a2c75d7360b11748f9f",
+    "evidence/host/phase3-shadow-preparation/stderr.log": "1c8faecd5332c8d7ed0107528e1b568cd593e3ab1484d330109c615f86a7c50b",
+    "evidence/host/phase3-shadow-preparation/stdout.log": "f0cfb556771940eeee27846ed57bd7efc45af17f99942dc1a8acbfab1408a558",
+    "evidence/host/planner-runtime/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/host/planner-runtime/stdout.log": "aa2dd74505f3fba2368198e47bf4c88011611ae2c2adcde1e8ace043b8524f17",
+    "evidence/host/run.json": "9f78a95acf7c13df8cda80070a4411aa9164066fe928918db10fe77211882517",
+    "evidence/host/summary.md": "371ef13bd5606a6cc9109af8ee353e2c9489fa8823d578f7035b4d9a43847e33",
+    "evidence/real-image-replay/build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/real-image-replay/geometry.csv": "0b1aa1955edb9cb0b99d18615ebbb4d985c7ef500e37beecea3ea4e804f009e3",
+    "evidence/real-image-replay/report.json": "c9ed509caf711dd4ff652f87bd976c10d1f043d569c5a27f67093ee02472fe6c",
+    "evidence/real-image-replay/run.log": "db0c5cfcd798b4be6d3f2ab76f7cbd7d32ad4acc64486e549b38f345c699a31c",
+    "evidence/static/run.json": "8f5302c02c47c3d77bc266f276658e81a60af72634351ec41b6e2debc26ac8cd",
+    "evidence/static/summary.md": "63d5216257f97259fddf73a2d55f5c0b1269af64b63a147a03044ec3a5aa2db1"
+  },
+  "patchSha256": "c530404cff1853ad629717e0362a01ec5dc5eaa424bc9f23b4ce51e1b1069147"
+}

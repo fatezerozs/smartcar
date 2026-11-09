@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0",
+  "id": "tangent-preview",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 1.720198,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:02.386+00:00",
+  "finishedAt": "2026-11-09T10:09:04.106+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_MIDTERM_AUTONOMOUS=0",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_tangent_preview.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_control.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_open_loop.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\tangent-preview\\artifacts\\default\\tangent-preview.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\tangent-preview\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.458106,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\tangent-preview\\artifacts\\default\\tangent-preview.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\tangent-preview\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.244633,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_tangent_preview.c",
+        "demo/code/vision_midterm.c",
+        "demo/code/vision_control.c",
+        "demo/code/midterm_open_loop.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_MIDTERM_AUTONOMOUS=0",
+        "VISION_MIDTERM_ROUTE_TRIAL=1",
+        "VISION_ROUTE_SWITCH=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\tangent-preview",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/fixtures/phase3-real-boundaries-20261109.json",
+    "artifacts/default/fixtures/tangent-preview/frame-000020.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000024.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000030.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000040.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000041.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000043.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000044.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000045.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000051.gray",
+    "artifacts/default/fixtures/tangent-preview/frame-000065.gray",
+    "artifacts/default/fixtures/tangent-preview/manifest.json",
+    "artifacts/default/tangent-preview.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

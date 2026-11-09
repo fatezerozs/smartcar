@@ -1,0 +1,25 @@
+{
+  "time": "2026-11-09T10:58:50.964123+08:00",
+  "version": "PHASE3_C26_SHADOW_20261109_2",
+  "profile": "C26-SHADOW-FA161BDE",
+  "authorization": "User previously requested flash verification; continuing Phase3 after explicitly cancelling upper-station work.",
+  "motionCommandSent": false,
+  "runtimeMetricActive": false,
+  "claim": "[LINK] port=radio owner=radio rx=96 tx=2952211 overflow=0 errors=1 tx_rejected=584; x=claim while stopped",
+  "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+  "drive": "[DRIVE] ready=1 state=0 faults=0 near=0.202 heading=-0.027 steer=0.000 duty=0.000 far_ok=1",
+  "command": [
+    "E:/ElecTronic/Keil/UV4/UV4.exe",
+    "-f",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-boardbench-20261109\\delivery\\workspace\\demo\\mdk\\competition\\MPC_Phase3_Shadow_Download.uvprojx",
+    "-t",
+    "nor_sdram_zf_dtcm",
+    "-j0",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-boardbench-20261109\\flash-20261109T025850Z\\flash.log"
+  ],
+  "exitCode": 2,
+  "programmingDone": false,
+  "verifyOk": false,
+  "flashLog": "Load \"C:\\\\shengchanli\\\\smartCar\\\\smartcar\\\\.build\\\\phase3-boardbench-20261109\\\\delivery\\\\Objects\\\\rt1064.axf\" \nInternal DLL Error\nError: Flash Download failed  -  Target DLL has been cancelled\nFlash Load finished at 10:58:52\n"
+}

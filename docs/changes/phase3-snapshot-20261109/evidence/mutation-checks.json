@@ -1,0 +1,20 @@
+[
+  {
+    "mutation": "request-version",
+    "exitCode": 1,
+    "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+    "detected": true
+  },
+  {
+    "mutation": "sample-version",
+    "exitCode": 1,
+    "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+    "detected": true
+  },
+  {
+    "mutation": "immutable-steering",
+    "exitCode": 1,
+    "failure": "speed:80 a.target_right==b.target_right&&a.target_left==b.target_left",
+    "detected": true
+  }
+]

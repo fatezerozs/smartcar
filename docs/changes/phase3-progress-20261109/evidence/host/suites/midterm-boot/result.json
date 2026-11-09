@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "1.0",
+  "id": "midterm-boot",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 3.41789,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:02.823+00:00",
+  "finishedAt": "2026-11-09T10:09:06.241+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\stubs",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DMIDTERM_SPEED_CONFIRMED=1",
+        "-DMIDTERM_ENCODER_LEFT_SIGN=1",
+        "-DMIDTERM_ENCODER_RIGHT_SIGN=1",
+        "-DMIDTERM_SPEED_MAX_TICKS=10",
+        "-DMIDTERM_SPEED_KP=5.0f",
+        "-DMIDTERM_SPEED_KI=0.05f",
+        "-DMIDTERM_VISUAL_REVIEWED=1",
+        "-DVISION_DRIVE_ENABLE=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_midterm_boot.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_boot.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_speed.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_motion.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_drive.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_actuator.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_guard.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_probe.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_startup.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_vehicle_profile.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_control.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_open_loop.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_mode.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_field.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_storage.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-1\\midterm-boot.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-1",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.590122,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-1\\midterm-boot.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-1",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.108014,
+      "stage": "test"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\stubs",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DMIDTERM_SPEED_CONFIRMED=1",
+        "-DMIDTERM_ENCODER_LEFT_SIGN=1",
+        "-DMIDTERM_ENCODER_RIGHT_SIGN=1",
+        "-DMIDTERM_SPEED_MAX_TICKS=10",
+        "-DMIDTERM_SPEED_KP=5.0f",
+        "-DMIDTERM_SPEED_KI=0.05f",
+        "-DMIDTERM_VISUAL_REVIEWED=0",
+        "-DVISION_DRIVE_ENABLE=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_midterm_boot.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_boot.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_speed.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_motion.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_drive.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_actuator.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_guard.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_probe.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_startup.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_vehicle_profile.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_control.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_open_loop.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_mode.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_field.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_storage.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-0\\midterm-boot.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-0",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.629122,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-0\\midterm-boot.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot\\artifacts\\review-0",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.075462,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "review-1",
+      "sources": [
+        "tests/vision/test_midterm_boot.c",
+        "demo/code/midterm_boot.c",
+        "demo/code/vision_speed.c",
+        "demo/code/wheel_speed.c",
+        "demo/code/vision_motion.c",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_guard.c",
+        "demo/code/vision_probe.c",
+        "demo/code/vision_startup.c",
+        "demo/code/vision_vehicle_profile.c",
+        "demo/code/vision_control.c",
+        "demo/code/midterm_open_loop.c",
+        "demo/code/app_mode.c",
+        "demo/code/vision_field.c",
+        "demo/code/vision_storage.c"
+      ],
+      "includeDirectories": [
+        "tests/vision/stubs",
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_AUTONOMOUS=1",
+        "MIDTERM_SPEED_CONFIRMED=1",
+        "MIDTERM_ENCODER_LEFT_SIGN=1",
+        "MIDTERM_ENCODER_RIGHT_SIGN=1",
+        "MIDTERM_SPEED_MAX_TICKS=10",
+        "MIDTERM_SPEED_KP=5.0f",
+        "MIDTERM_SPEED_KI=0.05f",
+        "MIDTERM_VISUAL_REVIEWED=1",
+        "VISION_DRIVE_ENABLE=1",
+        "VISION_START_SWITCH_ENABLE=0"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "review-0",
+      "sources": [
+        "tests/vision/test_midterm_boot.c",
+        "demo/code/midterm_boot.c",
+        "demo/code/vision_speed.c",
+        "demo/code/wheel_speed.c",
+        "demo/code/vision_motion.c",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_guard.c",
+        "demo/code/vision_probe.c",
+        "demo/code/vision_startup.c",
+        "demo/code/vision_vehicle_profile.c",
+        "demo/code/vision_control.c",
+        "demo/code/midterm_open_loop.c",
+        "demo/code/app_mode.c",
+        "demo/code/vision_field.c",
+        "demo/code/vision_storage.c"
+      ],
+      "includeDirectories": [
+        "tests/vision/stubs",
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_AUTONOMOUS=1",
+        "MIDTERM_SPEED_CONFIRMED=1",
+        "MIDTERM_ENCODER_LEFT_SIGN=1",
+        "MIDTERM_ENCODER_RIGHT_SIGN=1",
+        "MIDTERM_SPEED_MAX_TICKS=10",
+        "MIDTERM_SPEED_KP=5.0f",
+        "MIDTERM_SPEED_KI=0.05f",
+        "MIDTERM_VISUAL_REVIEWED=0",
+        "VISION_DRIVE_ENABLE=1",
+        "VISION_START_SWITCH_ENABLE=0"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\midterm-boot",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/review-0/midterm-boot.exe",
+    "artifacts/review-1/midterm-boot.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

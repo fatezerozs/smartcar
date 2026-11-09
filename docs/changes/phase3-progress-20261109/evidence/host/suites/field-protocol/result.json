@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0",
+  "id": "field-protocol",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "protocol-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.45777,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:13.383+00:00",
+  "finishedAt": "2026-11-09T10:09:13.841+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.EXE",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_field_protocol.ps1"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\field-protocol\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.454952,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\field-protocol",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "powershell",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

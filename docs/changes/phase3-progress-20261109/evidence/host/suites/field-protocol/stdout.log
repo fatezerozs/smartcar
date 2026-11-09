@@ -1,0 +1,3 @@
+[test] C:\Users\zfn19\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.EXE -NoLogo -NoProfile -NonInteractive -File C:\shengchanli\smartCar\smartcar\tests\vision\test_field_protocol.ps1
+FIELD PROTOCOL PASS: 50 checks; no COM opened.
+[PASS] Completed within declared software evidence scope

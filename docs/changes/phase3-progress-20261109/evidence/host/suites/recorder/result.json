@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0",
+  "id": "recorder",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "data-capture",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 2.824745,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:15.052+00:00",
+  "finishedAt": "2026-11-09T10:09:17.877+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\recorder\\test_recorder.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 2.821769,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "17 synthetic/mock tests; selected Host compiler/mode, no Keil, SD card, vehicle or hard real-time acceptance",
+    "executionMethod": "python",
+    "effectiveResources": [
+      "recorder-host-tests"
+    ],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "module": "main ASCII radio communication",
+  "passed": false,
+  "source": "c20c8126df7cbb52490432146b04a0f4505283e021888a718bb8affdc5e38c0b",
+  "changed_project_inputs": [
+    ".build\\recorder-joint-20261106\\motion-radio-20261108T140141769996Z\\candidate.uvprojx"
+  ],
+  "local_axf_sha256": "f30cb44f9e322c7ac68e82ca32e7e66a2c205a3506faf31688ff79d6b94de25f",
+  "valid_identity_count": 0,
+  "bytes": 96638,
+  "raw_sha256": "7d0807836c86bd70a687f83777be0cba09b1539e6b79a45e819ad506240ac2ee",
+  "start_sent": false,
+  "arm_sent": false,
+  "motion_tested": false,
+  "port_closed": true,
+  "criteria": "at least two complete matching idle/OFF identity lines during five STATUS queries",
+  "limitations": "Native main ASCII transport has no frame CRC; matching lines do not exclude interference or prove future reliability",
+  "stderr": "",
+  "ascii_fragments": [
+    "[LINK] port=radio owner=radio rx=146501 tx=18443 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=150078 tx=18744 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=181072 tx=20772 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=192646 tx=21460 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=199193 tx=21747 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "tt=main_radio115200 outputs=bounded_2900ms_pwm2000 source=c20",
+    "@[LINK] port=radio owner=radio rx=226475 tx=23035 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "MOTION id=RECORDER_MOTION_C26_3S_1 transport=main_radio115200 outputs=B",
+    "bounded_2900ms_pwm2000 source=c20c8126df7cbb52490432146b04a0f4505283e021888a718bb8affdc5e38c0b c26=1 camera=0 storage=0 frames_limit=200 record_soft_limit_ms=4000 cpr_x10_L/R=23358/23586 sign_L/R=-1/1 repeat_run=reset_required",
+    "[LINK] port=radio owner=radio rx=230130 tx=23583 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=230134 tx=23588 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "@[LINK] port=radio owner=radio rx=231645 tx=23982 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=236993 tx=24563 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=237460 tx=24724 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=241768 tx=251cted=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=24",
+    "[LINK] port=radio owner=radio rx=243461 tx=25399 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "owner=radio rx=245511 tx=25764 overflow=0 errors=1 tx_reject[LINK[LINK] STOP",
+    "[LINK] port=radio owner=radio rx=246405 tx=25923 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+    "[LINK] port=radio owner=radio rx=249276 tx=26212 overflow=0 m while stopped"
+  ]
+}

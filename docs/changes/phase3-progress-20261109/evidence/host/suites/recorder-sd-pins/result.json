@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0",
+  "id": "recorder-sd-pins",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "unit",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.270246,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:21.425+00:00",
+  "finishedAt": "2026-11-09T10:09:21.695+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\recorder\\sd_pins_mocks",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\recorder\\include",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\recorder\\sd_pins_harness.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\recorder\\recorder_sd_pins.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-sd-pins\\artifacts\\default\\recorder-sd-pins.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-sd-pins\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.199239,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-sd-pins\\artifacts\\default\\recorder-sd-pins.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-sd-pins\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.06684,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/recorder/sd_pins_harness.c",
+        "demo/recorder/recorder_sd_pins.c"
+      ],
+      "includeDirectories": [
+        "tests/recorder/sd_pins_mocks",
+        "demo/recorder/include"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\recorder-sd-pins",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/recorder-sd-pins.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

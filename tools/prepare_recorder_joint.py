@@ -51,6 +51,10 @@ def prepare(output,seed=None):
    inputs[str(p.relative_to(ROOT))]=sha(p);text=p.read_text()
    text=once(text,'if(ack && seq>counters.base_source) {','if(ack && seq>counters.base_source && counters.accepted<100U) {')
    text=once(text,'++counters.accepted;','++counters.accepted;if(counters.accepted>=100U)recorder_finish_requested=1;')
+   # Vision continues after the finite recording window. Count only processed
+   # frames whose sequence belongs to that window, including while draining.
+   text=once(text,'if(ack && vision[at].sequence>counters.base_source)',
+             'if(ack && vision[at].sequence>counters.base_source && vision[at].sequence<=counters.last_source)')
    text=once(text,'if(depth>counters.queue_high_water)','joint_queue_depth(depth);if(depth>counters.queue_high_water)')
    text=once(text,'*frame=&recording[*at];return 1;','*frame=&recording[*at];joint_queue_depth(uxQueueMessagesWaiting(filled_queue));return 1;')
    generated=private/p.name;generated.write_text('#include "joint.h"\nextern volatile unsigned char recorder_finish_requested;\n'+text);adapters[p.name]={'original':str(p.relative_to(ROOT)),'before_sha256':sha(p),'generated_sha256':sha(generated)};p=generated

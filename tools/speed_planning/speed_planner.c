@@ -61,16 +61,23 @@ int sp_limits_valid(const sp_limits_t *c)
 }
 static void limit(float cap,uint32_t reason,float *value,uint32_t *why)
 {if(cap<*value){*value=cap;*why=reason;}else if(cap==*value)*why|=reason;}
+int sp_preview_valid(const sp_preview_t *p)
+{
+    unsigned i;
+    if(!p||p->units!=SP_METRES||p->count<2||p->count>SP_CAPACITY)return 0;
+    for(i=0;i<p->count;++i)
+        if(!finite_f(p->distance[i])||!finite_f(p->curvature[i])||p->distance[i]<0||p->distance[i]>10000||
+           (i&&p->distance[i]<=p->distance[i-1])||(!i&&p->distance[i]!=0))return 0;
+    return 1;
+}
 int sp_plan(const sp_preview_t *p,const sp_limits_t *c,float measured,int near_only,float terminal,sp_plan_t *out)
 {
     sp_plan_t plan;unsigned i;
-    if(!p||!out||!sp_limits_valid(c)||p->units!=SP_METRES||p->count<2||p->count>SP_CAPACITY||
+    if(!out||!sp_limits_valid(c)||!sp_preview_valid(p)||
        !finite_f(measured)||measured<0||measured>100||!finite_f(terminal)||terminal<0||terminal>c->maximum_speed)return 0;
     memset(&plan,0,sizeof(plan));plan.count=p->count;
     for(i=0;i<p->count;++i){
         float usable,bt,brake_cap,curve;
-        if(!finite_f(p->distance[i])||!finite_f(p->curvature[i])||p->distance[i]<0||p->distance[i]>10000||
-           (i&&p->distance[i]<=p->distance[i-1])||(!i&&p->distance[i]!=0))return 0;
         curve=sqrtf(c->lateral_accel/(abs_f(p->curvature[i])+c->curvature_epsilon));
         plan.speed[i]=c->maximum_speed;plan.reason[i]=SP_LIMIT_MAX;
         limit(curve,SP_LIMIT_CURVE,&plan.speed[i],&plan.reason[i]);
@@ -150,7 +157,7 @@ int sp_servo_map(const sp_servo_point_t *map,unsigned n,float angle,float *pulse
             (map[i].angle_rad-map[i-1].angle_rad);return 1;}
     return 0;
 }
-static int policy_valid(const sp_policy_t *p)
+int sp_policy_valid(const sp_policy_t *p)
 {return p&&p->frame_timeout_ms&&p->frame_timeout_ms<UINT32_C(0x80000000)&&
  p->encoder_timeout_ms&&p->encoder_timeout_ms<UINT32_C(0x80000000)&&
  p->stop_timeout_ms&&p->stop_timeout_ms<UINT32_C(0x80000000)&&p->near_window_ms&&
@@ -162,7 +169,7 @@ static void latch(sp_supervisor_t *s,sp_mode_t mode,uint32_t fault)
 {if(s->authorized)++s->generation;s->authorized=0;s->motor_inhibit=1;s->faults|=fault;s->mode=mode;}
 int sp_supervisor_arm(sp_supervisor_t *s,const sp_policy_t *p,const sp_input_t *i)
 {
-    if(!s||!i||!policy_valid(p)||s->mode!=SP_DISARMED||i->hard_stop||i->severe_fault||!i->new_frame||
+    if(!s||!i||!sp_policy_valid(p)||s->mode!=SP_DISARMED||i->hard_stop||i->severe_fault||!i->new_frame||
        !i->near_valid||!i->far_valid||!i->encoder_valid||!finite_f(i->odometer_m)||i->odometer_m<0||
        !finite_f(i->measured_speed)||!fresh(i->now_ms,i->capture_ms,p->frame_timeout_ms)||
        !fresh(i->now_ms,i->encoder_ms,p->encoder_timeout_ms))return 0;
@@ -177,7 +184,7 @@ void sp_supervise(sp_supervisor_t *s,const sp_policy_t *p,const sp_input_t *i)
     if(!s||!i)return;
     if(i->hard_stop||i->severe_fault){latch(s,(i->severe_fault||s->faults)?SP_FAULT_LATCHED:SP_STOP_LATCHED,i->severe_fault?SP_FAULT_CONTROL:0);return;}
     if(!s->authorized)return;
-    if(!policy_valid(p)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONFIG);return;}
+    if(!sp_policy_valid(p)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONFIG);return;}
     if((uint32_t)(i->now_ms-s->last_now_ms)>=UINT32_C(0x80000000)){latch(s,SP_FAULT_LATCHED,SP_FAULT_CONTROL);return;}
     s->last_now_ms=i->now_ms;previous=s->mode;
     if(!i->encoder_valid||!finite_f(i->odometer_m)||i->odometer_m<s->last_odometer_m||
@@ -240,3 +247,18 @@ void sp_supervise(sp_supervisor_t *s,const sp_policy_t *p,const sp_input_t *i)
 }
 int sp_candidate_allowed(const sp_supervisor_t *s,uint32_t epoch)
 {return s&&s->authorized&&!s->motor_inhibit&&s->generation==epoch;}
+
+int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out)
+{
+    unsigned next=1;float fraction;sp_preview_t v;
+    if(!out||!sp_preview_valid(source)||
+       !finite_f(travelled)||travelled<0||travelled>=source->distance[source->count-1]-.000001f)return 0;
+    while(next<source->count&&source->distance[next]<=travelled)++next;
+    if(next>=source->count)return 0;
+    v=*source;v.count=1;v.distance[0]=0;
+    fraction=(travelled-source->distance[next-1])/(source->distance[next]-source->distance[next-1]);
+    v.curvature[0]=source->curvature[next-1]+fraction*(source->curvature[next]-source->curvature[next-1]);
+    for(unsigned j=next;j<source->count;++j){v.distance[v.count]=source->distance[j]-travelled;
+        v.curvature[v.count]=source->curvature[j];++v.count;}
+    if(v.count<2)return 0;*out=v;return 1;
+}

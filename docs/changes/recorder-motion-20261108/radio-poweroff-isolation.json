@@ -1,0 +1,19 @@
+{
+  "operator_state": "car radio powered OFF; PC receiver connected",
+  "receive_only": true,
+  "duration_seconds": 8,
+  "bytes": 15517,
+  "chunks": 155,
+  "first_chunk": "2026-11-08T13:48:30.2050509Z,21,0,358",
+  "last_chunk": "2026-11-08T13:48:38.1542977Z,7970,15427,90",
+  "sha256": "c15070c0c01d7972d5879eb4c287b838d93cad6811b81a54f4e4156299754a7b",
+  "expected_identity_present": false,
+  "interpretation": "traffic continued while intended transmitter was off; data cannot all be attributed to tested candidate; other transmitter or receiver-side source remains to identify",
+  "start_sent": false,
+  "arm_sent": false,
+  "evidence": "C:\\shengchanli\\smartCar\\wireless_diagnostics\\wireless-20261108-214829-966053",
+  "layers": [
+    "structured_parsed",
+    "computed"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "originalTestSha256": "55505cf0140a2a2adb147add5e34627367ddcf7c88a8574cd01f02c01eb22c9c",
+  "frozenProbeSha256": "5f1b66e7241a36e07d1f2c6cebc3902965e6e6a3b8cca2e9750711c57aa3159b",
+  "extraBoundaryAssertions": 6,
+  "exitCode": 0,
+  "compileCommand": [
+    "C:/Program Files/mingw64/bin/gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-Wno-unused-function",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-metric-20261109\\final-boundaries\\metric-boundaries.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_pi.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-metric-20261109\\final-boundaries\\boundaries.exe",
+    "-lm"
+  ],
+  "sourceHashes": {
+    "demo/code/vision_planner.c": "ac3e74aba4f360314ce702b70004c7e60c54d650552f5c09f20f18d15a132e98",
+    "tools/speed_planning/speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448",
+    "demo/code/vision_planner_shadow.c": "8bc89fb4d8c542584156056d779f0ac488ce03d91f684b8bf8bb98280143a7aa",
+    "demo/code/vision_metric_io.c": "3fdf366ce554d8fd9f516f8b56645b6389ef0bb517bc18229cb46125b50d8675",
+    "demo/code/vision_metric_pi.c": "68c013c58a4ff5388c72643236aba6ba3b139907dec817f301faeb0ded34350f",
+    "demo/code/wheel_speed.c": "5731ce8fcaaf7cb585e53eaa6f837e85fd363c2ce43e5be3eda5bbcf5ef2ae1b",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942"
+  }
+}

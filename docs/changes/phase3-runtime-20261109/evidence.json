@@ -1,0 +1,343 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "git": {
+    "branch": "docs/main-documentation-20261107",
+    "head": "f7fb5b9b8cecda8c5d366b12dd9b0adb0599fd41",
+    "dirty": true
+  },
+  "committed": false,
+  "hardwareAccessed": false,
+  "firmwareFlashed": false,
+  "productionDefaults": {
+    "runtime": 0,
+    "active": 0,
+    "profileReviewed": 0
+  },
+  "phase2Complete": false,
+  "phase3Complete": false,
+  "livePiRuntimeIntegrationImplemented": true,
+  "soleWriterIntegrationImplemented": true,
+  "productionApproved": false,
+  "sourceSha256": {
+    "demo/code/vision_speed.c": "feca9ee32e88cd71b3122179dbd95873b4def6debfd560dab33283e02e9c87d6",
+    "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
+    "demo/code/vision_drive.c": "051343aee13c2ec673f4c757dec047fe83dc31f1dfec976ba122b3bcb46774bd",
+    "demo/code/vision_actuator.c": "e167b794c18e31c48d6b924a5ee0bdc2c95bf69e85b524eb188b89ffa6ca3e53",
+    "demo/code/vision_planner.h": "ff5ed44035221422c141735f727979e4cae8f72b09c8612d37a9836b078a2d8c",
+    "demo/mdk/competition/MPC_20261106.uvprojx": "04e5a0737c83f735d9ccc7b653b5027be69223fc7632b8731cfb150b22cf1f32",
+    "demo/recorder/sdk_sources.lock.json": "ff5e8e7b247a97bc406608cfe69fb30497152605db3dba6611fe274bb4006bde",
+    "tests/planning/test_speed_response.c": "cf87e1ed6bb591483ff1c8fb5333bbd2b26537497a3c07862ff88287acd8f9fa",
+    "tests/planning/test_heartbeat_response.c": "37195ac4dc85db34954cd320855770ccb127f6e232b2d14232edc13ccae30b1b",
+    "tests/suites/catalog.json": "497b40eea561e396d02b613ac618de88f2e81132585ce71badbcaf9eb67810fe",
+    "tools/check_phase2_response.py": "f38a9f233edf20671852b10f599f3380cf900b0137f8547c21cb01b147d409bd",
+    "tools/speed_planning/audit_build.py": "e5dbd3a7b2fa954802b739d9196c2760e72e50e5dcf3c3ef0700a39639ecccff",
+    "demo/code/vision_metric_io.c": "f14f1e6d2bfb266b6cba8145fcd24536c70c00313f114c39f25a14189f239cb9",
+    "demo/code/vision_metric_io.h": "778215bf645cf91c37b73d09000693a18877f9971ad3bc360cf18e94975e20e5",
+    "tests/planning/test_metric_control.c": "55505cf0140a2a2adb147add5e34627367ddcf7c88a8574cd01f02c01eb22c9c",
+    "demo/code/vision_planner_build.h": "3f7bd5edbe182b3daad47d407d00bc83910a0042529d2bb3425f3cfab1326105",
+    "demo/code/vision_planner_runtime.c": "5bff7bafb0d66d2cb824fdc9f249352ffe0787e47d8783d4f3e9ac3eb3baf852",
+    "demo/code/vision_planner_runtime.h": "c554c216c8505ae779d865a14b8f0eee3d8728bfc9c4a67452b4fa49d1a42029",
+    "tests/planning/test_planner_runtime.c": "8cdbaa97de8549fceaa585137cdeaf5424159dca9d08317ebf351a31e7c0f7fd",
+    "tests/support/fixtures/response_io.h": "139c5be8874553ce93d4c6d765a7ca0bfc532dce3131045becfa514d6337b383",
+    "docs/changes/phase3-runtime-20261109/README.md": "c44886304168da081bc7e9eb9b5ffddab6cae1c46f04d9e65c8ea88a13363186",
+    "tests/suites/contract/interface_contract.c": "c4fce0f36e30c067a04d1541b11a041c0d6560b974d4b9f869233f2ca8a3544a",
+    "docs/PROJECT_INDEX.md": "2d75e8baed8e5c1bc66440b38e0654942e5b3983e18a1a84b92e04c5850cf444",
+    "docs/changes/c31-speed-planning-20261105/README.md": "6e9ce35c6ee2a10f8271d6cea22fd3f0f7d787d2da633fe6048c56c90c1ba991",
+    "tests/suites/README.md": "bc7bc7eb6909d0e5743070d9fe83501d29c5041ab93d48f9f55ea2c7cd4970c0"
+  },
+  "host": {
+    "runId": "20261109T010440-a3ed2835fc",
+    "status": "PASS",
+    "counts": {
+      "PASS": 57,
+      "SKIPPED": 1
+    },
+    "allCurrentInputHashesMatched": true,
+    "runtimeAssertions": {
+      "control": 6442,
+      "shadow": 413
+    },
+    "metricControlAssertions": 40792
+  },
+  "static": {
+    "runId": "20261109T010440-89dbb0ce8e",
+    "selectedSuites": [
+      "environment",
+      "static-safety",
+      "project-structure"
+    ],
+    "status": "PASS",
+    "completePreFlash": false
+  },
+  "keil": [
+    {
+      "mode": "off",
+      "directory": ".build/phase3-runtime-20261109/keil-verified-off",
+      "zeroErrorsWarnings": true,
+      "bytes": {
+        "code": 89824,
+        "roData": 13792,
+        "rwData": 212,
+        "ziData": 196648
+      },
+      "sourceSnapshotMatched": [
+        "demo/code/vision_speed.c",
+        "demo/code/vision_speed.h",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_planner.h",
+        "demo/code/vision_metric_io.c",
+        "demo/code/vision_metric_io.h",
+        "demo/code/vision_planner_build.h",
+        "demo/code/vision_planner_runtime.c",
+        "demo/code/vision_planner_runtime.h"
+      ],
+      "physicalProfileApproved": false
+    },
+    {
+      "mode": "shadow",
+      "directory": ".build/phase3-runtime-20261109/keil-verified-shadow",
+      "zeroErrorsWarnings": true,
+      "bytes": {
+        "code": 101264,
+        "roData": 13792,
+        "rwData": 212,
+        "ziData": 199772
+      },
+      "sourceSnapshotMatched": [
+        "demo/code/vision_speed.c",
+        "demo/code/vision_speed.h",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_planner.h",
+        "demo/code/vision_metric_io.c",
+        "demo/code/vision_metric_io.h",
+        "demo/code/vision_planner_build.h",
+        "demo/code/vision_planner_runtime.c",
+        "demo/code/vision_planner_runtime.h"
+      ],
+      "physicalProfileApproved": false
+    },
+    {
+      "mode": "control",
+      "directory": ".build/phase3-runtime-20261109/keil-verified-control",
+      "zeroErrorsWarnings": true,
+      "bytes": {
+        "code": 102840,
+        "roData": 13792,
+        "rwData": 212,
+        "ziData": 199772
+      },
+      "sourceSnapshotMatched": [
+        "demo/code/vision_speed.c",
+        "demo/code/vision_speed.h",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_planner.h",
+        "demo/code/vision_metric_io.c",
+        "demo/code/vision_metric_io.h",
+        "demo/code/vision_planner_build.h",
+        "demo/code/vision_planner_runtime.c",
+        "demo/code/vision_planner_runtime.h"
+      ],
+      "physicalProfileApproved": false
+    }
+  ],
+  "responseRegression": {
+    "frozenCandidateRetained": true,
+    "independentBaselineAssertions": 14414,
+    "independentHeartbeatAssertions": 815,
+    "nativeTraceRows": 451,
+    "crcVerified": true,
+    "hardware": false
+  },
+  "defaultDisabledAudit": {
+    "scope": "Compare previous/current driver implementations under the SAME current headers; extra API declarations excluded from comparison. Not binary or hardware equivalence.",
+    "cases": [
+      {
+        "variant": "c26",
+        "source": "vision_drive.c",
+        "identical": true,
+        "preprocessedSha256": "000708f6a61adbed2ce56e8c0c1a987f998fadb230c066cec97d068407d4cb26",
+        "commandPrefix": [
+          "gcc",
+          "-E",
+          "-P",
+          "-Itests/vision/stubs",
+          "-Idemo/code",
+          "-DVISION_ENCODER_ENABLE=1",
+          "-DVISION_MIDTERM_TRAINING=1",
+          "-DVISION_ROUTE_SWITCH=1",
+          "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+          "-DVISION_START_SWITCH_ENABLE=0",
+          "-DVISION_MIDTERM_AUTONOMOUS=0"
+        ]
+      },
+      {
+        "variant": "c26",
+        "source": "vision_actuator.c",
+        "identical": true,
+        "preprocessedSha256": "f64bafecaae74f76f6285e9af21e19363419bdf715c0546252ba88863e659793",
+        "commandPrefix": [
+          "gcc",
+          "-E",
+          "-P",
+          "-Itests/vision/stubs",
+          "-Idemo/code",
+          "-DVISION_ENCODER_ENABLE=1",
+          "-DVISION_MIDTERM_TRAINING=1",
+          "-DVISION_ROUTE_SWITCH=1",
+          "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+          "-DVISION_START_SWITCH_ENABLE=0",
+          "-DVISION_MIDTERM_AUTONOMOUS=0"
+        ]
+      },
+      {
+        "variant": "recorder",
+        "source": "vision_drive.c",
+        "identical": true,
+        "preprocessedSha256": "e9f33b139acb2d1a254a9f453169651032f31be44eb44cb519c9bcf839983c09",
+        "commandPrefix": [
+          "gcc",
+          "-E",
+          "-P",
+          "-Itests/vision/stubs",
+          "-Idemo/code",
+          "-DVISION_ENCODER_ENABLE=1",
+          "-DVISION_MIDTERM_TRAINING=1",
+          "-DVISION_ROUTE_SWITCH=1",
+          "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+          "-DVISION_START_SWITCH_ENABLE=0",
+          "-DVISION_MIDTERM_AUTONOMOUS=1",
+          "-DRECORDER_TRAINING=1",
+          "-DMIDTERM_VISUAL_REVIEWED=0"
+        ]
+      },
+      {
+        "variant": "recorder",
+        "source": "vision_actuator.c",
+        "identical": true,
+        "preprocessedSha256": "4525280e1e8372777d14c10e04f0611bdebf23a07460bc6ae59a326733d9fa94",
+        "commandPrefix": [
+          "gcc",
+          "-E",
+          "-P",
+          "-Itests/vision/stubs",
+          "-Idemo/code",
+          "-DVISION_ENCODER_ENABLE=1",
+          "-DVISION_MIDTERM_TRAINING=1",
+          "-DVISION_ROUTE_SWITCH=1",
+          "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+          "-DVISION_START_SWITCH_ENABLE=0",
+          "-DVISION_MIDTERM_AUTONOMOUS=1",
+          "-DRECORDER_TRAINING=1",
+          "-DMIDTERM_VISUAL_REVIEWED=0"
+        ]
+      }
+    ],
+    "oldSourceHash": "d7c62227d2f27a37d6510d1a3e58e020b98c92a2aec50fa885e0746576ee1280",
+    "newSourceHash": "051343aee13c2ec673f4c757dec047fe83dc31f1dfec976ba122b3bcb46774bd"
+  },
+  "incrementalPatchScope": [
+    "demo/code/vision_speed.c",
+    "demo/code/vision_speed.h",
+    "demo/code/vision_drive.c",
+    "demo/code/vision_actuator.c",
+    "demo/code/vision_planner.h",
+    "demo/mdk/competition/MPC_20261106.uvprojx",
+    "demo/recorder/sdk_sources.lock.json",
+    "tests/planning/test_speed_response.c",
+    "tests/planning/test_heartbeat_response.c",
+    "tests/suites/catalog.json",
+    "tools/check_phase2_response.py",
+    "tools/speed_planning/audit_build.py",
+    "demo/code/vision_metric_io.c",
+    "demo/code/vision_metric_io.h",
+    "tests/planning/test_metric_control.c",
+    "demo/code/vision_planner_build.h",
+    "demo/code/vision_planner_runtime.c",
+    "demo/code/vision_planner_runtime.h",
+    "tests/planning/test_planner_runtime.c",
+    "tests/support/fixtures/response_io.h",
+    "docs/changes/phase3-runtime-20261109/README.md"
+  ],
+  "incrementalPatchExcludes": [
+    "documentation navigation edits",
+    "interface contract additions; final hashes included"
+  ],
+  "sharedWorkspaceConcurrentChanges": [
+    "Response checker retains turn candidate support from parallel Phase2 work."
+  ],
+  "selfReview": [
+    "Original live PI instances reused, mutually exclusive target sources.",
+    "Supervisor/geometry work outside final IRQ commit; local ARM excerpts inspected, no WCET claim.",
+    "Internal supervisor faults map to existing recoverable/severe categories; OFF/ON regression passes.",
+    "Exact odometry endpoints accepted across later discontinuities; midpoint interpolation still rejected.",
+    "Recorder driver lock updated after default-disabled implementation comparisons; SDK locks intact.",
+    "Default build sizes equal previous stage; not a binary identity claim."
+  ],
+  "remaining": [
+    "Reviewed physical configuration and synchronized Phase2 data.",
+    "Board shadow/control timing, tracking, stability and stopping validation.",
+    "Other configurations, telemetry and complete A/B/track acceptance."
+  ],
+  "trustLayers": {
+    "structured_parsed": [
+      "native C",
+      "JSON",
+      "Keil XML",
+      "logs"
+    ],
+    "computed": [
+      "Host assertions",
+      "target builds",
+      "preprocessor comparisons",
+      "CRC",
+      "SHA256",
+      "local ARM instruction excerpts"
+    ],
+    "md_extractedOnlyClaims": [],
+    "newPhysicalVerification": false
+  },
+  "msvcExecuted": false,
+  "asanExecuted": false,
+  "remoteCIExecuted": false,
+  "evidenceSha256": {
+    "evidence/commit-disassembly.txt": "925e88c9738ab15eb60f3d49284dfcdcbd14bae0b731449a5f89373d493207cd",
+    "evidence/heartbeat-final-check/report.json": "e534d2df9806ccacdde9adabbeb5469df3ccddc35c76fef370c551e679854555",
+    "evidence/heartbeat-final-check/response-native.bin": "0525b5b53141fccba869a5caaa1b5fcce5f083ea7cb74aebad10c6a7e2d661f0",
+    "evidence/heartbeat-final-check/run.log": "6e2f9bf95238a32161d91a0e958b03edf908016d26c32e9a350b3d711b0bae77",
+    "evidence/heartbeat-final-check/test_heartbeat_response.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/heartbeat-final-check/test_heartbeat_response.run.log": "de19acabe6e52d53b17799cabd42e56512bec7960e5dcaee92e10d5498b93f6d",
+    "evidence/heartbeat-final-check/test_speed_response.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/heartbeat-final-check/test_speed_response.run.log": "742229921c2961f999b9ffb2908b89d43f33b999f6ee3d3e1f90f4f08fa67804",
+    "evidence/heartbeat-frozen-check/report.json": "17d6623d0233fd0faf23eb4ca5fae3cb1383238a5618074d2020c00b07c9dc8b",
+    "evidence/heartbeat-frozen-check/response-native.bin": "0525b5b53141fccba869a5caaa1b5fcce5f083ea7cb74aebad10c6a7e2d661f0",
+    "evidence/heartbeat-frozen-check/run.log": "6e2f9bf95238a32161d91a0e958b03edf908016d26c32e9a350b3d711b0bae77",
+    "evidence/heartbeat-frozen-check/test_heartbeat_response.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/heartbeat-frozen-check/test_heartbeat_response.run.log": "de19acabe6e52d53b17799cabd42e56512bec7960e5dcaee92e10d5498b93f6d",
+    "evidence/heartbeat-frozen-check/test_speed_response.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/heartbeat-frozen-check/test_speed_response.run.log": "742229921c2961f999b9ffb2908b89d43f33b999f6ee3d3e1f90f4f08fa67804",
+    "evidence/host/invalid-configuration/stderr.log": "dfc33de090247b6ac4d41dc120d72975bc3d9f347b63d2bbb2c877831f60d5ff",
+    "evidence/host/invalid-configuration/stdout.log": "b97a2236251c8d3dcc2f269359a629299611c49ba3dccc32f7696914579c6d26",
+    "evidence/host/metric-control/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/host/metric-control/stdout.log": "3216b664f6182bdb38091bc2b601d1d09cc514fc7617d1fdcffb30658231b3bf",
+    "evidence/host/planner-runtime/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/host/planner-runtime/stdout.log": "61fbd14ab59e505542d14a46e4f16c70377c3df2d48443af8c64d1dd3fb03cb6",
+    "evidence/host/recorder-tools/stderr.log": "b642ab7e80c511c482bfa0c0fb05f2a9d72d2fe54c788227b19c8ad2d190d005",
+    "evidence/host/recorder-tools/stdout.log": "16e27a7efe6cc048c5adf01dfab7de3554e8385138534c6a2b5232b61d42b795",
+    "evidence/host/run.json": "68d8726ac200e4b7a1d2c15b497afcde8e88051208e6ad10cc2232067bbd05e6",
+    "evidence/host/summary.md": "19a1f4af07e0aee258d615b35026e1e6a518124ea11c0580b248ef699f3a35fb",
+    "evidence/keil-control/build.log": "88ad27b2b3a87b18b1010fb512a41f10f8fd250fbb4147029eae88edf4899c50",
+    "evidence/keil-control/evidence.json": "4c0fb3565df7076f3e598e77910e59e4634fd9ad96360f2a4ec79c424d4b5e01",
+    "evidence/keil-off/build.log": "1c243612f2c0e2d69f94ebbf6c399f465dd71f5197fcd94c4ee1001ac8a014a5",
+    "evidence/keil-off/evidence.json": "0de9ed848eb9fae0ee8eb5fc3112b814b22ca59e62fa3afa5f84037cb69ca44f",
+    "evidence/keil-shadow/build.log": "5011dcea321466fd64cbbc410e2102154a4cdf1d435c3ce6476d289f9ce40022",
+    "evidence/keil-shadow/evidence.json": "a2e0d93d952a0cbcc8822c3c084ad973c5b4781eb498e373198e904436945c25",
+    "evidence/legacy-preprocess-audit.json": "dcc200728d07981222130f1353fcb4086019709600e1f9c1dd588bda30010f67",
+    "evidence/static/run.json": "20764d544137fe7d68b6032d6bf88606c7bb42aaf68189325095aa35ebd8fc68",
+    "evidence/static/summary.md": "afb8a7b29bcf065ccf28bea180708b6fe7dd6ade3951fa38199ddeeff6bff79a"
+  },
+  "patchSha256": "def74250f087c2e5805df0030616185ffab2c856506705a9870d66457604e025"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "mutation": "control-revision",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "interface:163 !vp_candidate_matches(VP_SHADOW,&out,&current,110)"
+  },
+  {
+    "mutation": "candidate-expiry",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "interface:155 !vp_candidate_matches(VP_SHADOW,&out,&in.stamp,130)"
+  },
+  {
+    "mutation": "count-units",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "interface:89 out.left_ticks_10ms==110&&out.right_ticks_10ms==120&&!out.quantized"
+  },
+  {
+    "mutation": "controlled-stop",
+    "exitCode": 1,
+    "detected": true,
+    "failure": "interface:120 out.action==VP_CONTROLLED_STOP&&out.trajectory.speed<=previous+1e-6f"
+  }
+]

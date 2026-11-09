@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "git": {
+    "sha": "f7fb5b9b8cecda8c5d366b12dd9b0adb0599fd41",
+    "branch": "docs/main-documentation-20261107",
+    "dirty": true
+  },
+  "committed": false,
+  "hardwareAccess": false,
+  "phase2Complete": false,
+  "phase3Complete": false,
+  "productionApproved": false,
+  "runtimePlannerConnected": false,
+  "newInterfaceRemovedByLinker": true,
+  "sources": {
+    "demo/code/vision_planner.c": {
+      "sha256": "dda4574b873b31ba2b5337ae4b55428563a8e8a215d345b0d0ec7545572baad5",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": null,
+        "baseline": "new file"
+      }
+    },
+    "demo/code/vision_planner.h": {
+      "sha256": "283da3cdd41fd9391693e876dbf9b4fb6ca34bd25241fcbf96526793395bcc62",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": null,
+        "baseline": "new file"
+      }
+    },
+    "tools/speed_planning/speed_planner.h": {
+      "sha256": "a1525c39faa6691ec513b9f76ea03c6278b279c52208b90962760d9b8e8e8cc3",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": "46c4d9f905fb6971ce22f9fa79e2850f6164869c3463be8c818ad0bb68e8b94d",
+        "baseline": "pre-turn worktree copy"
+      }
+    },
+    "tools/speed_planning/audit_build.py": {
+      "sha256": "b74869ac1a6f65fd2a56b7252e569f41ce8a7aabac3eaf3fc9a8b9f4c97804b5",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": "574eb8a526d1f2e919781e77d9ac4406de96b2984d1294970fac3fcfac8907d8",
+        "baseline": "pre-turn worktree copy"
+      }
+    },
+    "tests/planning/test_planner_interface.c": {
+      "sha256": "d667d1e55e4d6f9958a10e56f45ae47b9401b64ede0a444f79b0b0d5ed9da313",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": null,
+        "baseline": "new file"
+      }
+    },
+    "tests/suites/contract/planner_gate.c": {
+      "sha256": "7ca5de66a33ce9782bf9dcb4e61cb32d65427cc913296aa32b31109c85d95efb",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": null,
+        "baseline": "new file"
+      }
+    },
+    "tests/suites/contract/interface_contract.c": {
+      "sha256": "28792c7da16707ce6d8940e046a906416694803723b9a78edeabb5a9a8c71ba1",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": "ebe24e9f2c883e9891651be5ed5a06b015f9a1317963f591435ecf100ea32152",
+        "baseline": "clean HEAD at turn start"
+      }
+    },
+    "tests/suites/catalog.json": {
+      "sha256": "3e035f657c2f03113612f1af4f32d16aff5ecc5392b9da8fcf4be66259cc3f99",
+      "matchesFinalHostInput": true,
+      "before": {
+        "sha256": "beb730d642a01ae338d802114c31be462c60abd624928496b74d28d8d310f14f",
+        "baseline": "pre-turn worktree copy"
+      }
+    }
+  },
+  "project": {
+    "path": "demo/mdk/competition/MPC_20261106.uvprojx",
+    "sha256": "03f688f685e235c148a154e785c3c1c32b762400086f1ab7c528aaac6b8b9565",
+    "matchesAuditedBuild": true,
+    "before": {
+      "sha256": "2d990ceca40a70ca4736f389620dff24fb34648069f4ef2711109c43b7c99810",
+      "baseline": "pre-turn worktree copy"
+    }
+  },
+  "host": {
+    "runId": "20261108T213738-51d33baf5b",
+    "compiler": "gcc",
+    "mode": "optimized",
+    "status": "PASS",
+    "counts": {
+      "PASS": 52,
+      "SKIPPED": 1
+    },
+    "releaseEligible": false,
+    "durationSeconds": 46.541914
+  },
+  "static": {
+    "runId": "20261108T213738-91e6abcc3d",
+    "selectedSuites": [
+      "static-safety",
+      "project-structure"
+    ],
+    "status": "PASS",
+    "fullPreFlash": false
+  },
+  "keil": {
+    "buildOnly": true,
+    "zeroErrorsWarnings": true,
+    "defines": "VISION_MIDTERM_TRAINING=1,VISION_ENCODER_ENABLE=1,VISION_MIDTERM_AUTONOMOUS=0,VISION_MIDTERM_ROUTE_TRIAL=1,VISION_ROUTE_SWITCH=1,CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1, FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0, USB_STACK_BM, DEBUG, MCUXPRESSO_SDK, SD_ENABLED",
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1214632,
+        "sha256": "2146f5ab58dc981b856b1090ac94c62c348d6cf0ddb4a4bac3d6fb84027a54e9"
+      },
+      "rt1064.bin": {
+        "bytes": 110528,
+        "sha256": "5bc05e5f48554d9e8654f6a736cf6ce03a680d5dfe27798e43370e682617411b"
+      },
+      "disassembly.txt": {
+        "bytes": 2556640,
+        "sha256": "af95653ad877d95b38688dcade1c2fd74209539fd062f10cd447953100169c91"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2081681,
+        "sha256": "5ea54a57a76028c787bc4c3294ca6dacae86bb9afd690b169984dd2ba6b2a9a1"
+      }
+    }
+  },
+  "binaryComparison": {
+    "previousSha256": "88a12d9641dbba81fbbff0bc9a1db6fef8d02b0b5946cf1e0dcdb4185e4094f2",
+    "currentSha256": "5bc05e5f48554d9e8654f6a736cf6ce03a680d5dfe27798e43370e682617411b",
+    "bytes": 110528,
+    "differingBytes": 4,
+    "onlyDifference": "Existing main.c __TIME__ boot string",
+    "timeStringOffset": 43924,
+    "previousTime": "05:09:57",
+    "currentTime": "05:37:41",
+    "allOtherBytesIdentical": true
+  },
+  "mutationChecks": [
+    {
+      "mutation": "control-revision",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "interface:163 !vp_candidate_matches(VP_SHADOW,&out,&current,110)"
+    },
+    {
+      "mutation": "candidate-expiry",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "interface:155 !vp_candidate_matches(VP_SHADOW,&out,&in.stamp,130)"
+    },
+    {
+      "mutation": "count-units",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "interface:89 out.left_ticks_10ms==110&&out.right_ticks_10ms==120&&!out.quantized"
+    },
+    {
+      "mutation": "controlled-stop",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "interface:120 out.action==VP_CONTROLLED_STOP&&out.trajectory.speed<=previous+1e-6f"
+    }
+  ],
+  "msvcExecuted": false,
+  "asanExecuted": false,
+  "remoteCIExecuted": false,
+  "remaining": [
+    "Runtime shadow scheduling/supervisor/input history",
+    "Capture-aligned odometry and validated ground domain",
+    "Independent metric target entry into existing PI without legacy double mixing",
+    "Production calibration and actual timing/vehicle acceptance"
+  ],
+  "trustLayers": [
+    "structured_parsed",
+    "computed"
+  ],
+  "evidenceSha256": {
+    "evidence/binary-comparison.json": "a47acb7be268715c020cca243cf83b24595212bd0e72bd78f3ee984cb36bba1f",
+    "evidence/host-summary.md": "d4e56f566c0d330a62977e96c3831cc5f2a87eea0c61088a4de07a55e1cc7bf0",
+    "evidence/invalid-configuration.stdout.log": "9037869bfc62bb301756ea9c5afce1c9ab39bee59f1020475149075ca2b5584f",
+    "evidence/keil-artifacts.json": "a4629dfba91a83123475a8c0b4ed80da63287575262c6d904bc7462350368698",
+    "evidence/keil-build.log": "c0e7cf71d3f1cebbdc4c61817c6bec4bb8ac5a11a2944956d8ceb2991e9238a7",
+    "evidence/linker-removal.txt": "46843c529f70f843f4c4a3017b00b0801f34a04f75ae241c17ba46540a44cdd6",
+    "evidence/mutation-checks.json": "fe55bd2368f338048246cf553cb77fff85895f3004bd830abe237ae44514f353",
+    "evidence/planner-interface.stdout.log": "9931bd67dc06d43edd4db2ebf34485f3b8085909899cca4c6481852aa4ee6290",
+    "evidence/static-summary.md": "13ebe1a6c41f8fefb6bf3e2f3be177d3ae43438190b5f5a8898ce50d4c88f23e"
+  }
+}

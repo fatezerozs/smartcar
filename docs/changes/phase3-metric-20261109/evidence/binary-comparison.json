@@ -1,0 +1,9 @@
+{
+  "previousSha256": "3b1de5a29150a9011363ea20f7b4a7ff13b392955ef0c4ba0f4313d718773223",
+  "currentSha256": "6e63df8a65a2e5f860c09fb7c70d834ee6e71672eb213745ab18d2d825f31228",
+  "previousBytes": 110528,
+  "currentBytes": 110528,
+  "differingBytes": 33165,
+  "byteIdentical": false,
+  "interpretation": "New unused objects removed; layout/build-time can change bytes, same total sizes do not prove binary equality."
+}

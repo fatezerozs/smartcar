@@ -1,0 +1,43 @@
+{
+  "time": "2026-11-09T11:29:28.751930+08:00",
+  "port": "COM10",
+  "motionCommandSent": false,
+  "modes": {
+    "g": [
+      {
+        "file": "g-0.gray",
+        "sha256": "d71c61e1d9d1c17f8741602286a2b4cee136b712af4e9ff8e5804cee50f99685"
+      },
+      {
+        "file": "g-1.gray",
+        "sha256": "323d2219cf662e77505b5376782aa0ac2b0d5a1f6e1ddbfe1b5308e4e167aad8"
+      }
+    ],
+    "o": [
+      {
+        "file": "o-0.gray",
+        "sha256": "2c5736483d3ea08112fb1d19636e591f2652eb0eaf8a0b7b619b7fbe29502034"
+      },
+      {
+        "file": "o-1.gray",
+        "sha256": "46fdc91867e15f75133ca5d485fa63b6b76e8caf418163af17a056f2c7a55f57"
+      }
+    ],
+    "b": [
+      {
+        "file": "b-0.gray",
+        "sha256": "7e287a692422bc0b3914d6037fa9ba825abee15f94b03b83f71d7d31b18cd09c"
+      },
+      {
+        "file": "b-1.gray",
+        "sha256": "91f4fdebb4351ce046e4e4b8a2601e0af95ea254dec5e2e02a545d4a53876868"
+      }
+    ]
+  },
+  "protocol": "fixed header and length only; no payload CRC or image sequence; separate modes are not simultaneous",
+  "stop": "[LINK] STOP",
+  "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+  "claim": "[LINK] port=radio owner=radio rx=2153 tx=1493730 overflow=0 errors=1 tx_rejected=46; x=claim while stopped",
+  "complete": true,
+  "binaryCaptureAt": "2026-11-09T11:31:56.682814+08:00"
+}

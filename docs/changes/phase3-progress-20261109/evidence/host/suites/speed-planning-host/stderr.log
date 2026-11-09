@@ -1,0 +1,28 @@
+test_censor_gap_and_end (__main__.Sessions.test_censor_gap_and_end) ... ok
+test_complete_episode_counts_recovery_and_near_pause (__main__.Sessions.test_complete_episode_counts_recovery_and_near_pause) ... ok
+test_empirical_p99_is_explicit_policy (__main__.Sessions.test_empirical_p99_is_explicit_policy) ... ok
+test_near_output_violation_reported (__main__.Sessions.test_near_output_violation_reported) ... ok
+test_no_data_means_no_budget (__main__.Sessions.test_no_data_means_no_budget) ... ok
+test_no_frame_split_or_dataset_overlap (__main__.Sessions.test_no_frame_split_or_dataset_overlap) ... ok
+test_order_and_pwm_constraints (__main__.Sessions.test_order_and_pwm_constraints) ... ok
+test_version_units_duplicates_nonfinite (__main__.Sessions.test_version_units_duplicates_nonfinite) ... ok
+test_bicycle_and_rear_axle_mirror (__main__.VehicleModel.test_bicycle_and_rear_axle_mirror) ... ok
+test_count_direction_and_sample_units_with_synthetic_calibration (__main__.VehicleModel.test_count_direction_and_sample_units_with_synthetic_calibration) ... ok
+test_dimensions_keep_provenance (__main__.VehicleModel.test_dimensions_keep_provenance) ... ok
+test_nominal_encoder_label_cannot_authorize_metres (__main__.VehicleModel.test_nominal_encoder_label_cannot_authorize_metres) ... ok
+test_preserved_image_hashes (__main__.VehicleModel.test_preserved_image_hashes) ... ok
+test_readiness_preserves_missing_calibration (__main__.VehicleModel.test_readiness_preserves_missing_calibration) ... ok
+test_servo_command_is_monotonic_but_not_angle (__main__.VehicleModel.test_servo_command_is_monotonic_but_not_angle) ... ok
+test_servo_profile_matches_current_source (__main__.VehicleModel.test_servo_profile_matches_current_source) ... ok
+test_explicit_assumptions_and_braking_reserve (__main__.EngineeringReferences.test_explicit_assumptions_and_braking_reserve) ... ok
+test_frozen_v02_remains_explicitly_replayable (__main__.EngineeringReferences.test_frozen_v02_remains_explicitly_replayable) ... ok
+test_generated_config_stays_host_and_rejects_bad_references (__main__.EngineeringReferences.test_generated_config_stays_host_and_rejects_bad_references) ... ok
+test_corrupt_manifest_and_escape_are_rejected (__main__.CurrentDataInputs.test_corrupt_manifest_and_escape_are_rejected) ... ok
+test_crc_valid_sample_disagreement_is_rejected (__main__.CurrentDataInputs.test_crc_valid_sample_disagreement_is_rejected) ... ok
+test_delivered_binary_ledger_and_production_source_agree (__main__.CurrentDataInputs.test_delivered_binary_ledger_and_production_source_agree) ... ok
+test_source_cpr_drift_is_rejected (__main__.CurrentDataInputs.test_source_cpr_drift_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 1.024s
+
+OK

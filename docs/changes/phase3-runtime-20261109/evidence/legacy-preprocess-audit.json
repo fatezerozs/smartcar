@@ -1,0 +1,87 @@
+{
+  "scope": "Compare previous/current driver implementations under the SAME current headers; extra API declarations excluded from comparison. Not binary or hardware equivalence.",
+  "cases": [
+    {
+      "variant": "c26",
+      "source": "vision_drive.c",
+      "identical": true,
+      "preprocessedSha256": "000708f6a61adbed2ce56e8c0c1a987f998fadb230c066cec97d068407d4cb26",
+      "commandPrefix": [
+        "gcc",
+        "-E",
+        "-P",
+        "-Itests/vision/stubs",
+        "-Idemo/code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "-DVISION_MIDTERM_AUTONOMOUS=0"
+      ]
+    },
+    {
+      "variant": "c26",
+      "source": "vision_actuator.c",
+      "identical": true,
+      "preprocessedSha256": "f64bafecaae74f76f6285e9af21e19363419bdf715c0546252ba88863e659793",
+      "commandPrefix": [
+        "gcc",
+        "-E",
+        "-P",
+        "-Itests/vision/stubs",
+        "-Idemo/code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "-DVISION_MIDTERM_AUTONOMOUS=0"
+      ]
+    },
+    {
+      "variant": "recorder",
+      "source": "vision_drive.c",
+      "identical": true,
+      "preprocessedSha256": "e9f33b139acb2d1a254a9f453169651032f31be44eb44cb519c9bcf839983c09",
+      "commandPrefix": [
+        "gcc",
+        "-E",
+        "-P",
+        "-Itests/vision/stubs",
+        "-Idemo/code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DRECORDER_TRAINING=1",
+        "-DMIDTERM_VISUAL_REVIEWED=0"
+      ]
+    },
+    {
+      "variant": "recorder",
+      "source": "vision_actuator.c",
+      "identical": true,
+      "preprocessedSha256": "4525280e1e8372777d14c10e04f0611bdebf23a07460bc6ae59a326733d9fa94",
+      "commandPrefix": [
+        "gcc",
+        "-E",
+        "-P",
+        "-Itests/vision/stubs",
+        "-Idemo/code",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_START_SWITCH_ENABLE=0",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DRECORDER_TRAINING=1",
+        "-DMIDTERM_VISUAL_REVIEWED=0"
+      ]
+    }
+  ],
+  "oldSourceHash": "d7c62227d2f27a37d6510d1a3e58e020b98c92a2aec50fa885e0746576ee1280",
+  "newSourceHash": "051343aee13c2ec673f4c757dec047fe83dc31f1dfec976ba122b3bcb46774bd"
+}

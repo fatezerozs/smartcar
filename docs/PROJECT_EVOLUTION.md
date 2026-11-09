@@ -1,5 +1,7 @@
 # 项目设计与演进档案
 
+**2026-11-09进度更新：** [Phase3当前进度与交接](changes/phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。
+
 更新日期：2026-11-09（北京时间）。维护分支：`main`；当前工程为`MPC_20261106`，沿用C32测试体系。原`feat/vision-recorder-training`成果已在`00bb7a4`合入主线，独立采集构型与赛道构型仍分别构建和验收。
 生产固件标识仍为 switch 的 `MIDTERM_C26_31` / auto-track 的 `MIDTERM_C31_AUTO_TRACK_1`。
 

@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "id": "interface-contract",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "interface-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.196584,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:14.326+00:00",
+  "finishedAt": "2026-11-09T10:09:14.523+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\interface_contract.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\interface-contract\\artifacts\\default\\interface-contract.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\interface-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.128783,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\interface-contract\\artifacts\\default\\interface-contract.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\interface-contract\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.065017,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/suites/contract/interface_contract.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\interface-contract",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/interface-contract.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

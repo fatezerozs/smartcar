@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0",
+  "id": "planner-shadow",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.812454,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:27.350+00:00",
+  "finishedAt": "2026-11-09T10:09:28.162+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_planner_shadow.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow\\artifacts\\default\\planner-shadow.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.733275,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow\\artifacts\\default\\planner-shadow.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.072089,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/planning/test_planner_shadow.c",
+        "demo/code/vision_planner.c",
+        "tools/speed_planning/speed_planner.c",
+        "demo/code/vision_planner_shadow.c"
+      ],
+      "includeDirectories": [
+        "demo/code",
+        "tools/speed_planning"
+      ],
+      "defines": [],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\planner-shadow",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/planner-shadow.exe"
+  ],
+  "details": {
+    "scope": "Synthetic snapshots, shared supervisor/planner, capture-aligned preview advancement and serialized trajectory state; no hardware, PI or production calibration claim",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

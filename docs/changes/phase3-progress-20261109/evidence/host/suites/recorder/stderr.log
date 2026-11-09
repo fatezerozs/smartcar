@@ -1,0 +1,22 @@
+test_actual_sd_osa_deadlines_wake_wrap_and_quarantine (__main__.RecorderTests.test_actual_sd_osa_deadlines_wake_wrap_and_quarantine) ... ok
+test_actual_storage_task_complete_output_imports (__main__.RecorderTests.test_actual_storage_task_complete_output_imports) ... ok
+test_actual_storage_task_errors_rotation_and_export_isolation (__main__.RecorderTests.test_actual_storage_task_errors_rotation_and_export_isolation) ... ok
+test_actual_storage_task_gap_record_not_silently_complete (__main__.RecorderTests.test_actual_storage_task_gap_record_not_silently_complete) ... ok
+test_actual_storage_task_sync_failure_recovery_not_clean_session (__main__.RecorderTests.test_actual_storage_task_sync_failure_recovery_not_clean_session) ... ok
+test_capture_ownership_pressure_and_crc_c_harness (__main__.RecorderTests.test_capture_ownership_pressure_and_crc_c_harness) ... ok
+test_corruption_resynchronizes_without_invented_frame (__main__.RecorderTests.test_corruption_resynchronizes_without_invented_frame) ... ok
+test_data_after_end_is_rejected (__main__.RecorderTests.test_data_after_end_is_rejected) ... ok
+test_header_crc_geometry_uuid_and_unknown_version_fail_closed (__main__.RecorderTests.test_header_crc_geometry_uuid_and_unknown_version_fail_closed) ... ok
+test_identity_mix_is_rejected_before_recovery (__main__.RecorderTests.test_identity_mix_is_rejected_before_recovery) ... ok
+test_independent_c_producer_python_parser_and_64bit_times (__main__.RecorderTests.test_independent_c_producer_python_parser_and_64bit_times) ... ok
+test_missing_segment_index_is_preserved_as_incomplete (__main__.RecorderTests.test_missing_segment_index_is_preserved_as_incomplete) ... ok
+test_partial_final_json_is_archived_and_recovers_incomplete (__main__.RecorderTests.test_partial_final_json_is_archived_and_recovers_incomplete) ... ok
+test_power_loss_no_manifest_read_only_recovery_is_incomplete (__main__.RecorderTests.test_power_loss_no_manifest_read_only_recovery_is_incomplete) ... ok
+test_truncation_keeps_only_completed_records (__main__.RecorderTests.test_truncation_keeps_only_completed_records) ... ok
+test_unknown_loss_not_promoted_to_exact_capture (__main__.RecorderTests.test_unknown_loss_not_promoted_to_exact_capture) ... ok
+test_v1_import_without_draft_switch_and_pixel_verification (__main__.RecorderTests.test_v1_import_without_draft_switch_and_pixel_verification) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.642s
+
+OK

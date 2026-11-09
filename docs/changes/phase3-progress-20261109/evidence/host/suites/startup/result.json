@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0",
+  "id": "startup",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 1.451612,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:08:54.018+00:00",
+  "finishedAt": "2026-11-09T10:08:55.470+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\stubs",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_DUAL_UART_ENABLE=0",
+        "-DVISION_DRIVE_ENABLE=1",
+        "-DVISION_START_SWITCH_ENABLE=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_startup.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_field.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_drive.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_motion.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_actuator.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_guard.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_probe.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_startup.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_vehicle_profile.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\app_mode.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_control.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\midterm_open_loop.c",
+        "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_storage.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\startup\\artifacts\\default\\startup.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\startup\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 1.359308,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\startup\\artifacts\\default\\startup.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\startup\\artifacts\\default",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.087323,
+      "stage": "test"
+    }
+  ],
+  "variants": [
+    {
+      "id": "default",
+      "sources": [
+        "tests/vision/test_startup.c",
+        "demo/code/vision_field.c",
+        "demo/code/vision_drive.c",
+        "demo/code/vision_motion.c",
+        "demo/code/vision_actuator.c",
+        "demo/code/vision_guard.c",
+        "demo/code/vision_probe.c",
+        "demo/code/vision_startup.c",
+        "demo/code/vision_vehicle_profile.c",
+        "demo/code/app_mode.c",
+        "demo/code/vision_control.c",
+        "demo/code/midterm_open_loop.c",
+        "demo/code/vision_storage.c"
+      ],
+      "includeDirectories": [
+        "tests/vision/stubs",
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_DUAL_UART_ENABLE=0",
+        "VISION_DRIVE_ENABLE=1",
+        "VISION_START_SWITCH_ENABLE=1"
+      ],
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\startup",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [
+    "artifacts/default/startup.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "c",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

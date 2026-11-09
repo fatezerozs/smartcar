@@ -1,0 +1,124 @@
+{
+  "time": "2026-11-09T11:58:07.463512+08:00",
+  "version": "PHASE3_C26_SHADOW_20261109_4",
+  "profile": "C26-SHADOW-8CA1CE06",
+  "port": "COM10",
+  "motionCommandSent": false,
+  "benchmarks": [
+    {
+      "raw": "[PLANNER_BENCH] PASS synthetic=1 metric_active=0 profile=C26-SHADOW-8CA1CE06 cases=4 ticks=256 periods_ms=10,20 ready=238 zero=18 checks=250 expired_rejected=238 target_R/L=34/34 cpu_hz=600000000 cycles_enabled=1 mean_cycles=23347 max_cycles=44854; includes=supervisor+planner; excludes=vision+PI+PWM+UART; no_drive_authority",
+      "fields": {
+        "synthetic": "1",
+        "metric_active": "0",
+        "profile": "C26-SHADOW-8CA1CE06",
+        "cases": "4",
+        "ticks": "256",
+        "periods_ms": "10,20",
+        "ready": "238",
+        "zero": "18",
+        "checks": "250",
+        "expired_rejected": "238",
+        "target_R/L": "34/34",
+        "cpu_hz": "600000000",
+        "cycles_enabled": "1",
+        "mean_cycles": "23347",
+        "max_cycles": "44854",
+        "includes": "supervisor+planner",
+        "excludes": "vision+PI+PWM+UART"
+      },
+      "meanUs": 38.91166666666667,
+      "maxUs": 74.75666666666666
+    },
+    {
+      "raw": "[PLANNER_BENCH] PASS synthetic=1 metric_active=0 profile=C26-SHADOW-8CA1CE06 cases=4 ticks=256 periods_ms=10,20 ready=238 zero=18 checks=250 expired_rejected=238 target_R/L=34/34 cpu_hz=600000000 cycles_enabled=1 mean_cycles=23235 max_cycles=32716; includes=supervisor+planner; excludes=vision+PI+PWM+UART; no_drive_authority",
+      "fields": {
+        "synthetic": "1",
+        "metric_active": "0",
+        "profile": "C26-SHADOW-8CA1CE06",
+        "cases": "4",
+        "ticks": "256",
+        "periods_ms": "10,20",
+        "ready": "238",
+        "zero": "18",
+        "checks": "250",
+        "expired_rejected": "238",
+        "target_R/L": "34/34",
+        "cpu_hz": "600000000",
+        "cycles_enabled": "1",
+        "mean_cycles": "23235",
+        "max_cycles": "32716",
+        "includes": "supervisor+planner",
+        "excludes": "vision+PI+PWM+UART"
+      },
+      "meanUs": 38.725,
+      "maxUs": 54.526666666666664
+    },
+    {
+      "raw": "[PLANNER_BENCH] PASS synthetic=1 metric_active=0 profile=C26-SHADOW-8CA1CE06 cases=4 ticks=256 periods_ms=10,20 ready=238 zero=18 checks=250 expired_rejected=238 target_R/L=34/34 cpu_hz=600000000 cycles_enabled=1 mean_cycles=23220 max_cycles=34651; includes=supervisor+planner; excludes=vision+PI+PWM+UART; no_drive_authority",
+      "fields": {
+        "synthetic": "1",
+        "metric_active": "0",
+        "profile": "C26-SHADOW-8CA1CE06",
+        "cases": "4",
+        "ticks": "256",
+        "periods_ms": "10,20",
+        "ready": "238",
+        "zero": "18",
+        "checks": "250",
+        "expired_rejected": "238",
+        "target_R/L": "34/34",
+        "cpu_hz": "600000000",
+        "cycles_enabled": "1",
+        "mean_cycles": "23220",
+        "max_cycles": "34651",
+        "includes": "supervisor+planner",
+        "excludes": "vision+PI+PWM+UART"
+      },
+      "meanUs": 38.7,
+      "maxUs": 57.751666666666665
+    }
+  ],
+  "images": {
+    "g": [
+      {
+        "file": "g-0.gray",
+        "sha256": "b5df31c0a149767310ce89f4184d314f547f9fe76b4d42056123d23609896d83"
+      },
+      {
+        "file": "g-1.gray",
+        "sha256": "a773420dbec460c921c50ca88df9792cfa986dd7ec30d17537a5dc3b0500921c"
+      }
+    ],
+    "b": [
+      {
+        "file": "b-0.gray",
+        "sha256": "b5d8813199262fa3a3123002fa53149ad6afa7952514d5255cd06c4cfe6fffde"
+      },
+      {
+        "file": "b-1.gray",
+        "sha256": "3a64065619049d8e470e94be092d71386e9ea48b105f3b983667e58824f05440"
+      }
+    ],
+    "o": [
+      {
+        "file": "o-0.gray",
+        "sha256": "103342286979f399cc6cb40f8e1b722b8ca05c31324b5c7258a8c5d1af1f3dd9"
+      },
+      {
+        "file": "o-1.gray",
+        "sha256": "532a7f97d3853f7d6bbfd191fe1c5c40d9dce314b6040762cbed7e9c3acacc79"
+      }
+    ]
+  },
+  "verified": true,
+  "stop": "[LINK] STOP",
+  "board": "[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED",
+  "claim": "[LINK] port=radio owner=radio rx=48 tx=260168 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+  "status": "[FIELD] build=PHASE3_C26_SHADOW_20261109_4 version=MIDTERM_C26_31 ready=1 cam=1 hw=1 servo=1550/1430/1670 sign=-1 kp=1.2000 kd=0.0250 kh=1.2000 cruise=0.1450 cap=0.1800 rise=0.2000 axis=0.4968/0.4983 limit_ms=0",
+  "load": "[PLANNER_LOAD] OK profile=C26-SHADOW-8CA1CE06 mode=SHADOW metric_active=0 legacy_PI=unchanged; requires stopped encoder-ready; clear retained rows before reload",
+  "plannerBefore": "[PLANNER] profile=C26-SHADOW-8CA1CE06 configured=1 mode=1 metric_active=0 source=0 session=0 plans=0 waits=0 seen=2 near_geometry=0 full_geometry=0 status=0 supervisor=0 run=0 count=0 frozen=0 overwritten=0 cycles=1 cpu_hz=600000000 poll_max_cycles=4659 observe_max_cycles=8055; references=engineering-only; query stops; legacy PI/gains/PWM unchanged",
+  "plannerAfter": "[PLANNER] profile=C26-SHADOW-8CA1CE06 configured=1 mode=1 metric_active=0 source=0 session=0 plans=0 waits=0 seen=304 near_geometry=0 full_geometry=0 status=0 supervisor=0 run=0 count=0 frozen=0 overwritten=0 cycles=1 cpu_hz=600000000 poll_max_cycles=8199 observe_max_cycles=8055; references=engineering-only; query stops; legacy PI/gains/PWM unchanged",
+  "encoderAfter": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-1536 total4=964 samples=9568 sample_ms=95997 sign3=-1 sign4=1 confirmed=1",
+  "speedAfter": "[SPEED] enabled=1 max_ticks=132 kp=1.0000 ki=0.0469 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops",
+  "imageProtocolLimits": "94x60 decimated previews, fixed header/length only, no pixel CRC/frame counter. Separate modes are sequential, not same exposure."
+}

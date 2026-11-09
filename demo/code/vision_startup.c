@@ -158,11 +158,12 @@ void vd_route_switch_poll(uint32_t now)
     if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
        vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
     {
-        uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
+        /* The arm facade owns its atomic gate; output preparation must not
+         * inherit an outer IRQ mask. Final publication rechecks the lease. */
+        int accepted;
         accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
             vd_output_arm(now,1);
         if(accepted)vd_output_apply();
-        __set_PRIMASK(mask);
     }
 #endif
 }

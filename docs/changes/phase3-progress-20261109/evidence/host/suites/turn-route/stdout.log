@@ -1,0 +1,31 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_ENCODER_ENABLE=1 -DVISION_MIDTERM_TRAINING=1 -DVISION_MIDTERM_AUTONOMOUS=0 -DVISION_MIDTERM_ROUTE_TRIAL=1 -DVISION_ROUTE_SWITCH=1 -DVISION_DRIVE_ENABLE=1 -DVISION_START_SWITCH_ENABLE=0 C:\shengchanli\smartCar\smartcar\tests\vision\test_turn_route.c C:\shengchanli\smartCar\smartcar\demo\code\vision_midterm.c C:\shengchanli\smartCar\smartcar\demo\code\vision_speed.c C:\shengchanli\smartCar\smartcar\demo\code\wheel_speed.c C:\shengchanli\smartCar\smartcar\demo\code\vision_motion.c C:\shengchanli\smartCar\smartcar\demo\code\vision_drive.c C:\shengchanli\smartCar\smartcar\demo\code\vision_actuator.c C:\shengchanli\smartCar\smartcar\demo\code\vision_guard.c C:\shengchanli\smartCar\smartcar\demo\code\vision_probe.c C:\shengchanli\smartCar\smartcar\demo\code\vision_startup.c C:\shengchanli\smartCar\smartcar\demo\code\vision_vehicle_profile.c C:\shengchanli\smartCar\smartcar\demo\code\vision_control.c C:\shengchanli\smartCar\smartcar\demo\code\midterm_open_loop.c C:\shengchanli\smartCar\smartcar\demo\code\app_mode.c C:\shengchanli\smartCar\smartcar\demo\code\vision_field.c C:\shengchanli\smartCar\smartcar\demo\code\vision_storage.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\turn-route\artifacts\default\turn-route.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\turn-route\artifacts\default\turn-route.exe
+SUPPORT paired=24 side=-1 target=89
+SUPPORT paired=23 side=-1 target=86
+SUPPORT paired=24 side=1 target=122
+SUPPORT paired=23 side=1 target=119
+RING SPEED state=2 mode=1 target=121/123
+RING SPEED state=3 mode=1 target=121/123
+RING SPEED state=4 mode=1 target=121/123
+PROJECTED CROSS offset=-8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=-8 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=0 yaw=0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=-0.04 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.00 missing=0 crawl=0
+PROJECTED CROSS offset=8 yaw=0.04 missing=0 crawl=0
+PERIPHERAL bridge dir=-1 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.109 targets=123/120
+PERIPHERAL bridge dir=0 rows=4 anchors=8 both=83 duty=0.1696 mode=1 heading=-0.002 targets=123/123
+PERIPHERAL bridge dir=1 rows=4 anchors=8 both=83 duty=0.1287 mode=1 heading=0.105 targets=88/92
+TANGENT CONTROL side=-1 guided=132 peak_turn=1.000 width90=151
+TANGENT CONTROL side=1 guided=132 peak_turn=1.000 width90=151
+CLOSED PLANTS stage=0 target_R/L=122/123 measured_R/L=122/123 pwm_R/L=175/410
+CLOSED PLANTS stage=1 target_R/L=47/73 measured_R/L=47/73 pwm_R/L=67/242
+FIELD edge dir=-1 both=0 inferred=87 mode=3 duty=0.0973 u=-1.000 targets=31/49 pwm=364/585
+FIELD edge dir=1 both=0 inferred=87 mode=3 duty=0.0957 u=1.000 targets=46/30 pwm=549/343
+PAIRED corner dir=-1 target_outer/inner=73/47 duty=0.1283
+PAIRED corner dir=1 target_outer/inner=73/47 duty=0.1279
+TURN PATH PASS: 371624 checks; straight/left/right grayscale through actual vision and servo PWM; no physical bend claim.
+[PASS] Completed within declared software evidence scope

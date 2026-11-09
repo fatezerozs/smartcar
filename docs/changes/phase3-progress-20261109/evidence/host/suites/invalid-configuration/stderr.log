@@ -1,0 +1,32 @@
+In file included from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:17:2: error: #error "Auto-track requires autonomous + C31 route switch/trial algorithms."
+   17 | #error "Auto-track requires autonomous + C31 route switch/trial algorithms."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:20:2: error: #error "Autonomous route switch requires the C31 route trial profile."
+   20 | #error "Autonomous route switch requires the C31 route trial profile."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:23,
+                 from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/midterm_route_profile.h:52:2: error: #error "Route training requires explicit training and encoder build flags."
+   52 | #error "Route training requires explicit training and encoder build flags."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:23,
+                 from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/midterm_route_profile.h:55:2: error: #error "Route training must not enable autonomous boot."
+   55 | #error "Route training must not enable autonomous boot."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:184:2: error: #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+  184 | #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\demo\code/vision_profile.h:272,
+                 from C:\shengchanli\smartCar\smartcar\tests\suites\contract\configuration_probe.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/midterm_profile.h:42:2: error: #error "Autonomous midterm requires encoders/control, without bench or C12 startup."
+   42 | #error "Autonomous midterm requires encoders/control, without bench or C12 startup."
+      |  ^~~~~
+In file included from C:\shengchanli\smartCar\smartcar\demo\code/vision_planner.h:8,
+                 from C:\shengchanli\smartCar\smartcar\tests\suites\contract\planner_gate.c:2:
+C:\shengchanli\smartCar\smartcar\demo\code/vision_planner_build.h:19:2: error: #error "Active metric planner requires reviewed PI/supervisor integration; shadow only."
+   19 | #error "Active metric planner requires reviewed PI/supervisor integration; shadow only."
+      |  ^~~~~

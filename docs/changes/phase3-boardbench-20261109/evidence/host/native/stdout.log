@@ -1,0 +1,9 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\planning\test_shadow_preparation.py
+SHADOW CANDIDATE plans=126 source=0; identical legacy PWM sequence
+[PLANNER_BENCH] PASS synthetic=1 metric_active=0 profile=C26-SHADOW-FA161BDE cases=3 ticks=192 ready=174 zero=18 checks=183 expired_rejected=174 target_R/L=23/23 cpu_hz=600000000 cycles_enabled=1 mean_cycles=100 max_cycles=100; includes=supervisor+planner; excludes=vision+PI+PWM+UART; no_drive_authority
+
+SHADOW CANDIDATE PASS 3524 checks; simulated IO and cycle counter
+
+SHADOW GEOMETRY frames=750 near=36 full=3; native replay, no physical validity claim
+
+[PASS] Completed within declared software evidence scope

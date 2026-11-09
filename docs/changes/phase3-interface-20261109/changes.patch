@@ -1,0 +1,518 @@
+diff --git a/demo/code/vision_planner.c b/demo/code/vision_planner.c
+--- /dev/null
++++ b/demo/code/vision_planner.c
+@@ -0,0 +1,86 @@
++#include "vision_planner.h"
++#include <string.h>
++
++static int bounded(float x,float lo,float hi){return x>=lo&&x<=hi;}
++static int interval(uint32_t age){return age&&age<UINT32_C(0x80000000);}
++static int fresh(uint32_t now,uint32_t then,uint32_t age)
++{return interval(age)&&(uint32_t)(now-then)<age;}
++static int same_stamp(const vp_stamp_t *a,const vp_stamp_t *b)
++{
++    return a->output_epoch==b->output_epoch&&a->request_revision==b->request_revision&&
++        a->config_revision==b->config_revision&&a->frame_seq==b->frame_seq&&
++        a->encoder_seq==b->encoder_seq&&a->capture_ms==b->capture_ms&&a->encoder_ms==b->encoder_ms&&
++        a->control_revision==b->control_revision;
++}
++static vp_status_t reject(vp_candidate_t *out,vp_status_t status)
++{
++    /* A reused output buffer cannot retain stale drive or trajectory values. */
++    memset(out,0,sizeof(*out));out->status=status;return status;
++}
++static int config_valid(const vp_config_t *c)
++{
++    return c&&c->revision&&sp_limits_valid(&c->limits)&&
++        bounded(c->ticks_per_metre_left,1e-6f,1e6f)&&bounded(c->ticks_per_metre_right,1e-6f,1e6f)&&
++        c->max_left_ticks_10ms&&c->max_left_ticks_10ms<=1000&&
++        c->max_right_ticks_10ms&&c->max_right_ticks_10ms<=1000&&
++        interval(c->frame_max_age_ms)&&interval(c->encoder_max_age_ms)&&interval(c->candidate_max_age_ms)&&
++        c->candidate_max_age_ms<=c->encoder_max_age_ms&&c->candidate_max_age_ms<=c->frame_max_age_ms&&
++        c->compensate<=1&&c->geometry_calibrated<=1&&
++        (!c->compensate||(c->geometry_calibrated&&bounded(c->rear_track_m,1e-6f,10)));
++}
++vp_status_t vp_prepare(vp_mode_t mode,const vp_config_t *c,const vp_input_t *in,vp_candidate_t *out)
++{
++    sp_plan_t plan;sp_trajectory_t trajectory;vp_candidate_t candidate;
++    float target,cap,left,right;
++    if(!out)return VP_BAD_INPUT;
++    if(!in)return reject(out,VP_BAD_INPUT);
++    if(in->action==VP_ZERO_NOW)return reject(out,VP_ZERO);
++    if(mode!=VP_SHADOW)return reject(out,VP_OFF);
++    if(!config_valid(c)||in->stamp.config_revision!=c->revision)return reject(out,VP_BAD_CONFIG);
++    if((in->action!=VP_TRACK&&in->action!=VP_CONTROLLED_STOP)||in->near_only>1||
++       in->valid!=VP_VALID_ALL||!bounded(in->measured_speed_m_s,0,c->limits.maximum_speed)||
++       !bounded(in->requested_speed_m_s,0,c->limits.maximum_speed)||
++       !bounded(in->dt_s,.00001f,c->limits.max_dt_s))return reject(out,VP_BAD_INPUT);
++    if(!fresh(in->now_ms,in->stamp.capture_ms,c->frame_max_age_ms)||
++       !fresh(in->now_ms,in->stamp.encoder_ms,c->encoder_max_age_ms))return reject(out,VP_EXPIRED);
++    if(in->preview.units!=SP_METRES||in->preview.sequence!=in->stamp.frame_seq||
++       in->preview.capture_ms!=in->stamp.capture_ms||
++       in->preview_scope!=(in->near_only?VP_NEAR_PREVIEW:VP_FULL_PREVIEW))return reject(out,VP_BAD_GEOMETRY);
++    if(!sp_plan(&in->preview,&c->limits,in->measured_speed_m_s,in->near_only,0,&plan))
++        return reject(out,VP_BAD_GEOMETRY);
++    trajectory=in->trajectory;
++    cap=plan.current_cap;target=in->requested_speed_m_s;
++    if(in->action==VP_CONTROLLED_STOP){
++        /* A supervisor stop is a zero target, not hard_stop. Keep physical
++         * deceleration/jerk semantics distinct from immediate inhibition. */
++        target=0;
++    }
++    if(!sp_shape(&trajectory,&c->limits,target,cap,in->dt_s,0)||trajectory.infeasible)
++        return reject(out,VP_INFEASIBLE);
++    if(!sp_wheel_targets(trajectory.speed,in->preview.curvature[0],c->rear_track_m,c->compensate,
++        c->geometry_calibrated,c->ticks_per_metre_left,c->ticks_per_metre_right,&left,&right))
++        return reject(out,VP_TARGET_RANGE);
++    /* Old PI uses counts per 10ms, not counts/s and not permille. Reject
++     * overflow instead of saturating one wheel and changing the turn ratio. */
++    if(!bounded(left,0,(float)c->max_left_ticks_10ms*100)||
++       !bounded(right,0,(float)c->max_right_ticks_10ms*100))return reject(out,VP_TARGET_RANGE);
++    memset(&candidate,0,sizeof(candidate));candidate.stamp=in->stamp;
++    candidate.status=VP_READY;candidate.action=in->action;candidate.provenance=c->limits.provenance;
++    candidate.prepared_ms=in->now_ms;candidate.frame_max_age_ms=c->frame_max_age_ms;
++    candidate.encoder_max_age_ms=c->encoder_max_age_ms;candidate.candidate_max_age_ms=c->candidate_max_age_ms;
++    candidate.trajectory=trajectory;candidate.cap_m_s=cap;candidate.left_ticks_s=left;candidate.right_ticks_s=right;
++    candidate.left_ticks_10ms=(uint16_t)(left/100.0f);candidate.right_ticks_10ms=(uint16_t)(right/100.0f);
++    /* Defend the truncation contract even if float division rounds upward
++     * exactly onto an integer boundary. Integer counts never exceed request. */
++    if((float)candidate.left_ticks_10ms*100>left)--candidate.left_ticks_10ms;
++    if((float)candidate.right_ticks_10ms*100>right)--candidate.right_ticks_10ms;
++    candidate.quantized=(uint8_t)(left!=(float)candidate.left_ticks_10ms*100||right!=(float)candidate.right_ticks_10ms*100);
++    *out=candidate;return VP_READY;
++}
++int vp_candidate_matches(vp_mode_t mode,const vp_candidate_t *c,const vp_stamp_t *current,uint32_t now)
++{
++    return mode==VP_SHADOW&&c&&current&&c->status==VP_READY&&c->stamp.config_revision&&
++        (c->action==VP_TRACK||c->action==VP_CONTROLLED_STOP)&&same_stamp(&c->stamp,current)&&
++        fresh(now,c->prepared_ms,c->candidate_max_age_ms)&&
++        fresh(now,c->stamp.capture_ms,c->frame_max_age_ms)&&fresh(now,c->stamp.encoder_ms,c->encoder_max_age_ms);
++}
+diff --git a/demo/code/vision_planner.h b/demo/code/vision_planner.h
+--- /dev/null
++++ b/demo/code/vision_planner.h
+@@ -0,0 +1,74 @@
++#ifndef SMARTCAR_VISION_PLANNER_H
++#define SMARTCAR_VISION_PLANNER_H
++/* Portable MCU boundary around the SINGLE shared planning kernel.
++ * Shadow output is diagnostic data. No function grants a motor lease, writes
++ * PWM, changes PI state or supplies production calibration defaults. */
++#include "../../tools/speed_planning/speed_planner.h"
++
++#ifndef VISION_PLANNER_ACTIVE
++#define VISION_PLANNER_ACTIVE 0
++#endif
++#if VISION_PLANNER_ACTIVE != 0
++#error "Active metric planner requires reviewed PI/supervisor integration; shadow only."
++#endif
++
++typedef enum { VP_DISABLED=0,VP_SHADOW=1 } vp_mode_t;
++typedef enum { VP_ZERO_NOW=0,VP_TRACK=1,VP_CONTROLLED_STOP=2 } vp_action_t;
++typedef enum { VP_ZERO=0,VP_READY,VP_OFF,VP_BAD_CONFIG,VP_BAD_INPUT,
++               VP_EXPIRED,VP_BAD_GEOMETRY,VP_INFEASIBLE,VP_TARGET_RANGE } vp_status_t;
++enum { VP_VALID_NEAR=1U,VP_VALID_ENCODER=2U,VP_VALID_METRIC_GEOMETRY=4U,
++       VP_VALID_GROUND_DOMAIN=8U,VP_VALID_ALL=15U };
++enum { VP_FULL_PREVIEW=0,VP_NEAR_PREVIEW=1 };
++
++/* Integer identities travel with every candidate. Sequence zero is legal at
++ * wrap; config_revision must be nonzero. Metadata is not proof of approval. */
++typedef struct {
++    uint32_t output_epoch,request_revision,config_revision,frame_seq,encoder_seq;
++    uint32_t capture_ms,encoder_ms;
++    uint32_t control_revision; /* Caller advances after adopting trajectory state. */
++} vp_stamp_t;
++typedef struct {
++    uint32_t revision;
++    sp_limits_t limits;
++    float ticks_per_metre_left,ticks_per_metre_right,rear_track_m;
++    uint16_t max_left_ticks_10ms,max_right_ticks_10ms;
++    uint32_t frame_max_age_ms,encoder_max_age_ms,candidate_max_age_ms;
++    uint8_t compensate,geometry_calibrated;
++} vp_config_t;
++typedef struct {
++    vp_stamp_t stamp;
++    uint32_t now_ms,valid;
++    vp_action_t action;
++    uint8_t near_only,preview_scope;
++    sp_preview_t preview;
++    sp_trajectory_t trajectory;
++    float measured_speed_m_s,requested_speed_m_s,dt_s;
++} vp_input_t;
++typedef struct {
++    vp_stamp_t stamp;
++    vp_status_t status;
++    vp_action_t action;
++    sp_provenance_t provenance;
++    uint32_t prepared_ms,frame_max_age_ms,encoder_max_age_ms,candidate_max_age_ms;
++    sp_trajectory_t trajectory;
++    float cap_m_s,left_ticks_s,right_ticks_s;
++    uint16_t left_ticks_10ms,right_ticks_10ms;
++    uint8_t quantized;
++} vp_candidate_t;
++
++/* Caller supplies a coherent immutable snapshot; no shared state is touched.
++ * ZERO_NOW bypasses invalid/missing parameters and always clears all targets.
++ * Failed preparation also clears all targets; never reuse the previous result.
++ * TRACK uses the metric horizon; CONTROLLED_STOP shapes target zero while
++ * preserving the current geometric safety cap (cap outranks normal jerk).
++ * Near-invalid/missing encoder is always immediate zero, never coast authority.
++ * Geometry origin/ground-domain validation and supervisor admission belong to
++ * the upstream owner. This API does not infer them from a provenance label. */
++vp_status_t vp_prepare(vp_mode_t mode,const vp_config_t *config,
++                       const vp_input_t *input,vp_candidate_t *out);
++/* Diagnostic publication check only: recheck exact identities and all ages.
++ * Does NOT authorize motors, enforce a supervisor deadline or mutate state.
++ * Consumer must discard on false; actual control still uses the old path. */
++int vp_candidate_matches(vp_mode_t mode,const vp_candidate_t *candidate,
++                          const vp_stamp_t *current,uint32_t now_ms);
++#endif
+diff --git a/tools/speed_planning/speed_planner.h b/tools/speed_planning/speed_planner.h
+--- a/tools/speed_planning/speed_planner.h
++++ b/tools/speed_planning/speed_planner.h
+@@ -1,7 +1,8 @@
+ #ifndef SMARTCAR_HOST_SPEED_PLANNER_H
+ #define SMARTCAR_HOST_SPEED_PLANNER_H
+-/* Phase 1/2 HOST prototype. No PWM, authorization or MCU integration.
+- * All physical parameters are caller-supplied; there are no production defaults. */
++/* Single portable planning kernel, shared by Host and the MCU shadow interface.
++ * No PWM or motor authorization. All physical parameters are caller-supplied;
++ * there are no production defaults or active production integration here. */
+ #include <stdint.h>
+ #define SP_CAPACITY 16U
+ typedef enum { SP_NORMALIZED=0, SP_METRES=1 } sp_units_t;
+diff --git a/tools/speed_planning/audit_build.py b/tools/speed_planning/audit_build.py
+--- a/tools/speed_planning/audit_build.py
++++ b/tools/speed_planning/audit_build.py
+@@ -44,6 +44,11 @@
+     workspace=out/'workspace'
+     for name in ('demo','libraries'):
+         shutil.copytree(ROOT/name,workspace/name,ignore=shutil.ignore_patterns('Objects','Listings','*.uvoptx','*.uvguix.*','*.build_log.htm'))
++    # The actual primary project compiles the single shared planner kernel;
++    # copy only its native sources, never the tooling or calibration datasets.
++    shared=workspace/'tools/speed_planning';shared.mkdir(parents=True)
++    for name in ('speed_planner.c','speed_planner.h'):
++        shutil.copyfile(ROOT/'tools/speed_planning'/name,shared/name)
+     for key,folder in [('OutputDirectory',out/'Objects'),('ListingPath',out/'Listings')]:
+         folder.mkdir();target.find('./TargetOption/TargetCommonOption/'+key).text=str(folder)+os.sep
+     project=workspace/'demo/mdk/competition/MPC_20261106.uvprojx'
+diff --git a/tests/planning/test_planner_interface.c b/tests/planning/test_planner_interface.c
+--- /dev/null
++++ b/tests/planning/test_planner_interface.c
+@@ -0,0 +1,184 @@
++/* Synthetic metric inputs exercise the exact target interface and shared
++ * kernel. They are not vehicle calibration or physical stopping evidence. */
++#include "vision_planner.h"
++#include <math.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++static unsigned checks;
++#define CHECK(x) do{++checks;if(!(x)){fprintf(stderr,"interface:%d %s\n",__LINE__,#x);exit(1);}}while(0)
++static vp_config_t config(void)
++{
++    vp_config_t c;memset(&c,0,sizeof(c));c.revision=7;
++    c.limits=(sp_limits_t){SP_SIMULATION,3,1,2,1,2,4,6,.02f,.02f,.0001f,.05f};
++    c.ticks_per_metre_left=11000;c.ticks_per_metre_right=12000;c.rear_track_m=.15f;
++    c.max_left_ticks_10ms=c.max_right_ticks_10ms=1000;
++    c.frame_max_age_ms=100;c.encoder_max_age_ms=30;c.candidate_max_age_ms=20;
++    return c;
++}
++static vp_input_t input(void)
++{
++    vp_input_t in;memset(&in,0,sizeof(in));
++    in.stamp=(vp_stamp_t){9,5,7,UINT32_MAX,UINT32_MAX,100,110,3};
++    in.now_ms=110;in.valid=VP_VALID_ALL;in.action=VP_TRACK;
++    in.preview.units=SP_METRES;in.preview.count=SP_CAPACITY;
++    in.preview.sequence=in.stamp.frame_seq;in.preview.capture_ms=in.stamp.capture_ms;
++    for(unsigned j=0;j<SP_CAPACITY;++j)in.preview.distance[j]=(float)j*.25f;
++    in.dt_s=.01f;in.requested_speed_m_s=1;in.measured_speed_m_s=1;in.trajectory.speed=1;
++    return in;
++}
++static void zero(vp_candidate_t c)
++{
++    CHECK(c.action==VP_ZERO_NOW);CHECK(!c.trajectory.speed&&!c.trajectory.accel);
++    CHECK(!c.left_ticks_s&&!c.right_ticks_s&&!c.left_ticks_10ms&&!c.right_ticks_10ms&&!c.cap_m_s);
++}
++static void expect(vp_mode_t m,const vp_config_t *c,const vp_input_t *in,vp_status_t status)
++{
++    vp_candidate_t out;memset(&out,0x55,sizeof(out));CHECK(vp_prepare(m,c,in,&out)==status);
++    CHECK(out.status==status);zero(out);CHECK(!vp_candidate_matches(m,&out,in?&in->stamp:NULL,110));
++}
++static void gates(void)
++{
++    vp_config_t c=config();vp_input_t in=input();vp_candidate_t out;
++    expect(VP_DISABLED,&c,&in,VP_OFF);expect((vp_mode_t)2,&c,&in,VP_OFF);
++    expect(VP_SHADOW,NULL,&in,VP_BAD_CONFIG);expect(VP_SHADOW,&c,NULL,VP_BAD_INPUT);
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,NULL)==VP_BAD_INPUT);
++    in.action=VP_ZERO_NOW;in.measured_speed_m_s=NAN;in.dt_s=NAN;
++    expect(VP_DISABLED,NULL,&in,VP_ZERO);expect(VP_SHADOW,NULL,&in,VP_ZERO);
++    for(unsigned bits=0;bits<VP_VALID_ALL;++bits){in=input();in.valid=bits;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);}
++    in=input();in.valid=VP_VALID_ALL|16;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.action=(vp_action_t)3;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.near_only=2;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.stamp.config_revision=6;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);
++    in=input();c.revision=0;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.limits.provenance=(sp_provenance_t)2;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.candidate_max_age_ms=31;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.frame_max_age_ms=UINT32_C(0x80000000);expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.encoder_max_age_ms=0;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.compensate=1;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c.geometry_calibrated=1;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    c.rear_track_m=NAN;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.ticks_per_metre_left=INFINITY;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);c=config();
++    c.max_right_ticks_10ms=1001;expect(VP_SHADOW,&c,&in,VP_BAD_CONFIG);
++}
++static void data_validation(void)
++{
++    vp_config_t c=config();vp_input_t in=input();
++    in.preview.units=SP_NORMALIZED;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.sequence=0;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.capture_ms++;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.count=1;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.count=SP_CAPACITY+1;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.distance[2]=NAN;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview.curvature[0]=INFINITY;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.near_only=1;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.preview_scope=VP_NEAR_PREVIEW;expect(VP_SHADOW,&c,&in,VP_BAD_GEOMETRY);
++    in=input();in.dt_s=0;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.dt_s=.051f;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.trajectory.accel=NAN;expect(VP_SHADOW,&c,&in,VP_INFEASIBLE);
++    in=input();in.measured_speed_m_s=NAN;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.requested_speed_m_s=INFINITY;expect(VP_SHADOW,&c,&in,VP_BAD_INPUT);
++    in=input();in.stamp.encoder_ms=in.now_ms+1;expect(VP_SHADOW,&c,&in,VP_EXPIRED);
++    in=input();in.stamp.capture_ms=in.now_ms+1;expect(VP_SHADOW,&c,&in,VP_EXPIRED);
++    in=input();in.now_ms=in.stamp.encoder_ms+c.encoder_max_age_ms;expect(VP_SHADOW,&c,&in,VP_EXPIRED);
++}
++static void quantization_and_cap(void)
++{
++    vp_config_t c=config();vp_input_t in=input();vp_candidate_t out;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(out.left_ticks_10ms==110&&out.right_ticks_10ms==120&&!out.quantized);
++    CHECK(fabsf(out.left_ticks_s-11000)<.01f&&fabsf(out.right_ticks_s-12000)<.01f);
++    c.ticks_per_metre_left=11394;c.ticks_per_metre_right=11389;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(out.left_ticks_10ms==113&&out.right_ticks_10ms==113&&out.quantized);
++    in.trajectory.speed=in.measured_speed_m_s=in.requested_speed_m_s=.001f;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(!out.left_ticks_10ms&&!out.right_ticks_10ms&&out.left_ticks_s>0&&out.quantized);
++    in=input();c.max_left_ticks_10ms=100;expect(VP_SHADOW,&c,&in,VP_TARGET_RANGE);c=config();
++    c.compensate=c.geometry_calibrated=1;
++    for(unsigned j=0;j<SP_CAPACITY;++j)in.preview.curvature[j]=.2f;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(out.left_ticks_s/c.ticks_per_metre_left>out.right_ticks_s/c.ticks_per_metre_right);
++    in=input();in.trajectory.speed=in.requested_speed_m_s=.5f;
++    in.near_only=1;in.preview_scope=VP_NEAR_PREVIEW;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY&&out.cap_m_s<=c.limits.near_cap);
++    in=input();in.trajectory.speed=2;in.near_only=1;in.preview_scope=VP_NEAR_PREVIEW;
++    expect(VP_SHADOW,&c,&in,VP_INFEASIBLE);
++}
++static void semantics_and_oracle(void)
++{
++    vp_config_t c=config();vp_input_t in=input();vp_candidate_t out;
++    sp_plan_t plan;sp_trajectory_t trajectory=in.trajectory;
++    CHECK(sp_plan(&in.preview,&c.limits,in.measured_speed_m_s,0,0,&plan));
++    CHECK(sp_shape(&trajectory,&c.limits,in.requested_speed_m_s,plan.current_cap,in.dt_s,0));
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(out.trajectory.speed==trajectory.speed&&out.trajectory.accel==trajectory.accel&&out.cap_m_s==plan.current_cap);
++    in.action=VP_CONTROLLED_STOP;in.requested_speed_m_s=2;
++    float previous=1;int finished=0;
++    for(unsigned j=0;j<200;++j){
++        CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++        CHECK(out.action==VP_CONTROLLED_STOP&&out.trajectory.speed<=previous+1e-6f);
++        CHECK(out.cap_m_s==plan.current_cap); /* Stopping cannot ignore geometry. */
++        if(!j)CHECK(out.trajectory.speed>0); /* Controlled stop differs from immediate zero. */
++        previous=out.trajectory.speed;in.trajectory=out.trajectory;
++        if(out.trajectory.speed<1e-5f){finished=1;break;}
++    }
++    CHECK(finished);
++    in.action=VP_ZERO_NOW;expect(VP_SHADOW,&c,&in,VP_ZERO);
++    /* Truncated near horizon can make a requested controlled stop infeasible. */
++    in=input();in.action=VP_CONTROLLED_STOP;
++    for(unsigned j=0;j<SP_CAPACITY;++j)in.preview.distance[j]=(float)j*.001f;
++    expect(VP_SHADOW,&c,&in,VP_INFEASIBLE);
++}
++static void quantization_boundaries(void)
++{
++    vp_config_t c=config();vp_input_t in=input();vp_candidate_t out;
++    for(unsigned n=1;n<1000;++n){
++        c.ticks_per_metre_left=nextafterf((float)n*100,-INFINITY);
++        c.ticks_per_metre_right=nextafterf((float)n*100,INFINITY);
++        CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++        CHECK(out.left_ticks_10ms==n-1&&out.right_ticks_10ms==n);
++        CHECK((float)out.left_ticks_10ms*100<=out.left_ticks_s);
++        CHECK((float)out.right_ticks_10ms*100<=out.right_ticks_s);
++    }
++}
++static void identities_and_expiry(void)
++{
++    vp_config_t c=config();vp_input_t in=input();vp_candidate_t out;vp_stamp_t current;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(vp_candidate_matches(VP_SHADOW,&out,&in.stamp,110));
++    CHECK(!vp_candidate_matches(VP_DISABLED,&out,&in.stamp,110));
++    CHECK(!vp_candidate_matches(VP_SHADOW,NULL,&in.stamp,110));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,NULL,110));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,&in.stamp,109));
++    CHECK(vp_candidate_matches(VP_SHADOW,&out,&in.stamp,129));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,&in.stamp,130));
++    current=in.stamp;current.output_epoch++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.request_revision++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.config_revision++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.frame_seq++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.encoder_seq++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.capture_ms++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.encoder_ms++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    current=in.stamp;current.control_revision++;CHECK(!vp_candidate_matches(VP_SHADOW,&out,&current,110));
++    c.frame_max_age_ms=20;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(vp_candidate_matches(VP_SHADOW,&out,&in.stamp,119));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,&in.stamp,120));
++    c=config();c.encoder_max_age_ms=20;in.stamp.encoder_ms=100;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(vp_candidate_matches(VP_SHADOW,&out,&in.stamp,119));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,&in.stamp,120));
++    c=config();
++    /* All three clocks and sequence IDs can wrap; none require nonzero seq. */
++    in=input();in.now_ms=5;in.stamp.capture_ms=UINT32_MAX-4;in.stamp.encoder_ms=0;
++    in.stamp.encoder_seq=in.stamp.frame_seq=0;in.preview.sequence=0;in.preview.capture_ms=in.stamp.capture_ms;
++    CHECK(vp_prepare(VP_SHADOW,&c,&in,&out)==VP_READY);
++    CHECK(vp_candidate_matches(VP_SHADOW,&out,&in.stamp,24));
++    CHECK(!vp_candidate_matches(VP_SHADOW,&out,&in.stamp,25));
++}
++int main(void)
++{
++    gates();data_validation();quantization_and_cap();semantics_and_oracle();quantization_boundaries();identities_and_expiry();
++    printf("PLANNER INTERFACE PASS: %u checks; synthetic SI inputs, shadow only.\n",checks);return 0;
++}
+diff --git a/tests/suites/contract/planner_gate.c b/tests/suites/contract/planner_gate.c
+--- /dev/null
++++ b/tests/suites/contract/planner_gate.c
+@@ -0,0 +1,3 @@
++/* Compile the actual target guard; never enable a substitute test policy. */
++#include "vision_planner.h"
++int main(void){return 0;}
+diff --git a/tests/suites/contract/interface_contract.c b/tests/suites/contract/interface_contract.c
+--- a/tests/suites/contract/interface_contract.c
++++ b/tests/suites/contract/interface_contract.c
+@@ -1,6 +1,7 @@
+ /* Public data contract: field widths/geometry, not incidental struct padding. */
+ #include "vision_frame.h"
+ #include "vision_control.h"
++#include "vision_planner.h"
+ #include <stddef.h>
+ _Static_assert(sizeof(((vision_frame_stamp_t *)0)->sequence) == sizeof(uint32_t), "Frame sequence is uint32");
+ _Static_assert(sizeof(((vision_frame_stamp_t *)0)->capture_ms) == sizeof(uint32_t), "Capture clock is uint32 milliseconds");
+@@ -11,4 +12,6 @@
+ _Static_assert(sizeof(((vision_result_t *)0)->row_flags) == VISION_HEIGHT, "Per-row validity is preserved");
+ _Static_assert(VISION_PREVIEW_WIDTH * 2 == VISION_WIDTH, "Preview is horizontally subsampled");
+ _Static_assert(VISION_PREVIEW_HEIGHT * 2 == VISION_HEIGHT, "Preview is vertically subsampled");
++_Static_assert(VISION_PLANNER_ACTIVE == 0, "Metric planner remains shadow only");
++_Static_assert(sizeof(((vp_stamp_t *)0)->output_epoch) == sizeof(uint32_t), "Planner candidate binds output epoch");
+ int main(void) { return 0; }
+diff --git a/tests/suites/catalog.json b/tests/suites/catalog.json
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -2465,6 +2465,19 @@
+               "VISION_ENCODER_ENABLE=0"
+             ],
+             "expectCompileFailure": "Autonomous midterm requires"
++          },
++          {
++            "id": "planner-active-unreviewed",
++            "sources": [
++              "tests/suites/contract/planner_gate.c"
++            ],
++            "includeDirectories": [
++              "demo/code"
++            ],
++            "defines": [
++              "VISION_PLANNER_ACTIVE=1"
++            ],
++            "expectCompileFailure": "Active metric planner requires reviewed PI/supervisor integration"
+           }
+         ]
+       },
+@@ -3598,6 +3611,49 @@
+         "artifacts/**"
+       ],
+       "scope": "Host ISR interleavings for output/PI snapshot, STOP/mode/sample/request invalidation and IRQ mask restoration; no measured WCET or calibrated planning claim"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "planner-interface",
++      "name": "Metric MCU planner shadow boundary",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "c",
++        "variants": [
++          {
++            "id": "default",
++            "sources": [
++              "tests/planning/test_planner_interface.c",
++              "demo/code/vision_planner.c",
++              "tools/speed_planning/speed_planner.c"
++            ],
++            "includeDirectories": [
++              "demo/code",
++              "tools/speed_planning"
++            ],
++            "defines": []
++          }
++        ]
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 120,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Synthetic metric inputs, shared native kernel and shadow-only candidate contract; no actuator, PI integration, measured stopping or production approval"
+     }
+   ]
+ }
+diff --git a/demo/mdk/competition/MPC_20261106.uvprojx b/demo/mdk/competition/MPC_20261106.uvprojx
+--- a/demo/mdk/competition/MPC_20261106.uvprojx
++++ b/demo/mdk/competition/MPC_20261106.uvprojx
+@@ -2336,6 +2336,31 @@
+             </File>
+           </Files>
+         </Group>
++        <Group>
++          <GroupName>Phase3 planner shadow interface</GroupName>
++          <Files>
++            <File>
++              <FileName>vision_planner.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\code\vision_planner.c</FilePath>
++            </File>
++            <File>
++              <FileName>vision_planner.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\code\vision_planner.h</FilePath>
++            </File>
++            <File>
++              <FileName>speed_planner.c</FileName>
++              <FileType>1</FileType>
++              <FilePath>..\..\..\tools\speed_planning\speed_planner.c</FilePath>
++            </File>
++            <File>
++              <FileName>speed_planner.h</FileName>
++              <FileType>5</FileType>
++              <FilePath>..\..\..\tools\speed_planning\speed_planner.h</FilePath>
++            </File>
++          </Files>
++        </Group>
+       </Groups>
+     </Target>
+   </Targets>

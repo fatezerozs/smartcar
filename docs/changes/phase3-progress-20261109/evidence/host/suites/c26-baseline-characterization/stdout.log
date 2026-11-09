@@ -1,0 +1,18 @@
+[compile] "C:\Program Files\mingw64\bin\gcc.EXE" -std=c11 -Wall -Werror -Wno-misleading-indentation -Wno-unused-function -O2 -IC:\shengchanli\smartCar\smartcar\tests\vision\stubs -IC:\shengchanli\smartCar\smartcar\demo\code -DVISION_ENCODER_ENABLE=1 -DVISION_MIDTERM_TRAINING=1 -DVISION_MIDTERM_AUTONOMOUS=0 -DVISION_MIDTERM_ROUTE_TRIAL=1 -DVISION_ROUTE_SWITCH=1 -DVISION_DRIVE_ENABLE=1 -DVISION_START_SWITCH_ENABLE=0 C:\shengchanli\smartCar\smartcar\tests\planning\test_c26_baseline.c C:\shengchanli\smartCar\smartcar\demo\code\vision_speed.c C:\shengchanli\smartCar\smartcar\demo\code\wheel_speed.c C:\shengchanli\smartCar\smartcar\demo\code\vision_motion.c C:\shengchanli\smartCar\smartcar\demo\code\vision_drive.c C:\shengchanli\smartCar\smartcar\demo\code\vision_actuator.c C:\shengchanli\smartCar\smartcar\demo\code\vision_guard.c C:\shengchanli\smartCar\smartcar\demo\code\vision_probe.c C:\shengchanli\smartCar\smartcar\demo\code\vision_startup.c C:\shengchanli\smartCar\smartcar\demo\code\vision_vehicle_profile.c C:\shengchanli\smartCar\smartcar\demo\code\vision_control.c C:\shengchanli\smartCar\smartcar\demo\code\midterm_open_loop.c C:\shengchanli\smartCar\smartcar\demo\code\app_mode.c C:\shengchanli\smartCar\smartcar\demo\code\vision_field.c C:\shengchanli\smartCar\smartcar\demo\code\vision_storage.c -o C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\c26-baseline-characterization\artifacts\default\c26-baseline-characterization.exe -lm
+[test] C:\shengchanli\smartCar\smartcar\.test-results\20261109T100847-98ec7de614\suites\c26-baseline-characterization\artifacts\default\c26-baseline-characterization.exe
+C26,boot_OFF,300,0,22,0,0,0,0,0,0,0,0
+C26,UART_a_rejected,300,0,22,0,0,0,0,0,0,0,0
+C26,ON_without_lane,700,0,46,0,0,0,0,0,0,0,0
+C26,first_ON_admitted,1000,1,52,1,9,10,2,4,40,20,0
+C26,physical_OFF_revokes,1110,0,65,0,0,0,0,0,0,0,0
+C26,second_ON_admitted,1410,1,77,1,8,8,1,1,10,10,0
+C26,operator_STOP_inhibits,1710,0,94,0,0,0,0,0,0,0,0
+C26,STOP_OFF_ON_admitted,2110,1,116,1,8,8,1,1,10,10,0
+C26,vision_fault,3110,2,164,0,0,0,0,0,0,0,2
+C26,vision_recovery_ON_stays_stopped,3410,2,179,0,0,0,0,0,0,0,2
+C26,vision_OFF_ON_readmitted,3810,1,201,1,8,8,1,1,10,10,0
+C26,encoder_fault_ON_stays_stopped,4110,2,218,0,0,0,0,0,0,0,384
+C26,stable_OFF_preserves_severe,4210,2,228,0,0,0,0,0,0,0,384
+C26,severe_OFF_ON_stays_stopped,4510,2,247,0,0,0,0,0,0,0,384
+C26 BOUNDARY REGRESSION PASS; admission/fault policy only, not complete v1.4 acceptance.
+[PASS] Completed within declared software evidence scope

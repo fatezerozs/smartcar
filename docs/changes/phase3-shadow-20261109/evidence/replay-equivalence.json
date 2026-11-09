@@ -1,0 +1,27 @@
+[
+  {
+    "file": "diagnostic-recovery-1.csv",
+    "sha256": "d329543aa38ef23085fb6fe0616860e78de0e731455eaece80a6b7867d3fca03",
+    "identical": true
+  },
+  {
+    "file": "diagnostic-recovery-3.csv",
+    "sha256": "48ec1e1fffbdf73b0a7ea2197188ee44c4723bf8c49d7cef8c0997da0519cef0",
+    "identical": true
+  },
+  {
+    "file": "diagnostic-recovery-5.csv",
+    "sha256": "7f8ec7f242bc1030a23bea7a1ef0094fd42a46846f72bd6390f17c393b9a56ed",
+    "identical": true
+  },
+  {
+    "file": "initial-admission-only.csv",
+    "sha256": "5c092d624cbb6b354203522699ac7e5ed82748fb2ee8bc7ebddc46decec4ab93",
+    "identical": true
+  },
+  {
+    "file": "reference-time-budget.csv",
+    "sha256": "56b537c2a07913e38b788d633cbe9f7c8ce8deafc75dba2153472d9eca4f9c91",
+    "identical": true
+  }
+]

@@ -1,0 +1,1490 @@
+--- a/docs/PROJECT_INDEX.md
++++ b/docs/PROJECT_INDEX.md
+@@ -12,7 +12,7 @@
+ 
+ > **先记住四件事**
+ >
+-> - **主线控制开发看MPC。** Phase 3工作区已完成C26调度、原运行PI目标切换和最终writer的可选米制链路；默认关闭，尚待标定配置与上板验证。
++> - **主线控制开发看MPC。** Phase 3工作区已完成C26调度、原运行PI目标切换和最终writer的可选米制链路；默认关闭，尚待标定配置与上板验证。 [影子数据与下载工程入口](changes/phase3-shadow-preparation-20261109/README.md)。
+ > - **B2、B3、联合静止候选是测量/验证构型。** B2短窗通过，不等于三者联合通过，更不等于运动采集通过。
+ > - **软件阶段与硬件批次分开编号。** `Phase 3`是控制集成阶段；`B3`是静止测量工程，二者不是同一个阶段。
+ > - **先找证据，再判断进度。** 已构建、Host通过、局部实板通过和整车验收是不同结论；项目尚未整体验收。
+@@ -66,6 +66,8 @@
+ 固定B3/联合候选有自己的输入快照与产物哈希。主工程后续安全修正不会自动进入旧AXF；旧B3报告的故障清除行为只适用于被测候选。[固定候选说明](changes/recorder-b3-20261106/encoder-joint-static-20261106/JOINT_STATIC_DELIVERY.md)
+ 
+ ## 2. 进度总览
++
++**标定与实车诊断当前状态：** [Phase2总览](changes/phase2-calibration-20261108/DELIVERY_STATUS.md) / [机器登记](changes/phase2-calibration-20261108/CURRENT_STATUS.json)，已发布于main `bd94f27`。落地直线40目标两点及停车已有；转弯软回调连续性未通过，地面曲率未测，独立按轮回调未实现。工作区Phase3链路不是当前板载诊断固件。
+ 
+ 状态只描述明确范围：**软件通过**＝Host/纯构建证据；**局部实测通过**＝指定构型与窗口通过；**部分完成**＝仍有缺项；**待验**＝不能写成PASS。不用完成百分比推断验收。
+ 
+--- a/tests/suites/catalog.json
++++ b/tests/suites/catalog.json
+@@ -3920,6 +3920,35 @@
+         "artifacts/**"
+       ],
+       "scope": "Actual C26 scheduler/PI/writer with simulated native IO, explicit synthetic calibration; no board timing or vehicle authorization"
++    },
++    {
++      "schemaVersion": "1.0",
++      "id": "phase3-shadow-preparation",
++      "name": "Measured Phase2 profile and isolated C26 shadow download preparation",
++      "layer": "integration",
++      "category": "functional",
++      "evidenceClass": "host_simulated",
++      "entrypoint": {
++        "type": "python",
++        "path": "tests/planning/test_shadow_preparation.py"
++      },
++      "workingDirectory": ".",
++      "timeoutSeconds": 180,
++      "required": true,
++      "dependsOn": [
++        "compiler-environment"
++      ],
++      "resources": [],
++      "profiles": [
++        "Host",
++        "PreFlash",
++        "Diagnostic"
++      ],
++      "environment": {},
++      "artifacts": [
++        "artifacts/**"
++      ],
++      "scope": "Source-pinned measured candidates and labelled engineering references; native private shadow/field trace and legacy PWM equivalence; no hardware or active metric approval"
+     }
+   ]
+ }
+--- a/tests/suites/README.md
++++ b/tests/suites/README.md
+@@ -39,6 +39,10 @@
+   Synthetic geometry/scales exercise direct counts, independent PWM cap,
+   near/far transitions, held-ON latches, IRQ interleavings and commit deadlines.
+   The test-only review macro is not physical calibration or board timing evidence.
++- L2: `phase3-shadow-preparation` pins measured Phase2 inputs and labelled
++  reference values, checks preview/raw pixel and mm/metre transforms, builds
++  an isolated candidate, compares legacy PWM sequences, exercises stop-only
++  retained rows, and replays all 750 real images to expose geometry coverage.
+ - L2: `recorder` adds 17 capture/storage/SCRAW synthetic integration cases, using
+   the selected Host compiler/mode; `recorder-tools` checks incremental generation
+   without starting a firmware build. Both are required in Host and PreFlash.
+--- a/docs/changes/phase2-calibration-20261108/PHASE2_REMAINING.md
++++ b/docs/changes/phase2-calibration-20261108/PHASE2_REMAINING.md
+@@ -1,16 +1,20 @@
+-# Phase 2剩余测量与推进顺序
++# Phase 2已有数据、剩余定参与测量
++
++当前事实统一登记于[CURRENT_STATUS.json](CURRENT_STATUS.json)，阅读摘要见[成果与交接](DELIVERY_STATUS.md)。历史会话保持原值，“未定参/未验收”不等于“未测量”；现场状态须下次操作重新确认。
+ 
+ 2026-11-09当前状态：[成果与交接总览](DELIVERY_STATUS.md)。直线40目标落地点410±20/730±10mm及停车尾段已完成。当前转弯软回调V2已实测，普通越界不锁停，但右轮前进—暂停—再前进，持续性未通过；左右独立回调尚未实现，地面转弯未执行。保留失败与正常记录，不批准生产尺度、制动或侧向边界。下一步先修正按轮回调与低速响应，再推进地面短弧。
++
++**Phase3数据更新：** 已有实测已汇入[影子候选参数包](../../../profiles/phase3-c26-shadow-20261109.json)，保留来源SHA、单位、状态和未定项。94×60预览矩阵已转换为188×120原图、后轴米制坐标；制动/jerk/预算等未验收量仍明确使用影子工程参考值，不修改当前动力参数。
+ 
+ ## 当前真正未完成的验收项
+ 
+ | 项目 | 已有 | 还差的关键证据 |
+ | --- | --- | --- |
+-| 负载闭环速度响应 | 23/30/40架空正常点，23目标的两条短落地记录 | 使用已检查静音诊断构型，补目标30及后续落地跟踪、起步/饱和和实际电池条件；无线超时仍保留观察，不直接套架空参数 |
+-| 距离尺度与地面速度 | CPR、两次1m直推尺度候选；75.7mm尺测与50mm目测分别保留 | 尺测与轮端约99mm的差异未闭环，不能用单条短行程修改尺度；明确滚动/参考点/量尺误差与滑移影响 |
+-| 加减速、jerk和停车边界 | 三条完整滑行记录和软件零输出事件 | 在已记录电压/载荷/地面下验证重复性、保守停车边界、零速门槛/确认及停止超时 |
++| 负载闭环速度响应 | 23/30/40架空、落地Kp2→3→2、目标40的1500/2500ms响应及原始轨迹均已有 | 从现有记录整理工作增益/起步/超调/饱和范围，再做针对性稳定性验证；用户跳过的目标30不重列为必测 |
++| 距离尺度与地面速度 | CPR、两次1m候选11394/11389 counts/m；最新410±20/730±10mm与轮程交叉核对已有 | 可用于候选计算；保留早期短行程差异，明确尺度/滑移/量尺误差适用范围，不将未验收写成未测 |
++| 加减速、jerk和停车边界 | 三条历史完整滑行轨迹＋目标40两条落地停车轨迹、不同停止前轮速及约2秒尾段 | 现有数据先做模型/参数整理；保守边界、jerk和停稳判据尚待核定，补测仅针对未覆盖条件 |
+ | 视觉质量和near/far预算 | 750帧完整失效/恢复、分段静止检查、混合Host监督回放 | 不同光照/反光/单边等独立场次与标签；同步运动里程、恢复迟滞、时间/距离预算及留出验证 |
+-| 相机几何与转向/弯道 | 地面映射候选、左偏有限点动角、右偏授权镜像 | 近场误差/盲区及姿态复核，转向有效角/滞回，实际曲率与侧滑；右偏镜像仍非实测；a_lat_max未定 |
++| 相机几何与转向/弯道 | 后轴坐标映射候选、多点独立校核、左偏/返回角、右偏镜像及架空短弧已有 | 映射需限定适用域；地面短弧/实际曲率/侧向边界仍缺，先处理当前右轮间歇转动问题 |
+ | 运行构型端到端时延 | 静止CSI完成到observe返回3—4ms | RUNNING/MPC负载下采集、处理、控制、提交/物理PWM生效链及丢帧/调度上界 |
+ 
+ 450‰是用户指定直线请求档，600‰是候选PWM硬限，两者均非已测车速或已验收能力。电池曾不足后处理，但实际电压未记录；没有电流传感器时不强制新增motor_Kt/力矩测量。规划器接入MCU属于Phase3，不能算作本表额外Phase2采数工作。
+@@ -23,7 +27,7 @@
+ 
+ 100ms累计计数窗的速度复核显示三条记录在滑行中段逐步下降；150—650ms中段线性斜率约-0.51/-0.52/-0.60m/s²，原值及窗口见[coast-profile-review.json](coast-profile-review.json)。这只是观察描述，不是保守a_brake，更不是主动反向制动能力。末端有1计数级波动，生产零速门槛/停止超时仍待结合误差和独立数据审查。
+ 
+-## 必须补的主要数据
++## 历史采集计划（保留原时点，已完成项不重复执行）
+ 
+ | 顺序 | 还缺什么 | 具体采集 | 当前为什么不能直接填写参数 |
+ | --- | --- | --- | --- |
+@@ -36,7 +40,7 @@
+ 
+ 实际电池电压仍未测，3S/11.1V是标称；地面报告为类似尼龙，载荷、轮胎条件未完整结构化。后续新动态记录应补这些现场条件；没有测得的值保持未知。
+ 
+-## 当前下一步
++## 历史下一步（当前状态以顶部和交接总览为准）
+ 
+ 已完成本轮静止采集与离线回归，不追加相同遮挡重复。[第四轮](VISUAL_CONTINUOUS_RESULT_04.md)750帧完整，近场全程有效；far持续失效和恢复已记录，初始及移除抖动保留。[Host监督回归](VISUAL_SUPERVISOR_REPLAY.md)5场景3750行关键状态对照通过，新增统一入口专项6项检查通过；这些是本地软件证据，未验证本次远程CI。
+ 
+--- a/docs/changes/phase2-calibration-20261108/README.md
++++ b/docs/changes/phase2-calibration-20261108/README.md
+@@ -1,10 +1,14 @@
+ # Phase2 标定、实测与离线回归
+ 
++当前事实统一登记于[CURRENT_STATUS.json](CURRENT_STATUS.json)，阅读摘要见[成果与交接](DELIVERY_STATUS.md)。历史会话保持原值，“未定参/未验收”不等于“未测量”；现场状态须下次操作重新确认。
++
+ 更新：2026-11-09（北京时间）。**[成果整理与交接总览](DELIVERY_STATUS.md)** 是当前状态入口：Phase2部分完成、生产参数未批准。已完成尺寸/尺度候选、视觉时序与失效记录、直线负载响应与停车观测、无线定位与软回调实机验证；地面转弯尚未执行。
+ 
+ [返回工程总索引](../../PROJECT_INDEX.md) · [最新交付总览](DELIVERY_STATUS.md) · [剩余任务](PHASE2_REMAINING.md) · [主标定登记](../c31-speed-planning-20261105/CALIBRATION.md)
+ 
+ ## 当前应看什么
++
++**Phase3影子工程已单独整理：** [数据更新与下载入口](../phase3-shadow-preparation-20261109/README.md)。已有测量汇入候选包；不把未最终定参误列为缺测，不改本页历史实板身份。
+ 
+ | 目的 | 入口 | 当前核定范围 |
+ | --- | --- | --- |
+--- a/demo/code/vision_planner_runtime.c
++++ b/demo/code/vision_planner_runtime.c
+@@ -23,7 +23,7 @@
+     memset(&identity,0,sizeof(identity));identity.config_revision=configuration.planning.planner.revision;
+ }
+ static void revoke(void)
+-{int owned=have_result||info.session_active;have_result=0;info.session_active=0;if(info.mode==VDR_CONTROL&&owned)vd_speed_stop();}
++{int owned=have_result||info.session_active;have_result=0;info.session_active=info.result_valid=0;if(info.mode==VDR_CONTROL&&owned)vd_speed_stop();}
+ static void runtime_trip(uint32_t reason)
+ {
+     /* Internal diagnosis keeps existing recoverable/severe classes. The public
+@@ -92,6 +92,8 @@
+     if(have_observation&&(!(uint32_t)(seq-observed_sequence)||(uint32_t)(seq-observed_sequence)>=UINT32_C(0x80000000)||
+        !(uint32_t)(capture-observed_capture)||(uint32_t)(capture-observed_capture)>=UINT32_C(0x80000000)))return;
+     if(vm_vision_frame(&geometry,&configuration.vision,road,seq,capture,now,&pending_frame)){
++        ++info.observed_frames;info.near_geometry_frames+=pending_frame.near_valid;
++        info.full_geometry_frames+=pending_frame.far_valid;
+         pending=have_observation=1;observed_sequence=seq;observed_capture=capture;
+     }
+ #else
+@@ -133,6 +135,10 @@
+         status=vm_shadow_input(&odometry,&accepted_frame,0,identity,now,configuration.requested_speed_m_s,1,&input);
+         if(status!=VM_OK){input_fault(status);return;}
+     }
++    info.output_epoch=input.identity.output_epoch;info.frame_sequence=input.identity.frame_seq;
++    info.capture_ms=input.identity.capture_ms;info.encoder_sequence=input.identity.encoder_seq;
++    info.encoder_ms=input.identity.encoder_ms;info.measured_speed_m_s=input.observation.measured_speed;
++    info.near_valid=input.observation.near_valid;info.far_valid=input.observation.far_valid;
+     if(!info.session_active){
+         if(!vps_arm(&planner,&input))return;
+         info.session_active=1;have_result=0;return;
+@@ -142,6 +148,8 @@
+     if(prepared==VPS_READY){
+         result=next;
+         ++info.plans;have_result=1;identity=result.candidate.stamp;info.planning_status=VP_READY;
++        info.target_right_ticks=result.candidate.right_ticks_10ms;info.target_left_ticks=result.candidate.left_ticks_10ms;
++        info.planned_speed_m_s=result.candidate.trajectory.speed;info.cap_m_s=result.candidate.cap_m_s;
+         if(info.mode==VDR_CONTROL){
+             if(!vd_speed_metric_request(result.candidate.right_ticks_10ms,result.candidate.left_ticks_10ms,
+                 configuration.pwm_cap,configuration.feedforward_right,configuration.feedforward_left,
+@@ -158,6 +166,7 @@
+             result.revision=planner.revision; /* Held PI, no duplicate integral step. */
+         else have_result=0;
+     }
++    info.result_valid=have_result;
+ #else
+     (void)now;
+ #endif
+--- a/demo/code/vision_planner_runtime.h
++++ b/demo/code/vision_planner_runtime.h
+@@ -15,8 +15,13 @@
+ typedef struct {
+     vdr_mode_t mode;
+     uint32_t polls,plans,frame_waits,revision,source_version;
++    uint32_t observed_frames,near_geometry_frames,full_geometry_frames;
+     vp_status_t planning_status;
+     sp_mode_t supervisor_mode;
++    uint32_t output_epoch,frame_sequence,capture_ms,encoder_sequence,encoder_ms;
++    float measured_speed_m_s,planned_speed_m_s,cap_m_s;
++    uint16_t target_right_ticks,target_left_ticks;
++    uint8_t near_valid,far_valid,result_valid;
+     uint8_t configured,session_active;
+ } vdr_info_t;
+ void vd_planner_runtime_init(void);
+--- /dev/null
++++ b/tools/speed_planning/phase3_profile.py
+@@ -0,0 +1,184 @@
++"""Build a source-pinned C26 SHADOW configuration from existing Phase2 data.
++
++No device access, production macro writes, or physical threshold approval.
++Uncalibrated dynamic/policy fields retain explicit engineering references.
++"""
++import argparse
++import hashlib
++import json
++import math
++from pathlib import Path
++import re
++
++ROOT = Path(__file__).resolve().parents[2]
++BASE = 'docs/changes/phase2-calibration-20261108/'
++PROFILE = ROOT/'profiles/phase3-c26-shadow-20261109.json'
++
++
++def digest(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def project(matrix, u, v):
++    z = matrix[2][0]*u+matrix[2][1]*v+matrix[2][2]
++    if not math.isfinite(z) or abs(z)<1e-9:
++        raise ValueError('Singular image point')
++    return [(matrix[i][0]*u+matrix[i][1]*v+matrix[i][2])/z for i in range(2)]
++
++
++def build_profile(root=ROOT):
++    root=Path(root);sources={}
++    def read(name):
++        path=root/name;sources[name]=digest(path)
++        return json.loads(path.read_text('utf-8'))
++    geometry=read(BASE+'reported-candidates.json')['geometryM']
++    scale=read(BASE+'passive-distance-summary.json')
++    mapping=read(BASE+'ground-homography-origin-corrected.json')
++    fit=read(BASE+'ground-homography-candidate.json')
++    near=read(BASE+'ground-centre250-check.json')
++    latency=read(BASE+'evidence/latency-static/session01/analysis.json')
++    visual=read(BASE+'evidence/visual-continuous/session04/analysis.json')
++    stops=read(BASE+'stop-distance-candidate-reanalysis.json')
++    coast=read(BASE+'coast-profile-review.json')
++    response=[read(BASE+'evidence/'+name+'/review.json') for name in
++              ('ground-target40-cap250-1500-01','ground-target40-cap250-2500-01')]
++    encoder=read('profiles/encoder-production-20261106.json')
++    reference=read('profiles/c1-host-reference-v0.3.json')['parameters']
++    for name in ('demo/code/vision_midterm.c','demo/code/vision_speed.h','demo/code/vision_profile.h',
++                 BASE+'evidence/visual-supervisor-replay04/visual_policy.h'):
++        sources[name]=digest(root/name)
++    preview_source=(root/'demo/code/vision_midterm.c').read_text('utf-8')
++    if 'source[y * 2 * VISION_WIDTH + x * 2]' not in preview_source:
++        raise ValueError('Preview sampling changed; audit homography conversion')
++    speed_header=(root/'demo/code/vision_speed.h').read_text('utf-8')
++    def speed_contract(name):
++        m=re.search(r'^#define '+name+r' (\d+)U',speed_header,re.M)
++        if not m:raise ValueError('Missing native timing contract: '+name)
++        return int(m[1])
++    sample_age=speed_contract('VD_SPEED_SAMPLE_MAX_AGE_MS')
++    sample_gap=speed_contract('VD_SPEED_SAMPLE_MAX_INTERVAL_MS')
++    native=root/'demo/code/midterm_route_profile.h';sources['demo/code/midterm_route_profile.h']=digest(native)
++    match=re.search(r'^#define MT_ROUTE_FAST_TICKS (\d+)U',native.read_text('utf-8'),re.M)
++    if not match:raise ValueError('Native count range changed')
++    max_ticks=int(match[1])
++    if not mapping.get('cameraOriginHorizontalDistanceConfirmed') or fit['imageSize']!=[94,60]:
++        raise ValueError('Confirmed camera-ground origin and known preview sampling required')
++    h=mapping['homographyImageToRearGroundMm']
++    if len(h)!=3 or any(len(row)!=3 or any(not math.isfinite(x) for x in row) for row in h):
++        raise ValueError('Finite 3x3 homography required')
++    # vision_midterm_preview uses source[y*2][x*2], with zero-based centres.
++    # H_raw_m = diag(.001,.001,1) * H_preview_mm * diag(.5,.5,1).
++    raw_h=[[h[i][j]*(.5 if j<2 else 1)*(.001 if i<2 else 1) for j in range(3)] for i in range(3)]
++    points=mapping['points'];ys=[p['yRearForwardMm']*.001 for p in points]
++    xs=[p['xRearRightMm']*.001 for p in points];domain=[min(xs),max(xs),min(ys),max(ys)]
++    rows=[]
++    # Seven interior sample distances, not new measured points. Their image
++    # rows come from x=0 projection inversion; no whole-image extrapolation.
++    for j in range(1,8):
++        y=(domain[2]+(domain[3]-domain[2])*j/8)*1000
++        a,b,c=h[0];d,e,f=h[1];g,k,l=h[2]
++        denominator=a*(e-y*k)-b*(d-y*g)
++        v=(a*(y*l-f)+c*(d-y*g))/denominator
++        rows.append(int(round(v*2)))
++    if len(set(rows))!=7 or any(not 0<=r<120 for r in rows) or rows!=sorted(rows,reverse=True):
++        raise ValueError('Derived preview rows invalid')
++    left,right=scale['descriptiveMeanCountsPerMetreLeftRight']
++    if not (0<left<1e6 and 0<right<1e6):raise ValueError('Invalid distance scales')
++    newest=response[-1];target=newest['config']['maximumTargetTicks10ms']
++    requested=.5*(target*100/left+target*100/right)
++    def ref(name):return reference[name]['value']
++    # Maximum is a software input range converted from the original count
++    # ceiling; it is NOT a measured/approved maximum physical driving speed.
++    planning={'maximum_speed':max_ticks*100/min(left,right),'near_cap':requested,
++              'lateral_accel':ref('lateralAccelerationMps2'),'accel':ref('accelerationMps2'),
++              'brake':ref('brakingDecelerationMps2'),'jerk_accel':ref('jerkAccelerationMps3'),
++              'jerk_brake':ref('jerkBrakingMps3'),'latency_s':ref('latencyS'),
++              'distance_margin':ref('distanceMarginM'),'curvature_epsilon':.0001,'max_dt_s':sample_gap*.001}
++    seed=json.dumps(sources,sort_keys=True,separators=(',',':')).encode()
++    revision=int(hashlib.sha256(seed).hexdigest()[:8],16) or 1
++    profile={'schemaVersion':'smartcar.phase3-shadow-profile/1','profileId':'C26-SHADOW-'+format(revision,'08X'),
++             'revision':revision,'mode':'shadow','productionApproved':False,'activeMetricControlAllowed':False,
++             'sourcesSha256':sources,
++             'measured':{'geometryM':geometry,'encoderProfile':encoder,
++                         'distanceCountsPerMetreLeftRight':{'value':[left,right],'status':'measured-candidate'},
++                         'groundMapping':{'previewSize':[94,60],'runtimeSize':[188,120],
++                                          'previewToRawPixelScale':2,'runtimeHomographyMetres':raw_h,
++                                          'coordinateOrigin':'rear-axle ground projection; x right,y forward',
++                                          'sampledGroundRectangleM':domain,
++                                          'heldOutNearPointResidualM':near['residualToOperatorReportedPointMm']*.001,
++                                          'status':'measured-candidate; rectangle is an evaluation domain, not a certified validity region'},
++                         'staticLatencyMs':latency['stagesMs']['capture_to_observe_return'],
++                         'visualSession':{'frames':visual['frames'],'controlCounts':visual['controlValidFarCounts']},
++                         'groundResponses':[{'config':r['config'],'operator':r['operatorObservation'],
++                                             'tail300ms':r['tailWindowsMs']['300'],'stopWheelReview':r['stopWheelReview']} for r in response],
++                         'historicalCoastRuns':stops['runs'],'coastProfileInterpretation':coast['interpretation']},
++             'runtimeConfig':{'limits':planning,'ticks_per_metre_left':left,'ticks_per_metre_right':right,
++                              'rear_track_m':geometry['rearTrack'],'max_ticks_10ms':max_ticks,
++                              'frame_max_age_ms':100,'encoder_max_age_ms':sample_age,'candidate_max_age_ms':sample_gap,
++                              'odometry_max_age_ms':sample_age,'interpolation_gap_ms':sample_gap,'sign_left':-1,'sign_right':1,
++                              'compensate':0,'geometry_calibrated':0,'near_rows':rows[:5],'full_rows':rows,
++                              'min_confidence':25,'max_step_m':ref('distanceMarginM'),
++                              'requested_speed_m_s':requested,'pwm_cap':newest['config']['requestPermille'],
++                              'feedforward_right':0,'feedforward_left':0,
++                              'policy':{'frame_timeout_ms':100,'encoder_timeout_ms':30,
++                                        'near_window_ms':ref('nearWindowMs'),'far_budget_ms':ref('farBudgetMs'),
++                                        'stop_timeout_ms':ref('stopTimeoutMs'),'near_frames':ref('nearFrames'),
++                                        'far_frames':ref('farFrames'),'zero_samples':3,
++                                        'far_distance_m':ref('farDistanceM'),'zero_speed_m_s':.02}},
++             'parameterClasses':{'limitsAndBudgets':'engineering references from c1-host-reference-v0.3; SP_SIMULATION',
++                                 'sampleAndCandidateAges':'existing software timing contracts; not measured physical latency',
++                                 'maximumSpeed':'converted native count ceiling; not measured v_max',
++                                 'requestedSpeed':'target40 counts/10ms converted using candidate scales',
++                                 'previewRows':'computed sampling inside the fitted ground-distance range',
++                                 'continuityAndZeroSpeed':'shadow experiment settings; not adopted physical thresholds',
++                                 'pwmAndFeedforward':'unused by shadow output; original legacy PI/gains/PWM limits unchanged'},
++             'unresolved':{'runningEndToEndLatencyS':None,'approvedBrakeMps2':None,'approvedJerkMps3':None,
++                           'approvedLateralAccelerationMps2':None,'dynamicNearFarBudgets':None,
++                           'groundTurningCurvature':None},
++             'remainingWork':['Bundle/adapt existing measurements; do not repeat the entire Phase2 campaign.',
++                              'Measure RUNNING/MPC timing, dynamic visual/odometer episodes and ground turn geometry.',
++                              'Resolve near-domain errors and review dynamic/stop parameters before active metric driving.']}
++    return profile
++
++
++def validate_profile(profile,root=ROOT):
++    # Rebuild rather than accept a relabelled/tampered active profile. This pins
++    # original measurements AND the exact construction/units/reference policy.
++    if profile!=build_profile(root):raise ValueError('Profile differs from current source-pinned shadow data')
++    return profile
++
++
++def header(profile):
++    validate_profile(profile);c=profile['runtimeConfig'];limits=c['limits'];policy=c['policy']
++    def f(value):
++        s=format(float(value),'.9g');return s+('.0' if '.' not in s and 'e' not in s else '')+'f'
++    def members(data,names):return ','.join(f(data[n]) for n in names)
++    h=profile['measured']['groundMapping']['runtimeHomographyMetres'];domain=profile['measured']['groundMapping']['sampledGroundRectangleM']
++    text='''/* Generated from source-pinned Phase2 records. Shadow only. */
++#ifndef PHASE3_SHADOW_PROFILE_H
++#define PHASE3_SHADOW_PROFILE_H
++#if !VISION_PLANNER_RUNTIME || VISION_PLANNER_ACTIVE
++#error "Measured candidate profile supports shadow only."
++#endif
++'''
++    text+='#define PHASE3_SHADOW_PROFILE_ID "'+profile['profileId']+'"\n'
++    text+='static const vdr_config_t phase3_shadow_configuration = {\n'
++    text+='  .planning = {.planner = {.revision='+str(profile['revision'])+'U,\n'
++    text+='    .limits={SP_SIMULATION,'+members(limits,('maximum_speed','near_cap','lateral_accel','accel','brake','jerk_accel','jerk_brake','latency_s','distance_margin','curvature_epsilon','max_dt_s'))+'},\n'
++    for n in ('ticks_per_metre_left','ticks_per_metre_right','rear_track_m'):text+='    .'+n+'='+f(c[n])+',\n'
++    for n,v in [('max_left_ticks_10ms',c['max_ticks_10ms']),('max_right_ticks_10ms',c['max_ticks_10ms']),('frame_max_age_ms',c['frame_max_age_ms']),('encoder_max_age_ms',c['encoder_max_age_ms']),('candidate_max_age_ms',c['candidate_max_age_ms']),('compensate',0),('geometry_calibrated',0)]:text+='    .'+n+'='+str(v)+'U,\n'
++    text+='  },.policy={'+','.join(str(policy[n])+'U' for n in ('frame_timeout_ms','encoder_timeout_ms','near_window_ms','far_budget_ms','stop_timeout_ms','near_frames','far_frames','zero_samples'))+','+members(policy,('far_distance_m','zero_speed_m_s'))+'}},\n'
++    text+='  .odometry={'+str(profile['revision'])+'U,'+str(c['odometry_max_age_ms'])+'U,'+str(c['interpolation_gap_ms'])+'U,'+f(c['ticks_per_metre_left'])+','+f(c['ticks_per_metre_right'])+',-1,1},\n'
++    text+='  .vision={.homography={'+','.join(f(v) for row in h for v in row)+'},\n'
++    for n,v in zip(('min_x_m','max_x_m','min_y_m','max_y_m'),domain):text+='    .'+n+'='+f(v)+',\n'
++    text+='    .max_step_m='+f(c['max_step_m'])+',.near_rows={'+','.join(map(str,c['near_rows']))+'},.full_rows={'+','.join(map(str,c['full_rows']))+'},\n'
++    text+='    .near_count=5U,.full_count=7U,.min_confidence=25U,.revision='+str(profile['revision'])+'U,.max_age_ms=100U},\n'
++    text+='  .requested_speed_m_s='+f(c['requested_speed_m_s'])+',.pwm_cap='+str(c['pwm_cap'])+'U,.feedforward_right=0U,.feedforward_left=0U\n};\n#endif\n'
++    return text
++
++
++if __name__=='__main__':
++    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,default=PROFILE)
++    args=parser.parse_args();profile=build_profile();args.output.parent.mkdir(parents=True,exist_ok=True)
++    args.output.write_text(json.dumps(profile,ensure_ascii=False,indent=2)+'\n','utf-8')
++    print(profile['profileId']+' -> '+str(args.output))
+--- /dev/null
++++ b/tools/prepare_phase3_shadow.py
+@@ -0,0 +1,143 @@
++"""Prepare/build an isolated measured-data C26 shadow candidate. Never flash.
++
++The download project is a separate explicit entrypoint sharing the verified
++AXF. Original application defaults, PI gains and physical admission stay intact.
++"""
++import argparse
++import copy
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import sys
++import xml.etree.ElementTree as ET
++
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT))
++from tools.speed_planning.phase3_profile import PROFILE,digest,header,validate_profile
++sys.path.insert(0,str(ROOT/'tools/testing'))
++from process_runner import run_process
++
++VERSION='PHASE3_C26_SHADOW_20261109_1'
++
++
++def replace_once(text,old,new):
++    if text.count(old)!=1:raise ValueError('Candidate source context changed: '+old[:90])
++    return text.replace(old,new)
++
++
++def prepare(output,profile_path=PROFILE):
++    out=Path(output).resolve();profile_path=Path(profile_path).resolve()
++    if out.exists() or not out.is_relative_to(ROOT/'.build') or out==ROOT/'.build':
++        raise ValueError('A NEW directory below repository .build is required')
++    profile=validate_profile(json.loads(profile_path.read_text('utf-8')))
++    original=ROOT/'demo/mdk/competition/MPC_20261106.uvprojx';tree=ET.parse(original)
++    target=tree.find('./Targets/Target')
++    if len(tree.findall('./Targets/Target'))!=1:raise ValueError('One C26 target required')
++    defines=target.findtext('.//Cads/VariousControls/Define') or ''
++    for name,value in [('VISION_MIDTERM_AUTONOMOUS','0'),('VISION_ROUTE_SWITCH','1'),('VISION_ENCODER_ENABLE','1')]:
++        if name+'='+value not in [p.strip() for p in defines.split(',')]:raise ValueError('Wrong original target: '+name)
++    # Create the complete native copy; no frozen Phase2 image or old .build
++    # code is silently used as the source of this Phase3 candidate.
++    workspace=out/'workspace'
++    for name in ('demo','libraries'):
++        shutil.copytree(ROOT/name,workspace/name,ignore=shutil.ignore_patterns('Objects','Listings','*.uvoptx','*.uvguix.*','*.build_log.htm'))
++    shared=workspace/'tools/speed_planning';shared.mkdir(parents=True)
++    for name in ('speed_planner.c','speed_planner.h','vision_adapter.c','vision_adapter.h'):
++        shutil.copyfile(ROOT/'tools/speed_planning'/name,shared/name)
++    code=workspace/'demo/code';inputs={}
++    def change(name,fn):
++        path=code/name;inputs['demo/code/'+name]=digest(ROOT/'demo/code'/name)
++        path.write_text(fn(path.read_text('utf-8-sig')),'utf-8')
++    change('vision_drive.c',lambda s:replace_once(replace_once(replace_once(s,
++        '#include "vision_planner_runtime.h"','#include "vision_planner_runtime.h"\n#include "vision_planner_shadow_diag.h"'),
++        'vd_planner_runtime_init();','vd_planner_runtime_init();\n    vd_shadow_diag_init();'),
++        'vd_planner_runtime_observe(r,sequence,frame_ms,now);','vd_shadow_diag_observe(r,sequence,frame_ms,now);').replace(
++        'vd_planner_runtime_poll(now);','vd_shadow_diag_poll(now);'))
++    if (code/'vision_drive.c').read_text('utf-8').count('vd_shadow_diag_poll(now);')!=2:
++        raise ValueError('Expected the two original foreground runtime hooks')
++    def field(s):
++        s='#include "vision_planner_shadow_diag.h"\n'+s
++        return replace_once(s,'    vision_drive_get_profile(&cfg);',
++            '    vision_drive_get_profile(&cfg);\n    if(vd_shadow_diag_field(p->line,response,VF_RESPONSE_CAPACITY))return 2;')
++    change('vision_field.c',field)
++    # Human-readable identity is part of @status, not a duplicate motor lease.
++    change('vision_field.c',lambda s:replace_once(s,'"[FIELD] version=%s ready=',
++        '"[FIELD] build='+VERSION+' version=%s ready='))
++    for name in ('vision_planner_shadow_diag.c','vision_planner_shadow_diag.h'):
++        path=ROOT/'demo/candidates/phase3-shadow'/name;inputs[path.relative_to(ROOT).as_posix()]=digest(path)
++        shutil.copyfile(path,code/name)
++    (code/'phase3_shadow_profile.h').write_text(header(profile),'utf-8')
++    out.mkdir(parents=True,exist_ok=True)
++    shutil.copyfile(profile_path,out/'profile.json')
++    switches={'VISION_PLANNER_RUNTIME':'1','VISION_PLANNER_ACTIVE':'0','VISION_PLANNER_PROFILE_REVIEWED':'0'}
++    parts=[p for p in defines.split(',') if p.strip().split('=')[0].strip() not in switches]
++    target.find('.//Cads/VariousControls/Define').text=','.join(parts+[k+'='+v for k,v in switches.items()])
++    common=target.find('./TargetOption/TargetCommonOption')
++    for group in ('BeforeMake','BeforeCompile','AfterMake'):
++        for node in common.find(group):
++            if node.tag.startswith(('RunUserProg','nStop')):node.text='0'
++            elif 'Name' in node.tag:node.text=''
++    for key,folder in [('OutputDirectory',out/'Objects'),('ListingPath',out/'Listings')]:
++        folder.mkdir();common.find(key).text=str(folder)+os.sep
++    files=target.find('.//Group/Files')
++    for name,kind in [('vision_planner_shadow_diag.c','1'),('vision_planner_shadow_diag.h','5'),('phase3_shadow_profile.h','5')]:
++        item=ET.SubElement(files,'File');ET.SubElement(item,'FileName').text=name
++        ET.SubElement(item,'FileType').text=kind;ET.SubElement(item,'FilePath').text='..\\..\\code\\'+name
++    directory=workspace/'demo/mdk/competition'
++    project=directory/'MPC_Phase3_Shadow.uvprojx';download=directory/'MPC_Phase3_Shadow_Download.uvprojx'
++    # The inherited original project is source evidence only; remove the
++    # unpatched duplicate entry from this isolated copy to avoid wrong builds.
++    copied_original=directory/original.name
++    if copied_original.is_file():copied_original.unlink()
++    target.find('.//UpdateFlashBeforeDebugging').text='0';tree.write(project,encoding='utf-8',xml_declaration=True)
++    download_tree=copy.deepcopy(tree);download_tree.find('.//UpdateFlashBeforeDebugging').text='1'
++    download_tree.write(download,encoding='utf-8',xml_declaration=True)
++    for entry in (project,download):
++        shutil.copyfile(ROOT/'demo/mdk/base/rt1064.uvoptx',entry.with_suffix('.uvoptx'))
++    manifest={'schemaVersion':'smartcar.phase3-shadow-candidate/1','version':VERSION,'profileId':profile['profileId'],
++              'sourceProjectSha256':digest(original),'project':str(project),'downloadProject':str(download),
++              'output':str(out),'target':target.findtext('TargetName'),'defines':target.findtext('.//Cads/VariousControls/Define'),
++              'profileSha256':digest(out/'profile.json'),'primaryInputSha256':inputs,
++              'generatedCodeSha256':{p.name:digest(p) for p in sorted(code.glob('*')) if p.is_file()},
++              'buildPassed':False,'flashed':False,'productionApproved':False,'metricActive':False,
++              'legacyPiAndPwmLimitsChanged':False,'autoLoadOrArm':False,
++              'trace':{'rows':256,'ringOverwritesReported':True,'queriesStop':True,'noRuntimeUartOrSdWrites':True},
++              'scope':'Explicit planner_load while stopped; mixed measured candidate geometry/scales and labelled reference policy; legacy motors remain under original C26 owner.'}
++    (out/'candidate.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n','utf-8')
++    (out/'README.md').write_text('# '+VERSION+'\n\nBuild: '+str(project)+'\n\nDownload: '+str(download)+
++        '\n\nProfile: '+profile['profileId']+'; runtime=1, active=0. This command only prepared files.\n'
++        '\nAfter identity/STOP/OFF checks: @planner_load, @planner. Physical C26 admission remains required. '
++        'Queries stop driving; read retained rows only after STOP, then explicitly @planner_clear. '
++        'Original legacy PI/gains/PWM limits are unchanged.\n','utf-8')
++    return manifest
++
++
++def build(manifest,uv4,arm_bin):
++    out=Path(manifest['output']);project=Path(manifest['project']);uv4=Path(uv4).resolve()
++    fromelf=Path(arm_bin).resolve()/'fromelf.exe'
++    if not uv4.is_file() or not fromelf.is_file():raise ValueError('Existing UV4/fromelf tools required')
++    processes=[]
++    with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:
++        for command in ([uv4,'-r',project,'-t',manifest['target'],'-j0','-o',out/'build.log'],
++                        [fromelf,'--bincombined','--output',out/'phase3-shadow.bin',out/'Objects/rt1064.axf']):
++            result=run_process(list(map(str,command)),project.parent,dict(os.environ),600,stdout,stderr);processes.append(result)
++            if result['exitCode'] or result['timedOut'] or not result['cleanupVerified']:
++                raise RuntimeError('Build failed: '+str(out/'build.log'))
++    log=(out/'build.log').read_text('utf-8',errors='replace')
++    if '0 Error(s), 0 Warning(s)' not in log:raise RuntimeError('Zero errors AND warnings required')
++    manifest.update(buildPassed=True,processes=processes,artifactsSha256={p.relative_to(out).as_posix():digest(p) for p in
++        [out/'Objects/rt1064.axf',out/'phase3-shadow.bin',out/'build.log',project,Path(manifest['downloadProject'])]})
++    (out/'candidate.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n','utf-8')
++    return manifest
++
++
++if __name__=='__main__':
++    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True)
++    parser.add_argument('--profile',type=Path,default=PROFILE);parser.add_argument('--build',action='store_true')
++    parser.add_argument('--uv4',type=Path,default=Path('E:/ElecTronic/Keil/UV4/UV4.exe'))
++    parser.add_argument('--arm-bin',type=Path,default=Path('E:/ElecTronic/Keil/ARM/ARMCLANG/bin'))
++    args=parser.parse_args();manifest=prepare(args.output,args.profile)
++    if args.build:manifest=build(manifest,args.uv4,args.arm_bin)
++    print(json.dumps({k:manifest[k] for k in ('version','profileId','project','downloadProject','buildPassed','flashed')},indent=2))
+--- /dev/null
++++ b/profiles/phase3-c26-shadow-20261109.json
+@@ -0,0 +1,567 @@
++{
++  "schemaVersion": "smartcar.phase3-shadow-profile/1",
++  "profileId": "C26-SHADOW-FA161BDE",
++  "revision": 4195752926,
++  "mode": "shadow",
++  "productionApproved": false,
++  "activeMetricControlAllowed": false,
++  "sourcesSha256": {
++    "docs/changes/phase2-calibration-20261108/reported-candidates.json": "424b0eb425cc5123661e0d510fc85db9d031748da8939ef183e6cad4e789f2bf",
++    "docs/changes/phase2-calibration-20261108/passive-distance-summary.json": "21089dd1d7e90bc8f2e7cbf6f055fdad036124072fb785cdfb9fcd7b71f6ca19",
++    "docs/changes/phase2-calibration-20261108/ground-homography-origin-corrected.json": "48b27f411f81926d304df033d61039e55286bbaf64eee11241f0a0eb27d17df9",
++    "docs/changes/phase2-calibration-20261108/ground-homography-candidate.json": "38bd65bf177d1f30d397bd4b72488f1afd6a105463b40053ae27f0b6738848ac",
++    "docs/changes/phase2-calibration-20261108/ground-centre250-check.json": "0d6a5ab4ee9273be0da5685a5b96b52939373fd37e63526f197d91c3c22202e1",
++    "docs/changes/phase2-calibration-20261108/evidence/latency-static/session01/analysis.json": "686bf5d6520c242fd7809eaac353f056ce1b2422274d1115cd55ceffb9f18617",
++    "docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04/analysis.json": "7ccdb59a2d12c44e7d08ef92f24143e4e93095ccc776beb1ce19c209eac7d1f9",
++    "docs/changes/phase2-calibration-20261108/stop-distance-candidate-reanalysis.json": "123b4e6301726568ba09bfbf1346b1a8603e0d067fa847d28827f076469543c4",
++    "docs/changes/phase2-calibration-20261108/coast-profile-review.json": "dc06faba691e496f4675cd69c94920e4688fc9005f3f0787c7d6650ac1d38c0c",
++    "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-1500-01/review.json": "2114b7cbfd7ec89230b67f220fc74d20293af4a1f587f739d4298185bf738e80",
++    "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-2500-01/review.json": "6973a1bbbd234743cf4daa3da10870b0baf548b557d38236e90608cc51fd42cf",
++    "profiles/encoder-production-20261106.json": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
++    "profiles/c1-host-reference-v0.3.json": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
++    "demo/code/vision_midterm.c": "f657b32f0802fafc9f3e91f29dd9dc05b05f158a7399fcab5cc4b2332d5d2586",
++    "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
++    "demo/code/vision_profile.h": "ff08cd0778ab0172bde37a0e32813e8002ff94c26045abec51c279e577d80b6e",
++    "docs/changes/phase2-calibration-20261108/evidence/visual-supervisor-replay04/visual_policy.h": "aa4e7a5873734cb96140fcc25c208f84e6ac7d1363d8dfbc06a67a72e08095b8",
++    "demo/code/midterm_route_profile.h": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a"
++  },
++  "measured": {
++    "geometryM": {
++      "wheelbaseLeft": 0.197,
++      "wheelbaseRight": 0.197,
++      "rearTrack": 0.1529,
++      "frontTrack": 0.1529,
++      "cameraHeight": 0.33,
++      "cameraOffsetForward": 0.197,
++      "cameraOffsetRight": 0
++    },
++    "encoderProfile": {
++      "schema": "smartcar.encoder-production/1",
++      "adopted_by": "explicit user request: 不要作为估计了,直接写入生产配置",
++      "date": "2026-11-06",
++      "counting_mode": "A-rising with B-direction, QTMR2 free-running 16-bit modular deltas, 10ms sampling",
++      "left": {
++        "connector": 3,
++        "pins": [
++          "C3",
++          "C4"
++        ],
++        "forward_raw_sign": -1,
++        "counts_per_wheel_revolution": 2335.8,
++        "observed_counts": -23358,
++        "operator_forward_turns": 10
++      },
++      "right": {
++        "connector": 4,
++        "pins": [
++          "C5",
++          "C25"
++        ],
++        "forward_raw_sign": 1,
++        "counts_per_wheel_revolution": 2358.6,
++        "observed_counts": 23586,
++        "operator_forward_turns": 10
++      },
++      "production_configuration_written": true,
++      "metrological_repeatability_passed": false,
++      "loaded_rolling_circumference_m": null,
++      "hardware_motion_enabled_by_this_change": false,
++      "source_profile": "demo/code/midterm_route_profile.h",
++      "evidence": "docs/changes/recorder-b3-20261106/encoder-joint-static-20261106/measurement-ledger.json",
++      "limitations": [
++        "Repeated 3-turn trials differed; full turns are operator observations",
++        "Other wheel count drift/handling observed, notably +273 during right reverse and -2 during left 10 turns",
++        "No loaded circumference; current native controller remains counts/10ms and does not consume CPR to set physical speed"
++      ]
++    },
++    "distanceCountsPerMetreLeftRight": {
++      "value": [
++        11394,
++        11389
++      ],
++      "status": "measured-candidate"
++    },
++    "groundMapping": {
++      "previewSize": [
++        94,
++        60
++      ],
++      "runtimeSize": [
++        188,
++        120
++      ],
++      "previewToRawPixelScale": 2,
++      "runtimeHomographyMetres": [
++        [
++          -0.09748285466145949,
++          0.001748181809382539,
++          10.627236062305247
++        ],
++        [
++          -0.019981790735572196,
++          0.02195503913198325,
++          -11.454742189813878
++        ],
++        [
++          0.01190417528700402,
++          -0.2561758070132461,
++          1.0
++        ]
++      ],
++      "coordinateOrigin": "rear-axle ground projection; x right,y forward",
++      "sampledGroundRectangleM": [
++        -0.1,
++        0.1,
++        0.6970000000000001,
++        1.297
++      ],
++      "heldOutNearPointResidualM": 0.03968363652633184,
++      "status": "measured-candidate; rectangle is an evaluation domain, not a certified validity region"
++    },
++    "staticLatencyMs": {
++      "n": 256,
++      "min": 3,
++      "p50": 3.0,
++      "p95": 4.0,
++      "p99": 4.0,
++      "max": 4
++    },
++    "visualSession": {
++      "frames": 750,
++      "controlCounts": {
++        "1/0": 331,
++        "1/1": 419
++      }
++    },
++    "groundResponses": [
++      {
++        "config": {
++          "requestPermille": 250,
++          "durationMs": 1500,
++          "profileCapPermille": 600,
++          "maximumTargetTicks10ms": 40,
++          "kpQ8": 512,
++          "kiQ8": 25,
++          "signLeftRawU32": 4294967295,
++          "signRightRawU32": 1,
++          "closedLoop": 1,
++          "servoUs": 1550
++        },
++        "operator": {
++          "forwardMm": 410,
++          "reportedForwardErrorMm": 20,
++          "lateralRightPositiveMm": -2,
++          "normalAndStopConfirmed": true,
++          "abnormalitiesReported": "all normal",
++          "errorIsStatisticalConfidenceInterval": false
++        },
++        "tail300ms": {
++          "uniqueControlSamples": 29,
++          "notSteadyStateCertification": true,
++          "l": {
++            "meanCounts10ms": 44.241379310344826,
++            "rangeCounts10ms": [
++              32,
++              52
++            ],
++            "rmseCounts10ms": 7.203926132612544,
++            "samplesWithin2Counts": 1,
++            "maxOvershootCounts": 12
++          },
++          "r": {
++            "meanCounts10ms": 44.3448275862069,
++            "rangeCounts10ms": [
++              31,
++              52
++            ],
++            "rmseCounts10ms": 7.139013744305253,
++            "samplesWithin2Counts": 4,
++            "maxOvershootCounts": 12
++          }
++        },
++        "stopWheelReview": {
++          "schemaVersion": "smartcar.response-stop-wheel-review/1",
++          "source": "export-ground-target40-cap250-1500-01/trace.json",
++          "crcVerified": true,
++          "softwareZeroMs": 555360,
++          "stopSampleBracketOffsetsMs": [
++            -9,
++            1
++          ],
++          "candidateCountsPerMetre": {
++            "left": 11394,
++            "right": 11389
++          },
++          "wheelMetrics": {
++            "left": {
++              "wholeCaptureWheelMm": 408.37282780410743,
++              "postZeroSampleBracketWheelMm": [
++                204.31806213796736,
++                209.32069510268562
++              ],
++              "preZeroWindowSpeeds": [
++                {
++                  "windowMs": 50,
++                  "wheelMps": 0.43531683342109884
++                },
++                {
++                  "windowMs": 100,
++                  "wheelMps": 0.43268386870282605
++                },
++                {
++                  "windowMs": 200,
++                  "wheelMps": 0.42127435492364407
++                }
++              ],
++              "withinReportedForwardRange": true
++            },
++            "right": {
++              "wholeCaptureWheelMm": 411.6252524365616,
++              "postZeroSampleBracketWheelMm": [
++                204.58336991834224,
++                209.41259109667223
++              ],
++              "preZeroWindowSpeeds": [
++                {
++                  "windowMs": 50,
++                  "wheelMps": 0.4425322679778734
++                },
++                {
++                  "windowMs": 100,
++                  "wheelMps": 0.4249714636930371
++                },
++                {
++                  "windowMs": 200,
++                  "wheelMps": 0.4223373430503117
++                }
++              ],
++              "withinReportedForwardRange": true
++            }
++          },
++          "zeroToleranceSensitivity": [
++            {
++              "toleranceCountsPerSample": 0,
++              "lastAboveOffsetMs": 1121,
++              "firstFinalTailOffsetMs": 1131,
++              "finalTailDurationMs": 880,
++              "physicalStopVerified": false
++            },
++            {
++              "toleranceCountsPerSample": 1,
++              "lastAboveOffsetMs": 1071,
++              "firstFinalTailOffsetMs": 1081,
++              "finalTailDurationMs": 930,
++              "physicalStopVerified": false
++            },
++            {
++              "toleranceCountsPerSample": 2,
++              "lastAboveOffsetMs": 881,
++              "firstFinalTailOffsetMs": 891,
++              "finalTailDurationMs": 1120,
++              "physicalStopVerified": false
++            }
++          ],
++          "postZeroSubmittedPwmAllZero": true,
++          "productionApproved": false,
++          "limits": [
++            "Wheel-domain measures with unapproved scale; not independent ground stopping distance.",
++            "Zero-output event is software submission, not electrical PWM or mechanical stop.",
++            "Threshold sensitivity is descriptive; no production stop threshold adopted.",
++            "Single run, actual battery voltage unmeasured; no brake or jerk bound inferred."
++          ]
++        }
++      },
++      {
++        "config": {
++          "requestPermille": 250,
++          "durationMs": 2500,
++          "profileCapPermille": 600,
++          "maximumTargetTicks10ms": 40,
++          "kpQ8": 512,
++          "kiQ8": 25,
++          "signLeftRawU32": 4294967295,
++          "signRightRawU32": 1,
++          "closedLoop": 1,
++          "servoUs": 1550
++        },
++        "operator": {
++          "forwardMm": 730,
++          "reportedForwardErrorMm": 10,
++          "lateralRightPositiveMm": -2,
++          "normalAndStopConfirmed": true,
++          "abnormalitiesReported": "all normal",
++          "errorIsStatisticalConfidenceInterval": false
++        },
++        "tail300ms": {
++          "uniqueControlSamples": 29,
++          "notSteadyStateCertification": true,
++          "l": {
++            "meanCounts10ms": 40.689655172413794,
++            "rangeCounts10ms": [
++              35,
++              46
++            ],
++            "rmseCounts10ms": 2.4211709905575116,
++            "samplesWithin2Counts": 21,
++            "maxOvershootCounts": 6
++          },
++          "r": {
++            "meanCounts10ms": 41.13793103448276,
++            "rangeCounts10ms": [
++              38,
++              45
++            ],
++            "rmseCounts10ms": 2.189315748875859,
++            "samplesWithin2Counts": 21,
++            "maxOvershootCounts": 5
++          }
++        },
++        "stopWheelReview": {
++          "schemaVersion": "smartcar.response-stop-wheel-review/1",
++          "crcVerified": true,
++          "softwareZeroMs": 759140,
++          "stopSampleBracketOffsetsMs": [
++            -9,
++            1
++          ],
++          "candidateCountsPerMetre": {
++            "left": 11394,
++            "right": 11389
++          },
++          "wheelMetrics": {
++            "left": {
++              "wholeCaptureWheelMm": 733.6317360014043,
++              "postZeroSampleBracketWheelMm": [
++                111.54993856415658,
++                114.88502720730209
++              ],
++              "preZeroWindowSpeeds": [
++                {
++                  "windowMs": 50,
++                  "wheelMps": 0.3317535545023697
++                },
++                {
++                  "windowMs": 100,
++                  "wheelMps": 0.35018430753027907
++                },
++                {
++                  "windowMs": 200,
++                  "wheelMps": 0.35369492715464285
++                }
++              ],
++              "wheelMinusReportedForwardMm": 3.631736001404306,
++              "withinReportedForwardRange": true
++            },
++            "right": {
++              "wholeCaptureWheelMm": 734.9196593203968,
++              "postZeroSampleBracketWheelMm": [
++                109.84283080165072,
++                113.00377557292124
++              ],
++              "preZeroWindowSpeeds": [
++                {
++                  "windowMs": 50,
++                  "wheelMps": 0.3389235226973395
++                },
++                {
++                  "windowMs": 100,
++                  "wheelMps": 0.3573623671964176
++                },
++                {
++                  "windowMs": 200,
++                  "wheelMps": 0.3617525682676267
++                }
++              ],
++              "wheelMinusReportedForwardMm": 4.919659320396818,
++              "withinReportedForwardRange": true
++            }
++          },
++          "zeroToleranceSensitivity": [
++            {
++              "toleranceCountsPerSample": 0,
++              "lastAboveOffsetMs": 881,
++              "firstFinalTailOffsetMs": 891,
++              "finalTailDurationMs": 1120,
++              "physicalStopVerified": false
++            },
++            {
++              "toleranceCountsPerSample": 1,
++              "lastAboveOffsetMs": 881,
++              "firstFinalTailOffsetMs": 891,
++              "finalTailDurationMs": 1120,
++              "physicalStopVerified": false
++            },
++            {
++              "toleranceCountsPerSample": 2,
++              "lastAboveOffsetMs": 631,
++              "firstFinalTailOffsetMs": 641,
++              "finalTailDurationMs": 1370,
++              "physicalStopVerified": false
++            }
++          ],
++          "postZeroSubmittedPwmAllZero": true,
++          "productionApproved": false,
++          "limits": [
++            "Candidate wheel scales, not independently verified ground velocity or stop distance.",
++            "Software zero is not electrical reload timing.",
++            "Tolerance analysis does not select production zero-speed threshold.",
++            "One run, voltage unmeasured; no safe brake bound inferred."
++          ]
++        }
++      }
++    ],
++    "historicalCoastRuns": [
++      {
++        "source": "evidence/stop-trace/lower01/wheel-analysis.json",
++        "sourceSha256": "59c0a7fd2d65a0a5d88bc3059e6e6945f0d91f914eef43f3b5157239e61e1386",
++        "preZero100msCandidateWheelMpsLeftRight": [
++          0.41864139020537117,
++          0.40302045833699185
++        ],
++        "candidateCoastBracketMmLeftRight": [
++          [
++            179.65595927681235,
++            184.21976478848515
++          ],
++          [
++            180.1738519624199,
++            184.73966107647732
++          ]
++        ],
++        "candidateWholeCaptureMmLeftRight": [
++          376.95278216605226,
++          379.31337255246297
++        ]
++      },
++      {
++        "source": "evidence/stop-trace/video02/wheel-analysis.json",
++        "sourceSha256": "da7e3724db6db2384ac8b3554aba49f48d071951d3e0b8565c96ef6fbaea3fbc",
++        "preZero100msCandidateWheelMpsLeftRight": [
++          0.538002457433737,
++          0.5522872947580999
++        ],
++        "candidateCoastBracketMmLeftRight": [
++          [
++            279.6208530805687,
++            284.79901702650517
++          ],
++          [
++            277.8997278075336,
++            283.25577311440867
++          ]
++        ],
++        "candidateWholeCaptureMmLeftRight": [
++          606.4595401088292,
++          605.9355518482747
++        ]
++      },
++      {
++        "source": "evidence/stop-trace/video03/wheel-analysis.json",
++        "sourceSha256": "0385698d50683ad3bf7ef81d251c21e1b03c4f0ebe52bb701b1add777410fcf9",
++        "preZero100msCandidateWheelMpsLeftRight": [
++          0.6722836580656485,
++          0.6673105628237773
++        ],
++        "candidateCoastBracketMmLeftRight": [
++          [
++            389.32771634193426,
++            396.17342460944354
++          ],
++          [
++            390.02546316621306,
++            397.48880498726845
++          ]
++        ],
++        "candidateWholeCaptureMmLeftRight": [
++          891.5218536071615,
++          897.6205110194048
++        ]
++      }
++    ],
++    "coastProfileInterpretation": "Midsegment observed mean wheel deceleration descriptors only. Delay, terminal quantization, rolling scale/slip, variation across sessions and uncertainty not bounded. Do not adopt as a_brake production minimum or jerk limit."
++  },
++  "runtimeConfig": {
++    "limits": {
++      "maximum_speed": 1.1590130827991922,
++      "near_cap": 0.35113902406654746,
++      "lateral_accel": 0.2,
++      "accel": 0.5,
++      "brake": 0.8,
++      "jerk_accel": 2.0,
++      "jerk_brake": 3.0,
++      "latency_s": 0.1,
++      "distance_margin": 0.05,
++      "curvature_epsilon": 0.0001,
++      "max_dt_s": 0.02
++    },
++    "ticks_per_metre_left": 11394,
++    "ticks_per_metre_right": 11389,
++    "rear_track_m": 0.1529,
++    "max_ticks_10ms": 132,
++    "frame_max_age_ms": 100,
++    "encoder_max_age_ms": 30,
++    "candidate_max_age_ms": 20,
++    "odometry_max_age_ms": 30,
++    "interpolation_gap_ms": 20,
++    "sign_left": -1,
++    "sign_right": 1,
++    "compensate": 0,
++    "geometry_calibrated": 0,
++    "near_rows": [
++      70,
++      65,
++      61,
++      58,
++      54
++    ],
++    "full_rows": [
++      70,
++      65,
++      61,
++      58,
++      54,
++      52,
++      49
++    ],
++    "min_confidence": 25,
++    "max_step_m": 0.05,
++    "requested_speed_m_s": 0.35113902406654746,
++    "pwm_cap": 250,
++    "feedforward_right": 0,
++    "feedforward_left": 0,
++    "policy": {
++      "frame_timeout_ms": 100,
++      "encoder_timeout_ms": 30,
++      "near_window_ms": 300,
++      "far_budget_ms": 600,
++      "stop_timeout_ms": 2000,
++      "near_frames": 5,
++      "far_frames": 3,
++      "zero_samples": 3,
++      "far_distance_m": 0.24,
++      "zero_speed_m_s": 0.02
++    }
++  },
++  "parameterClasses": {
++    "limitsAndBudgets": "engineering references from c1-host-reference-v0.3; SP_SIMULATION",
++    "sampleAndCandidateAges": "existing software timing contracts; not measured physical latency",
++    "maximumSpeed": "converted native count ceiling; not measured v_max",
++    "requestedSpeed": "target40 counts/10ms converted using candidate scales",
++    "previewRows": "computed sampling inside the fitted ground-distance range",
++    "continuityAndZeroSpeed": "shadow experiment settings; not adopted physical thresholds",
++    "pwmAndFeedforward": "unused by shadow output; original legacy PI/gains/PWM limits unchanged"
++  },
++  "unresolved": {
++    "runningEndToEndLatencyS": null,
++    "approvedBrakeMps2": null,
++    "approvedJerkMps3": null,
++    "approvedLateralAccelerationMps2": null,
++    "dynamicNearFarBudgets": null,
++    "groundTurningCurvature": null
++  },
++  "remainingWork": [
++    "Bundle/adapt existing measurements; do not repeat the entire Phase2 campaign.",
++    "Measure RUNNING/MPC timing, dynamic visual/odometer episodes and ground turn geometry.",
++    "Resolve near-domain errors and review dynamic/stop parameters before active metric driving."
++  ]
++}
+--- /dev/null
++++ b/demo/candidates/phase3-shadow/vision_planner_shadow_diag.c
+@@ -0,0 +1,113 @@
++#include "vision_drive_internal.h"
++#include "vision_planner_shadow_diag.h"
++#include "phase3_shadow_profile.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#if VISION_PLANNER_ACTIVE || !VISION_PLANNER_RUNTIME
++#error "Shadow diagnostic service requires runtime=1 and active=0."
++#endif
++#define SHADOW_ROWS 256U
++typedef struct {
++    uint32_t ms,epoch,frame,encoder,revision,poll_cycles,observe_cycles;
++    int16_t measured_mm_s,planned_mm_s,cap_mm_s;
++    uint16_t target_right,target_left;
++    uint8_t mode,status,flags;
++} shadow_row_t;
++static shadow_row_t rows[SHADOW_ROWS];
++static unsigned head,count,overwritten,run,frozen,loaded,was_running;
++static uint32_t recorded_revision,recorded_encoder,recorded_epoch;
++static uint32_t poll_max,observe_max,last_observe;
++static unsigned cycles_enabled;
++void vd_shadow_diag_init(void)
++{
++    head=count=overwritten=run=frozen=loaded=was_running=cycles_enabled=0;
++    recorded_revision=recorded_encoder=recorded_epoch=UINT32_MAX;poll_max=observe_max=last_observe=0;
++}
++#if VISION_HOST_SHADOW_DIAG
++extern uint32_t vision_test_shadow_cycles(void);
++static uint32_t cycles(void){return vision_test_shadow_cycles();}
++static void enable_cycles(void){cycles_enabled=1;}
++static uint32_t clock_hz(void){return 600000000U;}
++#else
++static uint32_t cycles(void){return cycles_enabled?DWT->CYCCNT:0;}
++static void enable_cycles(void)
++{
++    CoreDebug->DEMCR|=CoreDebug_DEMCR_TRCENA_Msk;
++    DWT->CTRL|=DWT_CTRL_CYCCNTENA_Msk;
++    cycles_enabled=(DWT->CTRL&DWT_CTRL_CYCCNTENA_Msk)!=0;
++}
++static uint32_t clock_hz(void){return SystemCoreClock;}
++#endif
++static int16_t millimetres(float x)
++{
++    if(!(x>=0&&x<=32.767f))return 0;
++    return (int16_t)(x*1000.0f);
++}
++static void record(uint32_t now,const vdr_info_t *s,uint32_t elapsed)
++{
++    shadow_row_t *r=&rows[head];memset(r,0,sizeof(*r));
++    r->ms=now;r->epoch=s->output_epoch;r->frame=s->frame_sequence;r->encoder=s->encoder_sequence;
++    r->revision=s->revision;r->poll_cycles=elapsed;r->observe_cycles=last_observe;
++    r->measured_mm_s=millimetres(s->measured_speed_m_s);r->planned_mm_s=millimetres(s->planned_speed_m_s);
++    r->cap_mm_s=millimetres(s->cap_m_s);r->target_right=s->target_right_ticks;r->target_left=s->target_left_ticks;
++    r->mode=(uint8_t)s->supervisor_mode;r->status=(uint8_t)s->planning_status;
++    r->flags=(uint8_t)(s->near_valid|(s->far_valid<<1)|(s->result_valid<<2)|(s->session_active<<3));
++    head=(head+1)%SHADOW_ROWS;if(count<SHADOW_ROWS)++count;else ++overwritten;
++    recorded_revision=s->revision;recorded_encoder=s->encoder_sequence;recorded_epoch=s->output_epoch;
++}
++void vd_shadow_diag_poll(uint32_t now)
++{
++    uint32_t start=cycles();vd_planner_runtime_poll(now);
++    if(!loaded)return;
++    uint32_t elapsed=cycles()-start;vdr_info_t s;vision_drive_planner_info(&s);
++    if(elapsed>poll_max)poll_max=elapsed;
++    unsigned running=vd.control.output.state==VC_RUNNING&&vd.output_authorized;
++    if(running&&!was_running&&!frozen){++run;recorded_revision=recorded_encoder=recorded_epoch=UINT32_MAX;}
++    if(running&&!frozen&&(s.revision!=recorded_revision||s.encoder_sequence!=recorded_encoder||s.output_epoch!=recorded_epoch))
++        record(now,&s,elapsed);
++    if(!running&&was_running&&count)frozen=1;
++    was_running=running;
++}
++void vd_shadow_diag_observe(const vision_result_t *road,uint32_t sequence,uint32_t capture,uint32_t now)
++{
++    uint32_t start=cycles();vd_planner_runtime_observe(road,sequence,capture,now);
++    if(!loaded)return;last_observe=cycles()-start;if(last_observe>observe_max)observe_max=last_observe;
++}
++int vd_shadow_diag_field(const char *command,char *response,unsigned capacity)
++{
++    if(strncmp(command,"planner",7))return 0;
++    if(vd.control.output.state==VC_RUNNING||vd.output_authorized){
++        snprintf(response,capacity,"[PLANNER] REJECT stop first\r\n");return 1;
++    }
++    if(count)frozen=1;was_running=0;
++    if(!strcmp(command,"planner_load")){
++        int ok=!count&&vision_drive_planner_configure(VDR_SHADOW,&phase3_shadow_configuration);
++        if(ok){loaded=1;enable_cycles();poll_max=observe_max=last_observe=0;}
++        snprintf(response,capacity,"[PLANNER_LOAD] %s profile=%s mode=SHADOW metric_active=0 legacy_PI=unchanged; requires stopped encoder-ready; clear retained rows before reload\r\n",
++            ok?"OK":"REJECT",PHASE3_SHADOW_PROFILE_ID);return 1;
++    }
++    if(!strcmp(command,"planner_clear")){
++        head=count=overwritten=frozen=0;recorded_revision=recorded_encoder=recorded_epoch=UINT32_MAX;
++        snprintf(response,capacity,"[PLANNER_CLEAR] OK; trace only; no drive authorization\r\n");return 1;
++    }
++    if(!strncmp(command,"planner_row ",12)){
++        const char *p=command+12;char *end;unsigned long index=strtoul(p,&end,10);
++        if(*p<'0'||*p>'9'||*end||index>=count||!frozen){snprintf(response,capacity,"[PLANNER_ROW] REJECT index/frozen\r\n");return 1;}
++        shadow_row_t *r=&rows[(head+SHADOW_ROWS-count+(unsigned)index)%SHADOW_ROWS];
++        snprintf(response,capacity,"[PLANNER_ROW] run=%u i=%lu ms=%lu epoch=%lu frame=%lu enc=%lu rev=%lu mode=%u status=%u flags=%u measured_mm_s=%d planned_mm_s=%d cap_mm_s=%d ticks_R/L=%u/%u poll_cycles=%lu observe_cycles=%lu\r\n",
++            run,index,(unsigned long)r->ms,(unsigned long)r->epoch,(unsigned long)r->frame,(unsigned long)r->encoder,(unsigned long)r->revision,
++            r->mode,r->status,r->flags,r->measured_mm_s,r->planned_mm_s,r->cap_mm_s,r->target_right,r->target_left,
++            (unsigned long)r->poll_cycles,(unsigned long)r->observe_cycles);return 1;
++    }
++    if(!strcmp(command,"planner")){
++        vdr_info_t s;vision_drive_planner_info(&s);
++        snprintf(response,capacity,"[PLANNER] profile=%s configured=%u mode=%u metric_active=0 source=%u session=%u plans=%lu waits=%lu seen=%lu near_geometry=%lu full_geometry=%lu status=%u supervisor=%u run=%u count=%u frozen=%u overwritten=%u cycles=%u cpu_hz=%lu poll_max_cycles=%lu observe_max_cycles=%lu; references=engineering-only; query stops; legacy PI/gains/PWM unchanged\r\n",
++            PHASE3_SHADOW_PROFILE_ID,s.configured,(unsigned)s.mode,vd_speed_source(),s.session_active,
++            (unsigned long)s.plans,(unsigned long)s.frame_waits,(unsigned long)s.observed_frames,
++            (unsigned long)s.near_geometry_frames,(unsigned long)s.full_geometry_frames,(unsigned)s.planning_status,(unsigned)s.supervisor_mode,
++            run,count,frozen,overwritten,cycles_enabled,(unsigned long)clock_hz(),(unsigned long)poll_max,(unsigned long)observe_max);
++        return 1;
++    }
++    snprintf(response,capacity,"[PLANNER] REJECT command; planner, planner_load, planner_row N, planner_clear\r\n");return 1;
++}
+--- /dev/null
++++ b/demo/candidates/phase3-shadow/vision_planner_shadow_diag.h
+@@ -0,0 +1,9 @@
++#ifndef SMARTCAR_VISION_PLANNER_SHADOW_DIAG_H
++#define SMARTCAR_VISION_PLANNER_SHADOW_DIAG_H
++#include "vision_planner_runtime.h"
++/* Explicit candidate-only wrapper. No PWM, PI or drive admission operations. */
++void vd_shadow_diag_init(void);
++void vd_shadow_diag_poll(uint32_t now);
++void vd_shadow_diag_observe(const vision_result_t *road,uint32_t sequence,uint32_t capture,uint32_t now);
++int vd_shadow_diag_field(const char *command,char *response,unsigned capacity);
++#endif
+--- /dev/null
++++ b/tests/planning/test_shadow_candidate.c
+@@ -0,0 +1,55 @@
++/* Real private candidate/field/PI modules; timers, counters and PWM are fake. */
++#include "../support/fixtures/switch_io.h"
++#include "vision_drive_internal.h"
++#include "vision_planner_shadow_diag.h"
++#include "phase3_shadow_profile.h"
++static uint32_t fake_cycles;
++uint32_t vision_test_shadow_cycles(void){fake_cycles+=100;return fake_cycles;}
++void vision_test_output_hook(unsigned stage){(void)stage;}
++static char reply[VF_RESPONSE_CAPACITY];
++static void command(const char *s)
++{
++    vf_parser_t parser;vf_init(&parser);CHECK(vf_feed(&parser,'@',now,reply)==1);
++    while(*s){CHECK(vf_feed(&parser,(uint8_t)*s++,now,reply)==1);}
++    CHECK(vf_feed(&parser,'\n',now,reply)==2);
++}
++static void boot(void)
++{
++    switch_boot(1);switch_wait(10,1);set_lane(17);switch_delta_left=-1;switch_delta_right=1;
++    CHECK(!vision_drive_is_local()&&!pwm[0]&&!pwm[1]);
++}
++static void waveform(uint16_t *out,int load)
++{
++    boot();if(load){command("planner_load");CHECK(strstr(reply,"OK")&&strstr(reply,"mode=SHADOW"));}
++    CHECK(vd_speed_source()==VD_SPEED_LEGACY);
++    CHECK(info().kp_q8==256&&info().ki_q8==12); /* Original PI, not measured test gains. */
++    switch_wait(10,1); /* Field commands STOP; observe the original stable OFF before ON. */
++    switch_a=0;switch_wait(40,1);CHECK(vision_drive_is_local());
++    for(unsigned j=0;j<100;++j){switch_step(1);out[j*2]=(uint16_t)pwm[0];out[j*2+1]=(uint16_t)pwm[1];}
++}
++int main(void)
++{
++    uint16_t baseline[200],shadow[200];waveform(baseline,0);waveform(shadow,1);
++    CHECK(!memcmp(baseline,shadow,sizeof(baseline)));
++    CHECK(vp_config_valid(&phase3_shadow_configuration.planning.planner));
++    vdr_info_t s;vision_drive_planner_info(&s);CHECK(s.configured&&s.mode==VDR_SHADOW&&s.plans>0);
++    printf("SHADOW CANDIDATE plans=%lu source=%u; identical legacy PWM sequence\n",(unsigned long)s.plans,vd_speed_source());
++    /* Direct service calls cannot sneak in a query/load during a run. */
++    CHECK(vd_shadow_diag_field("planner_load",reply,sizeof(reply))&&strstr(reply,"REJECT stop first"));
++    CHECK(vision_drive_is_local()&&vd_speed_source()==VD_SPEED_LEGACY);
++    for(unsigned j=0;j<300;++j)switch_step(1);
++    command("planner");CHECK(!pwm[0]&&!pwm[1]&&strstr(reply,"configured=1")&&strstr(reply,"metric_active=0"));
++    CHECK(strstr(reply,"count=256")&&strstr(reply,"frozen=1")&&!strstr(reply,"overwritten=0 "));
++    CHECK(strstr(reply,"cycles=1")&&strstr(reply,"source=0"));
++    command("planner_row 0");CHECK(strstr(reply,"[PLANNER_ROW] run=1 i=0")&&strstr(reply,"poll_cycles="));
++    char saved[VF_RESPONSE_CAPACITY];strcpy(saved,reply);
++    command("planner_load");CHECK(strstr(reply,"REJECT"));
++    command("planner_row 0");CHECK(!strcmp(saved,reply));
++    command("planner_row 256");CHECK(strstr(reply,"REJECT"));
++    command("planner_row -1");CHECK(strstr(reply,"REJECT"));
++    command("planner_row 0x1");CHECK(strstr(reply,"REJECT"));
++    command("planner_clear");CHECK(strstr(reply,"OK"));command("planner");CHECK(strstr(reply,"count=0"));
++    CHECK(!vd_shadow_diag_field("status",reply,sizeof(reply)));
++    CHECK(vd_speed_source()==VD_SPEED_LEGACY&&!pwm[0]&&!pwm[1]);
++    printf("SHADOW CANDIDATE PASS %u checks; simulated IO and cycle counter\n",checks);return 0;
++}
+--- /dev/null
++++ b/tests/planning/test_shadow_preparation.py
+@@ -0,0 +1,102 @@
++"""Measured-data transforms and the actual private shadow candidate, no device."""
++import copy
++import csv
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++import xml.etree.ElementTree as ET
++
++ROOT=Path(__file__).resolve().parents[2]
++sys.path.insert(0,str(ROOT))
++from tools.prepare_phase3_shadow import prepare
++from tools.speed_planning.phase3_profile import PROFILE,build_profile,header,project,validate_profile
++from tools.speed_planning.replay import compile_command
++from tools.speed_planning.visual_trace import decode_frame
++
++
++class ShadowPreparation(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        parent=ROOT/'.build/phase3-shadow-tests';parent.mkdir(parents=True,exist_ok=True)
++        cls.temp=tempfile.TemporaryDirectory(dir=parent);cls.addClassCleanup(cls.temp.cleanup)
++        cls.folder=Path(cls.temp.name);cls.profile=json.loads(PROFILE.read_text('utf-8'))
++        cls.manifest=prepare(cls.folder/'candidate');cls.code=Path(cls.manifest['output'])/'workspace/demo/code'
++
++    def test_profile_matches_sources_and_retains_unknowns(self):
++        self.assertEqual(self.profile,build_profile())
++        self.assertFalse(self.profile['productionApproved']);self.assertFalse(self.profile['activeMetricControlAllowed'])
++        self.assertTrue(all(v is None for v in self.profile['unresolved'].values()))
++        self.assertIn('SP_SIMULATION',header(self.profile))
++        bad=copy.deepcopy(self.profile);bad['runtimeConfig']['limits']['latency_s']=.004
++        with self.assertRaises(ValueError):validate_profile(bad)
++        bad=copy.deepcopy(self.profile);bad['runtimeConfig']['ticks_per_metre_left']=12358
++        with self.assertRaises(ValueError):validate_profile(bad)
++
++    def test_homography_uses_exact_preview_sampling_and_metres(self):
++        source=json.loads((ROOT/'docs/changes/phase2-calibration-20261108/ground-homography-origin-corrected.json').read_text('utf-8'))
++        original=source['homographyImageToRearGroundMm'];converted=self.profile['measured']['groundMapping']['runtimeHomographyMetres']
++        for p in source['points']:
++            u,v=p['measuredImageUvMean'];a=project(original,u,v);b=project(converted,u*2,v*2)
++            for x,y in zip(a,b):self.assertAlmostEqual(x*.001,y,places=12)
++        self.assertEqual(self.profile['runtimeConfig']['compensate'],0)
++
++    def test_projects_share_one_image_and_only_download_opt_in_differs(self):
++        a=ET.parse(self.manifest['project']);b=ET.parse(self.manifest['downloadProject'])
++        self.assertEqual(a.findtext('.//UpdateFlashBeforeDebugging'),'0');self.assertEqual(b.findtext('.//UpdateFlashBeforeDebugging'),'1')
++        b.find('.//UpdateFlashBeforeDebugging').text='0';self.assertEqual(ET.tostring(a.getroot()),ET.tostring(b.getroot()))
++        defines=a.findtext('.//Cads/VariousControls/Define');self.assertIn('VISION_PLANNER_ACTIVE=0',defines)
++        self.assertNotIn('VISION_PLANNER_PROFILE_REVIEWED=1',defines)
++        self.assertTrue(all(n.text=='0' for n in a.iter() if n.tag.startswith('RunUserProg')))
++        self.assertEqual((self.code/'vision_speed.c').read_bytes(),(ROOT/'demo/code/vision_speed.c').read_bytes())
++        self.assertEqual((self.code/'vision_actuator.c').read_bytes(),(ROOT/'demo/code/vision_actuator.c').read_bytes())
++        self.assertIn('build=PHASE3_C26_SHADOW_20261109_1',(self.code/'vision_field.c').read_text('utf-8'))
++        self.assertFalse(self.manifest['autoLoadOrArm']);self.assertFalse(self.manifest['flashed'])
++
++    def test_native_candidate_keeps_legacy_pwm_and_retains_stop_only_trace(self):
++        family=os.environ.get('SMARTCAR_TEST_COMPILER','gcc');mode=os.environ.get('SMARTCAR_TEST_MODE','optimized')
++        compiler=os.environ.get('SMARTCAR_TEST_COMPILER_PATH') or shutil.which('cl' if family=='msvc' else 'gcc')
++        catalog=json.loads((ROOT/'tests/suites/catalog.json').read_text('utf-8'))
++        suite=next(s for s in catalog['suites'] if s['id']=='planner-runtime')
++        variant=next(v for v in suite['entrypoint']['variants'] if v['id']=='shadow')
++        candidate=Path(self.manifest['output'])/'workspace'
++        sources=[ROOT/'tests/planning/test_shadow_candidate.c']+[candidate/s for s in variant['sources'][1:]]+[self.code/'vision_planner_shadow_diag.c']
++        exe=self.folder/'candidate-test.exe'
++        cmd=compile_command(compiler,family,mode,sources,[ROOT/'tests/vision/stubs',self.code],exe)
++        defines=variant['defines']+['VISION_HOST_SHADOW_DIAG=1']
++        cmd[1:1]=[('/D' if family=='msvc' else '-D')+s for s in defines]
++        built=subprocess.run(cmd,capture_output=True,text=True,timeout=90);self.assertEqual(built.returncode,0,built.stderr)
++        result=subprocess.run([exe],capture_output=True,text=True,timeout=30)
++        print(result.stdout,flush=True);self.assertEqual(result.returncode,0,result.stdout+result.stderr)
++
++    def test_original_750_images_expose_candidate_geometry_coverage(self):
++        folder=ROOT/'docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04'
++        saved=json.loads((folder/'session.json').read_text('utf-8'));raw=self.folder/'original.gray'
++        with raw.open('wb') as file:
++            for i,metadata in enumerate(saved['frames']):
++                blob=(folder/metadata['file']).read_bytes();decoded=decode_frame(blob,saved['frozen']['gen'],i)
++                self.assertTrue(all(decoded[k]==metadata[k] for k in decoded));file.write(blob[96:])
++        family=os.environ.get('SMARTCAR_TEST_COMPILER','gcc');mode=os.environ.get('SMARTCAR_TEST_MODE','optimized')
++        compiler=os.environ.get('SMARTCAR_TEST_COMPILER_PATH') or shutil.which('cl' if family=='msvc' else 'gcc')
++        source_names=['demo/code/vision_midterm.c','demo/code/vision_metric_io.c','demo/code/vision_planner.c',
++                      'demo/code/vision_planner_shadow.c','tools/speed_planning/vision_adapter.c','tools/speed_planning/speed_planner.c']
++        sources=[ROOT/'tests/planning/shadow_geometry_runner.c']+[ROOT/n for n in source_names]
++        exe=self.folder/'geometry.exe';destination=self.folder/'geometry.csv'
++        cmd=compile_command(compiler,family,mode,sources,[ROOT/'demo/code',self.code],exe)
++        flags=['VISION_MIDTERM_TRAINING=1','VISION_PLANNER_RUNTIME=1','VISION_ROUTE_SWITCH=1',
++               'VISION_ENCODER_ENABLE=1','VISION_MIDTERM_ROUTE_TRIAL=1','VISION_MIDTERM_AUTONOMOUS=0']
++        cmd[1:1]=[('/D' if family=='msvc' else '-D')+s for s in flags]
++        built=subprocess.run(cmd,capture_output=True,text=True,timeout=60);self.assertEqual(built.returncode,0,built.stderr)
++        result=subprocess.run([exe,raw,destination],capture_output=True,text=True,timeout=60)
++        self.assertEqual(result.returncode,0,result.stdout+result.stderr);print(result.stdout,flush=True)
++        with destination.open() as file:rows=list(csv.DictReader(file))
++        self.assertEqual(len(rows),750)
++        near=sum(int(r['near_geometry']) for r in rows);full=sum(int(r['full_geometry']) for r in rows)
++        self.assertTrue(0<full<=near<750) # This scene is not an all-domain acceptance fixture.
++
++
++if __name__=='__main__':unittest.main(verbosity=2)
+--- /dev/null
++++ b/tests/planning/shadow_geometry_runner.c
+@@ -0,0 +1,25 @@
++/* Offline probe: actual original images and current native vision + measured
++ * candidate mapping. No motion, PI, motor authorization or physical truth. */
++#include "vision_planner_runtime.h"
++#include "phase3_shadow_profile.h"
++#include <stdio.h>
++static uint8_t gray[VISION_WIDTH*VISION_HEIGHT],binary[VISION_WIDTH*VISION_HEIGHT];
++int main(int argc,char **argv)
++{
++    if(argc!=3)return 2;FILE *in=fopen(argv[1],"rb"),*out=fopen(argv[2],"w");
++    if(!in||!out)return 3;
++    vision_midterm_reset();vm_vision_t state;vm_vision_init(&state);
++    unsigned frames=0,near=0,far=0;
++    fprintf(out,"index,raw_valid,confidence,centre70,flags70,near_geometry,full_geometry\n");
++    while(fread(gray,1,sizeof(gray),in)==sizeof(gray)){
++        vision_result_t road;vm_frame_t mapped;
++        vision_midterm_process(gray,binary,&road);
++        vm_vision_frame(&state,&phase3_shadow_configuration.vision,&road,frames+1,100+frames*20,104+frames*20,&mapped);
++        near+=mapped.near_valid;far+=mapped.far_valid;
++        fprintf(out,"%u,%u,%u,%u,%u,%u,%u\n",frames,road.valid,road.confidence,road.center[70],road.row_flags[70],mapped.near_valid,mapped.far_valid);
++        ++frames;
++    }
++    if(ferror(in)||ferror(out))return 4;fclose(in);if(fclose(out))return 4;
++    printf("SHADOW GEOMETRY frames=%u near=%u full=%u; native replay, no physical validity claim\n",frames,near,far);
++    return frames==750?0:5;
++}
+--- /dev/null
++++ b/docs/changes/phase3-shadow-preparation-20261109/README.md
+@@ -0,0 +1,67 @@
++# Phase3 主C26影子工程：数据更新与烧录准备
++
++2026-11-09，北京时间。按用户确认，整理主C26影子模式：加载已有Phase2实测候选，记录米制规划结果，电机仍由原C26控制。**本轮只生成、构建和检查工程，未连接串口、烧录、复位或驱动车辆。**
++
++## 工程入口
++
++- **下载工程：** [MPC_Phase3_Shadow_Download.uvprojx](../../../.build/phase3-shadow-preparation-20261109/delivery/workspace/demo/mdk/competition/MPC_Phase3_Shadow_Download.uvprojx)
++- **纯构建工程：** [MPC_Phase3_Shadow.uvprojx](../../../.build/phase3-shadow-preparation-20261109/delivery/workspace/demo/mdk/competition/MPC_Phase3_Shadow.uvprojx)
++- **构建身份：** `PHASE3_C26_SHADOW_20261109_1`，可从`@status`的`build=`字段核对。
++- **候选参数：** [phase3-c26-shadow-20261109.json](../../../profiles/phase3-c26-shadow-20261109.json)，配置ID `C26-SHADOW-FA161BDE`。
++
++两个工程指向同一个隔离源码副本、同一Objects目录和同一个AXF，仅调试下载选项不同。没有修改主工程开关，也没有改写既有Phase2冻结工程或板载记录。`.build`是本机可重建产物，路径在其他电脑需按下面命令重建，不能用归档项目路径冒充可移植安装包。
++
++`VISION_PLANNER_RUNTIME=1`、`VISION_PLANNER_ACTIVE=0`、`VISION_PLANNER_PROFILE_REVIEWED=0`。重启不会自动加载候选配置，也不会由新增代码授予动力。原PI增益、目标算法、PWM上限、舵机及C26准入保持原工程行为；**影子配置里的40计数换算速度、250‰字段不会限制或替换原驱动。**
++
++## 数据已怎样更新
++
++| 数据 | 本轮接入方式 |
++| --- | --- |
++| 尺寸与编码器 | 汇入已记录轴距197mm、轮距152.9mm、相机尺寸、已采用CPR与−1/+1方向；原始来源与SHA保留。 |
++| 距离尺度 | 使用两次1m直推候选左11394、右11389 counts/m进行影子速度/路程计算；不修改CPR或原驱动尺度。 |
++| 地面矩阵 | 采用原点更正后的后轴矩阵。预览取原图偶数像素，因此按`H原图米 = diag(.001,.001,1) × H预览毫米 × diag(.5,.5,1)`转换；没有添加半像素偏移。 |
++| 采样与域 | 根据拟合距离范围生成7个内部采样行，近预览使用前5行。采样是计算结果，不是新增实测点；保留已采样地面矩形，补偿关闭。 |
++| 响应与停车 | 汇入目标40的1500/2500ms落地、尺测410±20/730±10mm、末窗跟踪统计及软件零后的轮端停车尾段，同时保留三条历史滑行分析。 |
++| 视觉与时序 | 保留750帧失效/恢复及静止256帧3—4ms统计，明确不是RUNNING/MPC端到端延迟。 |
++| 未定参数 | 制动、jerk、侧向限制、运行延迟、动态恢复预算的最终值仍为null；为运行影子算法而使用的现有Host工程参考另列`parameterClasses`，生成C配置标记`SP_SIMULATION`，没有冒充实测或生产参数。 |
++
++最大速度字段是原132 counts/10ms软件范围按候选尺度换算的诊断范围，并非测得最高车速。请求速度由目标40 counts/10ms换算，约0.35114m/s。连续性、零速及近远场预算仍为影子实验设置。实际PI保持原Kp1/Ki0.05输入量化值；Phase2测得的Kp2/KiQ8=25仅作为数据记录，没有在本轮换入原控制。
++
++旧[Phase2缺项表](../phase2-calibration-20261108/PHASE2_REMAINING.md)已更新：已做的落地闭环、停车和矩阵校核不再写成未测，用户跳过的目标30不重新列为必测。真正缺测仍是运行构型完整时延、地面短弧/侧向性能和同步动态视觉里程；其余先整理已有数据，再按实际缺口验证。
++
++## 停机读回与记录
++
++烧录或RST前保持C26/C27均OFF、动力隔离，先确认工程身份、STOP及输出状态。新镜像沿用原主C26通信路由；先核对当前串口和owner，再发字段命令。当前Phase2最后实测镜像仍有独立[交接入口](../phase2-calibration-20261108/DELIVERY_STATUS.md)，不要把其转弯诊断命令或RAM配置直接用于本工程。
++
++1. `@status`：核对`build=PHASE3_C26_SHADOW_20261109_1`。
++2. `@planner_load`：仅在停机、编码器原配置就绪时加载影子候选，成功返回`OK`、配置ID和`mode=SHADOW`。不启动电机，不自动改PI。
++3. `@planner`：查看configured、mode、source、plans、waits、seen、near_geometry、full_geometry、记录状态与DWT周期统计。`mode=1/source=0/metric_active=0`对应影子计算、旧目标源。
++4. 实际ON会话仍需原C26稳定OFF→ON及有效视觉准入。所有`@`查询都按原字段协议先STOP，所以**运行中不轮询查询**；候选自身没有新增运行中UART/SD写入。
++5. 停机后先`@planner`，再`@planner_row 0`至`count-1`读取。记录为256行有界环，覆盖数量由overwritten给出；STOP后冻结。未清理的冻结记录不会因新ON自动覆盖，新ON不受此诊断缓存阻塞。
++6. 完成导出后才显式`@planner_clear`。该命令只清诊断记录，不授予驱动；重新加载配置前也需清空已有记录。
++
++行中时间是板端毫秒；epoch/frame/enc/rev绑定会话、图像、编码器和规划版本；measured/planned/cap单位mm/s，ticks_R/L单位counts/10ms。flags位0/1/2/3分别为near有效、full有效、候选有效、监督会话有效。结果只是影子候选，不能作为实际已提交PWM。ASCII诊断行没有新增板端CRC；采集应保留串口原文、run/索引/冻结状态并在PC归档校验。
++
++DWT统计分别覆盖视觉米制适配与监督/规划poll，单位CPU周期；cpu_hz来自SystemCoreClock。它们不覆盖整个采集→电气PWM链路，也不是保证WCET。记录本身、查询发送和其他系统负载的代价不合并成该统计。
++
++## 重要的实际图像核对结果
++
++本轮对已有750帧原始图逐帧重核CRC，再运行当前原生视觉算法与这份米制矩阵/采样域，**近几何36帧、完整几何3帧可用**。这不同于原控制记录中的750帧near有效/419帧far有效：两者有效性定义不同，米制入口还要求全部采样行双边实测并位于候选域内。
++
++例如首帧70行中心约91像素，矩阵投影横向约−0.119m，超出当前已采样±0.1m矩形。这是本轮离线组合暴露的适配/覆盖问题，不能把此场景包装成米制全域通过；也不证明相机姿态从标定到采集完全一致。工程保留seen/near_geometry/full_geometry和规划状态，用于上板定位；这些影子拒绝不停止原控制。合成车道的接口测试通过，不能替代真实图像域覆盖。
++
++## 复现与验证
++
++```powershell
++python -m tools.speed_planning.phase3_profile
++python tools/prepare_phase3_shadow.py --output .build/phase3-shadow-rebuild --build
++python tools/testing/run_tests.py --profile Host --suite phase3-shadow-preparation --compiler gcc --jobs 1
++```
++
++生成器核对输入SHA与完整候选内容后才创建新目录；构建只调用Keil重编译和fromelf，不调用下载参数。构建和下载项目的唯一预期差异是`UpdateFlashBeforeDebugging`。最终Host、静态选择、Keil日志、SHA和源码快照摘要见本目录`evidence.json`及`evidence/`。
++
++专项包含：预览/原图及mm/m的逐点独立变换对照、篡改候选拒绝、原PI/PWM序列逐项一致、停机查询及冻结保留、越界索引拒绝，以及真实750帧域覆盖检查。主工程默认关闭、其他构型和Phase2冻结镜像保持独立；本轮不宣称MSVC/ASan、完整PreFlash、实车跟踪或生产放行。
++
++最终GCC optimized Host：`20261109T020349-ab0a2b1ce4`，**58 PASS / 1 SKIPPED**；跳过仍为缺数据集/批准基线的performance-host。静态安全/工程结构选择：`20261109T020400-635e67c20c`，连同environment共3 PASS。候选Keil完整构建**0错误、0警告**，Code103672、RO14996、RW212、ZI211116字节。影子专项原生3498条断言通过，100组左右PWM逐项等于未加载影子时的原PI结果；750帧实际图像检查报告的是覆盖范围，不能把该专项PASS解释为全域几何合格。
++
++证据层：源码、原生JSON/CSV、二进制帧和Keil XML为`structured_parsed`；CRC/SHA、坐标换算、回放、Host与构建为`computed`。人工尺寸/尺测仍按操作者报告注明；没有仅`md_extracted`关键数值，没有新增`pdf_verified`或物理时序证据。自查覆盖单位、坐标原点、参考值标签、单writer/旧PI隔离、构建下载分离和最终哈希；全局配置、技能及持久Agent行为未改。

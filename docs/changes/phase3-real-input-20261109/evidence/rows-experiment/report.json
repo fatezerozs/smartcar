@@ -1,0 +1,85 @@
+{
+  "scope": "Actual original images and current C detector/metric adapter; rejection audit, no correctness ground truth or active control approval",
+  "profileId": "C26-SHADOW-FA161BDE",
+  "frames": 750,
+  "sourceFramesCrcAndShaVerified": 750,
+  "classificationMatchedActualAdapterForAllFrames": true,
+  "uniformRelativeTimeModelMs": 20,
+  "sourceSession": "docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04",
+  "counts": {
+    "near": {
+      "accepted": 66,
+      "source_invalid_or_quality": 0,
+      "requested_row_not_two_measured_edges": 229,
+      "adapter_geometry_or_history": 3,
+      "outside_configured_ground_domain": 452,
+      "near_geometry_required": 0
+    },
+    "full": {
+      "accepted": 3,
+      "source_invalid_or_quality": 0,
+      "requested_row_not_two_measured_edges": 287,
+      "adapter_geometry_or_history": 64,
+      "outside_configured_ground_domain": 394,
+      "near_geometry_required": 2
+    }
+  },
+  "experimentalPairedRowResampling": true,
+  "scopeEndpointsChanged": false,
+  "plannerComposition": {
+    "encoder": "explicit synthetic stationary feedback; no measured motion",
+    "admission": "diagnostic caller assertion, not physical C26 authorization",
+    "armIndices": [
+      560
+    ],
+    "readyIndices": [],
+    "supervisorModeCounts": {
+      "0": 560,
+      "1": 1,
+      "6": 189
+    },
+    "peakTicksRight": 0,
+    "peakTicksLeft": 0,
+    "autoRearmAfterLatch": false
+  },
+  "compileCommand": [
+    "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-DVISION_MIDTERM_TRAINING=1",
+    "-DVISION_PLANNER_RUNTIME=1",
+    "-DVISION_ROUTE_SWITCH=1",
+    "-DVISION_ENCODER_ENABLE=1",
+    "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+    "-DVISION_MIDTERM_AUTONOMOUS=0",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-real-input-20261109\\final-resample",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\metric_input_audit.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase3-real-input-20261109\\final-resample\\metric-audit.exe"
+  ],
+  "sourceSha256": {
+    "tools/speed_planning/metric_input_audit.c": "d92962a7f23653065e7f24af77049d528fb5ed5262e721e5d170312b6c26e8a5",
+    "demo/code/vision_midterm.c": "f657b32f0802fafc9f3e91f29dd9dc05b05f158a7399fcab5cc4b2332d5d2586",
+    "demo/code/vision_metric_io.c": "f14f1e6d2bfb266b6cba8145fcd24536c70c00313f114c39f25a14189f239cb9",
+    "demo/code/vision_planner.c": "ac3e74aba4f360314ce702b70004c7e60c54d650552f5c09f20f18d15a132e98",
+    "demo/code/vision_planner_shadow.c": "8bc89fb4d8c542584156056d779f0ac488ce03d91f684b8bf8bb98280143a7aa",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "tools/speed_planning/speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448"
+  },
+  "profileSha256": "79afc16033dcc173b610267c6d68b7b8a5f727a7fbca78eb404dec9993b8e0d1",
+  "hardwareAccessed": false,
+  "firmwareChanged": false,
+  "domainChanged": false,
+  "productionApproved": false
+}

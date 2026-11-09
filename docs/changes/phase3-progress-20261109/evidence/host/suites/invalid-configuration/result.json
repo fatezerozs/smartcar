@@ -1,0 +1,313 @@
+{
+  "schemaVersion": "1.0",
+  "id": "invalid-configuration",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "contract",
+  "category": "configuration-contract",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.479898,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:09:13.843+00:00",
+  "finishedAt": "2026-11-09T10:09:14.323+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MIDTERM_AUTO_TRACK=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-track-incomplete\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-track-incomplete",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.050517,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DVISION_ROUTE_SWITCH=1",
+        "-DVISION_ENCODER_ENABLE=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-route-incomplete\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-route-incomplete",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.049187,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ENCODER_ENABLE=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\route-no-encoder\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\route-no-encoder",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.053812,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+        "-DVISION_MIDTERM_TRAINING=1",
+        "-DVISION_ENCODER_ENABLE=1",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\route-auto-no-switch\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\route-auto-no-switch",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.051773,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MOTION_DIAG=1",
+        "-DVISION_MOTOR_THRESHOLD_DIAG=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\motion-no-threshold\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\motion-no-threshold",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.063193,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_MIDTERM_AUTONOMOUS=1",
+        "-DVISION_ENCODER_ENABLE=0",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\configuration_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-no-encoder\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\auto-no-encoder",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.053342,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+        "-DVISION_PLANNER_ACTIVE=1",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\suites\\contract\\planner_gate.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\planner-active-unreviewed\\invalid-configuration.exe",
+        "-lm"
+      ],
+      "exitCode": 1,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration\\artifacts\\planner-active-unreviewed",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.04617,
+      "stage": "compile"
+    }
+  ],
+  "variants": [
+    {
+      "id": "auto-track-incomplete",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MIDTERM_AUTO_TRACK=1"
+      ],
+      "expectCompileFailure": "Auto-track requires autonomous",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "auto-route-incomplete",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MIDTERM_AUTONOMOUS=1",
+        "VISION_ROUTE_SWITCH=1",
+        "VISION_ENCODER_ENABLE=1"
+      ],
+      "expectCompileFailure": "Autonomous route switch requires",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "route-no-encoder",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MIDTERM_ROUTE_TRIAL=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_ENCODER_ENABLE=0"
+      ],
+      "expectCompileFailure": "Route training requires explicit",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "route-auto-no-switch",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MIDTERM_ROUTE_TRIAL=1",
+        "VISION_MIDTERM_TRAINING=1",
+        "VISION_ENCODER_ENABLE=1",
+        "VISION_MIDTERM_AUTONOMOUS=1"
+      ],
+      "expectCompileFailure": "Route training must not enable autonomous boot",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "motion-no-threshold",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MOTION_DIAG=1",
+        "VISION_MOTOR_THRESHOLD_DIAG=0"
+      ],
+      "expectCompileFailure": "Motion diagnostic requires",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "auto-no-encoder",
+      "sources": [
+        "tests/suites/contract/configuration_probe.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_MIDTERM_AUTONOMOUS=1",
+        "VISION_ENCODER_ENABLE=0"
+      ],
+      "expectCompileFailure": "Autonomous midterm requires",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    },
+    {
+      "id": "planner-active-unreviewed",
+      "sources": [
+        "tests/suites/contract/planner_gate.c"
+      ],
+      "includeDirectories": [
+        "demo/code"
+      ],
+      "defines": [
+        "VISION_PLANNER_ACTIVE=1"
+      ],
+      "expectCompileFailure": "Active metric planner requires reviewed PI/supervisor integration",
+      "mode": "optimized",
+      "compilerFamily": "gcc"
+    }
+  ],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\invalid-configuration",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "host_compile",
+    "effectiveResources": [],
+    "lastRawExitCode": 1
+  }
+}

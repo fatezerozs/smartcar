@@ -1,0 +1,138 @@
+    vd_planner_runtime_output
+        0x80010134:    b570        p.      PUSH     {r4-r6,lr}
+        0x80010136:    b1d9        ..      CBZ      r1,0x80010170 ; vd_planner_runtime_output + 60
+        0x80010138:    4614        .F      MOV      r4,r2
+        0x8001013a:    b1ca        ..      CBZ      r2,0x80010170 ; vd_planner_runtime_output + 60
+        0x8001013c:    4606        .F      MOV      r6,r0
+        0x8001013e:    2000        .       MOVS     r0,#0
+        0x80010140:    460d        .F      MOV      r5,r1
+        0x80010142:    8020         .      STRH     r0,[r4,#0]
+        0x80010144:    8008        ..      STRH     r0,[r1,#0]
+        0x80010146:    b19e        ..      CBZ      r6,0x80010170 ; vd_planner_runtime_output + 60
+        0x80010148:    7e30        0~      LDRB     r0,[r6,#0x18]
+        0x8001014a:    b188        ..      CBZ      r0,0x80010170 ; vd_planner_runtime_output + 60
+        0x8001014c:    48bd        .H      LDR      r0,[pc,#756] ; [0x80010444] = 0x200003c0
+        0x8001014e:    f890102e    ....    LDRB     r1,[r0,#0x2e]
+        0x80010152:    b169        i.      CBZ      r1,0x80010170 ; vd_planner_runtime_output + 60
+        0x80010154:    7d01        .}      LDRB     r1,[r0,#0x14]
+        0x80010156:    2902        .)      CMP      r1,#2
+        0x80010158:    d10a        ..      BNE      0x80010170 ; vd_planner_runtime_output + 60
+        0x8001015a:    7841        Ax      LDRB     r1,[r0,#1]
+        0x8001015c:    b141        A.      CBZ      r1,0x80010170 ; vd_planner_runtime_output + 60
+        0x8001015e:    4abb        .J      LDR      r2,[pc,#748] ; [0x8001044c] = 0x2002e270
+        0x80010160:    6b00        .k      LDR      r0,[r0,#0x30]
+        0x80010162:    6831        1h      LDR      r1,[r6,#0]
+        0x80010164:    f8d221a0    ...!    LDR      r2,[r2,#0x1a0]
+        0x80010168:    4291        .B      CMP      r1,r2
+        0x8001016a:    bf08        ..      IT       EQ
+        0x8001016c:    4281        .B      CMPEQ    r1,r0
+        0x8001016e:    d001        ..      BEQ      0x80010174 ; vd_planner_runtime_output + 64
+        0x80010170:    2000        .       MOVS     r0,#0
+        0x80010172:    bd70        p.      POP      {r4-r6,pc}
+        0x80010174:    48b6        .H      LDR      r0,[pc,#728] ; [0x80010450] = 0x2001c79c
+        0x80010176:    6871        qh      LDR      r1,[r6,#4]
+        0x80010178:    f8d00240    ..@.    LDR      r0,[r0,#0x240]
+        0x8001017c:    4281        .B      CMP      r1,r0
+        0x8001017e:    d1f7        ..      BNE      0x80010170 ; vd_planner_runtime_output + 60
+        0x80010180:    2001        .       MOVS     r0,#1
+        0x80010182:    f7fef80d    ....    BL       timer_get ; 0x8000e1a0
+        0x80010186:    e9d61204    ....    LDRD     r1,r2,[r6,#0x10]
+        0x8001018a:    1a40        @.      SUBS     r0,r0,r1
+        0x8001018c:    4290        .B      CMP      r0,r2
+        0x8001018e:    d2ef        ..      BCS      0x80010170 ; vd_planner_runtime_output + 60
+        0x80010190:    f7f7ff8a    ....    BL       eligible ; 0x800080a8
+        0x80010194:    2800        .(      CMP      r0,#0
+        0x80010196:    d0eb        ..      BEQ      0x80010170 ; vd_planner_runtime_output + 60
+        0x80010198:    e9d60102    ....    LDRD     r0,r1,[r6,#8]
+        0x8001019c:    462a        *F      MOV      r2,r5
+        0x8001019e:    4623        #F      MOV      r3,r4
+        0x800101a0:    e8bd4070    ..p@    POP      {r4-r6,lr}
+        0x800101a4:    f000bf26    ..&.    B.W      vd_speed_metric_cached ; 0x80010ff4
+
+    vd_speed_metric_cached
+        0x80010ff4:    b5f8        ..      PUSH     {r3-r7,lr}
+        0x80010ff6:    4615        .F      MOV      r5,r2
+        0x80010ff8:    4602        .F      MOV      r2,r0
+        0x80010ffa:    2000        .       MOVS     r0,#0
+        0x80010ffc:    b33d        =.      CBZ      r5,0x8001104e ; vd_speed_metric_cached + 90
+        0x80010ffe:    461c        .F      MOV      r4,r3
+        0x80011000:    b32b        +.      CBZ      r3,0x8001104e ; vd_speed_metric_cached + 90
+        0x80011002:    8020         .      STRH     r0,[r4,#0]
+        0x80011004:    8028        (.      STRH     r0,[r5,#0]
+        0x80011006:    f3ef8610    ....    MRS      r6,PRIMASK
+        0x8001100a:    f3ef8310    ....    MRS      r3,PRIMASK
+        0x8001100e:    b672        r.      CPSID    i
+        0x80011010:    4bdf        .K      LDR      r3,[pc,#892] ; [0x80011390] = 0x20000100
+        0x80011012:    789f        .x      LDRB     r7,[r3,#2]
+        0x80011014:    b1cf        ..      CBZ      r7,0x8001104a ; vd_speed_metric_cached + 86
+        0x80011016:    6a18        .j      LDR      r0,[r3,#0x20]
+        0x80011018:    4290        .B      CMP      r0,r2
+        0x8001101a:    d115        ..      BNE      0x80011048 ; vd_speed_metric_cached + 84
+        0x8001101c:    4fdd        .O      LDR      r7,[pc,#884] ; [0x80011394] = 0x2002d7a8
+        0x8001101e:    6838        8h      LDR      r0,[r7,#0]
+        0x80011020:    4288        .B      CMP      r0,r1
+        0x80011022:    d111        ..      BNE      0x80011048 ; vd_speed_metric_cached + 84
+        0x80011024:    68b8        .h      LDR      r0,[r7,#8]
+        0x80011026:    b978        x.      CBNZ     r0,0x80011048 ; vd_speed_metric_cached + 84
+        0x80011028:    4887        .H      LDR      r0,[pc,#540] ; [0x80011248] = 0x2002e270
+        0x8001102a:    f8d00188    ....    LDR      r0,[r0,#0x188]
+        0x8001102e:    b958        X.      CBNZ     r0,0x80011048 ; vd_speed_metric_cached + 84
+        0x80011030:    f7f3f883    ....    BL       OUTLINED_FUNCTION_0 ; 0x8000413a
+        0x80011034:    6879        yh      LDR      r1,[r7,#4]
+        0x80011036:    1a40        @.      SUBS     r0,r0,r1
+        0x80011038:    281d        .(      CMP      r0,#0x1d
+        0x8001103a:    d805        ..      BHI      0x80011048 ; vd_speed_metric_cached + 84
+        0x8001103c:    8f38        8.      LDRH     r0,[r7,#0x38]
+        0x8001103e:    8028        (.      STRH     r0,[r5,#0]
+        0x80011040:    8f78        x.      LDRH     r0,[r7,#0x3a]
+        0x80011042:    8020         .      STRH     r0,[r4,#0]
+        0x80011044:    2001        .       MOVS     r0,#1
+        0x80011046:    e000        ..      B        0x8001104a ; vd_speed_metric_cached + 86
+        0x80011048:    2000        .       MOVS     r0,#0
+        0x8001104a:    f3868810    ....    MSR      PRIMASK,r6
+        0x8001104e:    bdf8        ..      POP      {r3-r7,pc}
+
+    eligible
+        0x800080a8:    b580        ..      PUSH     {r7,lr}
+        0x800080aa:    4811        .H      LDR      r0,[pc,#68] ; [0x800080f0] = 0x2002e270
+        0x800080ac:    f8901058    ..X.    LDRB     r1,[r0,#0x58]
+        0x800080b0:    2901        .)      CMP      r1,#1
+        0x800080b2:    d110        ..      BNE      0x800080d6 ; eligible + 46
+        0x800080b4:    f890119c    ....    LDRB     r1,[r0,#0x19c]
+        0x800080b8:    b169        i.      CBZ      r1,0x800080d6 ; eligible + 46
+        0x800080ba:    6dc1        .m      LDR      r1,[r0,#0x5c]
+        0x800080bc:    f8d02188    ...!    LDR      r2,[r0,#0x188]
+        0x800080c0:    4311        .C      ORRS     r1,r1,r2
+        0x800080c2:    d108        ..      BNE      0x800080d6 ; eligible + 46
+        0x800080c4:    f89011a7    ....    LDRB     r1,[r0,#0x1a7]
+        0x800080c8:    b929        ).      CBNZ     r1,0x800080d6 ; eligible + 46
+        0x800080ca:    f89011b3    ....    LDRB     r1,[r0,#0x1b3]
+        0x800080ce:    b911        ..      CBNZ     r1,0x800080d6 ; eligible + 46
+        0x800080d0:    f890016b    ..k.    LDRB     r0,[r0,#0x16b]
+        0x800080d4:    b108        ..      CBZ      r0,0x800080da ; eligible + 50
+        0x800080d6:    2000        .       MOVS     r0,#0
+        0x800080d8:    bd80        ..      POP      {r7,pc}
+        0x800080da:    2003        .       MOVS     r0,#3
+        0x800080dc:    f7fdff86    ....    BL       app_mode_allows ; 0x80005fec
+        0x800080e0:    2800        .(      CMP      r0,#0
+        0x800080e2:    d0f8        ..      BEQ      0x800080d6 ; eligible + 46
+        0x800080e4:    f7fdff8e    ....    BL       app_mode_change_pending ; 0x80006004
+        0x800080e8:    fab0f080    ....    CLZ      r0,r0
+        0x800080ec:    0940        @.      LSRS     r0,r0,#5
+        0x800080ee:    bd80        ..      POP      {r7,pc}
+
+    vd_planner_runtime_cap
+        0x800100a0:    48e8        .H      LDR      r0,[pc,#928] ; [0x80010444] = 0x200003c0
+        0x800100a2:    4aec        .J      LDR      r2,[pc,#944] ; [0x80010454] = 0x2000b94c
+        0x800100a4:    7d01        .}      LDRB     r1,[r0,#0x14]
+        0x800100a6:    f890002e    ....    LDRB     r0,[r0,#0x2e]
+        0x800100aa:    f8b22104    ...!    LDRH     r2,[r2,#0x104]
+        0x800100ae:    2902        .)      CMP      r1,#2
+        0x800100b0:    bf18        ..      IT       NE
+        0x800100b2:    2200        ."      MOVNE    r2,#0
+        0x800100b4:    2800        .(      CMP      r0,#0
+        0x800100b6:    bf08        ..      IT       EQ
+        0x800100b8:    4602        .F      MOVEQ    r2,r0
+        0x800100ba:    b290        ..      UXTH     r0,r2
+        0x800100bc:    4770        pG      BX       lr
+        0x800100be:    bf00        ..      NOP      

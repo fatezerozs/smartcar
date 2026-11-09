@@ -1,0 +1,1491 @@
+{
+  "schemaVersion": "smartcar.composed-reference-replay/2",
+  "referenceId": "C1-reference-v0.3-20261106",
+  "evidence": "synthetic-closed-loop-reference",
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "controlPeriodMs": 10,
+  "visionPeriodMs": 20,
+  "hypothesis": {
+    "nearBrakingCapMps": 0.45152822909778023,
+    "nearCapReferenceMps": 0.4,
+    "referenceTicksPerMetreLeft": 11617.316127314036,
+    "referenceTicksPerMetreRight": 11730.71402426701,
+    "encoderScaleSource": {
+      "kind": "adopted-wheel-cpr-with-nominal-circumference",
+      "encoderProfile": "profiles/encoder-production-20261106.json",
+      "encoderProfileSha256": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
+      "metrologicalRepeatabilityPassed": false
+    },
+    "nominalCircumferenceM": 0.20106192982974677,
+    "measuredMetricScale": false,
+    "planningDecelerationDistanceAtMaxM": 0.20000000000000004,
+    "latencyDistanceAtMaxM": 0.04000000000000001,
+    "productionApproved": false
+  },
+  "profileSha256": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
+  "compilerFamily": "gcc",
+  "mode": "optimized",
+  "compileCommand": [
+    "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\speed-planning-host\\artifacts\\work\\planning\\composed",
+    "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_pipeline.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\pipeline.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\wheel_speed.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100847-98ec7de614\\suites\\speed-planning-host\\artifacts\\work\\planning\\composed\\pipeline.exe"
+  ],
+  "experiments": [
+    {
+      "sensorResolutionFactor": 0.5,
+      "samples": 6000,
+      "cases": [
+        {
+          "case": "straight",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.005453132072394476,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-bend",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.018283266231421017,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.599999666,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-short-recovery",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1140,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.005453132072394476,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-time-budget",
+          "referencePolicyOverrides": {
+            "farDistanceM": 1.0
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1600,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 2500,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 2,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-distance-budget",
+          "referencePolicyOverrides": {
+            "farBudgetMs": 2000,
+            "farDistanceM": 0.05
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1130,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 2040,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 2,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-recovery-to-degraded",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 800,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1340,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.011218743114142124,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-timeout",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1300,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 2
+        },
+        {
+          "case": "camera-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1080,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 1
+        },
+        {
+          "case": "encoder-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1020,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 4
+        },
+        {
+          "case": "STOP-during-candidate",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1100,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-identity-mismatch",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.011218743114142124,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "infeasible-sharp-cap",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 8
+        }
+      ],
+      "queueExperiments": [
+        {
+          "case": "0",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3431911123"
+        },
+        {
+          "case": "0",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3431911123"
+        },
+        {
+          "case": "1",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3314053842"
+        },
+        {
+          "case": "1",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3314053842"
+        },
+        {
+          "case": "2",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1917759953"
+        },
+        {
+          "case": "2",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1917759953"
+        },
+        {
+          "case": "3",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "956380426"
+        },
+        {
+          "case": "3",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "956380426"
+        },
+        {
+          "case": "4",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2778689480"
+        },
+        {
+          "case": "4",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2778689480"
+        },
+        {
+          "case": "5",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1279753791"
+        },
+        {
+          "case": "5",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1279753791"
+        },
+        {
+          "case": "6",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3734969636"
+        },
+        {
+          "case": "6",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3734969636"
+        },
+        {
+          "case": "7",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2449554542"
+        },
+        {
+          "case": "7",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2449554542"
+        },
+        {
+          "case": "8",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "564098091"
+        },
+        {
+          "case": "8",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "564098091"
+        },
+        {
+          "case": "9",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2339445616"
+        },
+        {
+          "case": "9",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2339445616"
+        },
+        {
+          "case": "10",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2390148129"
+        },
+        {
+          "case": "10",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2390148129"
+        },
+        {
+          "case": "11",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2006754055"
+        },
+        {
+          "case": "11",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2006754055"
+        }
+      ],
+      "csvSha256": "525f7cb24133f65a34204d7358229c7ed8aa9c455702ea66169e5060298c033e"
+    },
+    {
+      "sensorResolutionFactor": 1.0,
+      "samples": 6000,
+      "cases": [
+        {
+          "case": "straight",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.003713273904483838,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-bend",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.014751358666354315,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.599999666,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-short-recovery",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1140,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.003713273904483838,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-time-budget",
+          "referencePolicyOverrides": {
+            "farDistanceM": 1.0
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1600,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 2470,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 2,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-distance-budget",
+          "referencePolicyOverrides": {
+            "farBudgetMs": 2000,
+            "farDistanceM": 0.05
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1130,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 2020,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 2,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-recovery-to-degraded",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 800,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1340,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.00963712715755066,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-timeout",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1300,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 2
+        },
+        {
+          "case": "camera-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1080,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 1
+        },
+        {
+          "case": "encoder-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1020,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 4
+        },
+        {
+          "case": "STOP-during-candidate",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1100,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-identity-mismatch",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.00963712715755066,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "infeasible-sharp-cap",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 8
+        }
+      ],
+      "queueExperiments": [
+        {
+          "case": "0",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1492916893"
+        },
+        {
+          "case": "0",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1492916893"
+        },
+        {
+          "case": "1",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3079616066"
+        },
+        {
+          "case": "1",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3079616066"
+        },
+        {
+          "case": "2",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2785527680"
+        },
+        {
+          "case": "2",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2785527680"
+        },
+        {
+          "case": "3",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2042400958"
+        },
+        {
+          "case": "3",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2042400958"
+        },
+        {
+          "case": "4",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2726224078"
+        },
+        {
+          "case": "4",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2726224078"
+        },
+        {
+          "case": "5",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3378374043"
+        },
+        {
+          "case": "5",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3378374043"
+        },
+        {
+          "case": "6",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1332355826"
+        },
+        {
+          "case": "6",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1332355826"
+        },
+        {
+          "case": "7",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3919925619"
+        },
+        {
+          "case": "7",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3919925619"
+        },
+        {
+          "case": "8",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "908381314"
+        },
+        {
+          "case": "8",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "908381314"
+        },
+        {
+          "case": "9",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "270024115"
+        },
+        {
+          "case": "9",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "270024115"
+        },
+        {
+          "case": "10",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1371390127"
+        },
+        {
+          "case": "10",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1371390127"
+        },
+        {
+          "case": "11",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "1173008333"
+        },
+        {
+          "case": "11",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "1173008333"
+        }
+      ],
+      "csvSha256": "d0f7ece5aa230499c675145a144deb7ec65be8c0a71c6c7b907631817f468757"
+    },
+    {
+      "sensorResolutionFactor": 2.0,
+      "samples": 6000,
+      "cases": [
+        {
+          "case": "straight",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.0023011974376502056,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-bend",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.008343246433329806,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.569999695,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-short-recovery",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1140,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.0023011974376502056,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-time-budget",
+          "referencePolicyOverrides": {
+            "farDistanceM": 1.0
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1600,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 2420,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 0,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "far-distance-budget",
+          "referencePolicyOverrides": {
+            "farBudgetMs": 2000,
+            "farDistanceM": 0.05
+          },
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "CONTROLLED_STOP"
+            },
+            {
+              "timeMs": 1950,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.799999952,
+          "maxAbsNormalReferenceJerkMps3": 3.0000003100000003,
+          "brakingCapOverrides": 1,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-recovery-to-degraded",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 800,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "DEGRADED_FAR_LOSS"
+            },
+            {
+              "timeMs": 1340,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.008724759148746526,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "near-timeout",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1300,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 2
+        },
+        {
+          "case": "camera-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1080,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 1
+        },
+        {
+          "case": "encoder-freeze",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1020,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 4
+        },
+        {
+          "case": "STOP-during-candidate",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1100,
+              "mode": "STOP_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "STOP_LATCHED",
+          "finalFaults": 0
+        },
+        {
+          "case": "preview-identity-mismatch",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "RECOVERY_NO_LANE"
+            },
+            {
+              "timeMs": 1120,
+              "mode": "NORMAL_TRACK"
+            }
+          ],
+          "activeSteadySamples": 301,
+          "simulatedTrackingRmseMps": 0.008724759148746526,
+          "maxReferenceMps": 0.400000006,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "NORMAL_TRACK",
+          "finalFaults": 0
+        },
+        {
+          "case": "infeasible-sharp-cap",
+          "referencePolicyOverrides": {},
+          "transitions": [
+            {
+              "timeMs": 10,
+              "mode": "NORMAL_TRACK"
+            },
+            {
+              "timeMs": 1000,
+              "mode": "FAULT_LATCHED"
+            }
+          ],
+          "activeSteadySamples": 0,
+          "simulatedTrackingRmseMps": null,
+          "maxReferenceMps": 0.399749994,
+          "maxAbsReferenceAccelMps2": 0.5,
+          "maxAbsNormalReferenceJerkMps3": 3.0000001999999997,
+          "brakingCapOverrides": 0,
+          "finalMode": "FAULT_LATCHED",
+          "finalFaults": 8
+        }
+      ],
+      "queueExperiments": [
+        {
+          "case": "0",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "236032729"
+        },
+        {
+          "case": "0",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "236032729"
+        },
+        {
+          "case": "1",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2242641031"
+        },
+        {
+          "case": "1",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2242641031"
+        },
+        {
+          "case": "2",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2949055420"
+        },
+        {
+          "case": "2",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2949055420"
+        },
+        {
+          "case": "3",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3599046511"
+        },
+        {
+          "case": "3",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3599046511"
+        },
+        {
+          "case": "4",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "499739938"
+        },
+        {
+          "case": "4",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "499739938"
+        },
+        {
+          "case": "5",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3377489959"
+        },
+        {
+          "case": "5",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3377489959"
+        },
+        {
+          "case": "6",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "4188881331"
+        },
+        {
+          "case": "6",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "4188881331"
+        },
+        {
+          "case": "7",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "2528499737"
+        },
+        {
+          "case": "7",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "2528499737"
+        },
+        {
+          "case": "8",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "226164928"
+        },
+        {
+          "case": "8",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "226164928"
+        },
+        {
+          "case": "9",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "864858901"
+        },
+        {
+          "case": "9",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "864858901"
+        },
+        {
+          "case": "10",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "86862660"
+        },
+        {
+          "case": "10",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "86862660"
+        },
+        {
+          "case": "11",
+          "slowStorage": "0",
+          "dropped": "0",
+          "highWater": "2",
+          "controlHash": "3373268716"
+        },
+        {
+          "case": "11",
+          "slowStorage": "1",
+          "dropped": "364",
+          "highWater": "8",
+          "controlHash": "3373268716"
+        }
+      ],
+      "csvSha256": "a8875e2f0e3075a2a5d9b2e3102dedad223ef760100bcab6dc774d1aae1b0853"
+    }
+  ],
+  "notes": [
+    "Simulated measured speed comes from a fictitious first-order wheel plant; it is not vehicle evidence.",
+    "CPR factor changes both simulated sensor resolution and controller scale consistently. It does not test unknown CPR miscalibration.",
+    "0.5/1/2 factors are artificial sensitivity settings, not a confidence interval.",
+    "Final output means a mock commit record, not PWM hardware or the production vision_actuator writer.",
+    "Queue is fixed-memory single-owner Host code, not an implemented ISR-safe/FreeRTOS sidecar."
+  ]
+}

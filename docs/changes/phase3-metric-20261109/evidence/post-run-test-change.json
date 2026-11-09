@@ -1,0 +1,6 @@
+{
+  "previousRunId": "20261108T235339-e9e753c3e8",
+  "previousInputSha256": "62f2976729604481feaf03089c994138eb8e53e699123a28bf15a9eccd94622a",
+  "currentInputSha256": "55505cf0140a2a2adb147add5e34627367ddcf7c88a8574cd01f02c01eb22c9c",
+  "note": "Test file changed after run; rerun current tree before final evidence. Production source hashes remained matched."
+}

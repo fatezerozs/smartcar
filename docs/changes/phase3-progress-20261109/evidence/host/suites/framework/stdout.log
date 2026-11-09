@@ -1,0 +1,5 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\framework\test_framework.py
+FAIL           fixture                        0.093s  test exited with code 3
+BLOCKED        dependent                      0.000s  Unmet dependencies: fixture:FAIL
+TIMEOUT        fixture                        1.015s  Suite deadline expired during test
+[PASS] Completed within declared software evidence scope

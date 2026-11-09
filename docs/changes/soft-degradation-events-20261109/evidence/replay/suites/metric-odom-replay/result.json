@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "metric-odom-replay",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.985202,
+  "exitCode": 0,
+  "startedAt": "2026-11-09T10:02:44.117+00:00",
+  "finishedAt": "2026-11-09T10:02:45.103+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_metric_odom_replay.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100243-e1a183b3da\\suites\\metric-odom-replay\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.980509,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T100243-e1a183b3da\\suites\\metric-odom-replay",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Measured cumulative counters and explicit candidate scales, independent conversion/interpolation oracle; no ground truth, live camera alignment, PWM or physical stopping claim",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

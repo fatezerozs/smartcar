@@ -1,0 +1,257 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "git": {
+    "sha": "f7fb5b9b8cecda8c5d366b12dd9b0adb0599fd41",
+    "branch": "docs/main-documentation-20261107",
+    "dirty": true
+  },
+  "committed": false,
+  "hardwareAccessed": false,
+  "livePiInstanceConnected": false,
+  "pwmConnected": false,
+  "phase2Complete": false,
+  "phase3Complete": false,
+  "productionApproved": false,
+  "sources": {
+    "demo/code/vision_metric_io.c": {
+      "sha256": "3fdf366ce554d8fd9f516f8b56645b6389ef0bb517bc18229cb46125b50d8675",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "demo/code/vision_metric_io.h": {
+      "sha256": "b8705ae09fe5ccd0c3abba7e4425743f6e672aa96562d3ace0a7cd770f0bd4e8",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "demo/code/vision_metric_pi.c": {
+      "sha256": "68c013c58a4ff5388c72643236aba6ba3b139907dec817f301faeb0ded34350f",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "demo/code/vision_metric_pi.h": {
+      "sha256": "19d1ea7e34c21da51e35743268b436ddafcb45b82598c83b878821cd8038cfe2",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "tools/speed_planning/metric_odom_runner.c": {
+      "sha256": "392b2f67c125453487d728fcb65c5f4a1981160ecc522835f693bd9e70ae49d5",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "tools/speed_planning/replay_metric_odom.py": {
+      "sha256": "4ea55dcc604e9b3cb13315506efcb7c321f61e5732100529c50aa4d5bfd93a20",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "tests/planning/test_metric_control.c": {
+      "sha256": "55505cf0140a2a2adb147add5e34627367ddcf7c88a8574cd01f02c01eb22c9c",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "tests/planning/test_metric_odom_replay.py": {
+      "sha256": "69db3c7d0b52509f518a6f9277757b15b0d61dcdfa4ac82c43075324df918245",
+      "matchesFinalHostInput": true,
+      "beforeSha256": null
+    },
+    "tools/speed_planning/audit_build.py": {
+      "sha256": "861f2e7fba246a652449fa730c99fb1e18f86aeab79e689fe8756c7b5f046688",
+      "matchesFinalHostInput": true,
+      "beforeSha256": "b74869ac1a6f65fd2a56b7252e569f41ce8a7aabac3eaf3fc9a8b9f4c97804b5"
+    },
+    "tests/suites/catalog.json": {
+      "sha256": "df6b699ea08b93c4c723245698df80d8b7e7ab39973c265998fcb479bcdb3ad8",
+      "matchesFinalHostInput": true,
+      "beforeSha256": "230fac2a4a6fc47c5236df3c8ea0f42b5033fafaba8f035be474dc252d12d688"
+    }
+  },
+  "sharedPi": {
+    "path": "demo/code/wheel_speed.c",
+    "sha256": "5731ce8fcaaf7cb585e53eaa6f837e85fd363c2ce43e5be3eda5bbcf5ef2ae1b",
+    "unchangedFromHEADContent": true
+  },
+  "project": {
+    "path": "demo/mdk/competition/MPC_20261106.uvprojx",
+    "sha256": "cd70f38bd738ff2c8da2eb40f7c568400ddab860d9bf116453e8730f878f89c8",
+    "beforeSha256": "09e0358d6a72053267356e3decbdbaad4e35713a827b2b246e3d2ca04c871632",
+    "matchesKeilAudit": true
+  },
+  "host": {
+    "runId": "20261108T235707-d57a3ee21e",
+    "compiler": "gcc",
+    "mode": "optimized",
+    "status": "PASS",
+    "counts": {
+      "PASS": 56,
+      "SKIPPED": 1
+    },
+    "durationSeconds": 43.795616,
+    "releaseEligible": false,
+    "metricControlAssertions": 40791
+  },
+  "additionalFrozenBoundaryProbe": {
+    "assertions": 40797,
+    "extraBoundaryAssertions": 6,
+    "exitCode": 0
+  },
+  "static": {
+    "runId": "20261108T235056-324bf41454",
+    "statuses": {
+      "environment": "PASS",
+      "static-safety": "FAIL",
+      "project-structure": "PASS"
+    },
+    "fullPreFlash": false,
+    "failure": "test_heartbeat_response.c directly includes another test C file; independent file not edited by this task",
+    "source": "tests/planning/test_heartbeat_response.c",
+    "sourceSha256AtRun": "cc7ccff3dd7c302688c9fcf54d46f5fbd529025e72d0c5f22676abfb49407550",
+    "currentSourceSha256": "cc7ccff3dd7c302688c9fcf54d46f5fbd529025e72d0c5f22676abfb49407550"
+  },
+  "keil": {
+    "zeroErrorsWarnings": true,
+    "buildOnly": true,
+    "artifacts": {
+      "Objects\\rt1064.axf": {
+        "bytes": 1215356,
+        "sha256": "294fe5e488439aa2294e6c89e0d452cddb795d01489de15b8fa05f39db94a102"
+      },
+      "rt1064.bin": {
+        "bytes": 110528,
+        "sha256": "6e63df8a65a2e5f860c09fb7c70d834ee6e71672eb213745ab18d2d825f31228"
+      },
+      "disassembly.txt": {
+        "bytes": 2556980,
+        "sha256": "4cbeffb2039360e023b58b36c9b355663965d32b6f4d0fda91c32c6cba87a7e5"
+      },
+      "Listings\\rt1064.map": {
+        "bytes": 2103619,
+        "sha256": "c1065329a352ddb95d6697cbeea850e31f9d63db75830a3fcf5c6f4072e94116"
+      }
+    },
+    "sizeBytes": {
+      "code": 89824,
+      "ro": 13792,
+      "rw": 212,
+      "zi": 196648
+    }
+  },
+  "binaryComparison": {
+    "previousSha256": "3b1de5a29150a9011363ea20f7b4a7ff13b392955ef0c4ba0f4313d718773223",
+    "currentSha256": "6e63df8a65a2e5f860c09fb7c70d834ee6e71672eb213745ab18d2d825f31228",
+    "previousBytes": 110528,
+    "currentBytes": 110528,
+    "differingBytes": 33165,
+    "byteIdentical": false,
+    "interpretation": "New unused objects removed; layout/build-time can change bytes, same total sizes do not prove binary equality."
+  },
+  "counterReplay": {
+    "traces": 3,
+    "rows": 1516,
+    "experiments": [
+      {
+        "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\lower01\\trace.json",
+        "sourceSha256": "568f3770a93e5cf4064ee98673e638d2f24a007c2db5f8ba36f0a8f628ea0fa3",
+        "rows": 472,
+        "rawTraceCrcVerified": true,
+        "allRowsMatchIndependentOracle": true,
+        "totalWheelPathM": 0.380239950034472,
+        "csvSha256": "281c2ba664b756d9a07a3c4257f7414d02034ea5a8f9b837f66ae3de795ff1b5"
+      },
+      {
+        "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\video02\\trace.json",
+        "sourceSha256": "63ef63697031671b96cd8ad138d1e0be0ea219201eedd12e3dc87aec055bc1e1",
+        "rows": 522,
+        "rawTraceCrcVerified": true,
+        "allRowsMatchIndependentOracle": true,
+        "totalWheelPathM": 0.6079532025680696,
+        "csvSha256": "9dd844e1822af8b38f954004a96f85d4bdfa3a7c3072cb04543fe21b35243fb5"
+      },
+      {
+        "source": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\stop-trace\\video03\\trace.json",
+        "sourceSha256": "235a48a0cc53f75327159b4c717c35fd7729ece7b64fb1aa57e40cde4a58bfd5",
+        "rows": 522,
+        "rawTraceCrcVerified": true,
+        "allRowsMatchIndependentOracle": true,
+        "totalWheelPathM": 0.895010163889589,
+        "csvSha256": "65b7d7942fc63af8f013799dde75bc432540e6ac92dc117b32d671c64b011a9c"
+      }
+    ],
+    "leftTicksPerM": 11394,
+    "rightTicksPerM": 11389,
+    "scaleProductionApproved": false,
+    "midpointCaptureQueriesSynthetic": true
+  },
+  "syntheticClosedLoop": {
+    "plants": 3,
+    "targetStages": 3,
+    "stepsPerStage": 600,
+    "physicalVehicleClaim": false
+  },
+  "mutationChecks": [
+    {
+      "mutation": "wheel-mapping",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "metric:41 e.total_left==100&&e.total_right==-100&&e.sequence==0"
+    },
+    {
+      "mutation": "capture-interpolation",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "metric:48 vm_odom_at_capture(&s,105,110,&x)==VM_OK&&fabsf(x-.005f)<1e-6f"
+    },
+    {
+      "mutation": "feedback-units",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "metric:122 candidate.measured_left==measured_l&&candidate.measured_right==measured_r"
+    },
+    {
+      "mutation": "stop-generation",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "metric:144 !vm_pi_commit(&pi,&planner,&result,&motion,&input.identity,e.ms,&candidate)"
+    },
+    {
+      "mutation": "inhibit-clear",
+      "exitCode": 1,
+      "detected": true,
+      "failure": "metric:156 !pi.left.output&&!pi.right.output&&!pi.left.integral_q8&&!pi.right.integral_q8"
+    }
+  ],
+  "msvcExecuted": false,
+  "asanExecuted": false,
+  "remoteCIExecuted": false,
+  "remaining": [
+    "Single live scheduler owner and retained frame handling",
+    "Live PI-instance ownership/target-source switching",
+    "Final writer integration with C26/epoch/fault policy",
+    "Actual timing, calibration and vehicle validation",
+    "Independent heartbeat test structure failure"
+  ],
+  "trustLayers": [
+    "structured_parsed",
+    "computed"
+  ],
+  "evidenceSha256": {
+    "evidence/binary-comparison.json": "9bc3eaaded7b016bd3500c4a0a9862adf9417def68bebf4620320faff3c5d80d",
+    "evidence/boundary-checks.c": "5f1b66e7241a36e07d1f2c6cebc3902965e6e6a3b8cca2e9750711c57aa3159b",
+    "evidence/boundary-checks.json": "438cc8329eec2fa6ee9b0f58b0eb60ee2a328423297462f0caa8db4939a54c1d",
+    "evidence/boundary-checks.stdout.log": "ea575e8e3e705b6e69bd639273d7f6077ef2ccec8d69b699eee6e41db4eeaa7e",
+    "evidence/counter-replay-report.json": "027f81e55feddf325b15586a83c8ba21d2ba48c90e6fd5de111a39e9d28bb4cf",
+    "evidence/host-summary.md": "50595992baebf7e957a445023ca78c7bca16ca6b26754b24c9e160c6b9b675fa",
+    "evidence/keil-artifacts.json": "19372057321449aefb1f5ffdf161d7b7769dcfc0c98e012bf34608b43b50225b",
+    "evidence/keil-build.log": "e8fcbba93a8da7d3d5de3e8997f1da1cb910e28e5811b0fe58058b9a795b586d",
+    "evidence/linker-removal.txt": "3e1c5ec987fac31ab688cdcef17b31954750b68cfcaeebb05f3bf88602094100",
+    "evidence/metric-control.stdout.log": "d74aa4db4873fa67064fb60498f51f1a41f1d534c87c2d8416feda97ece140cf",
+    "evidence/metric-odom-replay.stdout.log": "a194439292926550bd8b1c50e8b5c9f804e26080c47bad84e1d0709d55391419",
+    "evidence/mutation-checks.json": "e39c311c0664bd5f9139e7d6fb78684e925b6307205274d2592af15e6838e89b",
+    "evidence/output-0.csv": "281c2ba664b756d9a07a3c4257f7414d02034ea5a8f9b837f66ae3de795ff1b5",
+    "evidence/output-1.csv": "9dd844e1822af8b38f954004a96f85d4bdfa3a7c3072cb04543fe21b35243fb5",
+    "evidence/output-2.csv": "65b7d7942fc63af8f013799dde75bc432540e6ac92dc117b32d671c64b011a9c",
+    "evidence/post-run-test-change.json": "b8771b29071a09c13ec6a292c1d6265212dffa0dd570ad24c450b753a7971c80",
+    "evidence/static-failure.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/static-failure.stdout.log": "6bfcd58a949a72e941d9babde439234f04aec790c29eaa9240aeab27aa4d8c69",
+    "evidence/static-summary.md": "58227e4a2f43290bfd8eb44822cd6a0d530a1f027e1c62f5b961054ee81bc385"
+  }
+}

@@ -1,0 +1,8 @@
+test_all_rows_and_explicit_synthetic_limits (__main__.ShadowReplay.test_all_rows_and_explicit_synthetic_limits) ... ok
+test_stop_and_disarmed_candidates (__main__.ShadowReplay.test_stop_and_disarmed_candidates) ... ok
+test_tamper_rejected_without_artifact_creation (__main__.ShadowReplay.test_tamper_rejected_without_artifact_creation) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.844s
+
+OK

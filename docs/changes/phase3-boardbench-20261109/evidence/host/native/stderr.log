@@ -1,0 +1,10 @@
+test_homography_uses_exact_preview_sampling_and_metres (__main__.ShadowPreparation.test_homography_uses_exact_preview_sampling_and_metres) ... ok
+test_native_candidate_keeps_legacy_pwm_and_retains_stop_only_trace (__main__.ShadowPreparation.test_native_candidate_keeps_legacy_pwm_and_retains_stop_only_trace) ... ok
+test_original_750_images_expose_candidate_geometry_coverage (__main__.ShadowPreparation.test_original_750_images_expose_candidate_geometry_coverage) ... ok
+test_profile_matches_sources_and_retains_unknowns (__main__.ShadowPreparation.test_profile_matches_sources_and_retains_unknowns) ... ok
+test_projects_share_one_image_and_only_download_opt_in_differs (__main__.ShadowPreparation.test_projects_share_one_image_and_only_download_opt_in_differs) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.508s
+
+OK

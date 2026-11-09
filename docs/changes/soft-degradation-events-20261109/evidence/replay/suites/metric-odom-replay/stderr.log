@@ -1,0 +1,8 @@
+test_counter_tamper_rejected_before_artifacts (__main__.MetricReplay.test_counter_tamper_rejected_before_artifacts) ... ok
+test_counts_times_and_midpoint_history_match_independent_oracle (__main__.MetricReplay.test_counts_times_and_midpoint_history_match_independent_oracle) ... ok
+test_unknown_scale_not_guessed (__main__.MetricReplay.test_unknown_scale_not_guessed) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.786s
+
+OK

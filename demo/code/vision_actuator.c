@@ -1,5 +1,8 @@
 #include "vision_drive_internal.h"
 #include "vision_steering.h"
+#if VISION_PLANNER_RUNTIME
+#include "vision_planner_runtime.h"
+#endif
 
 #if VISION_DRIVE_ENABLE
 void vd_output_zero(void)
@@ -66,7 +69,7 @@ static int output_allowed(unsigned source,uint32_t now)
         if(!app_mode_allows(APP_MODE_DRIVE) || app_mode_change_pending() ||
            !vd.hardware_ready || !vd.control.configured ||
 
-#if !VISION_MIDTERM_C31_AUTONOMOUS
+#if !VISION_MIDTERM_C31_AUTONOMOUS && !VISION_ROUTE_SWITCH
            !vision_drive_profile_ready(&vd.profile) ||
 #endif
            vd.probe_active || vd.motion.phase ||
@@ -147,6 +150,9 @@ int vd_output_arm(uint32_t now,int local)
 int vd_output_bench_start(void)
 {
     uint32_t mask=__get_PRIMASK();int accepted=0;__disable_irq();
+#if VISION_PLANNER_ACTIVE
+    if(vd_speed_source()==VD_SPEED_METRIC){vd_output_zero();__set_PRIMASK(mask);return 0;}
+#endif
     /* Only explicit probe/start/reverse requests call this, never poll or ISR. */
     vd.output_authorized=vd.motion.phase?VD_OUTPUT_MOTION:VD_OUTPUT_PROBE;
     if(output_allowed(vd.output_authorized,timer_get(GPT_TIM_1))) {
@@ -165,6 +171,12 @@ static void output_commit(unsigned source,uint32_t right,uint32_t left,uint32_t 
     if(source==VD_OUTPUT_DRIVE)cap=(uint32_t)(vd.profile.control.duty_cap*PWM_DUTY_MAX);
 #endif
     if(cap>PWM_DUTY_MAX)cap=PWM_DUTY_MAX;
+#if VISION_PLANNER_ACTIVE
+    if(source==VD_OUTPUT_DRIVE&&vd_speed_source()==VD_SPEED_METRIC){
+        uint32_t metric_cap=(uint32_t)vd_planner_runtime_cap()*PWM_DUTY_MAX/1000U;
+        if(cap>metric_cap)cap=metric_cap;
+    }
+#endif
     /* Bound PI's actual result independently of its target/speed cap. C31
      * deliberately retains its existing full physical PWM headroom. */
 #if VISION_ROUTE_SWITCH
@@ -218,15 +230,23 @@ static void motion_apply(void)
     }
 }
 
+/* Rejection belongs to the captured lease too: an interrupted old candidate
+ * must neither publish output nor fault/zero a subsequently granted lease. */
+static void output_reject(uint32_t epoch,uint32_t faults,uint32_t mask)
+{
+    __disable_irq();
+    if(epoch==vd.output_epoch) {
+        if(faults){vd.guard_faults|=faults;vc_trip(&vd.control,faults);}
+        vd_output_zero();
+    }
+    __DMB();__set_PRIMASK(mask);
+}
+
 void vd_output_apply(void)
 {
     if (!vd.initialized) return;
     uint32_t mask = __get_PRIMASK();
-#if VISION_MIDTERM_C31_AUTONOMOUS
-    uint32_t epoch=vd.output_epoch; /* Control owns preparation; ISR only revokes. */
-#else
     __disable_irq();
-#endif
     if(vd.motion.phase) {
         vd_motion_tick(timer_get(GPT_TIM_1));
         if(vd.motion.phase)motion_apply();else vd_output_zero();
@@ -252,81 +272,89 @@ void vd_output_apply(void)
         vd.guard_running = 0;
         vd_output_zero();
     } else {
-#if VISION_MIDTERM_C31_AUTONOMOUS
-        /* Profile validation includes floats; configuration is task-owned and
-         * immutable while running. Final commit rechecks scalar authority. */
-        if(!vision_drive_profile_ready(&vd.profile)){vd_output_zero();return;}
+        /* One foreground owner updates control/profile; PIT can only revoke
+         * or sample. Copy the complete inputs before doing float preparation.
+         * Diagnostic motion/probe branches above keep their existing mask. */
+        uint32_t epoch=vd.output_epoch;
+        vc_controller_t control=vd.control;
+        vd_profile_t profile=vd.profile;
+        uint16_t speed_cap;
+#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
+        __set_PRIMASK(mask);
+#ifdef VISION_HOST_OUTPUT_HOOK
+        {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(4);}
 #endif
-        if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
-            vd_output_zero();__set_PRIMASK(mask);return;
+#endif
+        /* Configuration changes revoke the lease; validate this immutable
+         * profile outside the mask, then recheck live authority at commit. */
+        if(!vision_drive_profile_ready(&profile)) {
+            output_reject(epoch,0,mask);return;
         }
-        if(!(vd.control.output.steering>=-1 && vd.control.output.steering<=1) ||
-           !(vd.control.output.duty>=0 && vd.control.output.duty<=vd.profile.control.duty_cap) ||
-           !(vd.control.output.lateral>=-3 && vd.control.output.lateral<=3) ||
-           !(vd.control.output.heading>=-10 && vd.control.output.heading<=10) ||
-           !(vd.control.recovery_steer>=-1 && vd.control.recovery_steer<=1) ||
-           !(vd.control.output.paired_support>=0 && vd.control.output.paired_support<=1) ||
-           !(vd.control.output.edge_support>=0 && vd.control.output.edge_support<=1)) {
-            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
-            vd_output_zero();__set_PRIMASK(mask);return;
+        if(!(control.output.steering>=-1 && control.output.steering<=1) ||
+           !(control.output.duty>=0 && control.output.duty<=profile.control.duty_cap) ||
+           !(control.output.lateral>=-3 && control.output.lateral<=3) ||
+           !(control.output.heading>=-10 && control.output.heading<=10) ||
+           !(control.recovery_steer>=-1 && control.recovery_steer<=1) ||
+           !(control.output.paired_support>=0 && control.output.paired_support<=1) ||
+           !(control.output.edge_support>=0 && control.output.edge_support<=1)) {
+            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
         }
-        float steer = vd.control.output.steering * vd.profile.right_sign;
+        float steer = control.output.steering * profile.right_sign;
 #if VISION_ROUTE_SWITCH
         /* Keep about the previous center slope while adding bend authority:
          * for the 120us span, offset = 80*u + 40*u^3 microseconds. Continuous,
          * monotonic and symmetric; endpoints remain the validated profile. */
-        steer=vs_steering_shape(vd.control.output.steering)*vd.profile.right_sign;
+        steer=vs_steering_shape(control.output.steering)*profile.right_sign;
 #endif
-        float pulse = vd.profile.servo_center_us + steer * (steer >= 0 ?
-            vd.profile.servo_max_us - vd.profile.servo_center_us :
-            vd.profile.servo_center_us - vd.profile.servo_min_us);
+        float pulse = profile.servo_center_us + steer * (steer >= 0 ?
+            profile.servo_max_us - profile.servo_center_us :
+            profile.servo_center_us - profile.servo_min_us);
         float motor1, motor2;
-        if (!mol_split(vd.control.output.duty, vd.profile.control.duty_cap,
-                       vd.profile.motor1_scale, vd.profile.motor2_scale, &motor1, &motor2)) {
-            vd.guard_faults |= VC_FAULT_NUMERIC;
-            vc_trip(&vd.control, VC_FAULT_NUMERIC);
-            vd.guard_running = 0;
-            vd_output_zero();
-            __DMB(); __set_PRIMASK(mask);
-            return;
+#if VISION_PLANNER_ACTIVE
+        motor1=motor2=0;
+        if(vd_speed_source()!=VD_SPEED_METRIC){
+#endif
+        if (!mol_split(control.output.duty, profile.control.duty_cap,
+                       profile.motor1_scale, profile.motor2_scale, &motor1, &motor2)) {
+            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
         }
 #if VISION_ROUTE_SWITCH
         /* M1 RIGHT, M2 LEFT. Let the inner wheel run slower with the steering
          * command; equal closed-loop wheel targets can fight a tight bend.
          * Never boost the outer wheel or exceed the existing duty cap. */
         {
-         float offset=vd.control.output.lateral;
+         float offset=control.output.lateral;
          if(offset<0)offset=-offset;
-         if(vd.control.output.observation_valid&&offset>1.0f) {
+         if(control.output.observation_valid&&offset>1.0f) {
             float slow=1.0f-.20f*(offset-1.0f);
             if(slow<.75f)slow=.75f;
             motor1*=slow;motor2*=slow;
          }
-         vs_steering_mix(vs_steering_shape(vd.control.output.steering),&motor1,&motor2);}
-        if(!vd.control.output.observation_valid) {
+         vs_steering_mix(vs_steering_shape(control.output.steering),&motor1,&motor2);}
+        if(!control.output.observation_valid) {
             motor1=motor2=0;
-#if VISION_ENCODER_ENABLE
-            vd_speed_stop(); /* Clear targets and PI before publishing zero. */
+        }
 #endif
+#if VISION_PLANNER_ACTIVE
         }
 #endif
         /* Check derived floats before any integer conversion (also rejects NaN/Inf). */
-        if(!(pulse>=vd.profile.servo_min_us && pulse<=vd.profile.servo_max_us) ||
-           !(motor1>=0 && motor1<=vd.profile.control.duty_cap) ||
-           !(motor2>=0 && motor2<=vd.profile.control.duty_cap)) {
-            vd.guard_faults|=VC_FAULT_NUMERIC;vc_trip(&vd.control,VC_FAULT_NUMERIC);
-            vd_output_zero();__set_PRIMASK(mask);return;
+        if(!(pulse>=profile.servo_min_us && pulse<=profile.servo_max_us) ||
+           !(motor1>=0 && motor1<=profile.control.duty_cap) ||
+           !(motor2>=0 && motor2<=profile.control.duty_cap)) {
+            output_reject(epoch,VC_FAULT_NUMERIC,mask);return;
         }
+        speed_cap=(uint16_t)(profile.control.duty_cap*1000.0f+0.001f);
         uint32_t servo_duty = (uint32_t)(pulse * SERVO_MOTOR_FREQ * PWM_DUTY_MAX / 1000000.0f);
         uint32_t right_duty,left_duty;
+#if VISION_PLANNER_ACTIVE
+        vdr_output_t planner_output;
+        vd_planner_runtime_prepare(epoch,&planner_output);
+#endif
 #if VISION_ENCODER_ENABLE
         uint16_t right=(uint16_t)(motor1*1000.0f),left=(uint16_t)(motor2*1000.0f);
-        if(!vd_speed_output(right,left,0,(uint16_t)(vd.profile.control.duty_cap*1000.0f+0.001f),&right,&left)) {
-            __DMB();__set_PRIMASK(mask);return;
-        }
-        right_duty=(uint32_t)right*PWM_DUTY_MAX/1000U;
-        left_duty=(uint32_t)left*PWM_DUTY_MAX/1000U;
 #else
+        (void)speed_cap;
         /* Open-loop duty maps directly to PWM without permille quantization. */
         right_duty=(uint32_t)(motor1*PWM_DUTY_MAX);
         left_duty=(uint32_t)(motor2*PWM_DUTY_MAX);
@@ -334,21 +362,38 @@ void vd_output_apply(void)
         /* Controller outputs are bounded; vd.profile validates pulse range first.
          * This short critical section prevents foreground from re-enabling
          * PWM after a safety ISR has latched a stop. No UART/float in ISR. */
-#if VISION_MIDTERM_C31_AUTONOMOUS
+#if VISION_MIDTERM_C31_AUTONOMOUS || VISION_ROUTE_SWITCH
 #ifdef VISION_HOST_OUTPUT_HOOK
         {extern void vision_test_output_hook(unsigned stage);vision_test_output_hook(1);}
 #endif
         __disable_irq();
         if(epoch!=vd.output_epoch){__set_PRIMASK(mask);return;}
 #endif
-        gpio_set_level(MOTOR1_DIR, vd.profile.motor1_forward_level);
-        gpio_set_level(MOTOR2_DIR, vd.profile.motor2_forward_level);
+        if(!output_allowed(VD_OUTPUT_DRIVE,timer_get(GPT_TIM_1))) {
+            vd_output_zero();__set_PRIMASK(mask);return;
+        }
+#if VISION_ENCODER_ENABLE
+        /* Publish only after the lease recheck. A STOP during preparation
+         * must not leave even a pending nonzero speed request behind. */
+#if VISION_PLANNER_ACTIVE
+        if(vd_speed_source()==VD_SPEED_METRIC){
+            if(!vd_planner_runtime_output(&planner_output,&right,&left)){right=left=0;vd_speed_stop();}
+        }else
+#endif
+        if(!vd_speed_output(right,left,0,speed_cap,&right,&left)) {
+            __DMB();__set_PRIMASK(mask);return;
+        }
+        right_duty=(uint32_t)right*PWM_DUTY_MAX/1000U;
+        left_duty=(uint32_t)left*PWM_DUTY_MAX/1000U;
+#endif
+        gpio_set_level(MOTOR1_DIR, profile.motor1_forward_level);
+        gpio_set_level(MOTOR2_DIR, profile.motor2_forward_level);
         output_commit(VD_OUTPUT_DRIVE,right_duty,left_duty,servo_duty);
         if(!vd.output_authorized){__set_PRIMASK(mask);return;}
-        vd.guard_frame_ms = vd.control.last_frame_ms;
-        vd.guard_command_ms = vd.control.last_command_ms;
-        vd.guard_armed_ms = vd.control.armed_ms;
-        vd.guard_local = vd.control.local_run;
+        vd.guard_frame_ms = control.last_frame_ms;
+        vd.guard_command_ms = control.last_command_ms;
+        vd.guard_armed_ms = control.armed_ms;
+        vd.guard_local = control.local_run;
         vd.guard_running = 1;
     }
     __DMB();

@@ -1,0 +1,12 @@
+[
+  {
+    "variant": "before",
+    "spPlanCalls": 128,
+    "exitCode": 0
+  },
+  {
+    "variant": "after",
+    "spPlanCalls": 32,
+    "exitCode": 0
+  }
+]

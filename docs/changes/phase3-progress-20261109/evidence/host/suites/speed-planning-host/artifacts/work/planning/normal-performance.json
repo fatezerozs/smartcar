@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "smartcar.host-planning/1",
+  "evidence": "synthetic-simulation",
+  "productionApproved": false,
+  "spatialCases": 6,
+  "spatialSamples": 96,
+  "temporalSamples": 500,
+  "periodS": 0.02,
+  "speedUnit": "m/s",
+  "accelerationUnit": "m/s^2",
+  "jerkUnit": "m/s^3",
+  "minimumReference": 0.00159999973,
+  "maximumReference": 2.5,
+  "maxAbsAccel": 2.0,
+  "maxAbsJerk": 6.000000250000004,
+  "trackingRmse": null,
+  "measuredBrakeDistanceM": null,
+  "oracleMaxToleranceMps": 2e-05,
+  "csvSha256": "37869bf7bb5ee089b027fdddcfca275ca2d70928cbbad8f8d6e1ffc8d0cd685d"
+}

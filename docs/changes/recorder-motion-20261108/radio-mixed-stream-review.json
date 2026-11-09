@@ -1,0 +1,12 @@
+{
+  "raw_capture": "C:\\shengchanli\\smartCar\\wireless_diagnostics\\query-20261108T134510Z\\rx.bin",
+  "bytes": 1747,
+  "expected_source_digest_present": true,
+  "complete_identity_prefix_present": false,
+  "idle_status_present": true,
+  "mixed_binary_present": true,
+  "start_sent": false,
+  "arm_sent": false,
+  "map_audit": "legacy app_runtime, vision_telemetry and wireless_uart_send_buffer not linked; only motion formatter queued output expected",
+  "next": "operator isolates car radio power for passive source discrimination"
+}

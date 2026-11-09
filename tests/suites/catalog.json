@@ -2465,6 +2465,19 @@
               "VISION_ENCODER_ENABLE=0"
             ],
             "expectCompileFailure": "Autonomous midterm requires"
+          },
+          {
+            "id": "planner-active-unreviewed",
+            "sources": [
+              "tests/suites/contract/planner_gate.c"
+            ],
+            "includeDirectories": [
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_PLANNER_ACTIVE=1"
+            ],
+            "expectCompileFailure": "Active metric planner requires reviewed PI/supervisor integration"
           }
         ]
       },
@@ -3445,6 +3458,35 @@
     },
     {
       "schemaVersion": "1.0",
+      "id": "speed-planning-visual-trace",
+      "name": "Observed visual trace and Host supervisor regression",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_visual_supervisor_replay.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Hybrid: 750 measured visual metadata frames and native C supervisor, synthetic zero-speed encoder; no distance, PI, metric-planner, target or production calibration claim"
+    },
+    {
+      "schemaVersion": "1.0",
       "id": "c26-baseline-characterization",
       "name": "C26 admission and motor-inhibit boundary regression",
       "layer": "integration",
@@ -3505,6 +3547,437 @@
         "artifacts/**"
       ],
       "scope": "C26 startup, physical fault acknowledgement, severe-fault retention and near-invalid zero-output boundaries; historical id retained, not full calibrated planner acceptance"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "c26-snapshot",
+      "name": "C26 immutable preparation and versioned publication",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/planning/test_c26_snapshot.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c"
+            ],
+            "includeDirectories": [
+              "tests/vision/stubs",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=0",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_HOST_OUTPUT_HOOK=1"
+            ]
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 300,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Host ISR interleavings for output/PI snapshot, STOP/mode/sample/request invalidation and IRQ mask restoration; no measured WCET or calibrated planning claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "planner-interface",
+      "name": "Metric MCU planner shadow boundary",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/planning/test_planner_interface.c",
+              "demo/code/vision_planner.c",
+              "tools/speed_planning/speed_planner.c"
+            ],
+            "includeDirectories": [
+              "demo/code",
+              "tools/speed_planning"
+            ],
+            "defines": []
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Synthetic metric inputs, shared native kernel and shadow-only candidate contract; no actuator, PI integration, measured stopping or production approval"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "planner-shadow",
+      "name": "Stateful supervisor and metric shadow executor",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/planning/test_planner_shadow.c",
+              "demo/code/vision_planner.c",
+              "tools/speed_planning/speed_planner.c",
+              "demo/code/vision_planner_shadow.c"
+            ],
+            "includeDirectories": [
+              "demo/code",
+              "tools/speed_planning"
+            ],
+            "defines": []
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Synthetic snapshots, shared supervisor/planner, capture-aligned preview advancement and serialized trajectory state; no hardware, PI or production calibration claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "planner-shadow-replay",
+      "name": "Verified visual metadata through target shadow executor",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_shadow_visual_replay.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Hybrid measured visual metadata and explicitly synthetic metric/zero-motion input; no physical stopping, PI or runtime scheduling claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "metric-control",
+      "name": "Native metric snapshots, odometer history and direct PI units",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "default",
+            "sources": [
+              "tests/planning/test_metric_control.c",
+              "demo/code/vision_planner.c",
+              "tools/speed_planning/speed_planner.c",
+              "demo/code/vision_planner_shadow.c",
+              "demo/code/vision_metric_io.c",
+              "demo/code/vision_metric_pi.c",
+              "demo/code/wheel_speed.c",
+              "tools/speed_planning/vision_adapter.c"
+            ],
+            "includeDirectories": [
+              "demo/code",
+              "tools/speed_planning"
+            ],
+            "defines": []
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Synthetic native snapshot/vision inputs and unchanged wheel_speed PI algorithm; no active driver state, real PWM, firmware timing or physical calibration claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "metric-odom-replay",
+      "name": "Frozen wheel counter traces through native metric adapter",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_metric_odom_replay.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Measured cumulative counters and explicit candidate scales, independent conversion/interpolation oracle; no ground truth, live camera alignment, PWM or physical stopping claim"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "planner-runtime",
+      "name": "C26 metric target source, live PI and sole writer integration",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "c",
+        "variants": [
+          {
+            "id": "control",
+            "sources": [
+              "tests/planning/test_planner_runtime.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c",
+              "demo/code/vision_planner_runtime.c",
+              "demo/code/vision_metric_io.c",
+              "demo/code/vision_planner_shadow.c",
+              "demo/code/vision_planner.c",
+              "tools/speed_planning/speed_planner.c",
+              "tools/speed_planning/vision_adapter.c"
+            ],
+            "includeDirectories": [
+              "tests/vision/stubs",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=0",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_HOST_OUTPUT_HOOK=1",
+              "VISION_PLANNER_RUNTIME=1",
+              "VISION_PLANNER_ACTIVE=1",
+              "VISION_PLANNER_PROFILE_REVIEWED=1"
+            ]
+          },
+          {
+            "id": "shadow",
+            "sources": [
+              "tests/planning/test_planner_runtime.c",
+              "demo/code/vision_speed.c",
+              "demo/code/wheel_speed.c",
+              "demo/code/vision_motion.c",
+              "demo/code/vision_drive.c",
+              "demo/code/vision_actuator.c",
+              "demo/code/vision_guard.c",
+              "demo/code/vision_probe.c",
+              "demo/code/vision_startup.c",
+              "demo/code/vision_vehicle_profile.c",
+              "demo/code/vision_control.c",
+              "demo/code/midterm_open_loop.c",
+              "demo/code/app_mode.c",
+              "demo/code/vision_field.c",
+              "demo/code/vision_storage.c",
+              "demo/code/vision_planner_runtime.c",
+              "demo/code/vision_metric_io.c",
+              "demo/code/vision_planner_shadow.c",
+              "demo/code/vision_planner.c",
+              "tools/speed_planning/speed_planner.c",
+              "tools/speed_planning/vision_adapter.c"
+            ],
+            "includeDirectories": [
+              "tests/vision/stubs",
+              "demo/code"
+            ],
+            "defines": [
+              "VISION_ENCODER_ENABLE=1",
+              "VISION_MIDTERM_TRAINING=1",
+              "VISION_MIDTERM_AUTONOMOUS=0",
+              "VISION_MIDTERM_ROUTE_TRIAL=1",
+              "VISION_ROUTE_SWITCH=1",
+              "VISION_DRIVE_ENABLE=1",
+              "VISION_START_SWITCH_ENABLE=0",
+              "VISION_HOST_OUTPUT_HOOK=1",
+              "VISION_PLANNER_RUNTIME=1",
+              "VISION_PLANNER_ACTIVE=0",
+              "VISION_PLANNER_PROFILE_REVIEWED=0"
+            ]
+          }
+        ]
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 300,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Actual C26 scheduler/PI/writer with simulated native IO, explicit synthetic calibration; no board timing or vehicle authorization"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "phase3-shadow-preparation",
+      "name": "Measured Phase2 profile and isolated C26 shadow download preparation",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_shadow_preparation.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Source-pinned measured candidates and labelled engineering references; native private shadow/field trace and legacy PWM equivalence; no hardware or active metric approval"
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "vision-image-regression",
+      "name": "Original raw images and visually reviewed boundary bands",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/vision/test_image_regression.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "750 CRC/SHA verified native-resolution original frames; 28 local visually reviewed boundary bands selected after experiments and metric coverage. Not a full labelled accuracy benchmark, independent holdout or vehicle approval."
     }
   ]
 }

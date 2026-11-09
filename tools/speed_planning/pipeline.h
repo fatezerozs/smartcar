@@ -47,7 +47,6 @@ typedef struct {
 } sp_pipeline_t;
 /* Rebase still-fresh metric geometry using travelled distance since capture.
  * No new image identity is minted. Exhausted preview is rejected. */
-int sp_preview_advance(const sp_preview_t *source,float travelled,sp_preview_t *out);
 /* Caller supplies a nonzero session identity, unique while old candidates can
  * exist. Init is a new offline session, not a runtime fault-clear API. */
 int sp_pipeline_init(sp_pipeline_t *p,const sp_pipeline_config_t *config,uint64_t session);

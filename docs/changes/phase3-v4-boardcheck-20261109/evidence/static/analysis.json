@@ -1,0 +1,301 @@
+{
+  "scope": "Stopped V4 observed telemetry and sequential actual preview packets; not synchronized full-resolution images, ON planning or motor feedback validation",
+  "processingSampleLines": [
+    "[VISION2] age_ms=9 proc_ms=3 history_reset=0 row90_thr=215 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0",
+    "[VISION2] age_ms=9 proc_ms=3 history_reset=0 row90_thr=215 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0",
+    "[VISION2] age_ms=10 proc_ms=4 history_reset=0 row90_thr=215 local_rows=85 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0",
+    "[VISION2] age_ms=4 proc_ms=3 history_reset=0 row90_thr=215 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0",
+    "[VISION2] age_ms=14 proc_ms=3 history_reset=0 row90_thr=215 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0",
+    "[VISION2] age_ms=4 proc_ms=3 history_reset=0 row90_thr=215 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0"
+  ],
+  "qualitySampleLines": [
+    "[VISION2] n=4427 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=114 white=46",
+    "[VISION2] n=4452 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=113 white=47",
+    "[VISION2] n=4477 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=114 white=47",
+    "[VISION2] n=4560 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=114 white=47",
+    "[VISION2] n=4655 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=114 white=46",
+    "[VISION2] n=4751 fps=50.0 valid=1 state=TRACK q=93 thr=211 contrast=114 white=46"
+  ],
+  "processingSamples": 6,
+  "processingObservedMsRange": [
+    3,
+    4
+  ],
+  "reportedFpsRange": [
+    50.0,
+    50.0
+  ],
+  "sampleClockResolutionMs": 1,
+  "overlayPixelInspection": [
+    {
+      "file": "o-0.gray",
+      "rawRow": 70,
+      "blackCentresAtPreviewX": [
+        55,
+        56
+      ],
+      "grayEdgesAtPreviewX": [
+        38,
+        73
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 66,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        40,
+        65
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 64,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        41,
+        65
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 62,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        42,
+        64
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 60,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        43,
+        64
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 58,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        43,
+        63
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 56,
+      "blackCentresAtPreviewX": [
+        53,
+        54
+      ],
+      "grayEdgesAtPreviewX": [
+        44,
+        63
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 54,
+      "blackCentresAtPreviewX": [],
+      "grayEdgesAtPreviewX": [],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 52,
+      "blackCentresAtPreviewX": [],
+      "grayEdgesAtPreviewX": [],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 50,
+      "blackCentresAtPreviewX": [
+        57,
+        58
+      ],
+      "grayEdgesAtPreviewX": [
+        47,
+        69
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-0.gray",
+      "rawRow": 48,
+      "blackCentresAtPreviewX": [
+        57,
+        58
+      ],
+      "grayEdgesAtPreviewX": [
+        48,
+        69
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 70,
+      "blackCentresAtPreviewX": [
+        55,
+        56
+      ],
+      "grayEdgesAtPreviewX": [
+        39,
+        73
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 66,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        40,
+        65
+      ],
+      "partialCentresAtPreviewX": [
+        74
+      ]
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 64,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        41,
+        65
+      ],
+      "partialCentresAtPreviewX": [
+        75
+      ]
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 62,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        42,
+        64
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 60,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        43,
+        64
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 58,
+      "blackCentresAtPreviewX": [
+        52,
+        53
+      ],
+      "grayEdgesAtPreviewX": [
+        43,
+        63
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 56,
+      "blackCentresAtPreviewX": [
+        53,
+        54
+      ],
+      "grayEdgesAtPreviewX": [
+        44,
+        63
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 54,
+      "blackCentresAtPreviewX": [],
+      "grayEdgesAtPreviewX": [],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 52,
+      "blackCentresAtPreviewX": [],
+      "grayEdgesAtPreviewX": [],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 50,
+      "blackCentresAtPreviewX": [
+        57,
+        58
+      ],
+      "grayEdgesAtPreviewX": [
+        47,
+        69
+      ],
+      "partialCentresAtPreviewX": []
+    },
+    {
+      "file": "o-1.gray",
+      "rawRow": 48,
+      "blackCentresAtPreviewX": [
+        57,
+        58
+      ],
+      "grayEdgesAtPreviewX": [
+        48,
+        69
+      ],
+      "partialCentresAtPreviewX": []
+    }
+  ],
+  "requiredNearEndpointRow54HasNoVisibleMarksInBothOverlays": true,
+  "observedImages": 6,
+  "metricGeometryPass": false,
+  "nextRequiredEvidence": "Actual 188x120 raw gray plus matching native row/threshold state; current decimated preview replay does not reproduce the board loss."
+}
