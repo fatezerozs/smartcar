@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "smartcar.speed-response-review/1",
+  "sourceSha256": "ba1bdd81d4e99f3f1f14472239bf4e03f80ae9776bf433f251f0a36393242278",
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "crcVerified": true,
+  "rows": 522,
+  "config": {
+    "requestPermille": 250,
+    "durationMs": 3000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "firstZeroAfterArmMs": 3200,
+  "postZeroMs": 2003,
+  "stopReason": 1,
+  "faultDetailValues": [
+    0
+  ],
+  "faultValues": [
+    0
+  ],
+  "uniquePositiveTargetMatchedControls": 295,
+  "excludedZeroTargetPairingAnomalies": [
+    {
+      "heldAtSequence": 77016,
+      "controlSequence": 77015,
+      "controlElapsedMs": 204,
+      "targetLeftRight": [
+        0,
+        0
+      ],
+      "heldFeedbackLeftRight": [
+        25,
+        20
+      ],
+      "rawFeedbackLeftRight": [
+        0,
+        0
+      ],
+      "reason": "held feedback does not match source sample"
+    }
+  ],
+  "tailWindowsMs": {
+    "300": {
+      "uniqueControlSamples": 29,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 24.103448275862068,
+        "rangeCounts10ms": [
+          18,
+          29
+        ],
+        "rmseCounts10ms": 3.1622776601683795,
+        "samplesWithin2Counts": 14,
+        "maxOvershootCounts": 6
+      },
+      "r": {
+        "meanCounts10ms": 21.655172413793103,
+        "rangeCounts10ms": [
+          14,
+          28
+        ],
+        "rmseCounts10ms": 4.0043080249427225,
+        "samplesWithin2Counts": 14,
+        "maxOvershootCounts": 5
+      }
+    },
+    "500": {
+      "uniqueControlSamples": 49,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 23.836734693877553,
+        "rangeCounts10ms": [
+          18,
+          31
+        ],
+        "rmseCounts10ms": 3.347249861102852,
+        "samplesWithin2Counts": 25,
+        "maxOvershootCounts": 8
+      },
+      "r": {
+        "meanCounts10ms": 22.3265306122449,
+        "rangeCounts10ms": [
+          14,
+          30
+        ],
+        "rmseCounts10ms": 4.088310863215481,
+        "samplesWithin2Counts": 22,
+        "maxOvershootCounts": 7
+      }
+    }
+  },
+  "responseOnset": {
+    "l": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 1093,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    },
+    "r": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 1143,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    }
+  },
+  "outputCeiling": {
+    "l": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 142.0
+    },
+    "r": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 164.0
+    }
+  },
+  "driveNegativeRuns": {
+    "l": [],
+    "r": []
+  },
+  "signedRawTotalDeltaLeftRight": [
+    -4999,
+    4599
+  ],
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "limits": [
+    "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+    "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+    "Saturation duration is sample-window attribution, not electrical timing.",
+    "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+    "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+  ],
+  "sourceTrace": ".build\\phase2-calibration-20261108\\speed-response-20261109_1-release\\export-closed250-3000-01\\trace.json",
+  "operatorObservation": "Both wheels continuously forward; normal, stopped",
+  "mechanicalStopConfirmedByOperator": true,
+  "performanceAccepted": false
+}

@@ -1,0 +1,100 @@
+PLAN: @motion line 190 3000; heartbeat every 100ms; STOP=0ms; external STOP=False; drop heartbeat=0ms
+TOP
+[FIELD] STOP
+ split=0.8621 stripes=0.2613
+[VISION2] n=16539 fps=50.0 valid=0 state=NO_LANE q=2 thr=173 contrast=171 white=51
+[VISION2] both=2 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 width=0 flags=0 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=4 history_reset=1 row90_thr=164 local_rows=85 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[LINK] STOP
+[FIELD] STOP
+[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=335715 sample=33539 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=CROSS p=0.938 margin=0.901 entropy=0.130 accepted=0 trained=0
+[FEATURE] n=16564 ms=335704 mask=60 quality=0.671 heading=0.0000 curvature=0.0000 open_left=0.7011 open_right=0.7931 split=0.8506 stripes=0.2552
+[VISION2] n=16564 fps=50.0 valid=0 state=NO_LANE q=2 thr=173 contrast=171 white=51
+[VISION2] both=2 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 width=0 flags=0 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=4 history_reset=1 row90_thr=163 local_rows=80 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[LINK] port=radio owner=radio rx=940 tx=669917 overflow=0 errors=1 tx_rejected=0; x=claim while stopped
+[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=336215 sample=33589 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=CROSS p=0.933 margin=0.892 entropy=0.135 accepted=0 trained=0
+[FEATURE] n=16589 ms=336204 mask=60 quality=0.671 heading=0.0000 curvature=0.0000 open_left=0.7011 open_right=0.7931 split=0.8506 stripes=0.2592
+[VISION2] n=16589 fps=50.0 valid=0 state=NO_LANE q=2 thr=173 contrast=171 white=51
+[VISION2] both=2 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 width=0 flags=0 drop=0 junction=0 anchors=0
+[VISION2] age_ms=11 proc_ms=3 history_reset=1 row90_thr=163 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[MOTION] STARTED kind=1 requested=190 duration_ms=3000 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=11 kind=1 phase=1 reason=0 requested=190 actual=0 servo_us=1550 ms=336283
+[SPEED] ms=336283 sample=33596 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=1 reason=0 requested=190 actual=0 servo_us=1550 ms=336383
+[SPEED] ms=336383 sample=33606 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=1 reason=0 requested=190 actual=0 servo_us=1550 ms=336483
+[SPEED] ms=336483 sample=33616 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=0 servo_us=1550 ms=336483
+[SPEED] ms=336483 sample=33616 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=9 servo_us=1550 ms=336583
+[SPEED] ms=336583 sample=33626 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=19 servo_us=1550 ms=336683
+[SPEED] ms=336683 sample=33636 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=29 servo_us=1550 ms=336783
+[SPEED] ms=336783 sample=33646 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=39 servo_us=1550 ms=336883
+[SPEED] ms=336883 sample=33656 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=50 servo_us=1550 ms=336983
+[SPEED] ms=336983 sample=33666 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=59 servo_us=1550 ms=337083
+[SPEED] ms=337083 sample=33676 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=69 servo_us=1550 ms=337183
+[SPEED] ms=337183 sample=33686 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=79 servo_us=1550 ms=337283
+[SPEED] ms=337283 sample=33696 enabled=0 raw3_L=0 raw4_R=1 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=89 servo_us=1550 ms=337383
+[SPEED] ms=337383 sample=33706 enabled=0 raw3_L=0 raw4_R=1 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=100 servo_us=1550 ms=337483
+[SPEED] ms=337483 sample=33716 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=109 servo_us=1550 ms=337583
+[SPEED] ms=337583 sample=33726 enabled=0 raw3_L=0 raw4_R=2 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=119 servo_us=1550 ms=337683
+[SPEED] ms=337683 sample=33736 enabled=0 raw3_L=0 raw4_R=1 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=129 servo_us=1550 ms=337783
+[SPEED] ms=337783 sample=33746 enabled=0 raw3_L=0 raw4_R=1 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=140 servo_us=1550 ms=337883
+[SPEED] ms=337883 sample=33756 enabled=0 raw3_L=0 raw4_R=25 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=150 servo_us=1550 ms=337983
+[SPEED] ms=337983 sample=33766 enabled=0 raw3_L=-1 raw4_R=68 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=160 servo_us=1550 ms=338083
+[SPEED] ms=338083 sample=33776 enabled=0 raw3_L=0 raw4_R=91 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=169 servo_us=1550 ms=338183
+[SPEED] ms=338183 sample=33786 enabled=0 raw3_L=0 raw4_R=115 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=179 servo_us=1550 ms=338283
+[SPEED] ms=338283 sample=33796 enabled=0 raw3_L=0 raw4_R=146 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=189 servo_us=1550 ms=338383
+[SPEED] ms=338383 sample=33806 enabled=0 raw3_L=0 raw4_R=153 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338483
+[SPEED] ms=338483 sample=33816 enabled=0 raw3_L=0 raw4_R=193 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338583
+[SPEED] ms=338583 sample=33826 enabled=0 raw3_L=-1 raw4_R=198 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338683
+[SPEED] ms=338683 sample=33836 enabled=0 raw3_L=-43 raw4_R=202 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338783
+[SPEED] ms=338783 sample=33846 enabled=0 raw3_L=-81 raw4_R=205 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338883
+[SPEED] ms=338883 sample=33856 enabled=0 raw3_L=-113 raw4_R=208 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=338983
+[SPEED] ms=338983 sample=33866 enabled=0 raw3_L=-125 raw4_R=212 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=339083
+[SPEED] ms=339083 sample=33876 enabled=0 raw3_L=-139 raw4_R=213 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=339183
+[SPEED] ms=339183 sample=33886 enabled=0 raw3_L=-147 raw4_R=217 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=339286
+[SPEED] ms=339286 sample=33896 enabled=0 raw3_L=-157 raw4_R=220 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=2 reason=0 requested=190 actual=190 servo_us=1550 ms=339386
+[SPEED] ms=339386 sample=33906 enabled=0 raw3_L=-166 raw4_R=216 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=11 kind=1 phase=0 reason=1 requested=190 actual=0 servo_us=1550 ms=339486
+[SPEED] ms=339486 sample=33916 enabled=0 raw3_L=-163 raw4_R=213 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+FIRMWARE STOP REPORT CONFIRMED: reason=1. Measure physical stop separately. Log: C:\shengchanli\smartCar\smartcar\.build\motion-runs\20261109-001808-193.jsonl

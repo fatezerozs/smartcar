@@ -1,0 +1,52 @@
+PLAN: @motion line 150 2500; heartbeat every 100ms; STOP=0ms; external STOP=False; drop heartbeat=0ms
+[BOARD_IO] [LINK] STOP
+[FIELD] STOP
+[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=CROSS p=0.878 margin=0.823 entropy=0.231 accepted=0 trained=0
+[FEATURE] n=14698 ms=295099 mask=60 quality=0.616 heading=0.0000 curvature=0.0000 open_left=0.7011 open_right=0.5632 split=0.8621 stripes=0.2560
+[VISION2] n=14698 fps=50.0 valid=0 state=NO_LANE q=1 thr=169 contrast=157 white=50
+[VISION2] both=1 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 drop=0
+[VISION2] age_ms=15 proc_ms=4 history_reset=1 row90_thr=160 local_rows=84 ambiguous=0
+[LINK] port=radio owner=radio rx=231 tx=490719 overflow=0 errors=1 tx_rejected=0; x=claim while stopped
+[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=CROSS p=0.885 margin=0.836 entropy=0.223 accepted=0 trained=0
+[FEATURE] n=14723 ms=295599 mask=60 quality=0.616 heading=0.0000 curvature=0.0000 open_left=0.7011 open_right=0.5632 split=0.8621 stripes=0.2576
+[VISION2] n=14723 fps=50.0 valid=0 state=NO_LANE q=1 thr=169 contrast=157 white=50
+[VISION2] both=1 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 drop=0
+[VISION2] age_ms=15 proc_ms=4 history_reset=1 row90_thr=159 local_rows=86 ambiguous=0
+[MOTION] STARTED kind=1 requested=150 duration_ms=2500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=150 actual=0 servo_us=1550 ms=295867
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=150 actual=0 servo_us=1550 ms=295967
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=0 servo_us=1550 ms=296067
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=10 servo_us=1550 ms=296167
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=20 servo_us=1550 ms=296267
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=29 servo_us=1550 ms=296367
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=40 servo_us=1550 ms=296467
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=49 servo_us=1550 ms=296567
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=60 servo_us=1550 ms=296667
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=69 servo_us=1550 ms=296767
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=80 servo_us=1550 ms=296867
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=89 servo_us=1550 ms=296967
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=100 servo_us=1550 ms=297067
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=110 servo_us=1550 ms=297167
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=119 servo_us=1550 ms=297267
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=130 servo_us=1550 ms=297367
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=140 servo_us=1550 ms=297467
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=297567
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=297667
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=297767
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=297867
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=297967
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=298067
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=298167
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=298267
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=298367
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=298467
+[MOTION] seq=1 kind=1 phase=0 reason=1 requested=150 actual=0 servo_us=1550 ms=298567
+FIRMWARE STOP REPORT CONFIRMED: reason=1. Measure physical stop separately. Log: C:\shengchanli\smartCar\smartcar\.build\motion-runs\20261109-000422-526.jsonl

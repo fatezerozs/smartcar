@@ -1,0 +1,11 @@
+{
+  "port": "COM10",
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "kpQ8": 512,
+  "kiQ8": 25,
+  "targetCounts10ms": 23,
+  "readback": "[SPEED] enabled=1 max_ticks=23 kp=2.0000 ki=0.0977 target_R/L=0/0 measured_R/L=27/27 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops",
+  "motionCommandSent": false,
+  "resetSent": false,
+  "bufferReleased": false
+}

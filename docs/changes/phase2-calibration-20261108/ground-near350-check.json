@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "smartcar.phase2-near-map-check/1",
+  "sourceSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-near350-20261108T182509276Z\\camera-g-20261109-022509-434-7e442b36",
+  "operatorReply": "350mm两点就绪",
+  "evaluationModel": "ground-homography-candidate.json",
+  "refitPerformed": false,
+  "frames": [
+    {
+      "source": "frame-000001.gray",
+      "uv": [
+        [
+          42.74183976261128,
+          44.817507418397625
+        ],
+        [
+          66.37362637362638,
+          49.337278106508876
+        ],
+        [
+          48.41284403669725,
+          28.0
+        ],
+        [
+          61.57368421052632,
+          29.557894736842105
+        ],
+        [
+          50.265306122448976,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ]
+    },
+    {
+      "source": "frame-000002.gray",
+      "uv": [
+        [
+          42.74556213017752,
+          44.82396449704142
+        ],
+        [
+          66.36286919831224,
+          49.33755274261603
+        ],
+        [
+          48.41284403669725,
+          28.0
+        ],
+        [
+          61.58201058201058,
+          29.56084656084656
+        ],
+        [
+          50.27450980392157,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ]
+    },
+    {
+      "source": "frame-000003.gray",
+      "uv": [
+        [
+          42.74704142011834,
+          44.819526627218934
+        ],
+        [
+          66.36402027027027,
+          49.335304054054056
+        ],
+        [
+          48.41818181818182,
+          28.0
+        ],
+        [
+          61.56842105263158,
+          29.557894736842105
+        ],
+        [
+          50.27450980392157,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ]
+    }
+  ],
+  "points": [
+    {
+      "id": "A",
+      "groundMmReported": [
+        -100,
+        350
+      ],
+      "uvMean": [
+        42.74481443763571,
+        44.82033284755266
+      ],
+      "predictedGroundMm": [
+        -116.97513015091224,
+        337.46326701593637
+      ],
+      "residualMm": 21.102718250360986,
+      "use": "held-out near extrapolation check"
+    },
+    {
+      "id": "B",
+      "groundMmReported": [
+        100,
+        350
+      ],
+      "uvMean": [
+        66.36683861406964,
+        49.33671163439299
+      ],
+      "predictedGroundMm": [
+        94.26181931919095,
+        329.0727525955081
+      ],
+      "residualMm": 21.69968666719458,
+      "use": "held-out near extrapolation check"
+    },
+    {
+      "id": "C",
+      "groundMmReported": [
+        -100,
+        800
+      ],
+      "uvMean": [
+        48.4146232971921,
+        28.0
+      ],
+      "predictedGroundMm": [
+        -105.46417120248768,
+        800.2860938021631
+      ],
+      "residualMm": 5.471655745177302,
+      "use": "unchanged point consistency"
+    },
+    {
+      "id": "D",
+      "groundMmReported": [
+        100,
+        800
+      ],
+      "uvMean": [
+        61.57470528172283,
+        29.558878678176924
+      ],
+      "predictedGroundMm": [
+        100.51399724940894,
+        798.1893726585706
+      ],
+      "residualMm": 1.882170168165352,
+      "use": "unchanged point consistency"
+    },
+    {
+      "id": "E",
+      "groundMmReported": [
+        -100,
+        1100
+      ],
+      "uvMean": [
+        50.27144191009737,
+        23.0
+      ],
+      "predictedGroundMm": [
+        -94.54735815412022,
+        1102.0057731641477
+      ],
+      "residualMm": 5.809856201788003,
+      "use": "unchanged point consistency"
+    },
+    {
+      "id": "F",
+      "groundMmReported": [
+        100,
+        1100
+      ],
+      "uvMean": [
+        60.0,
+        24.0
+      ],
+      "predictedGroundMm": [
+        99.99999999999973,
+        1100.0000000000002
+      ],
+      "residualMm": 3.529903082259756e-13,
+      "use": "unchanged point consistency"
+    }
+  ],
+  "maxNearResidualMm": 21.69968666719458,
+  "unchangedMaxImageShiftPixels": 0.27981034573383473,
+  "productionApproved": false,
+  "nearMappingAcceptedForProduction": false,
+  "limits": [
+    "Both350mm points independent of existing fit; do not re-fit and report reduced training residual as validation.",
+    "Mark size/centroid/placement errors and distortion not independently calibrated.",
+    "This maps samples to rear-axle origin, not distance from optical centre."
+  ],
+  "coordinateInterpretationSuperseded": true,
+  "correctedPointDistanceFromCameraMm": 350,
+  "conditionalRearDistanceMm": 547,
+  "coordinateCorrectionSource": "ground-origin-correction.json"
+}

@@ -1,0 +1,124 @@
+{
+  "operatorReply": "遮挡了20-80cm",
+  "operatorReportedRangeFromCameraGroundProjectionMm": [
+    200,
+    800
+  ],
+  "stage": "REPORTED_NEAR_COVER_WITH_RETAINED_LANE_BOUNDARY",
+  "isolatedNearTestConditionMet": false,
+  "calReports": [
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "calStateCounts": {
+    "(1, 0)": 6,
+    "(1, 1)": 15
+  },
+  "allNearObservationValid": true,
+  "visualInspection": "First preview inspected: textured bright/gray material over near ground; left lane boundary remains visible. Far lane remains partly visible. Cannot certify both near boundaries are physically occluded.",
+  "rawEvidenceSha256": {
+    "near.console.txt": "70f33e8d88397d909df40b3d4df73f58ca46f2e7b189fbe5aa4c2a43c6648bc0",
+    "near.log": "4efb0edd5fceebc42f545828e0d147c44670a9860ed623465b161c4eed24ac0b",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000001.gray": "6498026cb87dbd10bb59aae800120b87ac547acf0e248b250bd070a394497bf9",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000001.png": "5d2b8eda2501d1f27210cf3f052bb9e04cb6f5b6e75227a93e73acc2972cb051",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000001.preview.png": "de8abfc5a26d8e9ca41fb1a0f1ccfaa42ec4d46cc72113e19e6377c975c7cb08",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000002.gray": "f39e2a8c221c03d0719d4b95a2bc9e68f51d49936969780a2a5dd57c81509091",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000002.png": "00471c833a2489bf697711ee2f753af25ca6654253e91f02b57eac195d9f837e",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000002.preview.png": "1e946c15578ba270ae8f329da66a24db920ea0edff89d203313971016faf96c4",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000003.gray": "2295a3d94a0e51050756ac682678f05a94e618727a9f0a1e152713c7eabe09e6",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000003.png": "9e2a9cac40e7302ab755049565ea46732c981c8e28c76c593b7401b20c2be0b3",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frame-000003.preview.png": "b2b4ea48f49ee7cc79db3664fce5209dae9a70c1e6156858a2929bf3e9761968",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\frames.csv": "dab80a74368fb0dc69fc1675b5ec2646203091e2dd2d682d2b99e9bc08465c64",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\received.bin": "217b2460d896c08785d1392791fd8ecd86544ca9fd9a7237e54cfde81f737531",
+    "images\\camera-g-20261109-030714-490-d2f534d8\\session.json": "27e6bfe30292bac9e87a65055e0da0a77bef63be28b33dc525dc07b82e213e46"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false,
+  "limits": [
+    "Reported800mm far edge overlaps approximate near edge of far band; not isolated near experiment.",
+    "Preserved edge support can permit valid tracking; no unique software-defect conclusion.",
+    "No synchronized per-frame ground-truth mask."
+  ]
+}

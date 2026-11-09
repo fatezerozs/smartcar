@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "smartcar.phase2-adoption-decision/1",
+  "recordedAtUtc": "2026-11-08T15:06:09.282745+00:00",
+  "rawInstruction": "不需要,直接用先前编码器和945mm数据,测量下一项",
+  "additionalRollingRepeatsRequested": false,
+  "useFor": "Subsequent Phase 2 velocity/distance conversion working baseline",
+  "cpr": {
+    "left": 2335.8,
+    "right": 2358.6
+  },
+  "forwardRawMultipliers": {
+    "left": -1,
+    "right": 1
+  },
+  "reportedFiveTurnDistanceMm": 945,
+  "circumferenceM": 0.189,
+  "countsPerMetre": {
+    "left": 12358.730158730159,
+    "right": 12479.36507936508
+  },
+  "repeatabilityVerified": false,
+  "productionApproved": false,
+  "nextMeasurement": "Ground low-speed response and stop/coast process; vehicle conditions and motion firmware must be checked first."
+}

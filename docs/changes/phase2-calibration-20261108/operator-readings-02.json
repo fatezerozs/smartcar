@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "smartcar.operator-calibration-reading/1",
+  "recordedDate": "2026-11-08",
+  "measurementTimestamp": null,
+  "source": "User correction and measurement-definition clarification",
+  "rawReply": "轮胎接地中心线之间的距离,改成152.9mm吧,游标卡尺测量;轴距仍然是197mm",
+  "mappingBasis": "The preceding question addressed front and rear tracks both previously reported as 155 mm; apply correction to both. Wheelbase is reaffirmed, not remeasured as a separate trial.",
+  "currentReportedGeometryMm": {
+    "wheelbase_left_mm": 197,
+    "wheelbase_right_mm": 197,
+    "rear_track_mm": 152.9,
+    "front_track_mm": 152.9
+  },
+  "trackDefinition": "Distance between tyre contact centre lines",
+  "instrumentType": "vernier caliper",
+  "localInstrumentId": "caliper-01",
+  "instrumentRangeMm": null,
+  "reportedDistanceResolutionMm": 0.1,
+  "measurementAccuracyMm": null,
+  "supersedesTrials": ["G03", "G04"],
+  "replacementTrials": ["G08", "G09"],
+  "repeatedMeasurementsProvided": false,
+  "measurementConditionsConfirmed": false,
+  "independentlyVerified": false,
+  "productionApproved": false
+}

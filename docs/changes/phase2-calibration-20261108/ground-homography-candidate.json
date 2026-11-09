@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "smartcar.phase2-ground-homography/1",
+  "status": "ORIGIN_CORRECTION_PENDING_HORIZONTAL_DISTANCE_CONFIRMATION",
+  "imageSize": [
+    94,
+    60
+  ],
+  "imageCoordinates": "u right,v down; pixel centre indices0..93/0..59",
+  "groundCoordinates": "mm; rear axle ground projection origin,x right,y forward",
+  "homographyImageToGroundMm": [
+    [
+      -194.96570932291897,
+      3.496363618765078,
+      10627.236062305246
+    ],
+    [
+      -44.65382653422398,
+      144.84334622718546,
+      -11651.742189813878
+    ],
+    [
+      0.02380835057400804,
+      -0.5123516140264922,
+      1.0
+    ]
+  ],
+  "homographyMethod": "Normalized DLT, four corner points A/B/E/F only; independent C/D not fitted",
+  "sourceSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-50mm-20261108T182104980Z\\camera-g-20261109-022105-139-ff3d220b",
+  "markerDimensionsMmReportedOrContextual": [
+    50,
+    50
+  ],
+  "placementSource": "User reports six ready, then enlarged15mm to requested50mm. Coordinates from preceding placement instruction; no independent survey.",
+  "centroidMethod": "Three frames; reviewed fixed boxes, gray<245 weighted by255-gray; no subpixel accuracy inferred from numerical centroid.",
+  "frames": [
+    {
+      "source": "frame-000001.gray",
+      "uv": [
+        [
+          46.56333333333333,
+          36.87
+        ],
+        [
+          64.26168224299066,
+          39.36261682242991
+        ],
+        [
+          48.387387387387385,
+          28.0
+        ],
+        [
+          61.401408450704224,
+          29.781690140845072
+        ],
+        [
+          50.0,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ],
+      "pixelsBelow245": [
+        6,
+        8,
+        2,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "source": "frame-000002.gray",
+      "uv": [
+        [
+          46.56506849315068,
+          36.86643835616438
+        ],
+        [
+          64.25925925925925,
+          39.36296296296296
+        ],
+        [
+          48.388888888888886,
+          28.0
+        ],
+        [
+          61.423611111111114,
+          29.791666666666668
+        ],
+        [
+          50.0,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ],
+      "pixelsBelow245": [
+        6,
+        8,
+        2,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "source": "frame-000003.gray",
+      "uv": [
+        [
+          46.5578231292517,
+          36.87074829931973
+        ],
+        [
+          64.26315789473684,
+          39.3703007518797
+        ],
+        [
+          48.38317757009346,
+          28.0
+        ],
+        [
+          61.411764705882355,
+          29.78676470588235
+        ],
+        [
+          50.0,
+          23.0
+        ],
+        [
+          60.0,
+          24.0
+        ]
+      ],
+      "pixelsBelow245": [
+        6,
+        8,
+        2,
+        3,
+        1,
+        1
+      ]
+    }
+  ],
+  "points": [
+    {
+      "id": "A",
+      "xRightMm": -100,
+      "yForwardMm": 500,
+      "role": "fit",
+      "measuredImageUvMean": [
+        46.56207498524524,
+        36.8690622184947
+      ],
+      "imageCentroidRangePixels": [
+        0.0072453638989813385,
+        0.004309943155348606
+      ],
+      "projectedGroundMm": [
+        -100.00000000000016,
+        500.0000000000001
+      ],
+      "residualMm": 1.9328852131274408e-13,
+      "axisHalfPixelSensitivityMaxMm": 12.219250286696361
+    },
+    {
+      "id": "B",
+      "xRightMm": 100,
+      "yForwardMm": 500,
+      "role": "fit",
+      "measuredImageUvMean": [
+        64.26136646566225,
+        39.36529351242419
+      ],
+      "imageCentroidRangePixels": [
+        0.003898635477582957,
+        0.007683929449790128
+      ],
+      "projectedGroundMm": [
+        99.9999999999999,
+        500.0
+      ],
+      "residualMm": 9.947598300641403e-14,
+      "axisHalfPixelSensitivityMaxMm": 11.64191776567243
+    },
+    {
+      "id": "C",
+      "xRightMm": -100,
+      "yForwardMm": 800,
+      "role": "held_out_validation",
+      "measuredImageUvMean": [
+        48.386484615456574,
+        28.0
+      ],
+      "imageCentroidRangePixels": [
+        0.005711318795427189,
+        0.0
+      ],
+      "projectedGroundMm": [
+        -105.90828254033927,
+        800.139081905592
+      ],
+      "residualMm": 5.909919318649027,
+      "axisHalfPixelSensitivityMaxMm": 23.334278430996704
+    },
+    {
+      "id": "D",
+      "xRightMm": 100,
+      "yForwardMm": 800,
+      "role": "held_out_validation",
+      "measuredImageUvMean": [
+        61.4122614225659,
+        29.786707171131365
+      ],
+      "imageCentroidRangePixels": [
+        0.022202660406890118,
+        0.009976525821596027
+      ],
+      "projectedGroundMm": [
+        97.03023887769716,
+        787.5236990350317
+      ],
+      "residualMm": 12.824880774962843,
+      "axisHalfPixelSensitivityMaxMm": 21.960835523940368
+    },
+    {
+      "id": "E",
+      "xRightMm": -100,
+      "yForwardMm": 1100,
+      "role": "fit",
+      "measuredImageUvMean": [
+        50.0,
+        23.0
+      ],
+      "imageCentroidRangePixels": [
+        0.0,
+        0.0
+      ],
+      "projectedGroundMm": [
+        -100.00000000000045,
+        1100.0
+      ],
+      "residualMm": 4.547473508864641e-13,
+      "axisHalfPixelSensitivityMaxMm": 38.02073645248197
+    },
+    {
+      "id": "F",
+      "xRightMm": 100,
+      "yForwardMm": 1100,
+      "role": "fit",
+      "measuredImageUvMean": [
+        60.0,
+        24.0
+      ],
+      "imageCentroidRangePixels": [
+        0.0,
+        0.0
+      ],
+      "projectedGroundMm": [
+        99.99999999999973,
+        1100.0000000000002
+      ],
+      "residualMm": 3.529903082259756e-13,
+      "axisHalfPixelSensitivityMaxMm": 36.96206761144088
+    }
+  ],
+  "maxHeldOutResidualMm": 12.824880774962843,
+  "validity": "Provisional only inside sampled quadrilateral500..1100mm,x±100mm; near rows and out-of-domain requests not approved.",
+  "nearFieldVerified": false,
+  "cameraDistortionCalibrated": false,
+  "productionApproved": false,
+  "limits": [
+    "Far markers occupy1 pixel; subpixel centroid stability across frames does not establish spatial accuracy.",
+    "Half-pixel perturbation sensitivity is not measurement uncertainty or a safety margin.",
+    "Four-point training residual is algebraic fit, not independent validation.",
+    "Only two held-out points in same scene; no independent pose/session coverage.",
+    "Saturation remains; center of thresholded marker may differ from physical marker centre.",
+    "No extrapolation to entire image/near blind zone or production curve allowed."
+  ],
+  "coordinateInterpretationSuperseded": true,
+  "supersededReason": "Operator reports camera-origin distances; previous rear-axle target coordinate interpretation incorrect.",
+  "coordinateCorrectionSource": "ground-origin-correction.json"
+}

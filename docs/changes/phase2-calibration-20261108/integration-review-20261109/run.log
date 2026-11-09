@@ -1,0 +1,3 @@
+RESPONSE PASS 14414 assertions; simulated IO, not physical response
+HEARTBEAT DIAG PASS 815 assertions; simulated IO only
+TURN RESPONSE PASS 4121 assertions; simulated IO only

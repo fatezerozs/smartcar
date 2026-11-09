@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "smartcar.phase2-reported-candidates/1",
+  "status": "OPERATOR_REPORTED_PENDING_REVIEW",
+  "productionApproved": false,
+  "phase2Complete": false,
+  "geometryM": {
+    "wheelbaseLeft": 0.197,
+    "wheelbaseRight": 0.197,
+    "rearTrack": 0.1529,
+    "frontTrack": 0.1529,
+    "cameraHeight": 0.33,
+    "cameraOffsetForward": 0.197,
+    "cameraOffsetRight": 0
+  },
+  "rollingInput": {
+    "totalDistanceMm": 945,
+    "turns": 5,
+    "basis": "one shared reported value, not independent repeats",
+    "loadedConditionsConfirmed": true,
+    "wheelsOnGroundReported": true,
+    "manuallyPushedStraightReported": true,
+    "instrumentType": "tape measure",
+    "instrumentResolutionMm": 1,
+    "measurementConditionsFullyConfirmed": false,
+    "sourceSession": "rolling-tape/session.json"
+  },
+  "candidateCircumferenceM": {
+    "left": 0.189,
+    "right": 0.189
+  },
+  "candidateCountsPerMetre": {
+    "left": 12358.730158730159,
+    "right": 12479.36507936508
+  },
+  "sourceSha256": {
+    "operator-readings-02.json": "34c77ac3754b0633deb4f995bf3cb2ade2770a24a25f8123b5c0b1d6d453a311",
+    "operator-readings-03.json": "c8bd42e600f7421d77f978c7c23521279c32da4f3b2601a7b89fc9344e1bcc30",
+    "operator-readings-04.json": "2a3a137b0fbaea4257ac3d79cc9ec95340b394922424ea12d25d23c493642734",
+    "operator-readings-05.json": "7f9480dda2eec71e56d57a4fbbbf69e489ba3569a4b70694548693539e5177b1"
+  },
+  "encoderProfileSha256": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
+  "uncertainty": null,
+  "limitations": [
+    "Five turns interpreted from preceding prompt; no independent repeat distribution",
+    "Adopted CPR repeatability limits still apply",
+    "No production parameter or existing Host profile changed",
+    "Normal load, wheels on ground, manual straight push and tape instrument confirmed by operator; tape range/accuracy, direction, exact ground/load details, acquisition time and independent repeats remain unconfirmed",
+    "Tape graduation 1 mm is a resolution report, not certified accuracy; camera position alone cannot establish ground mapping or near distance"
+  ],
+  "cameraCoordinateConvention": "Rear axle midpoint origin; x right, y forward, z up; optical centre (0, 0.197, 0.330) m",
+  "cameraCalibration": {
+    "positionReported": true,
+    "pitchRad": null,
+    "groundHomography": null,
+    "nearVisibleDistanceM": null,
+    "sameConditionsAsRollingConfirmed": false
+  },
+  "workingBaselineDecision": "rolling-adoption-decision.json",
+  "useAsSubsequentMeasurementWorkingBaseline": true,
+  "additionalRollingRepeatsDeferredByOperator": true
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "id": "compiler-environment",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "environment",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.202446,
+  "exitCode": 0,
+  "startedAt": "2026-11-08T20:17:16.675+00:00",
+  "finishedAt": "2026-11-08T20:17:16.878+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "--version"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.021182,
+      "stage": "toolchain"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work\\environment_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work\\environment_probe.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.114094,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work\\environment_probe.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.054817,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\compiler-environment",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [
+    "artifacts/work/environment_probe.c",
+    "artifacts/work/environment_probe.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "compiler-environment",
+    "effectiveResources": [
+      "compiler-environment"
+    ],
+    "lastRawExitCode": 0
+  }
+}

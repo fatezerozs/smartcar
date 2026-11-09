@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "smartcar.phase2-latency-baseline/1",
+  "version": "PHASE2_STOP_TRACE_20261109_1",
+  "port": "COM14",
+  "mode": "OBSERVE",
+  "command": "STOP,claim,text,status only; no motion or configuration",
+  "timingReportCount": 49,
+  "processingMs": {
+    "min": 3,
+    "max": 4,
+    "median": 3
+  },
+  "reportedFrameAgeMs": {
+    "min": 4,
+    "max": 20
+  },
+  "reportedFps": {
+    "min": 50.0,
+    "max": 50.0
+  },
+  "rawSha256": "c1b01fdfba96ff93c55c0ed8c658b8d7323a0aa88496395fb624c8f7f5858d63",
+  "productionLatencyCalibrated": false,
+  "limits": [
+    "Approximately500ms sparse telemetry, not a per-frame latency distribution.",
+    "GPT1 millisecond clock; capture timestamp is CSI completion, not exposure start.",
+    "Reported age is at periodic telemetry time, not a frame-aligned pipeline latency.",
+    "Stationary scene, OFF/OBSERVE; active closed-loop/MPC timing not tested."
+  ]
+}

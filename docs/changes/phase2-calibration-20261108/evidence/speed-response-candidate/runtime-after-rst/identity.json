@@ -1,0 +1,11 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "port": "COM14",
+  "baud": 115200,
+  "runtimeIdentityVerified": true,
+  "observeModeReported": true,
+  "usbOwnershipVerified": true,
+  "motionCommandSent": false,
+  "receivedBytes": 62296,
+  "bufferEmptyReported": true
+}

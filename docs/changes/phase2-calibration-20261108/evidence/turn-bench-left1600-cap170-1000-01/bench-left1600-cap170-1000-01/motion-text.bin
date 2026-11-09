@@ -1,0 +1,16 @@
+ar=0.7800 far=0.4600 half=0.0350
+[MOTOR] confirmed=1 dir=1/1 scale=1.0000/1.0000
+[BENCH] seq=0 kind=0 channel=0 value=0 level=0 hold_ms=0 active=0
+[STARTUP] enabled=0 delay_ms=2000 state=0 restored=0 switch_seen=0 closed=0 local=0
+[STORE] valid=0 slot=0 generation=0 error=1
+[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=253425 sample=25310 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_ENTRY p=0.939 margin=0.899 entropy=0.117 accepted=0 trained=0
+[FEATURE] n=12644 ms=253421 mask=60 quality=0.788 heading=0.0000 curvature=0.0000 open_left=0.7356 open_right=0.0230 split=0.3218 stripes=0.0738
+[VISION2] n=12644 fps=50.0 valid=0 state=NO_LANE q=3 thr=158 contrast=201 white=65
+[VISION2] both=3 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 width=0 flags=0 drop=0 junction=0 anchors=0
+[VISION2] age_ms=4 proc_ms=3 history_reset=0 row90_thr=139 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[MOTION] STARTED kind=3 requested=170 duration_ms=1000 servo_us=1600; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast

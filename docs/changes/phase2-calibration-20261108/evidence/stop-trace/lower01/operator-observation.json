@@ -1,0 +1,12 @@
+{
+  "operatorReply": "从开始到结束总410mm左右，误差5mm以内",
+  "forwardWholeRunMm": 410,
+  "operatorEstimatedErrorWithinMm": 5,
+  "errorMetrologicallyVerified": false,
+  "units": "mm",
+  "stopDistanceMeasuredByOperator": false,
+  "encoderWholeCaptureMmLeftRight": [
+    347.52761366555353,
+    346.1714576443653
+  ]
+}

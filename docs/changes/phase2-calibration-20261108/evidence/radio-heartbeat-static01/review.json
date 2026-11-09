@@ -1,0 +1,31 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "port": "COM10",
+  "motionCommandSent": false,
+  "before": {
+    "line": "[LINK] port=radio owner=radio rx=20529 tx=2017574 overflow=0 errors=0 tx_rejected=0; x=claim while stopped",
+    "rx": 20529,
+    "tx": 2017574,
+    "overflow": 0,
+    "errors": 0,
+    "tx_rejected": 0
+  },
+  "after": {
+    "line": "[LINK] port=radio owner=radio rx=20832 tx=2032804 overflow=0 errors=0 tx_rejected=0; x=claim while stopped",
+    "rx": 20832,
+    "tx": 2032804,
+    "overflow": 0,
+    "errors": 0,
+    "tx_rejected": 0
+  },
+  "heartbeatCount": 100,
+  "heartbeatBytesSent": 300,
+  "boardRxCounterDelta": 303,
+  "counterDeltaAlsoIncludesStatusQueryAndPossibleTrailingNewlineBytes": true,
+  "maxHostHeartbeatGapMs": 80.0233,
+  "receivedBytesDuringTrain": 13836,
+  "limits": [
+    "RX byte totals do not prove every h was parsed or establish worst-case interarrival timing.",
+    "Stopped test does not reproduce motor-power EMI or moving radio geometry."
+  ]
+}

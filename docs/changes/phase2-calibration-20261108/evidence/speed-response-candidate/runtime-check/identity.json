@@ -1,0 +1,9 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "port": "COM14",
+  "baud": 115200,
+  "runtimeIdentityVerified": false,
+  "observeModeReported": false,
+  "motionCommandSent": false,
+  "receivedBytes": 0
+}

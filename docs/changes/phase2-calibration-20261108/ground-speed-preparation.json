@@ -1,0 +1,582 @@
+{
+  "schemaVersion": "smartcar.phase2-ground-speed-preparation/1",
+  "recordedAtUtc": "2026-11-08T15:10:15.525827+00:00",
+  "operatorReport": "300*45(单位:cm);材质类似尼龙;能;3S电池,标称11.1V",
+  "site": {
+    "lengthM": 3,
+    "widthM": 0.45,
+    "surfaceReported": "类似尼龙",
+    "canMarkStartAndStopReported": true
+  },
+  "battery": {
+    "seriesCellsReported": 3,
+    "nominalVoltageV": 11.1,
+    "measuredVoltageV": null
+  },
+  "workingConversionSource": "rolling-adoption-decision.json",
+  "candidate": {
+    "archive": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-speed-prep-20261108T151015506889Z",
+    "project": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-speed-prep-20261108T151015506889Z\\historical_encoder_speed_download.uvprojx",
+    "axf": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-speed-prep-20261108T151015506889Z\\Objects\\rt1064.axf",
+    "axfSha256": "4cbdb28eb463d19c39a549d3cba4618549cdfe823e6f34650a69a20457052b63",
+    "firmwareMarkerInAxf": "ENCODER_SPEED_DIAG_5",
+    "historicalBuildLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-speed-prep-20261108T151015506889Z\\build-20261023-024205-758.log",
+    "historicalBuildErrors": 0,
+    "historicalBuildWarnings": 0,
+    "rebuildPerformed": false,
+    "sourceToBinaryReproducibilityVerified": false,
+    "flashedThisSession": true
+  },
+  "stage": "STOP_TRACE_CANDIDATE_READY_NOT_FLASHED",
+  "motorCommandSent": true,
+  "initialBenchProposal": {
+    "wheels": "All wheels clear, vehicle secured; motor power initially isolated for identity/config checks",
+    "servoCentreUs": 1550,
+    "forwardDirectionHistorical": {
+      "motor1Right": 1,
+      "motor2Left": 1
+    },
+    "encoderSigns": {
+      "left": -1,
+      "right": 1
+    },
+    "control": "After identity/configuration verification, bounded low-output bench action and STOP; no ground run in this stage."
+  },
+  "groundStage": "Only after bench readiness/identity/direction/STOP verification; limited short straight test, not automatic sequence.",
+  "limits": [
+    "Nominal 11.1 V is not a measured battery voltage.",
+    "Historical speed telemetry about 100 ms; not complete 10 ms raw capture.",
+    "Initial tests are functional acquisition checks, not certified deceleration/jerk or physical stop bounds.",
+    "No generic protocol whitelist changed; exact version client required.",
+    "Ground run needs current field readiness and direct stop capability; no output authorized by this JSON alone."
+  ],
+  "operatorReadinessReply": "架空就绪,你是否已经烧录(每次烧录后你需要向我说明烧录版本)",
+  "flashEvents": [
+    {
+      "recordedAtUtc": "2026-11-08T15:13:34.090966+00:00",
+      "firmwareImageMarker": "ENCODER_SPEED_DIAG_5",
+      "axfSha256": "4cbdb28eb463d19c39a549d3cba4618549cdfe823e6f34650a69a20457052b63",
+      "keilExitCode": 0,
+      "programAndVerifyPassed": true,
+      "runtimeIdentityVerified": true,
+      "motionCommandSent": false,
+      "statusOutcome": "Initial ownership/status failure preserved; subsequent encoder status/hardware and full status queries passed."
+    }
+  ],
+  "evidenceSha256": {
+    "evidence/ground-speed/flash-20261108T151258749Z.log": "39de44c5a7aeeb4dfe55951adafde78754f5196685e43f4a7fe4a88e8cdf6c15",
+    "evidence/ground-speed/after-flash-status-20261108T151318272Z.log": "9823b63d81f0354d2344f29fc379ff19dab3f9b50c5324db5b535b4af7d33b98",
+    "evidence/ground-speed/after-reset-status-20261108T151412750Z.log": "a668a70c9a8e6a28449c2b4f6755e9bc6c8957efa007e3ea4c41621fb52363f9",
+    "evidence/ground-speed/after-reset-encoder-status-20261108T151452414Z.log": "69b42758c17cae0d3d881ecb60bac1e425611bb6be567efbba45af849fac91f3",
+    "evidence/ground-speed/after-reset-encoder-hw-20261108T151517667Z.log": "4a4db662812594fd701b96acc2c4ae06dc7ac20a479d7bf19ac08f5b1d3aa9b6",
+    "evidence/ground-speed/retry-full-status-20261108T151535501Z.log": "3098a9faca1e107ceb4c81a202ab8f74aabeee9c54905e90cb825ed0a3db085f",
+    "evidence/ground-speed/powered-bench-before-config-20261108T151755864Z.log": "e8120bf50d57e739aa6d4f1848730eb2a40dc424c0d2dd31fad4b47553c2989d",
+    "evidence/ground-speed/bench-config-1-20261108T151830840Z.log": "7076f15eb3222d7e5e8a6f4b5822d4fde9351f4b7dde80dcb3d7386032788963",
+    "evidence/ground-speed/bench-config-2-20261108T151836768Z.log": "63b3ce50a86bcf57952967bc2689c9b23d5f71101f93d3a0089538457405ba90",
+    "evidence/ground-speed/bench-config-3-20261108T151842630Z.log": "654b3abdef1aa87238eeaff01ac4c53473efdbfa463196e2229e948b7d23f2f2",
+    "evidence/ground-speed/bench-config-4-20261108T151848503Z.log": "d788a81e918f86d8af5cdc50d9cde627658fb788de4c944fc508a84005c3a0f7",
+    "evidence/ground-speed/bench-config-5-20261108T151854336Z.log": "7c3a6ef4d3e8f81e9489e1a28a693d38b7015ae5c9694174ee4f689ebd2a69ae",
+    "evidence/ground-speed/bench-config-6-20261108T151900217Z.log": "ea70668aefd3b8e9a2c4018e4681b42f35e388918fe6296468ed0b654399aaa3",
+    "evidence/ground-speed/bench-final-config-readback-20261108T151946966Z.log": "cfbfc907c7ef55bd9c023a4ed8a05c196326b2c10b58d59a8afb4a99002309f7",
+    "evidence/ground-speed/after-bench-line-100-1000-20261108T152026538Z.log": "4321d965743565b4e8ef978fe0c4e145e3f643bec94ebf85e5fce247772af0d0",
+    "evidence/ground-speed/bench-line-100-1000-20261108T152012448Z.console.txt": "6af524387d662cddfc4d9240c20633ecf5bd1c377d76d45bbe44454566960eec",
+    "evidence/ground-speed/20261108-232012-892.jsonl": "08a066ddbc57026ed7f9518bc03f54d690c8d0b86c67b8b4f549c40184384080",
+    "evidence/ground-speed/baseline150-precheck-20261108T152730104Z.log": "459e5b1218f285048494b7cf8fb391dcb8d8b3a288ab73d2a077a90d7f9b6c64",
+    "evidence/ground-speed/baseline150-after-reset-20261108T152833801Z.log": "30e8f4d0e579a9cba3f23cabd071229308709c126b30cf56aefe063141d495a8",
+    "evidence/ground-speed/baseline150-after-reset-20261108T152833801Z.log.console.txt": "457ddc86333f670c4ebe953f33b6cd49e397e4d0b71d3a604058173f419ba93d",
+    "evidence/ground-speed/baseline150-config-1-20261108T152854611Z.log": "def9ec5b4e73959891f439e28f86042c9b5406e94cb0c62af3fcba07e1dd0827",
+    "evidence/ground-speed/baseline150-config-1-20261108T152854611Z.log.console.txt": "20ea6560429b5b101fc8dce1c3a2613bf2a58bfb3267162c8344c9210a6475e0",
+    "evidence/ground-speed/baseline150-config-2-20261108T152900464Z.log": "7cabc4e8cf95806626ec1771654c6d7652446c0442805f895195fe42a3ad7451",
+    "evidence/ground-speed/baseline150-config-2-20261108T152900464Z.log.console.txt": "442aa356809a82915f965561dd16376d340b3188821754b4323e238d301002aa",
+    "evidence/ground-speed/baseline150-config-3-20261108T152906299Z.log": "7137aa1598d9caec1c1a90287786c7b52811b6f378f0eef2f5c262222f389de8",
+    "evidence/ground-speed/baseline150-config-3-20261108T152906299Z.log.console.txt": "ff289a59a3a37e4ddac424a2666991900b952b56ac0a1f119081a96088a31392",
+    "evidence/ground-speed/baseline150-config-4-20261108T152912166Z.log": "f27e81cb612338e807192b7132c410172d3428fcdadde778bc5a96cd1e97bc38",
+    "evidence/ground-speed/baseline150-config-4-20261108T152912166Z.log.console.txt": "722f1895e068cf1fcc209edb4a7d55be454a5018684f041da99e171ad9665fdf",
+    "evidence/ground-speed/baseline150-config-5-20261108T152917997Z.log": "81278777c1e093611816e4e72c60b1d2749955a6ebad8113ca95bf08ad9f1cec",
+    "evidence/ground-speed/baseline150-config-5-20261108T152917997Z.log.console.txt": "28f581c00c62e8b3d00ae43d726e35a644080505f7e499ff7d80f7219072ca02",
+    "evidence/ground-speed/baseline150-config-6-20261108T152923896Z.log": "34cfc4962192ed5d16edce5dfaea81a4ccd016ccef13a4eb25f3b0f7130f4b80",
+    "evidence/ground-speed/baseline150-config-6-20261108T152923896Z.log.console.txt": "bb083a812d19f2289fa1a1dae2333864e41afc4b02368e1fe9a2f1532e4232ed",
+    "evidence/ground-speed/baseline150-final-readback-20261108T152937274Z.log": "0da738b256796f96504d67a01ad1418f731c975a2e730b77fa3bafba9164fb0a",
+    "evidence/ground-speed/baseline150-final-readback-20261108T152937274Z.log.console.txt": "d135e440b0a889b07ee95df22f2eda99634d74d19dd445e5617a3a30d505629e",
+    "evidence/ground-speed/baseline150-post-encoder-20261108T153009415Z.log": "18d1bd2841446f708a6ecfedf314467df7dbf3400611ece4f6e37fea1e45ade3",
+    "evidence/ground-speed/baseline150-post-encoder-20261108T153009415Z.log.console.txt": "7490e2e063ad3496b72c1c6b42aed2b0971e10b638c59ecdc5c9fdf9c0ac4a04",
+    "evidence/ground-speed/baseline150-precheck-20261108T152730104Z.log.console.txt": "604d9d83eb9310860e960ca514ceb7957287539ade288a8f4c487662ff8d2d5a",
+    "evidence/ground-speed/baseline150-run-20261108T152956357Z.console.txt": "319f261603f80b35f9f1c86531c7ebd4443a08eb467e22d912487196c3eb5c9b",
+    "evidence/ground-speed/20261108-232956-743.jsonl": "657db4938e1514c1452b08366c07f0897430cc748c0a1eb919af408a36917aad",
+    "evidence/ground-speed/equal150-balance-20261108T153101957Z.log": "b10de2d30ce7442f05483d28d624edcc553f571416f33872224174bbd698b923",
+    "evidence/ground-speed/equal150-balance-20261108T153101957Z.log.console.txt": "2b9d1d8431977750f8c224a1c424b249bcc8d49387aacaa814e7b24f6c937a04",
+    "evidence/ground-speed/equal150-post-encoder-20261108T153145765Z.log": "3e489cc3661e56b2e9537a1ba983db106aded369fa3e9ef28c897f3e1caf602b",
+    "evidence/ground-speed/equal150-post-encoder-20261108T153145765Z.log.console.txt": "457c8c22a0142d498a27dc2ef5a73206b32c23278cb96d87c53920ecb1e3cfed",
+    "evidence/ground-speed/equal150-pre-readback-20261108T153114554Z.log": "fee4cd76a28aa57f88ba71e5f15f09b832ef137324dcfa7a8ca30f0b01f5194b",
+    "evidence/ground-speed/equal150-pre-readback-20261108T153114554Z.log.console.txt": "5a85c3a8fef16546de9cd822b49579e4d1fdde16e9d3d0fbd74f72a74c65d752",
+    "evidence/ground-speed/equal150-run-20261108T153133688Z.console.txt": "941017cb226100d34a89c7be965f2678e897c1f7989bfc9f68f21fd828823a21",
+    "evidence/ground-speed/20261108-233134-103.jsonl": "041a0fcead032249476770e87506f6e2a382f2ae2f5beda53bd2aac1989f80c3",
+    "evidence/ground-speed/active-stop-post-encoder-20261108T153304323Z.log": "6e58e54733af30df78c937db7d31e3f28a0dfb787e8e43b69d51621236b3c91b",
+    "evidence/ground-speed/active-stop-post-encoder-20261108T153304323Z.log.console.txt": "35440e35325291cb12e46d8bf9136abce98cbf4852ebdca2580465f2b478c776",
+    "evidence/ground-speed/active-stop-precheck-20261108T153233240Z.log": "48db39bfd7050eb41eccfa9b99d7a4ed716882be99f79134d744b9844f15fb84",
+    "evidence/ground-speed/active-stop-precheck-20261108T153233240Z.log.console.txt": "72de6b605559dcdd7db8997e9da3eb1960a99f47bc6136834346d431bf24946d",
+    "evidence/ground-speed/active-stop-run-20261108T153253209Z.console.txt": "4fe999e903f4a702b287af765dbaf5915f5bd2309197527653f036d350470939",
+    "evidence/ground-speed/20261108-233253-647.jsonl": "a14c3261fd83c258615ff32d6aa48012db00145b97ada4312a19366736a946a8",
+    "evidence/ground-speed/active-stop-repeat-post-encoder-20261108T153433482Z.log": "97b844ba9f9e48b1f3602f75b9e226df655eac06d6d4b31dda1ecbe38ab311eb",
+    "evidence/ground-speed/active-stop-repeat-post-encoder-20261108T153433482Z.log.console.txt": "5d06afeb29a8702f05a12c916bd3925898c3d6c4670ddbe4054ce7150bf223d0",
+    "evidence/ground-speed/active-stop-repeat-precheck-20261108T153404465Z.log": "be80645bce73bfe784cc1515c9ddca21ce570aa280fdc8b8ae1f11235cfe61a6",
+    "evidence/ground-speed/active-stop-repeat-precheck-20261108T153404465Z.log.console.txt": "c94df380f2e89fb626108dc3fbd27a4aa47dde97046eb9504da3eb97cf010ff8",
+    "evidence/ground-speed/active-stop-repeat-run-20261108T153423287Z.console.txt": "fea95311324247509f5f5a342b3c2dece0cc1e27afa4c603996a8e5150196ca8",
+    "evidence/ground-speed/20261108-233423-713.jsonl": "64f484fd480904fc3ef270a57495807b82317d91f937c8dabc5c6040f07e2c83",
+    "evidence/ground-speed/active-stop-repeat2-post-encoder-20261108T153515441Z.log": "c2b27bc31d6869fe993d2c8cfd20caf4fd0835dc05d2cdc4035a3481f24eedab",
+    "evidence/ground-speed/active-stop-repeat2-post-encoder-20261108T153515441Z.log.console.txt": "f64e2a574b5154b13e2f900cebdaaa6913111f3a28f8cd94babcda19fa6ff069",
+    "evidence/ground-speed/active-stop-repeat2-run-20261108T153505427Z.console.txt": "be257bc6c7615ee67c2d5cddba719b057521e7251ceb5204f8e7688d34696cad",
+    "evidence/ground-speed/20261108-233505-819.jsonl": "c10dbeeaf3f154b4d38c4019d3f4f2a395b7aad4d8c0859340f9f7a71f68a17d",
+    "evidence/ground-speed/radio-com10-status-20261108T153852768Z.log": "5c4c86487a18da872eec9b06fd77b9c565dfb2c15b9075679b21eff21f78ad48",
+    "evidence/ground-speed/radio-com10-encoder-20261108T153914563Z.log": "e258977382dcf5917c3bfc751478cb7775e759d4fcedd1ca11e2a0916d201892",
+    "evidence/ground-speed/ground01-config-1-20261108T154223248Z.log": "39977bb9e8a5f7b9a8720adf65e1ebae66e6b3b6580dafe2500ccc25f7e71042",
+    "evidence/ground-speed/ground01-config-1-20261108T154223248Z.log.console.txt": "e4e08f3d551e9004bd9bd743f88f329e6dc2fb3bde462f29395083a3d6b4879b",
+    "evidence/ground-speed/ground01-config-2-20261108T154229117Z.log": "23b37d6bccfca41e4025108039b2be7666739fdc5cef2b0edf2d07bdba174e9e",
+    "evidence/ground-speed/ground01-config-2-20261108T154229117Z.log.console.txt": "a7ee27ad71359079dd23cf2477de08a204710cb4b3c1e418329189503c308bb8",
+    "evidence/ground-speed/ground01-config-3-20261108T154235020Z.log": "630b632e5a70415227b046474dba4984f89f88ad4095711a6cb8d6de858790e2",
+    "evidence/ground-speed/ground01-config-3-20261108T154235020Z.log.console.txt": "50170e3a2e504edf7bd3bf0b64a5303e7882ac5e6879ca6b18137febbc1b88be",
+    "evidence/ground-speed/ground01-config-4-20261108T154240835Z.log": "a8ff7db1cd917a6557243c025ec6ec55986754c8720f5d47e2d2f6701ee0ea1e",
+    "evidence/ground-speed/ground01-config-4-20261108T154240835Z.log.console.txt": "1fa1c1d8e604068b6dd305d31b864a4f6f05dc04f12295ca8d42a946604c80bb",
+    "evidence/ground-speed/ground01-config-5-20261108T154246673Z.log": "cbcac3b762312f2e50d4f0ca804e34df68ed36bbb5f73d16c063c009f674bf29",
+    "evidence/ground-speed/ground01-config-5-20261108T154246673Z.log.console.txt": "8afe3d99e1073c9305e3e2c63d084681ca0eab06dfdc4ecb581c453e654f8b1e",
+    "evidence/ground-speed/ground01-config-6-20261108T154252524Z.log": "19405a46c676d18163d2041a89d4179f7f6ca7fc5187cd290d61ce3a25c492c1",
+    "evidence/ground-speed/ground01-config-6-20261108T154252524Z.log.console.txt": "e4134b9446bb4a872ee37ea4465a293410461c8bb1c70c2d985c997a90c0ada4",
+    "evidence/ground-speed/ground01-final-readback-20261108T154308737Z.log": "5863967b16ed96f05fe8194947730de538ee724d6a444cae75b185c940702092",
+    "evidence/ground-speed/ground01-final-readback-20261108T154308737Z.log.console.txt": "2605e803bbf6eaf253dd90ccc448d0a75bf52f1dd65e84f91a0783f317941bff",
+    "evidence/ground-speed/ground01-post-encoder-20261108T154339613Z.log": "c210610870a564aa2e155eef91afa42cd08446d07d3d85c8b79d002de74d4bfd",
+    "evidence/ground-speed/ground01-post-encoder-20261108T154339613Z.log.console.txt": "95e7be925504fe979fafd3debc2cf0036ec74d1f721c83d578f0ef01eb812ea1",
+    "evidence/ground-speed/ground01-radio-precheck-20261108T154144785Z.log": "af36656e93b188e4197ce8a0f73d555c466f37710a0510a288e3d801f440135f",
+    "evidence/ground-speed/ground01-radio-precheck-20261108T154144785Z.log.console.txt": "56b55988ac6d27ecbfd648123c9bb96131142a78d9d6a8a579612caa29d812d1",
+    "evidence/ground-speed/ground01-radio-run-20261108T154328537Z.console.txt": "8b2b081d2605dc6fce1842ebc7115ce7b08e1cf9abdac1c9d0f883ad3cf04280",
+    "evidence/ground-speed/20261108-234328-923.jsonl": "2bdf71936433087a090ddeca4347da811270423c1033463d7e82ef7f69fd7803",
+    "evidence/ground-speed/ground02-full2500-run-20261108T154517186Z.console.txt": "6239e2499f3d7bb5280e443d7aca8e51a5a3a198ab215e18ed2dbb185a969e1b",
+    "evidence/ground-speed/20261108-234517-578.jsonl": "289fc36bb2b7db79b719e96e5a578f07feb42d9d1ad1be36b6fb05a2520886d4",
+    "evidence/ground-speed/radio-lifted150-run-20261108T155613431Z.console.txt": "b87bfb3f0dcb1e41610f267c9132b0bb16120b31015ab747d629ac3129c246b3",
+    "evidence/ground-speed/20261108-235613-872.jsonl": "62881a80b921e3d1ef6b4e37d9300daf072747a066fbbd14013def9b8412c262",
+    "evidence/ground-speed/radio-left-asymmetry-status-20261108T155723722Z.log": "560f23c8d25e86e2e1b947f5f08eb703af7c8c2dc6863733bea741039d7fc62a"
+  },
+  "runtimeChecks": {
+    "version": "ENCODER_SPEED_DIAG_5",
+    "mode": "OBSERVE",
+    "c26Raw": 1,
+    "c27Raw": 1,
+    "encoderMode": "PULSE_DIR",
+    "samplePeriodMs": 10,
+    "hardwareCM3": 5,
+    "hardwareCM4": 5,
+    "xbar": 0,
+    "daisy": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "speedLoopEnabled": false,
+    "encoderSignsConfigured": false,
+    "motorPwmLeft": 0,
+    "motorPwmRight": 0,
+    "continuousExclusiveOwnershipVerified": false
+  },
+  "nextBenchProposal": {
+    "mode": "line",
+    "requestPermille": 100,
+    "durationMs": 1000,
+    "steeringSettleMs": 200,
+    "rampPermillePerSecond": 100,
+    "dutyCap": 0.1,
+    "servoCentreUs": 1550,
+    "speedLoopEnabled": false,
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "motorDirectionsRightLeft": [
+      1,
+      1
+    ],
+    "encoderSignsLeftRight": [
+      -1,
+      1
+    ],
+    "heartbeatIntervalMs": 100,
+    "heartbeatTimeoutMs": 500,
+    "autoRepeat": false,
+    "groundRun": false,
+    "physicalStopNotAssumedFromZeroPwm": true
+  },
+  "benchRuns": [
+    {
+      "recordedAtUtc": "2026-11-08T15:20:50.141331+00:00",
+      "command": "@motion line 100 1000",
+      "executeCount": 1,
+      "sequence": 1,
+      "startAcknowledged": true,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "encoderPostReadback": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=0 total4=0 samples=30629 sample_ms=306609 sign3=-1 sign4=1 confirmed=1",
+      "physicalMovementVerified": false,
+      "operatorObservation": "两轮均未转动，无异响卡滞",
+      "speedLoopEnabled": false,
+      "telemetryLimitation": "SPEED pwm field represents speed controller state; disabled speed-loop zeros are not independently measured physical open-loop PWM. Raw sampled counts and cumulative counts must be assessed separately.",
+      "evidence": "evidence/ground-speed/20261108-232012-892.jsonl",
+      "operatorReportsNoAbnormalSoundOrBinding": true
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:30:32.771886+00:00",
+      "command": "@motion line 150 2500",
+      "executeCount": 1,
+      "sequence": 1,
+      "resetBeforeRun": true,
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "balanceRightLeft": [
+        1,
+        0.667
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "encoderPostReadback": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-9 total4=5538 samples=11835 sample_ms=118669 sign3=-1 sign4=1 confirmed=1",
+      "physicalMovementVerified": false,
+      "operatorObservation": "仅右轮向前转，现已停下",
+      "evidence": "evidence/ground-speed/20261108-232956-743.jsonl",
+      "notes": "Right raw counts nonzero during run; left sampled counts zero. Physical wheel observation and cumulative count interpretation pending. Unloaded encoder-equivalent speed is not ground velocity.",
+      "rightForwardMovementConfirmed": true,
+      "leftMovementConfirmed": false,
+      "physicalStopConfirmedByOperator": true
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:32:08.872201+00:00",
+      "command": "@motion line 150 2500",
+      "executeCount": 1,
+      "sequence": 2,
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "encoderPostReadback": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-8651 total4=15153 samples=21470 sample_ms=215019 sign3=-1 sign4=1 confirmed=1",
+      "rawCountsBeforeLeftRight": [
+        -9,
+        5538
+      ],
+      "rawCountsAfterLeftRight": [
+        -8651,
+        15153
+      ],
+      "rawCountDeltasLeftRight": [
+        -8642,
+        9615
+      ],
+      "physicalMovementVerified": true,
+      "operatorObservation": "两轮均向前，已停稳，无异响卡滞",
+      "evidence": "evidence/ground-speed/20261108-233134-103.jsonl",
+      "notes": "Both raw encoder channels responded with historical forward signs. Await physical direction and stop confirmation; unloaded test, not ground-speed calibration.",
+      "bothWheelsForwardConfirmed": true,
+      "physicalStopConfirmedByOperator": true,
+      "operatorReportsNoAbnormalSoundOrBinding": true
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:33:27.090510+00:00",
+      "command": "@motion line 150 2500",
+      "stopAfterHostMs": 2000,
+      "executeCount": 1,
+      "sequence": 3,
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 2,
+      "hostExitCode": 0,
+      "rawCountsBeforeLeftRight": [
+        -8651,
+        15153
+      ],
+      "rawCountsAfterLeftRight": [
+        -8727,
+        18204
+      ],
+      "rawCountDeltasLeftRight": [
+        -76,
+        3051
+      ],
+      "physicalMovementVerified": false,
+      "operatorObservation": "没注意,重新试一下",
+      "evidence": "evidence/ground-speed/20261108-233253-647.jsonl",
+      "notes": "Explicit STOP acknowledged; left raw response small/zero in sampled data requires physical confirmation before ground test."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:35:05.401293+00:00",
+      "command": "@motion line 150 2500",
+      "stopAfterHostMs": 2000,
+      "executeCount": 1,
+      "sequence": 4,
+      "operatorRequest": "没注意,重新试一下",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "finalPhase": 0,
+      "stopReason": 2,
+      "rawCountDeltasLeftRight": [
+        -82,
+        3759
+      ],
+      "operatorObservation": null,
+      "physicalMovementVerified": false,
+      "evidence": "evidence/ground-speed/20261108-233423-713.jsonl"
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:35:46.891827+00:00",
+      "command": "@motion line 150 2500",
+      "stopAfterHostMs": 2000,
+      "executeCount": 1,
+      "sequence": 5,
+      "operatorRequest": "再来一次",
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 2,
+      "hostExitCode": 0,
+      "rawCountDeltasLeftRight": [
+        -2459,
+        4363
+      ],
+      "deltaIntervalNote": "Between preceding post-query and this post-query, includes coast/idle; not exact motion phase integral.",
+      "operatorObservation": [
+        "都转动",
+        "停稳"
+      ],
+      "physicalMovementVerified": true,
+      "physicalStopConfirmedByOperator": true,
+      "directionReconfirmedThisRun": false,
+      "evidence": "evidence/ground-speed/20261108-233505-819.jsonl"
+    }
+  ],
+  "baseline150TestRequest": {
+    "rawInstruction": "那你据此份报告开始测试",
+    "recordedAtUtc": "2026-11-08T15:28:17.444060+00:00",
+    "firmware": "ENCODER_SPEED_DIAG_5",
+    "reflashPlanned": false,
+    "mode": "lifted bench, not ground",
+    "requestPermille": 150,
+    "durationMs": 2500,
+    "balanceRightLeft": [
+      1,
+      0.667
+    ],
+    "dutyCap": 0.15,
+    "speedLoopEnabled": false,
+    "servoCentreUs": 1550,
+    "configurationClient": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-speed-prep-20261108T151015506889Z\\exact-baseline150-config-client",
+    "status": "EXECUTED_ONCE_TIMED_END_CONFIRMED_AWAITING_OPERATOR",
+    "reason": "Previous accepted 100 permille request; native subsequent step <=10. Fresh first request <=150. Do not bypass gate or run intermediate actions.",
+    "newMotionCommandSent": true,
+    "note": "Replicates historical command conditions on current speed diagnostic, not byte-identical MOTION_DIAG_2 validation."
+  },
+  "groundMeasurementComplete": false,
+  "groundProposal": {
+    "mode": "single straight, wheels on ground",
+    "requestPermille": 150,
+    "durationMs": 2500,
+    "stopAfterHostMs": 2000,
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "servoCentreUs": 1550,
+    "speedLoopEnabled": false,
+    "autoRepeat": false,
+    "measurement": "Physical total displacement and lateral drift; no ground run until operator places vehicle and confirms field clear.",
+    "limits": "Open-loop motion can differ by wheel. Narrow site; human power cutoff required. Wheel-equivalent path not trusted as ground displacement without observation.",
+    "controlTransport": "radio requested by operator; pending port and status verification"
+  },
+  "transportChangeRequests": [
+    {
+      "recordedAtUtc": "2026-11-08T15:37:06.642142+00:00",
+      "rawReply": "没有有线连接的条件,可以无线吗",
+      "requestedRole": "radio",
+      "currentEnumeratedPorts": [
+        "COM4",
+        "COM6",
+        "COM7",
+        "COM3",
+        "COM14"
+      ],
+      "historicalRadioPort": "COM10",
+      "radioPortCurrentlyPresent": false,
+      "firmwareChangeNeededForNativeRadio": false,
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "baud": 115200,
+      "motionSentDuringChange": false
+    }
+  ],
+  "radioHandover": {
+    "recordedAtUtc": "2026-11-08T15:39:34.005170+00:00",
+    "operatorReply": "COM10;无线已经接好",
+    "port": "COM10",
+    "baud": 115200,
+    "versionVerified": "ENCODER_SPEED_DIAG_5",
+    "ownerVerified": "radio",
+    "statusAndEncoderQueriesPassed": true,
+    "modeReadback": "DRIVE",
+    "speedLoopEnabled": false,
+    "zeroOutputReadback": true,
+    "flashedDuringHandover": false,
+    "motionSentDuringHandover": false,
+    "limits": "Successful bounded stopped queries only; does not verify dynamic link loss or long-distance reliability. Ground placement and readiness still pending.",
+    "motorControlPhysicallyVerified": false
+  },
+  "groundRuns": [
+    {
+      "recordedAtUtc": "2026-11-08T15:44:05.624767+00:00",
+      "operatorReadiness": "落地就绪",
+      "firmware": "ENCODER_SPEED_DIAG_5",
+      "port": "COM10",
+      "role": "radio",
+      "command": "@motion line 150 2500",
+      "stopAfterHostMs": 2000,
+      "executeCount": 1,
+      "sequence": 1,
+      "resetDetectedBeforeRun": true,
+      "configurationRestoredAndReadBack": true,
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 2,
+      "hostExitCode": 0,
+      "rawCountsBeforeLeftRight": [
+        -22,
+        -19
+      ],
+      "rawCountsAfterLeftRight": [
+        -56,
+        38
+      ],
+      "rawCountDeltasLeftRight": [
+        -34,
+        57
+      ],
+      "wheelEquivalentDistanceMLeftRight": [
+        0.0027510917030567684,
+        0.004567540066140931
+      ],
+      "physicalForwardDisplacementMm": null,
+      "physicalLateralDisplacementRightPositiveMm": null,
+      "physicalStopConfirmedByOperator": false,
+      "operatorObservation": "基本没动",
+      "evidence": "evidence/ground-speed/20261108-234328-923.jsonl",
+      "limits": "Encoder equivalent is not physical displacement; interval includes idle/coast around motion. No isolated braking-distance or deceleration result; waiting operator measurements.",
+      "measurementInterpretation": "Qualitative negligible displacement, not measured exact zero; insufficient speed/braking data."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T15:45:35.626192+00:00",
+      "firmwareAssumedFromLastVerified": "ENCODER_SPEED_DIAG_5",
+      "configurationReusedFromLastVerified": true,
+      "port": "COM10",
+      "role": "radio",
+      "command": "@motion line 150 2500",
+      "executeCount": 1,
+      "sequence": 2,
+      "earlyStopRequested": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "physicalForwardDisplacementMm": null,
+      "physicalLateralDisplacementRightPositiveMm": null,
+      "operatorObservation": "无",
+      "evidence": "evidence/ground-speed/20261108-234517-578.jsonl",
+      "notes": "Retained native ownership/STARTED/final stopped report. No extra pre/post query, no reflash or reconfiguration. Sampled raw counts in printed run zero; no full-rate integrated counts acquired.",
+      "physicalMovementObservedByOperator": false,
+      "measurementInterpretation": "Operator reports no observed start/movement. No measured exact zero, motion threshold, speed, or braking curve inferred."
+    }
+  ],
+  "executionPreference": {
+    "operatorInstruction": "之后不需要验证这么多再开始执行,提升效率,可以先假设目前已经成功烧录配置成功",
+    "policy": "Reuse last confirmed identity/configuration; no routine flash or repeated configuration. Retain action acknowledgement and final outcome; recheck on reset/link failure/config changes. Assumptions are not measured passes."
+  },
+  "groundBlock": "No observed start at current open-loop cap 150 permille, full 2500 ms. Actual driver voltage and output waveform unavailable; cannot attribute solely to starting threshold or raise beyond diagnostic hard cap without a separate candidate.",
+  "hardwareConditionOperatorReply": "硬件无问题",
+  "hardwareConditionEvidence": "Operator report; actual supply voltage/output waveform not measured.",
+  "nextCandidate": "stop-trace-candidate.json",
+  "wirelessMotorValidationReview": {
+    "recordedAtUtc": "2026-11-08T15:55:18.520777+00:00",
+    "operatorConcern": "目前烧录的版本似乎无法无线串口控制小车motor模块,无法进行落地测量",
+    "established": [
+      "Wired lifted test: operator confirmed both wheels forward and stopped.",
+      "COM10 native radio accepted motion command and reported timed/explicit STOP.",
+      "Radio on-ground: no useful physical displacement reported."
+    ],
+    "notEstablished": [
+      "Radio lifted motor operation with same configuration and output as wired lifted test.",
+      "Wireless motor fault versus load/output limitation causal distinction."
+    ],
+    "confounding": "Transport and wheel loading changed together. ACK and motion.actual are software state, not electrical output or physical drive evidence.",
+    "nextTest": "Same current firmware, COM10, lifted wheels, same 150 permille/2500 ms balance1/1; one action after physical readiness, then compare with prior wired lifted result. No higher output candidate flash before this distinction.",
+    "startup200Decision": "Prepared only; defer flashing until native wireless motor comparison.",
+    "latestFinding": "Radio physically drives right motor; left stationary with read-back balance1/1. Prior USB repeated runs also had weak left response. Radio-specific causality not established."
+  },
+  "radioLiftedComparisonRuns": [
+    {
+      "recordedAtUtc": "2026-11-08T15:56:35.563399+00:00",
+      "operatorReadiness": "可以,无线架空就绪",
+      "command": "@motion line 150 2500",
+      "executeCount": 1,
+      "firmwareAssumedFromLastVerified": "ENCODER_SPEED_DIAG_5",
+      "configurationReusedFromLastVerified": true,
+      "port": "COM10",
+      "role": "radio",
+      "sequence": 3,
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "sampledRawEncoderSummary": {
+        "completeSamples": 29,
+        "leftMinMax": [
+          0,
+          0
+        ],
+        "rightMinMax": [
+          0,
+          79
+        ]
+      },
+      "operatorObservation": "仅右轮转动，已停稳",
+      "physicalMovementVerified": false,
+      "evidence": "evidence/ground-speed/20261108-235613-872.jsonl",
+      "notes": "Wireless lifted comparison, no reflash or increased output. Sampled encoder response is not complete integrated trajectory or physical operator verification.",
+      "rightMovementConfirmed": true,
+      "leftMovementConfirmed": false,
+      "physicalStopConfirmedByOperator": true
+    }
+  ],
+  "currentlyProgrammedImage": "PHASE2_STARTUP_200_20261108_1",
+  "currentlyRunningIdentityVerifiedAfterLatestFlash": true,
+  "currentlyRunningFirmware": "PHASE2_STARTUP_200_20261108_1",
+  "currentBlock": "Ground190 physical placement/readiness required; no ground190 command sent.",
+  "latestSweepSource": "startup200-candidate.json",
+  "ground190EvidenceSource": "startup200-candidate.json",
+  "firstUsefulGroundMotionObservation": "operator-ground190-01.json",
+  "latestUsefulGroundObservation": "operator-ground200-01.json",
+  "measurementSummary": "MEASUREMENT_SUMMARY.json"
+}

@@ -1,0 +1,228 @@
+{
+  "schemaVersion": "smartcar.phase2-static-vision-quality/1",
+  "firmware": "PHASE2_LATENCY_STATIC_20261109_1",
+  "stage": "STATIC_SEGMENTED_VISION_FUNCTION_CHECKS_COMPLETE",
+  "operatorSceneConfirmation": "是，当前就是真实赛道",
+  "motorAndServoPowerIsolatedPerSession": true,
+  "boardMode": "OBSERVE",
+  "bandsNormalized": {
+    "near": 0.78,
+    "far": 0.46,
+    "half": 0.035
+  },
+  "bandReadbackSource": "evidence/latency-static/session01/serial.jsonl",
+  "calReports": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ]
+  ],
+  "visionReports": [
+    {
+      "processedCount": 9379,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9404,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9429,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9454,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9479,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9504,
+      "valid": 1,
+      "quality": 66
+    },
+    {
+      "processedCount": 9529,
+      "valid": 1,
+      "quality": 66
+    },
+    {
+      "processedCount": 9554,
+      "valid": 1,
+      "quality": 63
+    },
+    {
+      "processedCount": 9579,
+      "valid": 1,
+      "quality": 66
+    },
+    {
+      "processedCount": 9604,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9629,
+      "valid": 1,
+      "quality": 66
+    },
+    {
+      "processedCount": 9654,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9679,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9704,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9729,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9754,
+      "valid": 1,
+      "quality": 67
+    },
+    {
+      "processedCount": 9779,
+      "valid": 1,
+      "quality": 66
+    },
+    {
+      "processedCount": 9804,
+      "valid": 1,
+      "quality": 64
+    },
+    {
+      "processedCount": 9829,
+      "valid": 1,
+      "quality": 65
+    },
+    {
+      "processedCount": 9854,
+      "valid": 1,
+      "quality": 63
+    }
+  ],
+  "baselineAllCalValid": true,
+  "rawSha256": "e5bb2d2b25db39381d8cf2deb6341be95b3b8fa31535cd4076407c23b28c64ca",
+  "limits": [
+    "Approximately500ms text reports; no exact event-onset/recovery time inferred.",
+    "CAL valid is controller observation validity, not an independent geometric ground-truth label.",
+    "Scene gray capture is separate from text baseline, not a synchronized full-frame session.",
+    "No motion, cumulative route or production recovery/budget validation."
+  ],
+  "farOcclusionEvidence": "vision-quality-far01.json",
+  "farRecoveryEvidence": "vision-quality-far-recovery01.json",
+  "farStaticFunctionalCheckPassed": true,
+  "nearAttemptEvidence": "vision-quality-near01.json",
+  "isolatedNearTestCompleted": false,
+  "nearSecondAttemptEvidence": "vision-quality-near02.json",
+  "nearThirdAttemptEvidence": "vision-quality-near03.json",
+  "nearBoundaryStaticInvalidObserved": true,
+  "isolatedNearTestLimitation": "Near boundary occlusion visually observed; far independent validity not exported when observation invalid.",
+  "nearRecoveryEvidence": "vision-quality-near-recovery01.json",
+  "nearBoundaryRecoveryObserved": true,
+  "fullOcclusionEvidence": "vision-quality-full01.json",
+  "fullRecoveryEvidence": "vision-quality-full-recovery01.json",
+  "fullViewRecoveryObserved": true,
+  "fieldStaticSessionEnded": true,
+  "productionVisionLossBudgetCalibrated": false,
+  "finalBoardConfiguration": "PHASE2_LATENCY_STATIC_20261109_1, OFF/OBSERVE, PWM clamp zero; motor/servo power isolated per session; no new motion/configuration commands",
+  "nextRequiredEvidence": [
+    "Continuous synchronized image/frame/capture/near-far-quality/event labels",
+    "Running build software latency and physical exposure/PWM timing",
+    "Closed-loop speed response and independent safety budget validation"
+  ]
+}

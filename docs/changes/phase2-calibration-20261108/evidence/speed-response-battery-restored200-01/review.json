@@ -1,0 +1,85 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "userReportedBatteryRestored": true,
+  "userReportedManualReset": true,
+  "voltageMeasuredV": null,
+  "requestPermille": 200,
+  "durationRequestedMs": 1500,
+  "rows": 307,
+  "crcVerified": true,
+  "postZeroMs": 2000,
+  "softwarePwmPeakPermille": 200,
+  "countDeltaLeftRight": [
+    -2857,
+    177
+  ],
+  "rawRanges": {
+    "rl": {
+      "minimum": -121,
+      "maximum": 5
+    },
+    "rr": {
+      "minimum": -14,
+      "maximum": 20
+    }
+  },
+  "faults": [
+    0,
+    256
+  ],
+  "faultDetails": [
+    0,
+    12
+  ],
+  "triggerRawSample": {
+    "ms": 21481,
+    "seq": 2116,
+    "tl": -1808,
+    "tr": 224,
+    "rl": -121,
+    "rr": 11,
+    "pr": 2000,
+    "pl": 2000,
+    "phase": 2,
+    "reason": 0,
+    "interval": 10,
+    "control_seq": 0,
+    "control_ms": 20428,
+    "target_r": 0,
+    "target_l": 0,
+    "measured_r": 0,
+    "measured_l": 0,
+    "integral_r": 0,
+    "integral_l": 0,
+    "faults": 0,
+    "detail": 0,
+    "enabled": 0
+  },
+  "firstZeroReason": 0,
+  "firstZeroAfterArmMs": 1053,
+  "tailLastFiveRawCounts": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "operatorObservation": "pending",
+  "physicalTestPassed": false,
+  "productionApproved": false
+}

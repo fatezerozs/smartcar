@@ -1,0 +1,118 @@
+{
+  "operatorReply": "近场已恢复",
+  "stage": "STATIC_NEAR_OBSTACLE_REMOVED_RECOVERY",
+  "expectedCal": [
+    1,
+    1
+  ],
+  "calReports": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ]
+  ],
+  "allReportsMatchExpected": true,
+  "visualInspection": "First preview inspected: near obstacles removed and lane visible in near/far regions.",
+  "rawEvidenceSha256": {
+    "recovery.console.txt": "2003f37d7910c64a0e47369dc55b2c3bd72a3f9cc6f7341d0cecafc0c350e4d7",
+    "recovery.log": "a891a66cf192bcfd06e1034b2257803d88ccae314c8c6c1b9f46f0ad85fcd4f8",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000001.gray": "4baef499b63cd8eab558df1cde542c7e2f1d5399deca581e64bc815288c0ef94",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000001.png": "399013d280e785168a16a2acb9a501a86e4e826b4870288cb379bd23fae96a9e",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000001.preview.png": "b784ada44b541481c83112f5fa70edaeed4c68f86a3b31eb20718827e4bcb83f",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000002.gray": "b78da104ed98815f7afe376a9ff31ae0fc34311dfc648202e536759ad237b3a2",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000002.png": "0aba7d6b19ef0f067a56141c48c09fb864f1d2ed44defc80a301f1f6915ceb5d",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000002.preview.png": "57aeace83ff68038f8bc66cb43419e139311019ee86467acccd344bb636f8d7f",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000003.gray": "be1c6a2ff8e291ff1369b3af574ef86383fb10fdcf89cf2a1a2aed1e359e82d4",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000003.png": "85cc62c19c303a237118e184936829ab3cc615f97dd4d07e288f21c56f7d3f24",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frame-000003.preview.png": "f57bf1ab765909eec6c6856dbcb5e5492208a7f6ef54e97a76e7af33eff88726",
+    "images\\camera-g-20261109-031204-140-619a2d37\\frames.csv": "0c629df22d7ae6fd0f6145290b1216cf35f5ea37d19e14a13edac1691a91c850",
+    "images\\camera-g-20261109-031204-140-619a2d37\\received.bin": "97bd054f8c59ecaf0694b6415cfb65e4a10b81c0382cc334e3b66bf00a26d02d",
+    "images\\camera-g-20261109-031204-140-619a2d37\\session.json": "eb9c5e7918ade5da96f30f53288486139476b8390fa67ad9734453938adabde3"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false
+}

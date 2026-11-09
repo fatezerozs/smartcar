@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "smartcar.phase2-operator-tangent/1",
+  "recordedAtUtc": "2026-11-08T14:54:09.546309+00:00",
+  "rawReplies": [
+    "回正,0"
+  ],
+  "pulseUsContext": 1550,
+  "holdMsContext": 700,
+  "benchSequenceContext": 12,
+  "sweepDirection": "decreasing pulse; from 1600",
+  "measurementPhase": "post-pulse-no-hold",
+  "angleReference": "vehicle longitudinal; right positive",
+  "tangentReported": 0,
+  "principalAngleDegComputed": 0,
+  "wheelAssignment": "common midpoint report in response to left/right measurement prompt; separate measurements not reiterated",
+  "leftTangentReported": 0,
+  "rightTangentReported": 0,
+  "productionApproved": false,
+  "notes": "Operator reports centered zero on return. No measurement uncertainty or independent repeat count established; does not certify exact mechanical zero."
+}

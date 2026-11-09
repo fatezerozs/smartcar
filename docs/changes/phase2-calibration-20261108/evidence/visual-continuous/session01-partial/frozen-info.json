@@ -1,0 +1,15 @@
+{
+  "gen": 1,
+  "count": 750,
+  "active": 0,
+  "reason": 1,
+  "start": 179595,
+  "cue1": 183598,
+  "cue2": 188595,
+  "finish": 194573,
+  "cues": 3,
+  "capacity": 750,
+  "payload": 22624,
+  "baud": 921600,
+  "zero_pwm": 1
+}

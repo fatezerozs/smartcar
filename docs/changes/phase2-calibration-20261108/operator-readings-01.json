@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "smartcar.operator-calibration-reading/1",
+  "recordedDate": "2026-11-08",
+  "measurementTimestamp": null,
+  "source": "User reply to requested left wheelbase/right wheelbase/rear track/front track in millimetres",
+  "rawReply": "197;197;155;155",
+  "mappingBasis": "Order and units from the preceding question, not additional repeated measurements",
+  "readingsMm": {
+    "wheelbase_left_mm": [197],
+    "wheelbase_right_mm": [197],
+    "rear_track_mm": [155],
+    "front_track_mm": [155]
+  },
+  "reportedDistanceResolutionMm": 0.1,
+  "instrumentIdentity": null,
+  "measurementAccuracyMm": null,
+  "measurementConditionsConfirmed": false,
+  "repeatedMeasurementsProvided": false,
+  "independentlyVerified": false,
+  "productionApproved": false
+}

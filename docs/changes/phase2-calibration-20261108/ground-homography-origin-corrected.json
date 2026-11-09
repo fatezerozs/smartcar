@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "smartcar.phase2-ground-origin-corrected-candidate/1",
+  "status": "CAMERA_GROUND_ORIGIN_CONFIRMED_CANDIDATE",
+  "sourceOriginalFit": "ground-homography-candidate.json",
+  "correctionSource": "ground-origin-correction.json",
+  "homographyImageToCameraGroundMm": [
+    [
+      -194.96570932291897,
+      3.496363618765078,
+      10627.236062305246
+    ],
+    [
+      -44.65382653422398,
+      144.84334622718546,
+      -11651.742189813878
+    ],
+    [
+      0.02380835057400804,
+      -0.5123516140264922,
+      1.0
+    ]
+  ],
+  "homographyImageToRearGroundMmConditional": [
+    [
+      -194.96570932291897,
+      3.496363618765078,
+      10627.236062305246
+    ],
+    [
+      -39.963581471144394,
+      43.9100782639665,
+      -11454.742189813878
+    ],
+    [
+      0.02380835057400804,
+      -0.5123516140264922,
+      1.0
+    ]
+  ],
+  "cameraOffsetMmRightForward": [
+    0,
+    197
+  ],
+  "points": [
+    {
+      "id": "A",
+      "xRightMm": -100,
+      "yForwardMm": 500,
+      "role": "fit",
+      "measuredImageUvMean": [
+        46.56207498524524,
+        36.8690622184947
+      ],
+      "imageCentroidRangePixels": [
+        0.0072453638989813385,
+        0.004309943155348606
+      ],
+      "projectedGroundMm": [
+        -100.00000000000016,
+        500.0000000000001
+      ],
+      "residualMm": 1.9328852131274408e-13,
+      "axisHalfPixelSensitivityMaxMm": 12.219250286696361,
+      "xCameraRightMm": -100,
+      "yCameraForwardMm": 500,
+      "xRearRightMmConditional": -100,
+      "yRearForwardMmConditional": 697,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": -100,
+      "yRearForwardMm": 697
+    },
+    {
+      "id": "B",
+      "xRightMm": 100,
+      "yForwardMm": 500,
+      "role": "fit",
+      "measuredImageUvMean": [
+        64.26136646566225,
+        39.36529351242419
+      ],
+      "imageCentroidRangePixels": [
+        0.003898635477582957,
+        0.007683929449790128
+      ],
+      "projectedGroundMm": [
+        99.9999999999999,
+        500.0
+      ],
+      "residualMm": 9.947598300641403e-14,
+      "axisHalfPixelSensitivityMaxMm": 11.64191776567243,
+      "xCameraRightMm": 100,
+      "yCameraForwardMm": 500,
+      "xRearRightMmConditional": 100,
+      "yRearForwardMmConditional": 697,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": 100,
+      "yRearForwardMm": 697
+    },
+    {
+      "id": "C",
+      "xRightMm": -100,
+      "yForwardMm": 800,
+      "role": "held_out_validation",
+      "measuredImageUvMean": [
+        48.386484615456574,
+        28.0
+      ],
+      "imageCentroidRangePixels": [
+        0.005711318795427189,
+        0.0
+      ],
+      "projectedGroundMm": [
+        -105.90828254033927,
+        800.139081905592
+      ],
+      "residualMm": 5.909919318649027,
+      "axisHalfPixelSensitivityMaxMm": 23.334278430996704,
+      "xCameraRightMm": -100,
+      "yCameraForwardMm": 800,
+      "xRearRightMmConditional": -100,
+      "yRearForwardMmConditional": 997,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": -100,
+      "yRearForwardMm": 997
+    },
+    {
+      "id": "D",
+      "xRightMm": 100,
+      "yForwardMm": 800,
+      "role": "held_out_validation",
+      "measuredImageUvMean": [
+        61.4122614225659,
+        29.786707171131365
+      ],
+      "imageCentroidRangePixels": [
+        0.022202660406890118,
+        0.009976525821596027
+      ],
+      "projectedGroundMm": [
+        97.03023887769716,
+        787.5236990350317
+      ],
+      "residualMm": 12.824880774962843,
+      "axisHalfPixelSensitivityMaxMm": 21.960835523940368,
+      "xCameraRightMm": 100,
+      "yCameraForwardMm": 800,
+      "xRearRightMmConditional": 100,
+      "yRearForwardMmConditional": 997,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": 100,
+      "yRearForwardMm": 997
+    },
+    {
+      "id": "E",
+      "xRightMm": -100,
+      "yForwardMm": 1100,
+      "role": "fit",
+      "measuredImageUvMean": [
+        50.0,
+        23.0
+      ],
+      "imageCentroidRangePixels": [
+        0.0,
+        0.0
+      ],
+      "projectedGroundMm": [
+        -100.00000000000045,
+        1100.0
+      ],
+      "residualMm": 4.547473508864641e-13,
+      "axisHalfPixelSensitivityMaxMm": 38.02073645248197,
+      "xCameraRightMm": -100,
+      "yCameraForwardMm": 1100,
+      "xRearRightMmConditional": -100,
+      "yRearForwardMmConditional": 1297,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": -100,
+      "yRearForwardMm": 1297
+    },
+    {
+      "id": "F",
+      "xRightMm": 100,
+      "yForwardMm": 1100,
+      "role": "fit",
+      "measuredImageUvMean": [
+        60.0,
+        24.0
+      ],
+      "imageCentroidRangePixels": [
+        0.0,
+        0.0
+      ],
+      "projectedGroundMm": [
+        99.99999999999973,
+        1100.0000000000002
+      ],
+      "residualMm": 3.529903082259756e-13,
+      "axisHalfPixelSensitivityMaxMm": 36.96206761144088,
+      "xCameraRightMm": 100,
+      "yCameraForwardMm": 1100,
+      "xRearRightMmConditional": 100,
+      "yRearForwardMmConditional": 1297,
+      "originalGroundOriginWronglyLabelledRear": true,
+      "xRearRightMm": 100,
+      "yRearForwardMm": 1297
+    }
+  ],
+  "productionApproved": false,
+  "limits": [
+    "Horizontal camera-ground coordinate origin confirmed by operator;197mm rear-offset uncertainty remains.",
+    "197mm camera offset is prior operator report, not independent metrology.",
+    "Translation preserves point residuals but changes usable distances relative to rear axle.",
+    "Original target coordinates, raw frames and fit preserved as superseded interpretation."
+  ],
+  "cameraOriginHorizontalDistanceConfirmed": true,
+  "homographyImageToRearGroundMm": [
+    [
+      -194.96570932291897,
+      3.496363618765078,
+      10627.236062305246
+    ],
+    [
+      -39.963581471144394,
+      43.9100782639665,
+      -11454.742189813878
+    ],
+    [
+      0.02380835057400804,
+      -0.5123516140264922,
+      1.0
+    ]
+  ],
+  "rearOffsetProvenance": "Prior operator-reported197mm camera forward offset, not independently remeasured."
+}

@@ -1,0 +1,53 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "requestCeilingPermille": 250,
+  "targetCountsPer10ms": 23,
+  "durationRequestedMs": 1500,
+  "info": {
+    "generation": 5,
+    "start_ms": 359191,
+    "stop_ms": 360891,
+    "count": 371,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 1,
+    "crc32": 434773268
+  },
+  "rows": 371,
+  "crcVerified": true,
+  "postZeroMs": 2000,
+  "countDeltaLeftRight": [
+    -1461,
+    1054
+  ],
+  "softwarePwmPeakPermille": 176,
+  "faultsObserved": [
+    0
+  ],
+  "operatorObservation": "User: no reverse; right wheel almost same speed as left, both forward",
+  "mechanicalStopConfirmed": false,
+  "performanceAccepted": false,
+  "productionApproved": false,
+  "last300msUniqueHeldControlSamples": 29,
+  "last300msRmseCounts10ms": {
+    "r": 6.065731897164254,
+    "l": 6.965431887493434
+  },
+  "last300msFeedbackRanges": {
+    "r": [
+      6,
+      28
+    ],
+    "l": [
+      22,
+      36
+    ]
+  },
+  "limits": [
+    "Short lifted trial, not stationary performance acceptance.",
+    "Held control samples paired by control_seq/control_ms; not every physical sample.",
+    "Tail encoder zeros do not independently confirm mechanical stop."
+  ]
+}

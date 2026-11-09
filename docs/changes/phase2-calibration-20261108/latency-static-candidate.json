@@ -1,0 +1,55 @@
+{
+  "version": "PHASE2_LATENCY_STATIC_20261109_1",
+  "sourceSnapshot": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\stop-trace-20261108T163350483315Z",
+  "archive": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\latency-static-20261109_1",
+  "project": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\latency-static-20261109_1\\latency_static.uvprojx",
+  "downloadProject": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\latency-static-20261109_1\\latency_static_download.uvprojx",
+  "flashed": true,
+  "productionApproved": false,
+  "buildPassed": true,
+  "buildErrors": 0,
+  "buildWarnings": 0,
+  "axf": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\latency-static-20261109_1\\Objects\\phase2_latency_static.axf",
+  "axfSha256": "0dc07e584af183a0e04e87641909ebfdb46c69ebfda206e09cc218862c391299",
+  "axfBytes": 1148840,
+  "hostBufferTestsPassed": true,
+  "nativePythonChecksumParityPassed": true,
+  "runtimeIdentityVerified": true,
+  "sourceEvidenceSha256": {
+    "demo/code/phase2_timing.c": "3d3c3e26af4eb09c5fcd0649641c0d5eba63a1475f99eca764f6dfac2286f653",
+    "demo/code/phase2_timing.h": "94532631861cff5e95c7239d4df98ad6efd71112fa3e6c23e563d20d30239313",
+    "demo/code/static_pwm.c": "fee3264448ba514d23525c6ff34ca0f8652c42730af1bacbd0f9944c809d8fc6",
+    "demo/code/app_runtime.c": "a38a7befdc7e836e76b38a351fb3c9ddb17a8b12e4a7b591407f59fa1a943e4b",
+    "demo/code/vision_field.c": "73e6f26b4ba8a291354d3b4a9a895680bcc01c92d6f8413aae3ba343bdc26869",
+    "demo/code/vision_profile.h": "3c3137a68d059567a0477defbca03d18135d1b6d49d58e91e51c00f7c71d9dce",
+    "test_timing.c": "6134959c9fd59660738e2c6a4e27342f0ea908185b95bc162fd1473ab2ce9910",
+    "keil-build-final.log": "3f24739dcfb8e2644a3d4e86531daf9719c49d1140054c8f8e05a6362a119fb3"
+  },
+  "measurementScope": "CSI completion to software observe return in OFF/OBSERVE;256frames,1ms clock;not full exposure-to-electrical-PWM latency",
+  "zeroPwmMechanism": "Private PWM driver clamps duty=0 in both pwm_init and pwm_set_duty; production driver unchanged",
+  "commands": [
+    "@timing_start: OBSERVE, empty buffer only",
+    "@timing_info: generation,count,active,reason,FNV1a",
+    "@timing_row i: frozen read only",
+    "@timing_clear: OBSERVE,inactive only; explicit destructive clear"
+  ],
+  "retention": "Full256rows freezes;30s timeout or mode change freezes partial trace;export never clears",
+  "limitations": [
+    "OFF/OBSERVE does not exercise RUNNING branch, closed-loop PI or MPC integration.",
+    "No exposure/VSYNC/physical PWM timestamps; no end-to-end production latency claim.",
+    "1ms quantization; capture-clock callback unchanged from prior firmware.",
+    "Collection suppresses regular500ms vision telemetry; remaining transport/system load not identical to driving."
+  ],
+  "programAndVerifyPassed": true,
+  "flashLog": "evidence/latency-static/flash.log",
+  "postFlashCaptureStatus": "COMPLETE_256_ROWS_VALIDATED",
+  "postFlashReceivedBytes": 0,
+  "physicalStaticCapturePassed": true,
+  "traceEvidence": "evidence/latency-static/session01/trace.json",
+  "analysisEvidence": "evidence/latency-static/session01/analysis.json",
+  "evidenceSha256": {
+    "analysis.json": "686bf5d6520c242fd7809eaac353f056ce1b2422274d1115cd55ceffb9f18617",
+    "serial.jsonl": "7509fca5d88ef2ea0f1afa8a79c49a1b0409110219f9f93c1a5cbd76d5be7dcf",
+    "trace.json": "6f19688410427a13578e9d9dd745c02a0da7f2580e485cb2f436bb8225817565"
+  }
+}

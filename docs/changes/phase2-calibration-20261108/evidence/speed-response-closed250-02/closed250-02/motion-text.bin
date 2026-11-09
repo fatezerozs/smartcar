@@ -1,0 +1,42 @@
+=0 channel=0 value=0 level=0 hold_ms=0 active=0
+[STARTUP] enabled=0 delay_ms=2000 state=0 restored=0 switch_seen=0 closed=0 local=0
+[STORE] valid=0 slot=0 generation=0 error=1
+[MOTION] STARTED kind=1 requested=250 duration_ms=1500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=5 kind=1 phase=1 reason=0 requested=250 actual=0 servo_us=1550 ms=359191
+[SPEED] ms=359191 sample=35887 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=-2/12 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=1 reason=0 requested=250 actual=0 servo_us=1550 ms=359291
+[SPEED] ms=359291 sample=35896 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=-2/12 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=0 servo_us=1550 ms=359391
+[SPEED] ms=359391 sample=35906 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=-2/12 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=30 servo_us=1550 ms=359491
+[SPEED] ms=359491 sample=35916 enabled=1 raw3_L=0 raw4_R=0 target_R/L=2/2 measured_R/L=0/0 pwm_R/L=4/4 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=59 servo_us=1550 ms=359591
+[SPEED] ms=359591 sample=35926 enabled=1 raw3_L=0 raw4_R=0 target_R/L=5/5 measured_R/L=0/0 pwm_R/L=14/14 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=89 servo_us=1550 ms=359691
+[SPEED] ms=359691 sample=35936 enabled=1 raw3_L=0 raw4_R=0 target_R/L=8/8 measured_R/L=0/0 pwm_R/L=26/26 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=119 servo_us=1550 ms=359791
+[SPEED] ms=359791 sample=35946 enabled=1 raw3_L=0 raw4_R=0 target_R/L=10/10 measured_R/L=0/0 pwm_R/L=39/39 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=149 servo_us=1550 ms=359891
+[SPEED] ms=359891 sample=35956 enabled=1 raw3_L=0 raw4_R=0 target_R/L=13/13 measured_R/L=0/0 pwm_R/L=56/56 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=179 servo_us=1550 ms=359991
+[SPEED] ms=359991 sample=35966 enabled=1 raw3_L=0 raw4_R=0 target_R/L=16/16 measured_R/L=0/0 pwm_R/L=76/76 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=209 servo_us=1550 ms=360091
+[SPEED] ms=360091 sample=35976 enabled=1 raw3_L=0 raw4_R=0 target_R/L=19/19 measured_R/L=0/0 pwm_R/L=99/99 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=239 servo_us=1550 ms=360191
+[SPEED] ms=360191 sample=35986 enabled=1 raw3_L=0 raw4_R=0 target_R/L=21/21 measured_R/L=0/0 pwm_R/L=123/123 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360291
+[SPEED] ms=360291 sample=35996 enabled=1 raw3_L=0 raw4_R=2 target_R/L=23/23 measured_R/L=2/0 pwm_R/L=144/149 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360391
+[SPEED] ms=360391 sample=36006 enabled=1 raw3_L=-2 raw4_R=9 target_R/L=23/23 measured_R/L=9/2 pwm_R/L=147/167 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360491
+[SPEED] ms=360491 sample=36016 enabled=1 raw3_L=-34 raw4_R=9 target_R/L=23/23 measured_R/L=9/34 pwm_R/L=158/105 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360591
+[SPEED] ms=360591 sample=36026 enabled=1 raw3_L=-30 raw4_R=15 target_R/L=23/23 measured_R/L=15/30 pwm_R/L=154/105 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360691
+[SPEED] ms=360691 sample=36036 enabled=1 raw3_L=-33 raw4_R=24 target_R/L=23/23 measured_R/L=24/33 pwm_R/L=144/94 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360791
+[SPEED] ms=360791 sample=36046 enabled=1 raw3_L=-30 raw4_R=25 target_R/L=23/23 measured_R/L=25/30 pwm_R/L=141/93 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=2 reason=0 requested=250 actual=250 servo_us=1550 ms=360891
+[SPEED] ms=360891 sample=36056 enabled=1 raw3_L=-25 raw4_R=20 target_R/L=23/23 measured_R/L=20/25 pwm_R/L=151/97 faults=0; counts/10ms
+[MOTION] seq=5 kind=1 phase=0 reason=1 requested=250 actual=0 servo_us=1550 ms=360891
+[SPEED] ms=360891 sample=36057 enabled=1 raw3_L=-25 raw4_R=25 target_R/L=0/0 measured_R/L=20/25 pwm_R/L=0/0 faults=0; counts/10ms

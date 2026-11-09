@@ -1,0 +1,50 @@
+[BOARD_IO] C26=0 C27=0[LINK] 
+STOP
+[FIELD] STOP
+[LINK] STOP
+
+[
+BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[DRIVE] r
+eady=0 state=0 faults=0 near=0.000 hea
+ding=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=CROSS 
+p=0.940 margin=0.908 entropy=0.128 accepted=0 trained=0
+[FEATURE] n=3826 ms=77076 mask=60 quality=0.667 heading=0.0000 curvature=0.0000 open_left=0.6897 open_right=0.7816 split=0.8391 stri
+pes=0.2478
+[VISION2] n=3826 fps=50.0 valid=0 state=NO_LANE q=1 thr=173 contrast=170 white=51
+[VISION2] both=1 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 drop=0
+[V
+ISION2] age_ms=20 proc_ms=3 history_reset=0 row90_thr=164 local_rows=84 ambiguous=0
+
+[LINK
+] port=radio owner=radio rx=73 tx=74284 overflow=0 errors=0 tx_rejected=0; x=claim while stopped
+
+LINK] RX_E
+RROR; discarded until newline
+[TELEM] ms=318 n=0 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=591 n=0 state=0 faults=0 valid=0 owner=usb motion=0
+
+[TELEM] m
+s=793 n=10 state=0 faults=0 valid=0 owner=usb motion=0
+
+[TELEM]
+ ms=993 n=20 state=0 faults=0 valid=0 owner=usb motion=0
+
+[TELEM
+] ms=1193 n=30 state=0 faults=0 valid=0 owner=usb motion=0
+
+[TEL
+EM] ms=1393 n=40 state=0 faults=0 valid=0 owner=usb motion=0
+
+[TELEM] ms=1593 n=50 sta
+te=0 faults=0 valid=0 owner=usb motion=0
+
+Log: C:\shengchanli\smartCar\smartcar\.build\phase2-calibration-20261108\known-motion2-20261108T155749526152Z\power-on-restore-config-20261108T160831382Z.log
+Exception: C:\shengchanli\smartCar\smartcar\.build\phase2-calibration-20261108\known-motion2-20261108T155749526152Z\exact-config-client\field_serial.ps1:94
+Line |
+  94 |              throw 'New firmware marker absent; framed configuration a …
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | New firmware marker absent; framed configuration and motion were NOT sent.

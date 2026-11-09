@@ -1,0 +1,13 @@
+{
+  "recordedAtUtc": "2026-11-08T16:28:50.093315+00:00",
+  "rawReply": "920;10;无",
+  "sequence": 16,
+  "requestPermille": 200,
+  "durationMs": 3000,
+  "forwardMm": 920,
+  "lateralRightPositiveMm": 10,
+  "operatorReportsAnomaly": "无",
+  "unitsFromPrompt": "mm",
+  "productionApproved": false,
+  "brakingDistanceMeasured": false
+}

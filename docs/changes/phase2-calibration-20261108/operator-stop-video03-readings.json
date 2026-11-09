@@ -1,0 +1,16 @@
+{
+  "rawReplies": [
+    "可能有清晰度的问题,我这边人眼识别的时候后轮轴在蜂鸣声响在59cm处,停止位置在89cm处",
+    "你可以对照一下",
+    "(当然都是估算,蜂鸣声响的时候会有误差,你大致比较下就行)"
+  ],
+  "sourceVideo": "C:\\download_temp\\VID_20261109_011745.mp4",
+  "rearAxleAtBeepCm": 59,
+  "rearAxleAtStopCm": 89,
+  "computedDisplacementMm": 300,
+  "source": "Operator visual video readings; not independent physical ruler measurement",
+  "productionApproved": false,
+  "readingStatus": "ROUGH_OPERATOR_ESTIMATE",
+  "audibleMarkerReadingHasUnquantifiedTimingError": true,
+  "use": "Order-of-magnitude comparison only; not precise distance-scale correction or brake calibration"
+}

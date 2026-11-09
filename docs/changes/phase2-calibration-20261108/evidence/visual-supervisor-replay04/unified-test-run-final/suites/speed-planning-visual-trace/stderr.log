@@ -1,0 +1,11 @@
+test_censored_observation_episode_does_not_invent_distance (__main__.VisualSupervisorReplay.test_censored_observation_episode_does_not_invent_distance) ... ok
+test_denied_admission_does_not_auto_arm_on_later_valid_frames (__main__.VisualSupervisorReplay.test_denied_admission_does_not_auto_arm_on_later_valid_frames) ... ok
+test_four_valid_frames_can_clear_three_confirmations_but_not_five (__main__.VisualSupervisorReplay.test_four_valid_frames_can_clear_three_confirmations_but_not_five) ... ok
+test_real_metadata_matches_independent_oracle_without_motion_claim (__main__.VisualSupervisorReplay.test_real_metadata_matches_independent_oracle_without_motion_claim) ... ok
+test_source_corruption_rejected_before_building (__main__.VisualSupervisorReplay.test_source_corruption_rejected_before_building) ... ok
+test_time_expiry_latches_and_later_recovery_cannot_unlock (__main__.VisualSupervisorReplay.test_time_expiry_latches_and_later_recovery_cannot_unlock) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.707s
+
+OK

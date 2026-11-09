@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "smartcar.response-stop-wheel-review/1",
+  "crcVerified": true,
+  "softwareZeroMs": 759140,
+  "stopSampleBracketOffsetsMs": [
+    -9,
+    1
+  ],
+  "candidateCountsPerMetre": {
+    "left": 11394,
+    "right": 11389
+  },
+  "wheelMetrics": {
+    "left": {
+      "wholeCaptureWheelMm": 733.6317360014043,
+      "postZeroSampleBracketWheelMm": [
+        111.54993856415658,
+        114.88502720730209
+      ],
+      "preZeroWindowSpeeds": [
+        {
+          "windowMs": 50,
+          "wheelMps": 0.3317535545023697
+        },
+        {
+          "windowMs": 100,
+          "wheelMps": 0.35018430753027907
+        },
+        {
+          "windowMs": 200,
+          "wheelMps": 0.35369492715464285
+        }
+      ],
+      "wheelMinusReportedForwardMm": 3.631736001404306,
+      "withinReportedForwardRange": true
+    },
+    "right": {
+      "wholeCaptureWheelMm": 734.9196593203968,
+      "postZeroSampleBracketWheelMm": [
+        109.84283080165072,
+        113.00377557292124
+      ],
+      "preZeroWindowSpeeds": [
+        {
+          "windowMs": 50,
+          "wheelMps": 0.3389235226973395
+        },
+        {
+          "windowMs": 100,
+          "wheelMps": 0.3573623671964176
+        },
+        {
+          "windowMs": 200,
+          "wheelMps": 0.3617525682676267
+        }
+      ],
+      "wheelMinusReportedForwardMm": 4.919659320396818,
+      "withinReportedForwardRange": true
+    }
+  },
+  "zeroToleranceSensitivity": [
+    {
+      "toleranceCountsPerSample": 0,
+      "lastAboveOffsetMs": 881,
+      "firstFinalTailOffsetMs": 891,
+      "finalTailDurationMs": 1120,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPerSample": 1,
+      "lastAboveOffsetMs": 881,
+      "firstFinalTailOffsetMs": 891,
+      "finalTailDurationMs": 1120,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPerSample": 2,
+      "lastAboveOffsetMs": 631,
+      "firstFinalTailOffsetMs": 641,
+      "finalTailDurationMs": 1370,
+      "physicalStopVerified": false
+    }
+  ],
+  "postZeroSubmittedPwmAllZero": true,
+  "productionApproved": false,
+  "limits": [
+    "Candidate wheel scales, not independently verified ground velocity or stop distance.",
+    "Software zero is not electrical reload timing.",
+    "Tolerance analysis does not select production zero-speed threshold.",
+    "One run, voltage unmeasured; no safe brake bound inferred."
+  ]
+}

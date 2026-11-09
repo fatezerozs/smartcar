@@ -1,0 +1,176 @@
+{
+  "recordedAtUtc": "2026-11-08T16:31:01.656236+00:00",
+  "firmware": "PHASE2_STARTUP_200_20261108_1",
+  "workingScaleSource": "rolling-adoption-decision.json",
+  "steeringReferenceSource": "steering-symmetry-reference.json",
+  "ground190": {
+    "n": 3,
+    "forwardValuesMm": [
+      240,
+      270,
+      5
+    ],
+    "forwardMeanMm": 171.66666666666666,
+    "forwardMedianMm": 240,
+    "forwardRangeMm": 265,
+    "lateralValuesRightPositiveMm": [
+      3,
+      -1,
+      0
+    ],
+    "interpretation": "All reported observations retained, including near-no-start. Heterogeneity/third power-state uncertainty prevent stable-duty-speed or distance model; mean is descriptive only, not calibration parameter."
+  },
+  "ground200": {
+    "n": 3,
+    "forwardValuesMm": [
+      870,
+      920,
+      920
+    ],
+    "forwardMeanMm": 903.3333333333334,
+    "forwardSampleStdDevMm": 28.867513459481287,
+    "forwardRangeMm": 50,
+    "lateralValuesRightPositiveMm": [
+      10,
+      10,
+      -2
+    ],
+    "maxAbsLateralMm": 10,
+    "interpretation": "Three operator-reported run displacements at one output/time point; mean and sample SD descriptive only. No brake distance, metrological error interval or production safety bound.",
+    "sameParameterRepetitionsFinished": true
+  },
+  "physicalWirelessBothForwardAndStopConfirmedAt190": true,
+  "phase2Complete": false,
+  "productionApproved": false,
+  "remainingCritical": [
+    "Stop/coast distance and actual stop timing after output zero",
+    "Fresh full-rate encoder trajectory spanning motor start and post-stop",
+    "Ground mapping/near available distance",
+    "Capture-to-output latency",
+    "Labeled near/far loss/recovery episodes and budgets"
+  ],
+  "excludedEvidence": "First six-point startup scan motor power off per operator; preserved in startupSweepHistory. Erroneous tangent-0.0306 explicitly excluded; unilateral prior power-off motion feedback retained as invalid physical drive inference.",
+  "currentFirmware": "PHASE2_STOP_TRACE_20261109_1",
+  "wheelStopObservation": {
+    "source": "evidence/stop-trace/video02/wheel-analysis.json",
+    "physicalStoppingDistanceVerified": false,
+    "preZero100msWheelMpsLeftRight": [
+      0.4960056511687644,
+      0.5040320529127449
+    ],
+    "brakeParameterApproved": false
+  },
+  "latestStaticUpdate": {
+    "date": "2026-11-09",
+    "firmware": "PHASE2_LATENCY_STATIC_20261109_1",
+    "mode": "OBSERVE",
+    "softwareLatencyTraceFrames": 256,
+    "softwareLatencyMs": [
+      3,
+      4
+    ],
+    "visionSegmentCalReports": 189,
+    "phase2Complete": false,
+    "productionApproved": false,
+    "references": [
+      "LATENCY_TEST.md",
+      "VISION_QUALITY_TEST.md",
+      "PHASE2_REMAINING.md"
+    ]
+  },
+  "latestContinuousStaticUpdate": {
+    "date": "2026-11-09",
+    "firmware": "PHASE2_VISUAL_TRACE_20261109_1",
+    "mode": "OBSERVE",
+    "verifiedFrames": 750,
+    "fullCaptureAndExportPassed": true,
+    "farOcclusionRecoveryScenarioPassed": false,
+    "controlStateCounts": {
+      "1/0": 331,
+      "1/1": 419
+    },
+    "missingSequenceNumbers": 0,
+    "phase2Complete": false,
+    "productionApproved": false,
+    "reference": "VISUAL_CONTINUOUS_RESULT_04.md",
+    "copyFailureCounterFirstLast": [
+      6,
+      6
+    ],
+    "copyFailuresDuringRecordedInterval": 0,
+    "normalBaselineRecovered": true,
+    "farLossRecoveryObserved": true,
+    "cleanFarOcclusionRecoveryScenarioPassed": false
+  },
+  "latestOfflineUpdate": {
+    "date": "2026-11-09",
+    "evidence": "hybrid-observed-visual-and-synthetic-encoder",
+    "sourceFrames": 750,
+    "scenarios": 5,
+    "independentOracleRows": 3750,
+    "unitChecksPassed": 6,
+    "unifiedSuite": "speed-planning-visual-trace",
+    "localUnifiedSuitePassed": true,
+    "remoteCiVerifiedThisUpdate": false,
+    "referenceBudgetMs": 600,
+    "referenceRecoveryFrames": 3,
+    "productionApproved": false,
+    "phase2Complete": false,
+    "report": "VISUAL_SUPERVISOR_REPLAY.md"
+  },
+  "latestPreparation": {
+    "date": "2026-11-09",
+    "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+    "straightRequestPermille": 450,
+    "hardPwmCapPermille": 600,
+    "straightSpeedMps": null,
+    "flashed": true,
+    "physicalTestPassed": false,
+    "productionApproved": false,
+    "buildErrors": 0,
+    "buildWarnings": 0,
+    "hostAssertions": 14414,
+    "pythonChecks": 8,
+    "report": "SPEED_RESPONSE_TEST.md",
+    "programAndVerifyPassed": true,
+    "runtimeIdentityVerified": true,
+    "ramConfigured": true,
+    "motionCommandSent": false,
+    "readbackMode": "OBSERVE",
+    "port": "COM14",
+    "baud": 115200
+  },
+  "latestClosedLoopResult": {
+    "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+    "durationMs": 3000,
+    "targetCounts10ms": 40,
+    "perRunCapPermille": 250,
+    "crcRows": 522,
+    "normalTimedEnd": true,
+    "faults": 0,
+    "operatorBothForwardAndStopped": true,
+    "softwarePwmPeakPermille": 157,
+    "stabilityAccepted": false,
+    "productionApproved": false,
+    "review": "evidence/speed-response-target40-01/review.json"
+  },
+  "latestGroundClosedLoopResult": {
+    "targetCounts10ms": 23,
+    "perRunCapPermille": 250,
+    "durationMs": 2500,
+    "crcRows": 472,
+    "normalTimedEnd": true,
+    "userReportedRulerForwardMm": 380,
+    "userReportedRulerLateralRightPositiveMm": 0,
+    "reportedAbnormalities": "none, all normal",
+    "operatorStopConfirmed": true,
+    "workingWheelDistanceMm": {
+      "left": 360.8916973845884,
+      "right": 358.4160154535078
+    },
+    "scaleAccepted": false,
+    "stabilityAccepted": false,
+    "radioIssueResolved": false,
+    "review": "evidence/speed-response-ground23-2500-02/review.json"
+  }
+}

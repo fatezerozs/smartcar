@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "smartcar.speed-response-review/1",
+  "sourceSha256": "5fc5a8c0e1392b6be460ef6be2894fc49437815db336f872d981dab9dbfd78fb",
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "crcVerified": true,
+  "rows": 372,
+  "config": {
+    "requestPermille": 200,
+    "durationMs": 1500,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "firstZeroAfterArmMs": 1700,
+  "postZeroMs": 2004,
+  "stopReason": 1,
+  "faultDetailValues": [
+    0
+  ],
+  "faultValues": [
+    0
+  ],
+  "uniquePositiveTargetMatchedControls": 146,
+  "excludedZeroTargetPairingAnomalies": [],
+  "tailWindowsMs": {
+    "300": {
+      "uniqueControlSamples": 29,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 14.862068965517242,
+        "rangeCounts10ms": [
+          11,
+          22
+        ],
+        "rmseCounts10ms": 8.452708196907603,
+        "samplesWithin2Counts": 1,
+        "maxOvershootCounts": 0
+      },
+      "r": {
+        "meanCounts10ms": 15.10344827586207,
+        "rangeCounts10ms": [
+          12,
+          19
+        ],
+        "rmseCounts10ms": 8.147349897041835,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 0
+      }
+    },
+    "500": {
+      "uniqueControlSamples": 49,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 11.346938775510203,
+        "rangeCounts10ms": [
+          2,
+          22
+        ],
+        "rmseCounts10ms": 12.656368889590242,
+        "samplesWithin2Counts": 1,
+        "maxOvershootCounts": 0
+      },
+      "r": {
+        "meanCounts10ms": 11.673469387755102,
+        "rangeCounts10ms": [
+          3,
+          19
+        ],
+        "rmseCounts10ms": 12.304802447227916,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 0
+      }
+    }
+  },
+  "responseOnset": {
+    "l": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 1184,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    },
+    "r": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 1174,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    }
+  },
+  "outputCeiling": {
+    "l": {
+      "sampledAtCeiling": 16,
+      "sampledCeilingDurationMs": 160,
+      "softwarePwmPeakPermille": 200.0
+    },
+    "r": {
+      "sampledAtCeiling": 12,
+      "sampledCeilingDurationMs": 120,
+      "softwarePwmPeakPermille": 200.0
+    }
+  },
+  "driveNegativeRuns": {
+    "l": [
+      {
+        "firstSequence": 4453,
+        "lastSequence": 4453,
+        "samples": 1,
+        "elapsedSampleSpanMs": 0,
+        "minimumNormalizedCounts10ms": -1
+      }
+    ],
+    "r": []
+  },
+  "signedRawTotalDeltaLeftRight": [
+    -851,
+    854
+  ],
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "limits": [
+    "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+    "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+    "Saturation duration is sample-window attribution, not electrical timing.",
+    "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+    "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+  ],
+  "sourceTrace": ".build\\phase2-calibration-20261108\\speed-response-20261109_1-release\\export-ground-target23-reset200-01\\trace.json",
+  "physicalSetup": "ground",
+  "port": "COM10",
+  "operatorObservation": {
+    "forwardMm": 50,
+    "lateralRightPositiveMm": 0,
+    "method": "visual estimate explicitly clarified by user",
+    "instrument": null,
+    "uncertaintyMm": null,
+    "abnormalitiesReported": "none",
+    "mechanicalStopExplicitlyConfirmed": false
+  },
+  "workingWheelDistanceMm": {
+    "left": 74.68843250833771,
+    "right": 74.98463429625077
+  },
+  "distanceScaleValidationPassed": false,
+  "performanceAccepted": false,
+  "resetObservedBeforeRun": true,
+  "planned250MotionSent": false,
+  "actualRunCeilingPermille": 200
+}

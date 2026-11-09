@@ -1,0 +1,943 @@
+{
+  "schemaVersion": "smartcar.visual-trace-analysis/1",
+  "version": "PHASE2_VISUAL_TRACE_20261109_1",
+  "frames": 750,
+  "captureSpanMs": 14973,
+  "captureIntervalMs": {
+    "n": 749,
+    "min": 19,
+    "p50": 20.0,
+    "p95": 20.0,
+    "p99": 20.0,
+    "max": 20
+  },
+  "missingCaptureSequenceNumbers": 0,
+  "copyFailureCounterFirstLast": [
+    6,
+    6
+  ],
+  "controlValidFarCounts": {
+    "1/0": 331,
+    "1/1": 419
+  },
+  "independentBandSupportCounts": {
+    "1/0": 331,
+    "1/1": 419
+  },
+  "rawValidCounts": {
+    "1": 750
+  },
+  "quality": {
+    "n": 750,
+    "min": 49,
+    "p50": 62.0,
+    "p95": 89.0,
+    "p99": 90.0,
+    "max": 90
+  },
+  "softwareStagesMs": {
+    "captureToObserveReturn": {
+      "n": 750,
+      "min": 3,
+      "p50": 4.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    },
+    "visionProcessing": {
+      "n": 750,
+      "min": 3,
+      "p50": 4.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    },
+    "recordImageAndDiagnostics": {
+      "n": 750,
+      "min": 0,
+      "p50": 0.0,
+      "p95": 1.0,
+      "p99": 1.0,
+      "max": 1
+    }
+  },
+  "controlRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 50,
+      "frames": 51,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 999,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 51,
+      "lastIndex": 51,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1019,
+      "lastCaptureElapsedMs": 1019,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 52,
+      "lastIndex": 54,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1039,
+      "lastCaptureElapsedMs": 1079,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 55,
+      "lastIndex": 55,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1099,
+      "lastCaptureElapsedMs": 1099,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 56,
+      "lastIndex": 58,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1119,
+      "lastCaptureElapsedMs": 1159,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 59,
+      "lastIndex": 59,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1179,
+      "lastCaptureElapsedMs": 1179,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 60,
+      "lastIndex": 62,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1199,
+      "lastCaptureElapsedMs": 1239,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 63,
+      "lastIndex": 75,
+      "frames": 13,
+      "firstCaptureElapsedMs": 1259,
+      "lastCaptureElapsedMs": 1499,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 76,
+      "lastIndex": 77,
+      "frames": 2,
+      "firstCaptureElapsedMs": 1519,
+      "lastCaptureElapsedMs": 1539,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 78,
+      "lastIndex": 80,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1559,
+      "lastCaptureElapsedMs": 1599,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 81,
+      "lastIndex": 82,
+      "frames": 2,
+      "firstCaptureElapsedMs": 1619,
+      "lastCaptureElapsedMs": 1639,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 83,
+      "lastIndex": 85,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1659,
+      "lastCaptureElapsedMs": 1699,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 86,
+      "lastIndex": 86,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1719,
+      "lastCaptureElapsedMs": 1719,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 87,
+      "lastIndex": 89,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1739,
+      "lastCaptureElapsedMs": 1779,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 90,
+      "lastIndex": 90,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1799,
+      "lastCaptureElapsedMs": 1799,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 91,
+      "lastIndex": 91,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1819,
+      "lastCaptureElapsedMs": 1819,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 92,
+      "lastIndex": 92,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1839,
+      "lastCaptureElapsedMs": 1839,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 93,
+      "lastIndex": 95,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1859,
+      "lastCaptureElapsedMs": 1899,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 96,
+      "lastIndex": 96,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1919,
+      "lastCaptureElapsedMs": 1919,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 97,
+      "lastIndex": 97,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1939,
+      "lastCaptureElapsedMs": 1939,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 98,
+      "lastIndex": 102,
+      "frames": 5,
+      "firstCaptureElapsedMs": 1959,
+      "lastCaptureElapsedMs": 2039,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 103,
+      "lastIndex": 273,
+      "frames": 171,
+      "firstCaptureElapsedMs": 2059,
+      "lastCaptureElapsedMs": 5457,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 274,
+      "lastIndex": 288,
+      "frames": 15,
+      "firstCaptureElapsedMs": 5477,
+      "lastCaptureElapsedMs": 5757,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 289,
+      "lastIndex": 292,
+      "frames": 4,
+      "firstCaptureElapsedMs": 5777,
+      "lastCaptureElapsedMs": 5837,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 293,
+      "lastIndex": 294,
+      "frames": 2,
+      "firstCaptureElapsedMs": 5857,
+      "lastCaptureElapsedMs": 5877,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 295,
+      "lastIndex": 296,
+      "frames": 2,
+      "firstCaptureElapsedMs": 5897,
+      "lastCaptureElapsedMs": 5917,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 297,
+      "lastIndex": 316,
+      "frames": 20,
+      "firstCaptureElapsedMs": 5937,
+      "lastCaptureElapsedMs": 6317,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 317,
+      "lastIndex": 317,
+      "frames": 1,
+      "firstCaptureElapsedMs": 6337,
+      "lastCaptureElapsedMs": 6337,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 318,
+      "lastIndex": 527,
+      "frames": 210,
+      "firstCaptureElapsedMs": 6357,
+      "lastCaptureElapsedMs": 10535,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 528,
+      "lastIndex": 528,
+      "frames": 1,
+      "firstCaptureElapsedMs": 10555,
+      "lastCaptureElapsedMs": 10555,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 529,
+      "lastIndex": 529,
+      "frames": 1,
+      "firstCaptureElapsedMs": 10575,
+      "lastCaptureElapsedMs": 10575,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 530,
+      "lastIndex": 548,
+      "frames": 19,
+      "firstCaptureElapsedMs": 10595,
+      "lastCaptureElapsedMs": 10955,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 549,
+      "lastIndex": 556,
+      "frames": 8,
+      "firstCaptureElapsedMs": 10975,
+      "lastCaptureElapsedMs": 11115,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 557,
+      "lastIndex": 578,
+      "frames": 22,
+      "firstCaptureElapsedMs": 11135,
+      "lastCaptureElapsedMs": 11555,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 579,
+      "lastIndex": 579,
+      "frames": 1,
+      "firstCaptureElapsedMs": 11575,
+      "lastCaptureElapsedMs": 11575,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 580,
+      "lastIndex": 581,
+      "frames": 2,
+      "firstCaptureElapsedMs": 11595,
+      "lastCaptureElapsedMs": 11615,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    },
+    {
+      "firstIndex": 582,
+      "lastIndex": 582,
+      "frames": 1,
+      "firstCaptureElapsedMs": 11635,
+      "lastCaptureElapsedMs": 11635,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 0
+      }
+    },
+    {
+      "firstIndex": 583,
+      "lastIndex": 749,
+      "frames": 167,
+      "firstCaptureElapsedMs": 11655,
+      "lastCaptureElapsedMs": 14973,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    }
+  ],
+  "supportRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 50,
+      "frames": 51,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 999,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 51,
+      "lastIndex": 51,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1019,
+      "lastCaptureElapsedMs": 1019,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 52,
+      "lastIndex": 54,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1039,
+      "lastCaptureElapsedMs": 1079,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 55,
+      "lastIndex": 55,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1099,
+      "lastCaptureElapsedMs": 1099,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 56,
+      "lastIndex": 58,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1119,
+      "lastCaptureElapsedMs": 1159,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 59,
+      "lastIndex": 59,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1179,
+      "lastCaptureElapsedMs": 1179,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 60,
+      "lastIndex": 62,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1199,
+      "lastCaptureElapsedMs": 1239,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 63,
+      "lastIndex": 75,
+      "frames": 13,
+      "firstCaptureElapsedMs": 1259,
+      "lastCaptureElapsedMs": 1499,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 76,
+      "lastIndex": 77,
+      "frames": 2,
+      "firstCaptureElapsedMs": 1519,
+      "lastCaptureElapsedMs": 1539,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 78,
+      "lastIndex": 80,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1559,
+      "lastCaptureElapsedMs": 1599,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 81,
+      "lastIndex": 82,
+      "frames": 2,
+      "firstCaptureElapsedMs": 1619,
+      "lastCaptureElapsedMs": 1639,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 83,
+      "lastIndex": 85,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1659,
+      "lastCaptureElapsedMs": 1699,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 86,
+      "lastIndex": 86,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1719,
+      "lastCaptureElapsedMs": 1719,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 87,
+      "lastIndex": 89,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1739,
+      "lastCaptureElapsedMs": 1779,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 90,
+      "lastIndex": 90,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1799,
+      "lastCaptureElapsedMs": 1799,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 91,
+      "lastIndex": 91,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1819,
+      "lastCaptureElapsedMs": 1819,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 92,
+      "lastIndex": 92,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1839,
+      "lastCaptureElapsedMs": 1839,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 93,
+      "lastIndex": 95,
+      "frames": 3,
+      "firstCaptureElapsedMs": 1859,
+      "lastCaptureElapsedMs": 1899,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 96,
+      "lastIndex": 96,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1919,
+      "lastCaptureElapsedMs": 1919,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 97,
+      "lastIndex": 97,
+      "frames": 1,
+      "firstCaptureElapsedMs": 1939,
+      "lastCaptureElapsedMs": 1939,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 98,
+      "lastIndex": 102,
+      "frames": 5,
+      "firstCaptureElapsedMs": 1959,
+      "lastCaptureElapsedMs": 2039,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 103,
+      "lastIndex": 273,
+      "frames": 171,
+      "firstCaptureElapsedMs": 2059,
+      "lastCaptureElapsedMs": 5457,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 274,
+      "lastIndex": 288,
+      "frames": 15,
+      "firstCaptureElapsedMs": 5477,
+      "lastCaptureElapsedMs": 5757,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 289,
+      "lastIndex": 292,
+      "frames": 4,
+      "firstCaptureElapsedMs": 5777,
+      "lastCaptureElapsedMs": 5837,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 293,
+      "lastIndex": 294,
+      "frames": 2,
+      "firstCaptureElapsedMs": 5857,
+      "lastCaptureElapsedMs": 5877,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 295,
+      "lastIndex": 296,
+      "frames": 2,
+      "firstCaptureElapsedMs": 5897,
+      "lastCaptureElapsedMs": 5917,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 297,
+      "lastIndex": 316,
+      "frames": 20,
+      "firstCaptureElapsedMs": 5937,
+      "lastCaptureElapsedMs": 6317,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 317,
+      "lastIndex": 317,
+      "frames": 1,
+      "firstCaptureElapsedMs": 6337,
+      "lastCaptureElapsedMs": 6337,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 318,
+      "lastIndex": 527,
+      "frames": 210,
+      "firstCaptureElapsedMs": 6357,
+      "lastCaptureElapsedMs": 10535,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 528,
+      "lastIndex": 528,
+      "frames": 1,
+      "firstCaptureElapsedMs": 10555,
+      "lastCaptureElapsedMs": 10555,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 529,
+      "lastIndex": 529,
+      "frames": 1,
+      "firstCaptureElapsedMs": 10575,
+      "lastCaptureElapsedMs": 10575,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 530,
+      "lastIndex": 548,
+      "frames": 19,
+      "firstCaptureElapsedMs": 10595,
+      "lastCaptureElapsedMs": 10955,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 549,
+      "lastIndex": 556,
+      "frames": 8,
+      "firstCaptureElapsedMs": 10975,
+      "lastCaptureElapsedMs": 11115,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 557,
+      "lastIndex": 578,
+      "frames": 22,
+      "firstCaptureElapsedMs": 11135,
+      "lastCaptureElapsedMs": 11555,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 579,
+      "lastIndex": 579,
+      "frames": 1,
+      "firstCaptureElapsedMs": 11575,
+      "lastCaptureElapsedMs": 11575,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 580,
+      "lastIndex": 581,
+      "frames": 2,
+      "firstCaptureElapsedMs": 11595,
+      "lastCaptureElapsedMs": 11615,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    },
+    {
+      "firstIndex": 582,
+      "lastIndex": 582,
+      "frames": 1,
+      "firstCaptureElapsedMs": 11635,
+      "lastCaptureElapsedMs": 11635,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 0
+      }
+    },
+    {
+      "firstIndex": 583,
+      "lastIndex": 749,
+      "frames": 167,
+      "firstCaptureElapsedMs": 11655,
+      "lastCaptureElapsedMs": 14973,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    }
+  ],
+  "cueRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 199,
+      "frames": 200,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 3978,
+      "state": {
+        "cue_bits": 0
+      }
+    },
+    {
+      "firstIndex": 200,
+      "lastIndex": 449,
+      "frames": 250,
+      "firstCaptureElapsedMs": 3998,
+      "lastCaptureElapsedMs": 8976,
+      "state": {
+        "cue_bits": 1
+      }
+    },
+    {
+      "firstIndex": 450,
+      "lastIndex": 749,
+      "frames": 300,
+      "firstCaptureElapsedMs": 8996,
+      "lastCaptureElapsedMs": 14973,
+      "state": {
+        "cue_bits": 3
+      }
+    }
+  ],
+  "productionBudgetCalibrated": false,
+  "limits": [
+    "Actual physical occlusion intervals require original-image annotation; cue bits are not ground truth.",
+    "Independent band support is algorithm geometry, not independently measured scene truth.",
+    "Static zero-PWM instrumented build; no RUNNING/MPC or exposure-to-electrical-PWM validation.",
+    "1ms time quantization; empirical maxima do not establish guaranteed limits."
+  ]
+}

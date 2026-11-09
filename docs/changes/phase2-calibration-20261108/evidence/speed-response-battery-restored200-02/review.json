@@ -1,0 +1,15 @@
+{
+  "requestPermille": 200,
+  "durationRequestedMs": 1500,
+  "rows": 301,
+  "crcVerified": true,
+  "countDeltaLeftRight": [
+    -3114,
+    71
+  ],
+  "faultDetail": 12,
+  "operatorObservation": "Left wheel visibly faster",
+  "stopConfirmedByNextReadiness": true,
+  "physicalTestPassed": false,
+  "productionApproved": false
+}

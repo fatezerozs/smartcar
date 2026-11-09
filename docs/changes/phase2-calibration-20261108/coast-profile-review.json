@@ -1,0 +1,340 @@
+{
+  "schemaVersion": "smartcar.phase2-coast-profile-review/1",
+  "distanceScaleSource": "passive-distance-summary.json",
+  "countsPerMetreLeftRight": [
+    11394,
+    11389
+  ],
+  "runs": [
+    {
+      "source": "lower01",
+      "windows": [
+        {
+          "centreOffsetFromZeroMs": -50,
+          "durationMs": 100.0,
+          "leftMps": 0.4186413902053712,
+          "rightMps": 0.4030204583369918,
+          "meanMps": 0.4108309242711815
+        },
+        {
+          "centreOffsetFromZeroMs": 50,
+          "durationMs": 100.0,
+          "leftMps": 0.41513077058100756,
+          "rightMps": 0.44165422776363156,
+          "meanMps": 0.4283924991723196
+        },
+        {
+          "centreOffsetFromZeroMs": 150,
+          "durationMs": 100.0,
+          "leftMps": 0.3686150605581885,
+          "rightMps": 0.3406796031258231,
+          "meanMps": 0.3546473318420058
+        },
+        {
+          "centreOffsetFromZeroMs": 250,
+          "durationMs": 100.0,
+          "leftMps": 0.3019132876952782,
+          "rightMps": 0.30819211519887607,
+          "meanMps": 0.30505270144707713
+        },
+        {
+          "centreOffsetFromZeroMs": 350,
+          "durationMs": 100.0,
+          "leftMps": 0.2536422678602773,
+          "rightMps": 0.2704363859864782,
+          "meanMps": 0.2620393269233777
+        },
+        {
+          "centreOffsetFromZeroMs": 450,
+          "durationMs": 100.0,
+          "leftMps": 0.2132701421800948,
+          "rightMps": 0.1940468873474405,
+          "meanMps": 0.20365851476376765
+        },
+        {
+          "centreOffsetFromZeroMs": 550,
+          "durationMs": 100.0,
+          "leftMps": 0.1439354045989117,
+          "rightMps": 0.14399859513565721,
+          "meanMps": 0.14396699986728445
+        },
+        {
+          "centreOffsetFromZeroMs": 650,
+          "durationMs": 100.0,
+          "leftMps": 0.10180796910654731,
+          "rightMps": 0.10448678549477565,
+          "meanMps": 0.10314737730066148
+        },
+        {
+          "centreOffsetFromZeroMs": 750,
+          "durationMs": 100.0,
+          "leftMps": 0.04827101983500088,
+          "rightMps": 0.04917025199754148,
+          "meanMps": 0.04872063591627118
+        },
+        {
+          "centreOffsetFromZeroMs": 850,
+          "durationMs": 100.0,
+          "leftMps": 0.002632964718272775,
+          "rightMps": 0.002634120642725437,
+          "meanMps": 0.002633542680499106
+        },
+        {
+          "centreOffsetFromZeroMs": 950,
+          "durationMs": 100.0,
+          "leftMps": -0.0070212392487274,
+          "rightMps": -0.0070243217139344975,
+          "meanMps": -0.007022780481330948
+        },
+        {
+          "centreOffsetFromZeroMs": 1050,
+          "durationMs": 100.0,
+          "leftMps": 0.0,
+          "rightMps": -0.0008780402142418122,
+          "meanMps": -0.0004390201071209061
+        },
+        {
+          "centreOffsetFromZeroMs": 1150,
+          "durationMs": 100.0,
+          "leftMps": 0.0,
+          "rightMps": 0.0,
+          "meanMps": 0.0
+        },
+        {
+          "centreOffsetFromZeroMs": 1250,
+          "durationMs": 100.0,
+          "leftMps": 0.0,
+          "rightMps": 0.0,
+          "meanMps": 0.0
+        }
+      ],
+      "midSegmentLinearSlopeMps2": -0.5140393398873456,
+      "fitIntervalMs": [
+        150,
+        650
+      ],
+      "productionBrakeBound": false
+    },
+    {
+      "source": "video02",
+      "windows": [
+        {
+          "centreOffsetFromZeroMs": -50,
+          "durationMs": 100.0,
+          "leftMps": 0.538002457433737,
+          "rightMps": 0.5522872947580999,
+          "meanMps": 0.5451448760959184
+        },
+        {
+          "centreOffsetFromZeroMs": 50,
+          "durationMs": 100.0,
+          "leftMps": 0.516061084781464,
+          "rightMps": 0.5136535253314601,
+          "meanMps": 0.514857305056462
+        },
+        {
+          "centreOffsetFromZeroMs": 150,
+          "durationMs": 100.0,
+          "leftMps": 0.4809548885378269,
+          "rightMps": 0.4802879971902713,
+          "meanMps": 0.4806214428640491
+        },
+        {
+          "centreOffsetFromZeroMs": 250,
+          "durationMs": 100.0,
+          "leftMps": 0.4054765666140073,
+          "rightMps": 0.3986302572657828,
+          "meanMps": 0.4020534119398951
+        },
+        {
+          "centreOffsetFromZeroMs": 350,
+          "durationMs": 100.0,
+          "leftMps": 0.37300333508864314,
+          "rightMps": 0.3731670910527702,
+          "meanMps": 0.37308521307070663
+        },
+        {
+          "centreOffsetFromZeroMs": 450,
+          "durationMs": 100.0,
+          "leftMps": 0.3019132876952782,
+          "rightMps": 0.28799719027131443,
+          "meanMps": 0.29495523898329634
+        },
+        {
+          "centreOffsetFromZeroMs": 550,
+          "durationMs": 100.0,
+          "leftMps": 0.245743373705459,
+          "rightMps": 0.25989990341557645,
+          "meanMps": 0.25282163856051776
+        },
+        {
+          "centreOffsetFromZeroMs": 650,
+          "durationMs": 100.0,
+          "leftMps": 0.21590310689836753,
+          "rightMps": 0.2221441742031785,
+          "meanMps": 0.219023640550773
+        },
+        {
+          "centreOffsetFromZeroMs": 750,
+          "durationMs": 100.0,
+          "leftMps": 0.15710022819027558,
+          "rightMps": 0.1580472385635262,
+          "meanMps": 0.1575737333769009
+        },
+        {
+          "centreOffsetFromZeroMs": 850,
+          "durationMs": 100.0,
+          "leftMps": 0.10444093382482007,
+          "rightMps": 0.09482834313811572,
+          "meanMps": 0.09963463848146789
+        },
+        {
+          "centreOffsetFromZeroMs": 950,
+          "durationMs": 100.0,
+          "leftMps": 0.050026329647182725,
+          "rightMps": 0.04478005092633242,
+          "meanMps": 0.047403190286757574
+        },
+        {
+          "centreOffsetFromZeroMs": 1050,
+          "durationMs": 100.0,
+          "leftMps": 0.00526592943654555,
+          "rightMps": 0.005268241285450874,
+          "meanMps": 0.005267085360998212
+        },
+        {
+          "centreOffsetFromZeroMs": 1150,
+          "durationMs": 100.0,
+          "leftMps": -0.0070212392487274,
+          "rightMps": -0.006146281499692685,
+          "meanMps": -0.006583760374210042
+        },
+        {
+          "centreOffsetFromZeroMs": 1250,
+          "durationMs": 100.0,
+          "leftMps": -0.000877654906090925,
+          "rightMps": 0.0,
+          "meanMps": -0.0004388274530454625
+        }
+      ],
+      "midSegmentLinearSlopeMps2": -0.5239469445119779,
+      "fitIntervalMs": [
+        150,
+        650
+      ],
+      "productionBrakeBound": false
+    },
+    {
+      "source": "video03",
+      "windows": [
+        {
+          "centreOffsetFromZeroMs": -50,
+          "durationMs": 100.0,
+          "leftMps": 0.6740389678778304,
+          "rightMps": 0.6804811660374045,
+          "meanMps": 0.6772600669576174
+        },
+        {
+          "centreOffsetFromZeroMs": 50,
+          "durationMs": 100.0,
+          "leftMps": 0.6529752501316483,
+          "rightMps": 0.6339450346825884,
+          "meanMps": 0.6434601424071184
+        },
+        {
+          "centreOffsetFromZeroMs": 150,
+          "durationMs": 100.0,
+          "leftMps": 0.5774969282078287,
+          "rightMps": 0.5847747826850469,
+          "meanMps": 0.5811358554464379
+        },
+        {
+          "centreOffsetFromZeroMs": 250,
+          "durationMs": 100.0,
+          "leftMps": 0.5222046691241004,
+          "rightMps": 0.5399947317587145,
+          "meanMps": 0.5310997004414074
+        },
+        {
+          "centreOffsetFromZeroMs": 350,
+          "durationMs": 100.0,
+          "leftMps": 0.4677900649464631,
+          "rightMps": 0.44955658969180784,
+          "meanMps": 0.45867332731913546
+        },
+        {
+          "centreOffsetFromZeroMs": 450,
+          "durationMs": 100.0,
+          "leftMps": 0.40108829208355273,
+          "rightMps": 0.4179471419791026,
+          "meanMps": 0.40951771703132767
+        },
+        {
+          "centreOffsetFromZeroMs": 550,
+          "durationMs": 100.0,
+          "leftMps": 0.34404072318764256,
+          "rightMps": 0.3406796031258231,
+          "meanMps": 0.34236016315673284
+        },
+        {
+          "centreOffsetFromZeroMs": 650,
+          "durationMs": 100.0,
+          "leftMps": 0.28874846410391436,
+          "rightMps": 0.2818509087716217,
+          "meanMps": 0.28529968643776804
+        },
+        {
+          "centreOffsetFromZeroMs": 750,
+          "durationMs": 100.0,
+          "leftMps": 0.2273126206775496,
+          "rightMps": 0.243217139344982,
+          "meanMps": 0.23526488001126578
+        },
+        {
+          "centreOffsetFromZeroMs": 850,
+          "durationMs": 100.0,
+          "leftMps": 0.1685097419694576,
+          "rightMps": 0.18790060584774781,
+          "meanMps": 0.1782051739086027
+        },
+        {
+          "centreOffsetFromZeroMs": 950,
+          "durationMs": 100.0,
+          "leftMps": 0.13077058100754782,
+          "rightMps": 0.11765738870840284,
+          "meanMps": 0.12421398485797533
+        },
+        {
+          "centreOffsetFromZeroMs": 1050,
+          "durationMs": 100.0,
+          "leftMps": 0.07372301211163769,
+          "rightMps": 0.06760909649661954,
+          "meanMps": 0.07066605430412862
+        },
+        {
+          "centreOffsetFromZeroMs": 1150,
+          "durationMs": 100.0,
+          "leftMps": 0.036861506055818845,
+          "rightMps": 0.032487487926947056,
+          "meanMps": 0.03467449699138295
+        },
+        {
+          "centreOffsetFromZeroMs": 1250,
+          "durationMs": 100.0,
+          "leftMps": 0.00175530981218185,
+          "rightMps": 0.002634120642725437,
+          "meanMps": 0.0021947152274536435
+        }
+      ],
+      "midSegmentLinearSlopeMps2": -0.5984443049100515,
+      "fitIntervalMs": [
+        150,
+        650
+      ],
+      "productionBrakeBound": false
+    }
+  ],
+  "interpretation": "Midsegment observed mean wheel deceleration descriptors only. Delay, terminal quantization, rolling scale/slip, variation across sessions and uncertainty not bounded. Do not adopt as a_brake production minimum or jerk limit.",
+  "newMotionPerformed": false,
+  "productionApproved": false
+}

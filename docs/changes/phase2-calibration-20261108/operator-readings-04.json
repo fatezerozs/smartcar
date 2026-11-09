@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "smartcar.operator-calibration-reading/1",
+  "recordedDate": "2026-11-08",
+  "measurementTimestamp": null,
+  "source": "User confirmation of normal-load wheels-on-ground manual rolling and distance instrument",
+  "precedingQuestion": "945mm 是正常装载、轮胎落地直推测得的吗？用什么量具测距离？",
+  "rawReply": "是,卷尺",
+  "confirms": {
+    "normalOperatingLoadReported": true,
+    "wheelsOnGroundReported": true,
+    "manuallyPushedStraightReported": true,
+    "instrumentType": "tape measure"
+  },
+  "rollingSession": "rolling-tape/session.json",
+  "localInstrumentId": "tape-01",
+  "instrumentResolutionMm": null,
+  "instrumentRangeMm": null,
+  "measurementAccuracyMm": null,
+  "surfaceDetails": null,
+  "exactBatteryAndPayload": null,
+  "independentRepeatsProvided": false,
+  "independentlyVerified": false,
+  "productionApproved": false
+}

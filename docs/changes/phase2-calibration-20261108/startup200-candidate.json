@@ -1,0 +1,3823 @@
+{
+  "schemaVersion": "smartcar.phase2-startup200-candidate/1",
+  "version": "PHASE2_STARTUP_200_20261108_1",
+  "archive": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z",
+  "project": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\startup200.uvprojx",
+  "sourceSnapshotSha256": {
+    "demo\\code\\app_link.c": "66ab2807c841f3238be8a680f5f4331a64bc534e1ea72049ca7a6d0ffdc7c165",
+    "demo\\code\\app_link.h": "0ecd9b4062a16f6aee0775e6e1069c687e1b7c96cd17099c632d3077638c4702",
+    "demo\\code\\app_link_board.c": "e35911b1c5861cc416d7381999ff646f974e7f035999e516b07b24e161e94ac6",
+    "demo\\code\\app_mode.c": "c8d414812b17845a3e2a17a66abb182c5aeaf045a7986f3aefa29f4bc29ce235",
+    "demo\\code\\app_mode.h": "c81bf262f9f6f35c176912c8b638f919d02b404fa66e72d8f06ced6f769e5b61",
+    "demo\\code\\app_runtime.c": "5afdbd0443fe28913719dd5aabfd79212cc06125b3a5094c962b576bd3924cb6",
+    "demo\\code\\app_runtime.h": "1181cfac6a6ad3eace4dfbc6ffa228e00d5d34b1b92afd15e84065165a238606",
+    "demo\\code\\app_transport.c": "46bd68b354c573f9aa085090bf1c3eaae8a4b0c4492b42c42f6d4a0d15ba18a3",
+    "demo\\code\\app_transport.h": "e1303673ad851dcba2b257dbe0c254c7cf7765c6c9cd756b8d688e1274c878e4",
+    "demo\\code\\board_camera.c": "a7d3a9c0afe1a3bbdcc703b0c77b8458a18d195c917ea57bbe5170c451501735",
+    "demo\\code\\board_camera.h": "c1697fa194df958c6e6d322c4210379174c8aa4185e2226722c3acc1cbae6eb7",
+    "demo\\code\\board_diagnostics.c": "93c76d0ee9bb91446fb8eac16c125442827ee0495d300d858d7b95ae571f520a",
+    "demo\\code\\board_diagnostics.h": "5354d66a5b0a18809909e91a6035a46754f6e142a2868c0d3ed9f5e50d170ae6",
+    "demo\\code\\board_encoder.c": "3292f302beb8fef7ef3b26fc9c20d687b992c5c7692768bd52715de2e9212646",
+    "demo\\code\\board_encoder.h": "30af38e9133e24df59160dda71a2555700086e9a53c45f45cb5106111a76bc5a",
+    "demo\\code\\board_io.c": "49b129346385a4a0269d3f2c353d45d2342ba615ba4e1c6880d6002ca11af5a8",
+    "demo\\code\\board_io.h": "100e293c8cec674b53e025f419ade208856360261b883f6d07fb2e1275e81313",
+    "demo\\code\\board_io_hw.c": "88af6e5a9be0fcc3b2d6520d0642657be954d51e33c351e13ebcbaa599c46b60",
+    "demo\\code\\Camera.c": "dd063ffdc0fb16bf80826823241e0938423786cbf6ad6f8aee7a7d5f26eede7e",
+    "demo\\code\\Camera.h": "0ce41f55f04706b41c925c0df0d70b6d047acef24dc67c6d97fa51621027c853",
+    "demo\\code\\Island.c": "47adc9beb73474f766254bcb85b5b574bbaad705eba8f2e3a82cf3d8bb56b63e",
+    "demo\\code\\Island.h": "7a9a1f2b37d92d2dc81142a6cb1f18fb8befd0b4005b45e2cdca38035e1dee29",
+    "demo\\code\\midterm_boot.c": "23a361d5fe7a1613aa6638f5903de15d171c7c80e01b377aadd8800b3baeaaec",
+    "demo\\code\\midterm_boot.h": "7d490969c3830cf26ac690f17164bff0a5caba0b8e89a236408355aa3e4d0213",
+    "demo\\code\\midterm_open_loop.c": "7666ba07cb6b6a61c0e489e7db550ffb6f224a0b4f4a44cce189a70d7761e7d4",
+    "demo\\code\\midterm_open_loop.h": "d91b0d045afef6f676e8d64a7d6532f768fe00a408222aa39d522bb72b719eca",
+    "demo\\code\\midterm_profile.h": "187d0a3ff3f1a3f719bc38d55de6095added5391f82e4bf737f29f471e4a18a9",
+    "demo\\code\\midterm_route_profile.h": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a",
+    "demo\\code\\track_bayes.c": "bc27cf8a3fc57406f9b6c1654a4f1a5e18cdd69849247b0f7070131daa5f0209",
+    "demo\\code\\track_bayes.h": "6a244dcba1314949557012e858863a6006fc52abcf3fb7507a39362013e59d3d",
+    "demo\\code\\vision_actuator.c": "fada8628820e97fda0748a72f8314324e02bcbf45840a0a846f0bf325c78ac21",
+    "demo\\code\\vision_control.c": "9aaca3a0134e514d82fb20a5adbf3811effe0c8ef39b41d12238662c88c82157",
+    "demo\\code\\vision_control.h": "2b27e638e5b23bebc935291e3ba41de393fffa4e7913cc9043959fbf8f91c9ac",
+    "demo\\code\\VISION_CONTROL.md": "2e67e552f2a71cdd2e723bc601ff08efcfe8ce405fe6933dd14e2d674200dd19",
+    "demo\\code\\vision_debug.c": "6ed711a35c862f7221230241a73b327ff4141c041e4891a339aed60ebdc7e4d6",
+    "demo\\code\\vision_debug.h": "00a72bdefe1e6ebdeb052c27c492d3c4a22aca306ae417c4d99590f6f92ddb17",
+    "demo\\code\\vision_drive.c": "d7c62227d2f27a37d6510d1a3e58e020b98c92a2aec50fa885e0746576ee1280",
+    "demo\\code\\vision_drive.h": "3d77f855e5732e665fac3902b05e64508cf2ba91bb4aa8e37ca1fb6b75a8b9b7",
+    "demo\\code\\vision_drive_internal.h": "2d5f46b6699f31f61536dd333d4477fe7e0ed211a4ca69fcd58b7aae267c2492",
+    "demo\\code\\vision_field.c": "36f946c980e24c57a69e77f67c0a15d623e0ecaae1e6208fe4961e8967682c8b",
+    "demo\\code\\vision_field.h": "3c565e7b28c5e3a667588e996024fd1abe999bce623045884f70b33d03960ca5",
+    "demo\\code\\vision_frame.c": "7b15c3e4960201e6c6ff114df007214ad72146b4aa9bc79a9b17efbd94cd42bc",
+    "demo\\code\\vision_frame.h": "8d82bc063311494fc8784b635e478b11e660b72f06d8f798a931c84a5ea59893",
+    "demo\\code\\vision_guard.c": "7e2fb815d3b5cdb66637eb5d2536f0ce067476644768695c986b52d1ac6e2fd5",
+    "demo\\code\\vision_junction_policy.h": "d6c977a6996148418ea70bcfbeffcd407a5b75ddff9e8255a42430198a358a2e",
+    "demo\\code\\vision_midterm.c": "f657b32f0802fafc9f3e91f29dd9dc05b05f158a7399fcab5cc4b2332d5d2586",
+    "demo\\code\\vision_midterm.h": "fea3247690fc9a68b8664bc263fbb3baa1224c7d96865731d06c253a0fc896ce",
+    "demo\\code\\vision_motion.c": "d650990b5757def6614006f0e7a86c8349a9eae9fe9bb4a63efd5e07992bed3b",
+    "demo\\code\\vision_power.h": "4f5f89a4d05a83a5d7b83af2cbc2b9f938fafbaf15a4aac3f3ab85156f53f35b",
+    "demo\\code\\vision_probe.c": "e1918fb3c080645b99afed645876f7853fa05c0b053cf7a40cd67393b0d107e1",
+    "demo\\code\\vision_profile.h": "c11e08d7204c575e4049934795a15b4dec34fadbe381a71da4df550ad587330f",
+    "demo\\code\\VISION_README.md": "ce1e1fc4960d7ded75c91ea8a0ed90b8c712b39989b06f7f475a8a7ce8e9ea45",
+    "demo\\code\\vision_reference_route.h": "212f87202328b9192800a0d07263e0ac503a3d482d0db85d68ca39df8b746b8d",
+    "demo\\code\\vision_ring_entry.h": "c423db61a34879aa72fa68d70444468afccbfdf45fd9d9d52a8d844629122303",
+    "demo\\code\\vision_route_junction.h": "3a1f54bead1d3f6dddb7fab0d307bc8b52813cc495ad69de44c849c9ac32bbc6",
+    "demo\\code\\vision_route_path.h": "c638c96f3a082d5f360e29053665bc07cbfaa948931c530aad3efe1bc4d33589",
+    "demo\\code\\vision_speed.c": "3eb24f4a2c513f503df7235b5b833319305f0fe591a8ae0e50e77db1ab26e875",
+    "demo\\code\\vision_speed.h": "2b901eef70192e516f37634a1413782b0200879000f4e31ca5e093ffb6790193",
+    "demo\\code\\vision_startup.c": "df9cec8a36410d3f13b45bec4266d7628c931689d002e9d871e6fc339b70d02a",
+    "demo\\code\\vision_steering.h": "d919029f6f1900f64449779d2f71e76c20bcc32b887fa5bd1004f0b414c1656f",
+    "demo\\code\\vision_storage.c": "fc87e7b442227868ca628a5951d22e9c3330a86bbe1214ff26051a54751d9ad6",
+    "demo\\code\\vision_storage.h": "b109f4d4a6f35d1fa695f82b33cf37773b481551b74ca24c22ba70e673d5f385",
+    "demo\\code\\vision_storage_board.c": "55256e226a89cc76cda9c78bd2ddfa1b918e009bb62a0415f0e226bb6d5f2315",
+    "demo\\code\\vision_telemetry.c": "46a23a3aa9a4c62ff903693b5ce486580e6fd1963efc0922e6abc62255daf716",
+    "demo\\code\\vision_telemetry.h": "9804172285efd9f86fba331b2ddd0f4e5d5835653795d6d4f4b40683a1e7d067",
+    "demo\\code\\vision_vehicle_profile.c": "e487d0761355c18f978a57e2150e25db0eac303932c21218770e0b81c2a0ca27",
+    "demo\\code\\vision_wheel_targets.h": "bb19989917ec554d5a67d0b4715fc1e8c25c73d798fc2e9945d0b0706eadd889",
+    "demo\\code\\wheel_speed.c": "5731ce8fcaaf7cb585e53eaa6f837e85fd363c2ce43e5be3eda5bbcf5ef2ae1b",
+    "demo\\code\\wheel_speed.h": "ce5cfb4915830ea8992dedc92e787b4ea422fb6e8a9711dc5e5b969e05528797",
+    "demo\\code\\本文件夹作用.txt": "b670f4e9ffcee1e7808f3d2c36322d403a56f0a7323c28efd7237572c14862db",
+    "demo\\user\\inc\\img_process.h": "a21222cd50c8c77a437dc15bc12deabb9b6e8c88295b22f05a590f40a567fb64",
+    "demo\\user\\inc\\isr.h": "4392cc22157ab8b160e18ec7eb77c53cd2cc4ef5788e82f699777ffa04bed0c8",
+    "demo\\user\\inc\\main.h": "fe49dd2907c8fda1495eb0510ece531d2aa00c27c1a2e1576757cfdc74cc1990",
+    "demo\\user\\inc\\pid.h": "e56ba21781d8acaaa0e72c29e4cbbcb00571439f931aaeb84960420c3295d241",
+    "demo\\user\\inc\\RT106X_config.h": "b4a75866ac51ea3e1f555be554db51ec83ea0114d9793596594c4fda77036a27",
+    "demo\\user\\src\\img_process.c": "677afb4fb678fd6927c1b951b633db4d07b7c514fea6e1fad33bcb15d7de74de",
+    "demo\\user\\src\\isr.c": "aa068c20a39651349c1293d1875e25b38d2532da6cb8ab24d5f92d140070a7f7",
+    "demo\\user\\src\\main.c": "3a9d3495fc3a8b4f0ed817dffbc3952fbf082ca75ff4e70d8d08544d939776ca",
+    "demo\\user\\src\\pid.c": "6b9284fd2293cb809c9d203e42c2dca1f4157e9b217b5a638e122bf1cefcc780"
+  },
+  "changes": [
+    {
+      "path": "demo/code/vision_profile.h",
+      "change": "Independent build marker; motion max 150->200 permille; line duration max 6000->3000 ms"
+    }
+  ],
+  "limits": {
+    "firstRequestPermille": 150,
+    "subsequentStepPermille": 10,
+    "motionHardMaxPermille": 200,
+    "durationMaxMs": 3000,
+    "heartbeatTimeoutMs": 500,
+    "autoStart": false,
+    "speedLoopHardMaxPermille": 150
+  },
+  "flashed": true,
+  "hostPassed": true,
+  "buildPassed": true,
+  "physicalTestPassed": false,
+  "hardwareReport": "硬件无问题 (operator report, no voltage/waveform measurement)",
+  "reason": "Existing 150 permille open-loop on-ground runs did not start; prepare isolated bounded start characterization, not production approval.",
+  "hostChecks": 31978,
+  "hostTestScope": "Snapshot motion/field/final output code, encoder disabled in Host stubs; original motion checks and extended cap/step/time/STOP/heartbeat/mode tests. Actual Keil has encoder enabled.",
+  "hostCompilerNote": "GCC14.2 -O2 -Wall -Wextra -Werror -Wno-misleading-indentation; preexisting compact adjacent if statements required existing-style diagnostic suppression; no candidate runtime source changed for it.",
+  "axf": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\Objects\\phase2_startup200.axf",
+  "axfSha256": "080e3ac4910928b64eb40f9d470906a86d3d939244f61c54c9597a676cc5da7d",
+  "axfBytes": 1131756,
+  "sourceSnapshotIntegrityVerified": true,
+  "productionApproved": false,
+  "downloadProject": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\startup200_download.uvprojx",
+  "downloadProjectSha256": "23a5419ab93ee9809e8518f40b2701834e80c63a016dff0607455c3941795a76",
+  "programAndVerifyPassed": true,
+  "runtimeIdentityVerified": true,
+  "status": "GROUND200_THREE_REPEATS_RECORDED_NEXT_STOP_PROCESS_CAPTURE",
+  "executionHypotheses": [
+    "150 permille below stable left starting output",
+    "Alternative: final physical PWM differs from requested output; not measured yet"
+  ],
+  "userPacePreference": "Hypothesis-driven bounded experiments, reuse known configuration; no automatic repeated powered sweep.",
+  "evidenceSha256": {
+    "evidence/startup200/flash-20261108T161137943Z.log": "e9434c408be5f5e9eda47058a699460fd780efe3a29c61b12f4d5cbbe65b684c",
+    "evidence/startup200/initial-config-20261108T161301870Z.log": "639afb5eee133a940cbbb9b8fc61ab68725fb1df2478f16cde6ccfc95ea2e985",
+    "evidence/startup200/initial-config-retry-20261108T161317458Z.log": "8e867bc52d83ec7bb30436477ac5d4c16c37af083b85db20115a5f9db377cedb",
+    "evidence/startup200/lifted-150-20261108T161511121127Z.console.txt": "0f9aa8f255f7f4a0774c9091b13fb1c059e8da92ffcdc6cca64231dd95be597f",
+    "evidence/startup200/20261109-001511-524.jsonl": "24347a4425358affdd80519585fde49439b5ef47ed75aa6000be24c18270eaa6",
+    "evidence/startup200/lifted-160-20261108T161517982192Z.console.txt": "539aabd991a481a4901c58b35e419a7019441f9ddc3901c84c278abf93b48da3",
+    "evidence/startup200/20261109-001518-356.jsonl": "06a3b707ff3168a9acd60e4540c151e600b8d34dcf8a6db3482b73a3397062bd",
+    "evidence/startup200/lifted-170-20261108T161524734705Z.console.txt": "8b98d47a6de2c1e489f0fb8df9df0b92f0893d0d360b61ea641de50b450d7f0b",
+    "evidence/startup200/20261109-001525-118.jsonl": "3738fe328f15aef54a61f7cb309fd22b75b9be9c139c53576b81ec64d555f5b5",
+    "evidence/startup200/lifted-180-20261108T161531514816Z.console.txt": "d2504452f17e1417d7991964cc9fd9ad8d4202c65737ac0a74dce931223a9f55",
+    "evidence/startup200/20261109-001531-894.jsonl": "ada24abca0c58e1f276bac7cdde26877c8d787958b0d2e5ee08f10e611edcf45",
+    "evidence/startup200/lifted-190-20261108T161538298941Z.console.txt": "ac139c710d76dd93ca9ace5daab3228c54f8f3604581ceac312d10015443c8a6",
+    "evidence/startup200/20261109-001538-669.jsonl": "b0dce1e3ce75c5648388c398296fe54509fd8f9c4422502f83147904574eccc6",
+    "evidence/startup200/lifted-200-20261108T161545099381Z.console.txt": "ad4284f1d1a0b0479926a040bfaa58c9e0e5da15ad2bcbb3f42868a0ac075f3b",
+    "evidence/startup200/20261109-001545-476.jsonl": "968732b2a0055b3414ea0c293160d5824a571bef46c22ed405423428a7aab77a",
+    "evidence/startup200/powered-retry-config-20261108T161710883Z.log": "da92618ca51299523eee21d8a56d4153f96f3ee5854b96a2839e51a3e8e0dab9",
+    "evidence/startup200/lifted-150-20261108T161740520711Z.console.txt": "f9bf1551d32489c1f4bc9c6bb6425828072eebed3abc239cad35397ca2953f94",
+    "evidence/startup200/20261109-001740-888.jsonl": "97473d01a850c1a2ad6e52ab5d8d06630aeb50ff1281a49cb3c13bbcd5901747",
+    "evidence/startup200/lifted-160-20261108T161747202316Z.console.txt": "9b121db59c51d223c3a00931c6156258a293c187255162c134feb150fc88f30a",
+    "evidence/startup200/20261109-001747-611.jsonl": "07f3a69940476e71e9dcaa9d34461e045f24182d5e817d877fe0bbff7524540c",
+    "evidence/startup200/lifted-170-20261108T161754099788Z.console.txt": "520df9ba472636f29b309fb86cd4a4c9f7e15410ed11fdb94df146aba051a4ae",
+    "evidence/startup200/20261109-001754-467.jsonl": "83aeb77bd6206b4652232765cb0268ff8fccd0d81927bdc5d898e766868bb6b1",
+    "evidence/startup200/lifted-180-20261108T161800934717Z.console.txt": "abc26866b3051e6a622b22c0754afb8a805b2492565ec728c56d43be523ca11c",
+    "evidence/startup200/20261109-001801-309.jsonl": "45a2ce37e6ec0ce47ef56712240accd05ec93606eebcc81c55fdcc246fd4df23",
+    "evidence/startup200/lifted-190-20261108T161807804457Z.console.txt": "cc399ef32cfed180ac16ecb4cc92645c58fbdc05aa520c22d76034e207af1896",
+    "evidence/startup200/20261109-001808-193.jsonl": "95b4669f420c78219a4f5c37fc22480095ad93df2b7844ee19634c20dfedd723",
+    "evidence/startup200/ground190-run-20261108T162033250Z.console.txt": "dd8b4bcf7b74ac9ce0a2ed9744b1f6a67d015ed8c54e452a1292983f50553035",
+    "evidence/startup200/20261109-002033-670.jsonl": "c0558a8e9f1c2e4cc21d75700c9ebee793fa7103414033aebf21fe83e37aa5cf",
+    "evidence/startup200/ground190-repeat-run-20261108T162241143Z.console.txt": "bf75e1dde1361e82e3bee210fd141d883a0d9e3d1cd7060b44d534af01881e0b",
+    "evidence/startup200/20261109-002241-524.jsonl": "72a76c4955f74fd3c4d7ba561b2a91f23bcb20492d99a520ac3b0eda3c463d80",
+    "evidence/startup200/ground190-third-run-20261108T162402218Z.console.txt": "380129f95db17a7435e1f2c15326116d63623dc76e4bbb7049335d2314d8fb7e",
+    "evidence/startup200/20261109-002402-604.jsonl": "34de158375cc52863ddacc840ade6c05c8b8e98a03c7dc09deb34fc0dc866d3d",
+    "evidence/startup200/ground200-run-20261108T162619233Z.console.txt": "59c6910f24bbcd1ac6cd08e01859efb8add5e27e53072ea243b26c4747226dec",
+    "evidence/startup200/20261109-002619-618.jsonl": "c7214f49c76a906bf2d9077353c84860c8f26f039171a0f3731d2bed0a994144",
+    "evidence/startup200/ground200-repeat-run-20261108T162743178Z.console.txt": "6cac2cd9dd0a28a80b90f1da87e32c361fadb35c4d4b09318658c61a8407d113",
+    "evidence/startup200/20261109-002743-602.jsonl": "f43186d982dedd573e0318bf480cc4b8b51d41d7395ce36e507dcfc6306199e7",
+    "evidence/startup200/ground200-third-run-20261108T162913138Z.console.txt": "bcd7c14c4b0443123d93937e69197eaece2464db602be7829cb1aff8a762cba9",
+    "evidence/startup200/20261109-002913-566.jsonl": "aa3991c3ac347c4a938202743fba36fb5a603ce9f37a896f56c4c08127e0ed25"
+  },
+  "configurationRestored": true,
+  "operatorResetReported": true,
+  "configuration": {
+    "servoUs": [
+      1550,
+      1430,
+      1670
+    ],
+    "rightSign": -1,
+    "motorDirections": [
+      1,
+      1
+    ],
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "cruise": 0,
+    "cap": 0.2,
+    "encoderSignsLeftRight": [
+      -1,
+      1
+    ],
+    "speedLoopEnabled": false
+  },
+  "startupSweepStopReason": "BOTH_ENCODER_RESPONSE_SCREEN_MET",
+  "startupSweepHistory": [
+    {
+      "runs": [
+        {
+          "recordedAtUtc": "2026-11-08T16:15:15.864895+00:00",
+          "requestPermille": 150,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 30,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              159887,
+              15956,
+              0,
+              0
+            ],
+            [
+              159987,
+              15966,
+              0,
+              0
+            ],
+            [
+              160087,
+              15976,
+              0,
+              0
+            ],
+            [
+              160187,
+              15986,
+              0,
+              0
+            ],
+            [
+              160287,
+              15996,
+              0,
+              0
+            ],
+            [
+              160387,
+              16006,
+              0,
+              0
+            ],
+            [
+              160487,
+              16016,
+              0,
+              0
+            ],
+            [
+              160587,
+              16026,
+              0,
+              0
+            ],
+            [
+              160687,
+              16036,
+              0,
+              0
+            ],
+            [
+              160787,
+              16046,
+              0,
+              0
+            ],
+            [
+              160887,
+              16056,
+              0,
+              0
+            ],
+            [
+              160987,
+              16066,
+              0,
+              0
+            ],
+            [
+              161087,
+              16076,
+              0,
+              0
+            ],
+            [
+              161187,
+              16086,
+              0,
+              0
+            ],
+            [
+              161287,
+              16096,
+              0,
+              0
+            ],
+            [
+              161387,
+              16106,
+              0,
+              0
+            ],
+            [
+              161487,
+              16116,
+              0,
+              0
+            ],
+            [
+              161587,
+              16126,
+              0,
+              0
+            ],
+            [
+              161687,
+              16136,
+              0,
+              0
+            ],
+            [
+              161787,
+              16146,
+              0,
+              0
+            ],
+            [
+              161887,
+              16156,
+              0,
+              0
+            ],
+            [
+              161987,
+              16166,
+              0,
+              0
+            ],
+            [
+              162087,
+              16176,
+              0,
+              0
+            ],
+            [
+              162187,
+              16186,
+              0,
+              0
+            ],
+            [
+              162287,
+              16196,
+              0,
+              0
+            ],
+            [
+              162387,
+              16206,
+              0,
+              0
+            ],
+            [
+              162487,
+              16216,
+              0,
+              0
+            ],
+            [
+              162587,
+              16226,
+              0,
+              0
+            ],
+            [
+              162687,
+              16236,
+              0,
+              0
+            ],
+            [
+              162787,
+              16246,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-150-20261108T161511121127Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001511-524.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        },
+        {
+          "recordedAtUtc": "2026-11-08T16:15:22.617633+00:00",
+          "requestPermille": 160,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 30,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              166638,
+              16631,
+              0,
+              0
+            ],
+            [
+              166738,
+              16641,
+              0,
+              0
+            ],
+            [
+              166838,
+              16651,
+              0,
+              0
+            ],
+            [
+              166938,
+              16661,
+              0,
+              0
+            ],
+            [
+              167038,
+              16671,
+              0,
+              0
+            ],
+            [
+              167138,
+              16681,
+              0,
+              0
+            ],
+            [
+              167238,
+              16691,
+              0,
+              0
+            ],
+            [
+              167338,
+              16701,
+              0,
+              0
+            ],
+            [
+              167438,
+              16711,
+              0,
+              0
+            ],
+            [
+              167538,
+              16721,
+              0,
+              0
+            ],
+            [
+              167638,
+              16731,
+              0,
+              0
+            ],
+            [
+              167738,
+              16741,
+              0,
+              0
+            ],
+            [
+              167838,
+              16751,
+              0,
+              0
+            ],
+            [
+              167938,
+              16761,
+              0,
+              0
+            ],
+            [
+              168038,
+              16771,
+              0,
+              0
+            ],
+            [
+              168138,
+              16781,
+              0,
+              0
+            ],
+            [
+              168238,
+              16791,
+              0,
+              0
+            ],
+            [
+              168338,
+              16801,
+              0,
+              0
+            ],
+            [
+              168438,
+              16811,
+              0,
+              0
+            ],
+            [
+              168538,
+              16821,
+              0,
+              0
+            ],
+            [
+              168638,
+              16831,
+              0,
+              0
+            ],
+            [
+              168738,
+              16841,
+              0,
+              0
+            ],
+            [
+              168838,
+              16851,
+              0,
+              0
+            ],
+            [
+              168938,
+              16861,
+              0,
+              0
+            ],
+            [
+              169038,
+              16871,
+              0,
+              0
+            ],
+            [
+              169138,
+              16881,
+              0,
+              0
+            ],
+            [
+              169238,
+              16891,
+              0,
+              0
+            ],
+            [
+              169338,
+              16901,
+              0,
+              0
+            ],
+            [
+              169438,
+              16911,
+              0,
+              0
+            ],
+            [
+              169538,
+              16921,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-160-20261108T161517982192Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001518-356.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        },
+        {
+          "recordedAtUtc": "2026-11-08T16:15:29.397701+00:00",
+          "requestPermille": 170,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 31,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              173401,
+              17308,
+              0,
+              0
+            ],
+            [
+              173501,
+              17318,
+              0,
+              0
+            ],
+            [
+              173601,
+              17328,
+              0,
+              0
+            ],
+            [
+              173701,
+              17338,
+              0,
+              0
+            ],
+            [
+              173801,
+              17348,
+              0,
+              0
+            ],
+            [
+              173901,
+              17358,
+              0,
+              0
+            ],
+            [
+              174001,
+              17368,
+              0,
+              0
+            ],
+            [
+              174101,
+              17378,
+              0,
+              0
+            ],
+            [
+              174201,
+              17388,
+              0,
+              0
+            ],
+            [
+              174301,
+              17398,
+              0,
+              0
+            ],
+            [
+              174401,
+              17408,
+              0,
+              0
+            ],
+            [
+              174501,
+              17418,
+              0,
+              0
+            ],
+            [
+              174601,
+              17428,
+              0,
+              0
+            ],
+            [
+              174701,
+              17438,
+              0,
+              0
+            ],
+            [
+              174801,
+              17448,
+              0,
+              0
+            ],
+            [
+              174901,
+              17458,
+              0,
+              0
+            ],
+            [
+              175001,
+              17468,
+              0,
+              0
+            ],
+            [
+              175101,
+              17478,
+              0,
+              0
+            ],
+            [
+              175201,
+              17488,
+              0,
+              0
+            ],
+            [
+              175301,
+              17498,
+              0,
+              0
+            ],
+            [
+              175401,
+              17508,
+              0,
+              0
+            ],
+            [
+              175501,
+              17518,
+              0,
+              0
+            ],
+            [
+              175601,
+              17528,
+              0,
+              0
+            ],
+            [
+              175701,
+              17538,
+              0,
+              0
+            ],
+            [
+              175801,
+              17548,
+              0,
+              0
+            ],
+            [
+              175901,
+              17558,
+              0,
+              0
+            ],
+            [
+              176001,
+              17568,
+              0,
+              0
+            ],
+            [
+              176101,
+              17578,
+              0,
+              0
+            ],
+            [
+              176201,
+              17588,
+              0,
+              0
+            ],
+            [
+              176301,
+              17598,
+              0,
+              0
+            ],
+            [
+              176401,
+              17608,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-170-20261108T161524734705Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001525-118.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        },
+        {
+          "recordedAtUtc": "2026-11-08T16:15:36.184169+00:00",
+          "requestPermille": 180,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 30,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              180205,
+              17988,
+              0,
+              0
+            ],
+            [
+              180305,
+              17998,
+              0,
+              0
+            ],
+            [
+              180405,
+              18008,
+              0,
+              0
+            ],
+            [
+              180505,
+              18018,
+              0,
+              0
+            ],
+            [
+              180605,
+              18028,
+              0,
+              0
+            ],
+            [
+              180705,
+              18038,
+              0,
+              0
+            ],
+            [
+              180805,
+              18048,
+              0,
+              0
+            ],
+            [
+              180905,
+              18058,
+              0,
+              0
+            ],
+            [
+              181005,
+              18068,
+              0,
+              0
+            ],
+            [
+              181105,
+              18078,
+              0,
+              0
+            ],
+            [
+              181205,
+              18088,
+              0,
+              0
+            ],
+            [
+              181305,
+              18098,
+              0,
+              0
+            ],
+            [
+              181405,
+              18108,
+              0,
+              0
+            ],
+            [
+              181505,
+              18118,
+              0,
+              0
+            ],
+            [
+              181605,
+              18128,
+              0,
+              0
+            ],
+            [
+              181705,
+              18138,
+              0,
+              0
+            ],
+            [
+              181805,
+              18148,
+              0,
+              0
+            ],
+            [
+              181905,
+              18158,
+              0,
+              0
+            ],
+            [
+              182005,
+              18168,
+              0,
+              0
+            ],
+            [
+              182105,
+              18178,
+              0,
+              0
+            ],
+            [
+              182205,
+              18188,
+              0,
+              0
+            ],
+            [
+              182305,
+              18198,
+              0,
+              0
+            ],
+            [
+              182405,
+              18208,
+              0,
+              0
+            ],
+            [
+              182505,
+              18218,
+              0,
+              0
+            ],
+            [
+              182605,
+              18228,
+              0,
+              0
+            ],
+            [
+              182705,
+              18238,
+              0,
+              0
+            ],
+            [
+              182805,
+              18248,
+              0,
+              0
+            ],
+            [
+              182905,
+              18258,
+              0,
+              0
+            ],
+            [
+              183005,
+              18268,
+              0,
+              0
+            ],
+            [
+              183105,
+              18278,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-180-20261108T161531514816Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001531-894.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        },
+        {
+          "recordedAtUtc": "2026-11-08T16:15:42.966487+00:00",
+          "requestPermille": 190,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 31,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              186968,
+              18664,
+              0,
+              0
+            ],
+            [
+              187068,
+              18674,
+              0,
+              0
+            ],
+            [
+              187168,
+              18684,
+              0,
+              0
+            ],
+            [
+              187268,
+              18694,
+              0,
+              0
+            ],
+            [
+              187368,
+              18704,
+              0,
+              0
+            ],
+            [
+              187468,
+              18714,
+              0,
+              0
+            ],
+            [
+              187568,
+              18724,
+              0,
+              0
+            ],
+            [
+              187668,
+              18734,
+              0,
+              0
+            ],
+            [
+              187768,
+              18744,
+              0,
+              0
+            ],
+            [
+              187868,
+              18754,
+              0,
+              0
+            ],
+            [
+              187968,
+              18764,
+              0,
+              0
+            ],
+            [
+              188068,
+              18774,
+              0,
+              0
+            ],
+            [
+              188168,
+              18784,
+              0,
+              0
+            ],
+            [
+              188268,
+              18794,
+              0,
+              0
+            ],
+            [
+              188368,
+              18804,
+              0,
+              0
+            ],
+            [
+              188468,
+              18814,
+              0,
+              0
+            ],
+            [
+              188568,
+              18824,
+              0,
+              0
+            ],
+            [
+              188668,
+              18834,
+              0,
+              0
+            ],
+            [
+              188768,
+              18844,
+              0,
+              0
+            ],
+            [
+              188868,
+              18854,
+              0,
+              0
+            ],
+            [
+              188968,
+              18864,
+              0,
+              0
+            ],
+            [
+              189068,
+              18874,
+              0,
+              0
+            ],
+            [
+              189168,
+              18884,
+              0,
+              0
+            ],
+            [
+              189268,
+              18894,
+              0,
+              0
+            ],
+            [
+              189368,
+              18904,
+              0,
+              0
+            ],
+            [
+              189468,
+              18914,
+              0,
+              0
+            ],
+            [
+              189568,
+              18924,
+              0,
+              0
+            ],
+            [
+              189668,
+              18934,
+              0,
+              0
+            ],
+            [
+              189768,
+              18944,
+              0,
+              0
+            ],
+            [
+              189868,
+              18954,
+              0,
+              0
+            ],
+            [
+              189968,
+              18964,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-190-20261108T161538298941Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001538-669.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        },
+        {
+          "recordedAtUtc": "2026-11-08T16:15:49.732846+00:00",
+          "requestPermille": 200,
+          "durationMs": 3000,
+          "port": "COM10",
+          "role": "radio",
+          "mode": "lifted",
+          "accepted": true,
+          "hostExitCode": 0,
+          "normalTimedEndConfirmed": true,
+          "sampleCount": 31,
+          "rawSamplesMsSeqLeftRight": [
+            [
+              193743,
+              19342,
+              0,
+              0
+            ],
+            [
+              193843,
+              19352,
+              0,
+              0
+            ],
+            [
+              193943,
+              19362,
+              0,
+              0
+            ],
+            [
+              194043,
+              19372,
+              0,
+              0
+            ],
+            [
+              194143,
+              19382,
+              0,
+              0
+            ],
+            [
+              194243,
+              19392,
+              0,
+              0
+            ],
+            [
+              194343,
+              19402,
+              0,
+              0
+            ],
+            [
+              194443,
+              19412,
+              0,
+              0
+            ],
+            [
+              194543,
+              19422,
+              0,
+              0
+            ],
+            [
+              194643,
+              19432,
+              0,
+              0
+            ],
+            [
+              194743,
+              19442,
+              0,
+              0
+            ],
+            [
+              194843,
+              19452,
+              0,
+              0
+            ],
+            [
+              194943,
+              19462,
+              0,
+              0
+            ],
+            [
+              195043,
+              19472,
+              0,
+              0
+            ],
+            [
+              195143,
+              19482,
+              0,
+              0
+            ],
+            [
+              195243,
+              19492,
+              0,
+              0
+            ],
+            [
+              195343,
+              19502,
+              0,
+              0
+            ],
+            [
+              195443,
+              19512,
+              0,
+              0
+            ],
+            [
+              195543,
+              19522,
+              0,
+              0
+            ],
+            [
+              195643,
+              19532,
+              0,
+              0
+            ],
+            [
+              195743,
+              19542,
+              0,
+              0
+            ],
+            [
+              195843,
+              19552,
+              0,
+              0
+            ],
+            [
+              195943,
+              19562,
+              0,
+              0
+            ],
+            [
+              196043,
+              19572,
+              0,
+              0
+            ],
+            [
+              196143,
+              19582,
+              0,
+              0
+            ],
+            [
+              196243,
+              19592,
+              0,
+              0
+            ],
+            [
+              196343,
+              19602,
+              0,
+              0
+            ],
+            [
+              196443,
+              19612,
+              0,
+              0
+            ],
+            [
+              196543,
+              19622,
+              0,
+              0
+            ],
+            [
+              196643,
+              19632,
+              0,
+              0
+            ],
+            [
+              196743,
+              19642,
+              0,
+              0
+            ]
+          ],
+          "maxConsecutiveBothForwardResponseSamples": 0,
+          "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+          "bothEncoderResponseObserved": false,
+          "operatorObservation": null,
+          "physicalMovementVerified": false,
+          "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-200-20261108T161545099381Z.console.txt",
+          "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001545-476.jsonl",
+          "leftRawMinMax": [
+            0,
+            0
+          ],
+          "rightRawMinMax": [
+            0,
+            0
+          ]
+        }
+      ],
+      "stopReason": "MAX_REACHED_WITHOUT_BOTH_RESPONSE",
+      "summary": {
+        "points": 6,
+        "completeMotionPhaseSamples": 183,
+        "allSampledRawCountsZero": true,
+        "physicalMovementUnconfirmed": true,
+        "conclusion": "No encoder response at any point up to200. Does not establish starting threshold or prove actual PWM. Need physical observation and output-path evidence; do not increase above200."
+      },
+      "operatorCorrection": "电源忘打开了,重新试一次",
+      "validForMotorStartupInference": false,
+      "exclusionReason": "Operator confirms motor power was off. Protocol/software records remain preserved."
+    }
+  ],
+  "poweredRetryOperatorInstruction": "电源忘打开了,重新试一次",
+  "startupSweepRuns": [
+    {
+      "recordedAtUtc": "2026-11-08T16:17:45.084426+00:00",
+      "requestPermille": 150,
+      "durationMs": 3000,
+      "port": "COM10",
+      "role": "radio",
+      "mode": "lifted",
+      "accepted": true,
+      "hostExitCode": 0,
+      "normalTimedEndConfirmed": true,
+      "sampleCount": 30,
+      "rawSamplesMsSeqLeftRight": [
+        [
+          309112,
+          30879,
+          0,
+          0
+        ],
+        [
+          309212,
+          30889,
+          0,
+          0
+        ],
+        [
+          309312,
+          30899,
+          0,
+          0
+        ],
+        [
+          309412,
+          30909,
+          0,
+          0
+        ],
+        [
+          309512,
+          30919,
+          0,
+          0
+        ],
+        [
+          309612,
+          30929,
+          0,
+          0
+        ],
+        [
+          309712,
+          30939,
+          0,
+          0
+        ],
+        [
+          309812,
+          30949,
+          0,
+          0
+        ],
+        [
+          309912,
+          30959,
+          0,
+          0
+        ],
+        [
+          310012,
+          30969,
+          0,
+          0
+        ],
+        [
+          310112,
+          30979,
+          0,
+          1
+        ],
+        [
+          310212,
+          30989,
+          0,
+          10
+        ],
+        [
+          310312,
+          30999,
+          0,
+          1
+        ],
+        [
+          310412,
+          31009,
+          0,
+          7
+        ],
+        [
+          310512,
+          31019,
+          0,
+          21
+        ],
+        [
+          310612,
+          31029,
+          0,
+          36
+        ],
+        [
+          310712,
+          31039,
+          0,
+          58
+        ],
+        [
+          310812,
+          31049,
+          0,
+          59
+        ],
+        [
+          310912,
+          31059,
+          0,
+          81
+        ],
+        [
+          311012,
+          31069,
+          0,
+          84
+        ],
+        [
+          311112,
+          31079,
+          0,
+          85
+        ],
+        [
+          311212,
+          31089,
+          0,
+          82
+        ],
+        [
+          311312,
+          31099,
+          0,
+          82
+        ],
+        [
+          311412,
+          31109,
+          0,
+          91
+        ],
+        [
+          311512,
+          31119,
+          0,
+          97
+        ],
+        [
+          311612,
+          31129,
+          0,
+          100
+        ],
+        [
+          311712,
+          31139,
+          0,
+          104
+        ],
+        [
+          311812,
+          31149,
+          0,
+          107
+        ],
+        [
+          311912,
+          31159,
+          0,
+          108
+        ],
+        [
+          312012,
+          31169,
+          0,
+          106
+        ]
+      ],
+      "maxConsecutiveBothForwardResponseSamples": 0,
+      "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+      "bothEncoderResponseObserved": false,
+      "operatorObservation": null,
+      "physicalMovementVerified": false,
+      "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-150-20261108T161740520711Z.console.txt",
+      "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001740-888.jsonl",
+      "leftRawMinMax": [
+        0,
+        0
+      ],
+      "rightRawMinMax": [
+        0,
+        108
+      ]
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:17:51.983078+00:00",
+      "requestPermille": 160,
+      "durationMs": 3000,
+      "port": "COM10",
+      "role": "radio",
+      "mode": "lifted",
+      "accepted": true,
+      "hostExitCode": 0,
+      "normalTimedEndConfirmed": true,
+      "sampleCount": 30,
+      "rawSamplesMsSeqLeftRight": [
+        [
+          315982,
+          31566,
+          0,
+          0
+        ],
+        [
+          316082,
+          31576,
+          0,
+          0
+        ],
+        [
+          316182,
+          31586,
+          0,
+          0
+        ],
+        [
+          316282,
+          31596,
+          0,
+          0
+        ],
+        [
+          316382,
+          31606,
+          0,
+          0
+        ],
+        [
+          316482,
+          31616,
+          0,
+          0
+        ],
+        [
+          316582,
+          31626,
+          0,
+          0
+        ],
+        [
+          316682,
+          31636,
+          0,
+          0
+        ],
+        [
+          316782,
+          31646,
+          0,
+          0
+        ],
+        [
+          316882,
+          31656,
+          0,
+          0
+        ],
+        [
+          316982,
+          31666,
+          0,
+          2
+        ],
+        [
+          317082,
+          31676,
+          0,
+          3
+        ],
+        [
+          317182,
+          31686,
+          0,
+          6
+        ],
+        [
+          317282,
+          31696,
+          0,
+          24
+        ],
+        [
+          317382,
+          31706,
+          0,
+          30
+        ],
+        [
+          317482,
+          31716,
+          0,
+          62
+        ],
+        [
+          317582,
+          31726,
+          0,
+          76
+        ],
+        [
+          317682,
+          31736,
+          0,
+          86
+        ],
+        [
+          317782,
+          31746,
+          0,
+          95
+        ],
+        [
+          317882,
+          31756,
+          0,
+          100
+        ],
+        [
+          317982,
+          31766,
+          0,
+          106
+        ],
+        [
+          318082,
+          31776,
+          0,
+          115
+        ],
+        [
+          318182,
+          31786,
+          0,
+          123
+        ],
+        [
+          318282,
+          31796,
+          0,
+          131
+        ],
+        [
+          318382,
+          31806,
+          0,
+          127
+        ],
+        [
+          318482,
+          31816,
+          0,
+          118
+        ],
+        [
+          318582,
+          31826,
+          0,
+          121
+        ],
+        [
+          318682,
+          31836,
+          0,
+          130
+        ],
+        [
+          318782,
+          31846,
+          0,
+          137
+        ],
+        [
+          318882,
+          31856,
+          0,
+          122
+        ]
+      ],
+      "maxConsecutiveBothForwardResponseSamples": 0,
+      "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+      "bothEncoderResponseObserved": false,
+      "operatorObservation": null,
+      "physicalMovementVerified": false,
+      "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-160-20261108T161747202316Z.console.txt",
+      "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001747-611.jsonl",
+      "leftRawMinMax": [
+        0,
+        0
+      ],
+      "rightRawMinMax": [
+        0,
+        137
+      ]
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:17:58.819014+00:00",
+      "requestPermille": 170,
+      "durationMs": 3000,
+      "port": "COM10",
+      "role": "radio",
+      "mode": "lifted",
+      "accepted": true,
+      "hostExitCode": 0,
+      "normalTimedEndConfirmed": true,
+      "sampleCount": 31,
+      "rawSamplesMsSeqLeftRight": [
+        [
+          322814,
+          32249,
+          0,
+          0
+        ],
+        [
+          322914,
+          32259,
+          0,
+          0
+        ],
+        [
+          323014,
+          32269,
+          0,
+          0
+        ],
+        [
+          323114,
+          32279,
+          0,
+          0
+        ],
+        [
+          323214,
+          32289,
+          0,
+          0
+        ],
+        [
+          323314,
+          32299,
+          0,
+          0
+        ],
+        [
+          323414,
+          32309,
+          0,
+          0
+        ],
+        [
+          323514,
+          32319,
+          0,
+          0
+        ],
+        [
+          323614,
+          32329,
+          0,
+          0
+        ],
+        [
+          323714,
+          32339,
+          0,
+          0
+        ],
+        [
+          323814,
+          32349,
+          0,
+          1
+        ],
+        [
+          323914,
+          32359,
+          0,
+          0
+        ],
+        [
+          324014,
+          32369,
+          0,
+          6
+        ],
+        [
+          324114,
+          32379,
+          0,
+          27
+        ],
+        [
+          324214,
+          32389,
+          0,
+          46
+        ],
+        [
+          324314,
+          32399,
+          0,
+          73
+        ],
+        [
+          324414,
+          32409,
+          0,
+          95
+        ],
+        [
+          324514,
+          32419,
+          0,
+          115
+        ],
+        [
+          324614,
+          32429,
+          0,
+          138
+        ],
+        [
+          324714,
+          32439,
+          0,
+          131
+        ],
+        [
+          324814,
+          32449,
+          0,
+          151
+        ],
+        [
+          324914,
+          32459,
+          0,
+          152
+        ],
+        [
+          325014,
+          32469,
+          0,
+          152
+        ],
+        [
+          325114,
+          32479,
+          0,
+          160
+        ],
+        [
+          325214,
+          32489,
+          0,
+          157
+        ],
+        [
+          325314,
+          32499,
+          0,
+          157
+        ],
+        [
+          325414,
+          32509,
+          0,
+          160
+        ],
+        [
+          325514,
+          32519,
+          0,
+          153
+        ],
+        [
+          325614,
+          32529,
+          0,
+          161
+        ],
+        [
+          325714,
+          32539,
+          0,
+          149
+        ],
+        [
+          325814,
+          32549,
+          0,
+          167
+        ]
+      ],
+      "maxConsecutiveBothForwardResponseSamples": 0,
+      "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+      "bothEncoderResponseObserved": false,
+      "operatorObservation": null,
+      "physicalMovementVerified": false,
+      "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-170-20261108T161754099788Z.console.txt",
+      "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001754-467.jsonl",
+      "leftRawMinMax": [
+        0,
+        0
+      ],
+      "rightRawMinMax": [
+        0,
+        167
+      ]
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:18:05.689156+00:00",
+      "requestPermille": 180,
+      "durationMs": 3000,
+      "port": "COM10",
+      "role": "radio",
+      "mode": "lifted",
+      "accepted": true,
+      "hostExitCode": 0,
+      "normalTimedEndConfirmed": true,
+      "sampleCount": 30,
+      "rawSamplesMsSeqLeftRight": [
+        [
+          329716,
+          32939,
+          0,
+          0
+        ],
+        [
+          329816,
+          32949,
+          0,
+          0
+        ],
+        [
+          329916,
+          32959,
+          0,
+          0
+        ],
+        [
+          330016,
+          32969,
+          0,
+          0
+        ],
+        [
+          330116,
+          32979,
+          0,
+          0
+        ],
+        [
+          330216,
+          32989,
+          0,
+          0
+        ],
+        [
+          330316,
+          32999,
+          0,
+          0
+        ],
+        [
+          330416,
+          33009,
+          0,
+          0
+        ],
+        [
+          330516,
+          33019,
+          0,
+          0
+        ],
+        [
+          330616,
+          33029,
+          0,
+          0
+        ],
+        [
+          330716,
+          33039,
+          0,
+          2
+        ],
+        [
+          330816,
+          33049,
+          0,
+          0
+        ],
+        [
+          330916,
+          33059,
+          0,
+          22
+        ],
+        [
+          331016,
+          33069,
+          0,
+          28
+        ],
+        [
+          331116,
+          33079,
+          0,
+          54
+        ],
+        [
+          331216,
+          33089,
+          0,
+          66
+        ],
+        [
+          331316,
+          33099,
+          0,
+          101
+        ],
+        [
+          331416,
+          33109,
+          0,
+          124
+        ],
+        [
+          331516,
+          33119,
+          0,
+          130
+        ],
+        [
+          331616,
+          33129,
+          0,
+          155
+        ],
+        [
+          331716,
+          33139,
+          0,
+          159
+        ],
+        [
+          331816,
+          33149,
+          0,
+          182
+        ],
+        [
+          331916,
+          33159,
+          0,
+          173
+        ],
+        [
+          332016,
+          33169,
+          0,
+          168
+        ],
+        [
+          332116,
+          33179,
+          0,
+          187
+        ],
+        [
+          332216,
+          33189,
+          0,
+          191
+        ],
+        [
+          332316,
+          33199,
+          0,
+          183
+        ],
+        [
+          332416,
+          33209,
+          0,
+          175
+        ],
+        [
+          332516,
+          33219,
+          0,
+          179
+        ],
+        [
+          332616,
+          33229,
+          0,
+          192
+        ]
+      ],
+      "maxConsecutiveBothForwardResponseSamples": 0,
+      "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+      "bothEncoderResponseObserved": false,
+      "operatorObservation": null,
+      "physicalMovementVerified": false,
+      "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-180-20261108T161800934717Z.console.txt",
+      "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001801-309.jsonl",
+      "leftRawMinMax": [
+        0,
+        0
+      ],
+      "rightRawMinMax": [
+        0,
+        192
+      ]
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:18:12.498674+00:00",
+      "requestPermille": 190,
+      "durationMs": 3000,
+      "port": "COM10",
+      "role": "radio",
+      "mode": "lifted",
+      "accepted": true,
+      "hostExitCode": 0,
+      "normalTimedEndConfirmed": true,
+      "sampleCount": 30,
+      "rawSamplesMsSeqLeftRight": [
+        [
+          336483,
+          33616,
+          0,
+          0
+        ],
+        [
+          336583,
+          33626,
+          0,
+          0
+        ],
+        [
+          336683,
+          33636,
+          0,
+          0
+        ],
+        [
+          336783,
+          33646,
+          0,
+          0
+        ],
+        [
+          336883,
+          33656,
+          0,
+          0
+        ],
+        [
+          336983,
+          33666,
+          0,
+          0
+        ],
+        [
+          337083,
+          33676,
+          0,
+          0
+        ],
+        [
+          337183,
+          33686,
+          0,
+          0
+        ],
+        [
+          337283,
+          33696,
+          0,
+          1
+        ],
+        [
+          337383,
+          33706,
+          0,
+          1
+        ],
+        [
+          337483,
+          33716,
+          0,
+          0
+        ],
+        [
+          337583,
+          33726,
+          0,
+          2
+        ],
+        [
+          337683,
+          33736,
+          0,
+          1
+        ],
+        [
+          337783,
+          33746,
+          0,
+          1
+        ],
+        [
+          337883,
+          33756,
+          0,
+          25
+        ],
+        [
+          337983,
+          33766,
+          -1,
+          68
+        ],
+        [
+          338083,
+          33776,
+          0,
+          91
+        ],
+        [
+          338183,
+          33786,
+          0,
+          115
+        ],
+        [
+          338283,
+          33796,
+          0,
+          146
+        ],
+        [
+          338383,
+          33806,
+          0,
+          153
+        ],
+        [
+          338483,
+          33816,
+          0,
+          193
+        ],
+        [
+          338583,
+          33826,
+          -1,
+          198
+        ],
+        [
+          338683,
+          33836,
+          -43,
+          202
+        ],
+        [
+          338783,
+          33846,
+          -81,
+          205
+        ],
+        [
+          338883,
+          33856,
+          -113,
+          208
+        ],
+        [
+          338983,
+          33866,
+          -125,
+          212
+        ],
+        [
+          339083,
+          33876,
+          -139,
+          213
+        ],
+        [
+          339183,
+          33886,
+          -147,
+          217
+        ],
+        [
+          339286,
+          33896,
+          -157,
+          220
+        ],
+        [
+          339386,
+          33906,
+          -166,
+          216
+        ]
+      ],
+      "maxConsecutiveBothForwardResponseSamples": 8,
+      "bothResponseScreeningCriterion": "5 consecutive received motion-phase samples: left<=-5, right>=5 counts/10ms. Diagnostic response screen only; not physical stability/accuracy acceptance.",
+      "bothEncoderResponseObserved": true,
+      "operatorObservation": "两轮均向前，已停稳，无异响卡滞",
+      "physicalMovementVerified": true,
+      "console": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\startup200-20261108T154909270006Z\\lifted-190-20261108T161807804457Z.console.txt",
+      "rawLog": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-001808-193.jsonl",
+      "leftRawMinMax": [
+        -166,
+        0
+      ],
+      "rightRawMinMax": [
+        0,
+        220
+      ],
+      "physicalBothForwardConfirmed": true,
+      "physicalStopConfirmed": true,
+      "noAbnormalSoundOrBindingReported": true
+    }
+  ],
+  "sweepSummary": {
+    "points": 5,
+    "completeMotionPhaseSamples": 151,
+    "firstBothResponsePointPermille": 190,
+    "previousTestedLeftNoResponsePointPermille": 180,
+    "stopAtFirstBothResponse": true,
+    "tested200OnPoweredRetry": false,
+    "physicalMovementUnconfirmed": false,
+    "conclusion": "In this powered-retry sequence, right responded at150..190 and left first sampled response at190. Supports output-dependent left startup in this condition, not certified threshold or exclusion of PWM/load/intermittency effects.",
+    "notMeasured": [
+      "Ground velocity",
+      "Braking deceleration/distance",
+      "Metrological repeatability",
+      "Physical PWM waveform"
+    ],
+    "operatorPhysicalConclusion": "Both wheels forward, stopped, no abnormal sound/binding at190; unloaded only."
+  },
+  "physicalLiftedBothForwardAndStopObserved": true,
+  "ground190Proposal": {
+    "requestPermille": 190,
+    "durationMs": 2500,
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "servoCentreUs": 1550,
+    "port": "COM10",
+    "mode": "single ground straight timed action",
+    "motionSent": true,
+    "operatorReadinessPending": true,
+    "measurements": [
+      "Actual forward rear-axle centre displacement mm",
+      "Signed lateral displacement mm",
+      "Physical stop and slip/yaw observation"
+    ],
+    "limits": "45cm-wide site; earlier asymmetric starts mean immediate operator power cutoff if approaching edge. Do not infer ground speed from unloaded counts."
+  },
+  "ground190Runs": [
+    {
+      "recordedAtUtc": "2026-11-08T16:21:00.951305+00:00",
+      "operatorReadiness": "落地就绪",
+      "command": "@motion line 190 2500",
+      "executeCount": 1,
+      "sequence": 12,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          481917,
+          48159,
+          0,
+          0
+        ],
+        [
+          482017,
+          48169,
+          0,
+          0
+        ],
+        [
+          482117,
+          48179,
+          0,
+          0
+        ],
+        [
+          482217,
+          48189,
+          0,
+          0
+        ],
+        [
+          482317,
+          48199,
+          0,
+          0
+        ],
+        [
+          482417,
+          48209,
+          0,
+          0
+        ],
+        [
+          482517,
+          48219,
+          0,
+          0
+        ],
+        [
+          482617,
+          48229,
+          0,
+          0
+        ],
+        [
+          482717,
+          48239,
+          0,
+          0
+        ],
+        [
+          482817,
+          48249,
+          0,
+          0
+        ],
+        [
+          482917,
+          48259,
+          -1,
+          0
+        ],
+        [
+          483017,
+          48269,
+          0,
+          0
+        ],
+        [
+          483117,
+          48279,
+          -1,
+          1
+        ],
+        [
+          483217,
+          48289,
+          -1,
+          0
+        ],
+        [
+          483317,
+          48299,
+          -1,
+          1
+        ],
+        [
+          483417,
+          48309,
+          -2,
+          1
+        ],
+        [
+          483517,
+          48319,
+          -3,
+          3
+        ],
+        [
+          483617,
+          48329,
+          -3,
+          2
+        ],
+        [
+          483717,
+          48339,
+          -8,
+          7
+        ],
+        [
+          483817,
+          48349,
+          -15,
+          16
+        ],
+        [
+          483917,
+          48359,
+          -20,
+          23
+        ],
+        [
+          484017,
+          48369,
+          -9,
+          11
+        ],
+        [
+          484117,
+          48379,
+          -20,
+          15
+        ],
+        [
+          484217,
+          48389,
+          -25,
+          22
+        ],
+        [
+          484317,
+          48399,
+          -31,
+          32
+        ]
+      ],
+      "physicalForwardDisplacementMm": 240,
+      "physicalLateralDisplacementRightPositiveMm": 3,
+      "physicalStopConfirmed": false,
+      "operatorObservation": "240;3;无",
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002033-670.jsonl",
+      "limits": "100ms telemetry of selected10ms samples; not integrated displacement, complete braking trajectory or physical ground-speed validation.",
+      "operatorReportsSlipDragOrObviousYaw": "无",
+      "measurementSource": "Operator tape measurement reply to rear-axle centre displacement prompt; transverse right-positive convention inherited from prompt.",
+      "physicalStopReportedExplicitly": false,
+      "measurementAcquiredAfterStopPrompt": true,
+      "acceptedFor": "Single operator-reported whole-run displacement; review pending",
+      "brakingDistanceMm": null,
+      "notes": "No separate stop-command position or mechanical stop timestamp. Total forward displacement is not braking distance or calibrated steady speed. No independent repeats yet."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:23:02.456938+00:00",
+      "operatorReadiness": "复测就绪",
+      "command": "@motion line 190 2500",
+      "executeCount": 1,
+      "sequence": 13,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          609757,
+          60943,
+          0,
+          0
+        ],
+        [
+          609857,
+          60953,
+          0,
+          0
+        ],
+        [
+          609957,
+          60963,
+          0,
+          0
+        ],
+        [
+          610057,
+          60973,
+          0,
+          0
+        ],
+        [
+          610157,
+          60983,
+          0,
+          0
+        ],
+        [
+          610257,
+          60993,
+          0,
+          0
+        ],
+        [
+          610357,
+          61003,
+          0,
+          0
+        ],
+        [
+          610457,
+          61013,
+          0,
+          0
+        ],
+        [
+          610557,
+          61023,
+          0,
+          0
+        ],
+        [
+          610657,
+          61033,
+          0,
+          0
+        ],
+        [
+          610757,
+          61043,
+          0,
+          0
+        ],
+        [
+          610857,
+          61053,
+          0,
+          0
+        ],
+        [
+          610957,
+          61063,
+          0,
+          0
+        ],
+        [
+          611057,
+          61073,
+          0,
+          1
+        ],
+        [
+          611157,
+          61083,
+          -1,
+          0
+        ],
+        [
+          611257,
+          61093,
+          0,
+          0
+        ],
+        [
+          611357,
+          61103,
+          0,
+          0
+        ],
+        [
+          611457,
+          61113,
+          -1,
+          1
+        ],
+        [
+          611557,
+          61123,
+          -4,
+          4
+        ],
+        [
+          611657,
+          61133,
+          -9,
+          8
+        ],
+        [
+          611757,
+          61143,
+          -16,
+          15
+        ],
+        [
+          611857,
+          61153,
+          -19,
+          21
+        ],
+        [
+          611957,
+          61163,
+          -26,
+          25
+        ],
+        [
+          612057,
+          61173,
+          -30,
+          34
+        ],
+        [
+          612157,
+          61183,
+          -37,
+          34
+        ],
+        [
+          612257,
+          61193,
+          -44,
+          43
+        ]
+      ],
+      "physicalForwardDisplacementMm": 270,
+      "physicalLateralDisplacementRightPositiveMm": -1,
+      "physicalStopConfirmed": false,
+      "operatorObservation": "270;-1;无",
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002241-524.jsonl",
+      "limits": "Selected10ms windows about100ms apart; no full-rate distance or braking inference.",
+      "operatorReportsSlipDragOrObviousYaw": "无",
+      "measurementAcquiredAfterStopPrompt": true,
+      "acceptedFor": "Operator-reported whole-run displacement, repeat2; review pending",
+      "brakingDistanceMm": null,
+      "notes": "Compared with seq12, forward distance differs by30mm. No independent uncertainty or separate coast/braking measurement."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:24:26.361161+00:00",
+      "operatorReadiness": "就绪",
+      "command": "@motion line 190 2500",
+      "executeCount": 1,
+      "sequence": 14,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          690841,
+          69052,
+          0,
+          0
+        ],
+        [
+          690941,
+          69062,
+          0,
+          0
+        ],
+        [
+          691041,
+          69072,
+          0,
+          0
+        ],
+        [
+          691141,
+          69082,
+          0,
+          0
+        ],
+        [
+          691241,
+          69092,
+          0,
+          0
+        ],
+        [
+          691341,
+          69102,
+          0,
+          0
+        ],
+        [
+          691441,
+          69112,
+          0,
+          0
+        ],
+        [
+          691541,
+          69122,
+          0,
+          0
+        ],
+        [
+          691641,
+          69132,
+          0,
+          0
+        ],
+        [
+          691741,
+          69142,
+          0,
+          0
+        ],
+        [
+          691841,
+          69152,
+          0,
+          0
+        ],
+        [
+          691941,
+          69162,
+          0,
+          1
+        ],
+        [
+          692041,
+          69172,
+          0,
+          0
+        ],
+        [
+          692141,
+          69182,
+          0,
+          1
+        ],
+        [
+          692241,
+          69192,
+          0,
+          0
+        ],
+        [
+          692341,
+          69202,
+          -3,
+          3
+        ],
+        [
+          692441,
+          69212,
+          -5,
+          4
+        ],
+        [
+          692541,
+          69222,
+          -9,
+          8
+        ],
+        [
+          692641,
+          69232,
+          -11,
+          11
+        ],
+        [
+          692741,
+          69242,
+          -10,
+          9
+        ],
+        [
+          692841,
+          69252,
+          0,
+          -1
+        ],
+        [
+          692941,
+          69262,
+          0,
+          0
+        ],
+        [
+          693041,
+          69272,
+          0,
+          0
+        ],
+        [
+          693141,
+          69282,
+          0,
+          0
+        ],
+        [
+          693241,
+          69292,
+          -1,
+          0
+        ],
+        [
+          693341,
+          69302,
+          0,
+          0
+        ]
+      ],
+      "physicalForwardDisplacementMm": 5,
+      "physicalLateralDisplacementRightPositiveMm": 0,
+      "operatorObservation": "5;0;几乎不前进",
+      "physicalStopConfirmed": false,
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002402-604.jsonl",
+      "notes": "Retain as reported, not automatically excluded. Power question not explicitly answered; no proof power-off caused this result. Not a reliable stable-open-loop mapping.",
+      "operatorReportsSlipDragOrObviousYaw": "几乎不前进",
+      "motorPowerContinuouslyOnConfirmed": null
+    }
+  ],
+  "ground190DescriptiveSummary": {
+    "n": 3,
+    "forwardValuesMm": [
+      240,
+      270,
+      5
+    ],
+    "forwardMeanMm": 171.66666666666666,
+    "forwardMedianMm": 240,
+    "forwardRangeMm": 265,
+    "lateralValuesRightPositiveMm": [
+      3,
+      -1,
+      0
+    ],
+    "interpretation": "All reported observations retained, including near-no-start. Heterogeneity/third power-state uncertainty prevent stable-duty-speed or distance model; mean is descriptive only, not calibration parameter."
+  },
+  "ground200Proposal": {
+    "requestPermille": 200,
+    "durationMs": 3000,
+    "port": "COM10",
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "executeCountPlanned": 1,
+    "motionSent": true,
+    "purpose": "Test upper bounded point with longer hold; output and duration both differ from190/2500, do not attribute effect exclusively to amplitude.",
+    "required": "New marked start, enough clear runway, hands/tools clear and physical power-on confirmation."
+  },
+  "ground200Runs": [
+    {
+      "recordedAtUtc": "2026-11-08T16:26:41.774872+00:00",
+      "operatorReadiness": "200就绪",
+      "command": "@motion line 200 3000",
+      "executeCount": 1,
+      "sequence": 15,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          827833,
+          82751,
+          0,
+          0
+        ],
+        [
+          827933,
+          82761,
+          0,
+          0
+        ],
+        [
+          828033,
+          82771,
+          0,
+          0
+        ],
+        [
+          828133,
+          82781,
+          0,
+          0
+        ],
+        [
+          828233,
+          82791,
+          0,
+          0
+        ],
+        [
+          828333,
+          82801,
+          0,
+          0
+        ],
+        [
+          828433,
+          82811,
+          0,
+          0
+        ],
+        [
+          828533,
+          82821,
+          0,
+          0
+        ],
+        [
+          828633,
+          82831,
+          0,
+          0
+        ],
+        [
+          828733,
+          82841,
+          0,
+          0
+        ],
+        [
+          828833,
+          82851,
+          0,
+          0
+        ],
+        [
+          828933,
+          82861,
+          -1,
+          0
+        ],
+        [
+          829033,
+          82871,
+          -1,
+          1
+        ],
+        [
+          829133,
+          82881,
+          -1,
+          1
+        ],
+        [
+          829233,
+          82891,
+          -1,
+          1
+        ],
+        [
+          829333,
+          82901,
+          -1,
+          0
+        ],
+        [
+          829433,
+          82911,
+          0,
+          1
+        ],
+        [
+          829533,
+          82921,
+          -5,
+          5
+        ],
+        [
+          829633,
+          82931,
+          -11,
+          10
+        ],
+        [
+          829733,
+          82941,
+          -16,
+          17
+        ],
+        [
+          829833,
+          82951,
+          -20,
+          21
+        ],
+        [
+          829933,
+          82961,
+          -24,
+          25
+        ],
+        [
+          830033,
+          82971,
+          -32,
+          30
+        ],
+        [
+          830133,
+          82981,
+          -37,
+          41
+        ],
+        [
+          830233,
+          82991,
+          -43,
+          48
+        ],
+        [
+          830333,
+          83001,
+          -49,
+          52
+        ],
+        [
+          830433,
+          83011,
+          -55,
+          58
+        ],
+        [
+          830533,
+          83021,
+          -59,
+          66
+        ],
+        [
+          830633,
+          83031,
+          -70,
+          63
+        ],
+        [
+          830733,
+          83041,
+          -78,
+          77
+        ]
+      ],
+      "physicalForwardDisplacementMm": 870,
+      "physicalLateralDisplacementRightPositiveMm": 10,
+      "operatorObservation": "870;10;无",
+      "physicalStopConfirmed": false,
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002619-618.jsonl",
+      "limits": "Amplitude and duration both differ from190/2500; selected10ms windows only, no integrated or isolated braking distance.",
+      "operatorReportsSlipDragOrObviousYaw": "无",
+      "measurementAcquiredAfterStopPrompt": true,
+      "brakingDistanceMm": null,
+      "notes": "Single whole-run operator measurement; not an isolated stopping distance or stable speed mapping. Both amplitude and duration differ from190 trials."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:28:05.697367+00:00",
+      "operatorReadiness": "就绪",
+      "command": "@motion line 200 3000",
+      "executeCount": 1,
+      "sequence": 16,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          911813,
+          91149,
+          0,
+          0
+        ],
+        [
+          911913,
+          91159,
+          0,
+          0
+        ],
+        [
+          912013,
+          91169,
+          0,
+          0
+        ],
+        [
+          912113,
+          91179,
+          0,
+          0
+        ],
+        [
+          912213,
+          91189,
+          0,
+          0
+        ],
+        [
+          912313,
+          91199,
+          0,
+          0
+        ],
+        [
+          912413,
+          91209,
+          0,
+          0
+        ],
+        [
+          912513,
+          91219,
+          0,
+          0
+        ],
+        [
+          912613,
+          91229,
+          0,
+          0
+        ],
+        [
+          912713,
+          91239,
+          0,
+          0
+        ],
+        [
+          912813,
+          91249,
+          0,
+          0
+        ],
+        [
+          912913,
+          91259,
+          0,
+          0
+        ],
+        [
+          913013,
+          91269,
+          0,
+          0
+        ],
+        [
+          913113,
+          91279,
+          0,
+          1
+        ],
+        [
+          913213,
+          91289,
+          0,
+          0
+        ],
+        [
+          913313,
+          91299,
+          -2,
+          2
+        ],
+        [
+          913413,
+          91309,
+          -6,
+          5
+        ],
+        [
+          913513,
+          91319,
+          -6,
+          6
+        ],
+        [
+          913613,
+          91329,
+          -10,
+          8
+        ],
+        [
+          913713,
+          91339,
+          -17,
+          15
+        ],
+        [
+          913813,
+          91349,
+          -22,
+          23
+        ],
+        [
+          913913,
+          91359,
+          -28,
+          22
+        ],
+        [
+          914013,
+          91369,
+          -34,
+          34
+        ],
+        [
+          914113,
+          91379,
+          -38,
+          35
+        ],
+        [
+          914213,
+          91389,
+          -50,
+          47
+        ],
+        [
+          914313,
+          91399,
+          -53,
+          48
+        ],
+        [
+          914413,
+          91409,
+          -61,
+          61
+        ],
+        [
+          914513,
+          91419,
+          -67,
+          62
+        ],
+        [
+          914613,
+          91429,
+          -75,
+          73
+        ],
+        [
+          914713,
+          91439,
+          -79,
+          79
+        ],
+        [
+          914813,
+          91449,
+          -83,
+          81
+        ]
+      ],
+      "physicalForwardDisplacementMm": 920,
+      "physicalLateralDisplacementRightPositiveMm": 10,
+      "operatorObservation": "920;10;无",
+      "physicalStopConfirmed": false,
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002743-602.jsonl",
+      "limits": "Repeat2, physical measurement pending; no isolated braking capture.",
+      "operatorReportsSlipDragOrObviousYaw": "无",
+      "measurementAcquiredAfterStopPrompt": true,
+      "brakingDistanceMm": null,
+      "notes": "Repeat2 whole-run displacement only; not isolated braking distance."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:29:38.214727+00:00",
+      "operatorReadiness": "就绪",
+      "command": "@motion line 200 3000",
+      "executeCount": 1,
+      "sequence": 17,
+      "port": "COM10",
+      "role": "radio",
+      "firmware": "PHASE2_STARTUP_200_20261108_1",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "speedLoopEnabled": false,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "hostExitCode": 0,
+      "rawMotionSamplesMsSeqLeftRight": [
+        [
+          1001793,
+          100147,
+          0,
+          0
+        ],
+        [
+          1001893,
+          100157,
+          0,
+          0
+        ],
+        [
+          1001993,
+          100167,
+          0,
+          0
+        ],
+        [
+          1002093,
+          100177,
+          0,
+          0
+        ],
+        [
+          1002193,
+          100187,
+          0,
+          0
+        ],
+        [
+          1002293,
+          100197,
+          0,
+          0
+        ],
+        [
+          1002393,
+          100207,
+          0,
+          0
+        ],
+        [
+          1002493,
+          100217,
+          0,
+          0
+        ],
+        [
+          1002593,
+          100227,
+          0,
+          0
+        ],
+        [
+          1002693,
+          100237,
+          0,
+          0
+        ],
+        [
+          1002793,
+          100247,
+          0,
+          0
+        ],
+        [
+          1002893,
+          100257,
+          0,
+          0
+        ],
+        [
+          1002993,
+          100267,
+          -1,
+          0
+        ],
+        [
+          1003093,
+          100277,
+          -1,
+          0
+        ],
+        [
+          1003193,
+          100287,
+          0,
+          0
+        ],
+        [
+          1003293,
+          100297,
+          0,
+          0
+        ],
+        [
+          1003393,
+          100307,
+          -1,
+          1
+        ],
+        [
+          1003493,
+          100317,
+          -3,
+          4
+        ],
+        [
+          1003593,
+          100327,
+          -9,
+          9
+        ],
+        [
+          1003693,
+          100337,
+          -17,
+          17
+        ],
+        [
+          1003793,
+          100347,
+          -21,
+          20
+        ],
+        [
+          1003893,
+          100357,
+          -23,
+          22
+        ],
+        [
+          1003993,
+          100367,
+          -29,
+          33
+        ],
+        [
+          1004093,
+          100377,
+          -42,
+          42
+        ],
+        [
+          1004193,
+          100387,
+          -45,
+          45
+        ],
+        [
+          1004293,
+          100397,
+          -55,
+          58
+        ],
+        [
+          1004393,
+          100407,
+          -58,
+          57
+        ],
+        [
+          1004493,
+          100417,
+          -70,
+          69
+        ],
+        [
+          1004593,
+          100427,
+          -71,
+          76
+        ],
+        [
+          1004693,
+          100437,
+          -76,
+          74
+        ],
+        [
+          1004793,
+          100447,
+          -82,
+          77
+        ]
+      ],
+      "physicalForwardDisplacementMm": 920,
+      "physicalLateralDisplacementRightPositiveMm": -2,
+      "operatorObservation": "920;-2;无",
+      "physicalStopConfirmed": false,
+      "rawEvidence": "C:\\shengchanli\\smartCar\\smartcar\\.build\\motion-runs\\20261109-002913-566.jsonl",
+      "limits": "Third and last same-parameter repeat; no isolated brake/coast capture.",
+      "operatorReportsSlipDragOrObviousYaw": "无",
+      "measurementAcquiredAfterStopPrompt": true,
+      "brakingDistanceMm": null
+    }
+  ],
+  "ground200DescriptiveSummary": {
+    "n": 3,
+    "forwardValuesMm": [
+      870,
+      920,
+      920
+    ],
+    "forwardMeanMm": 903.3333333333334,
+    "forwardSampleStdDevMm": 28.867513459481287,
+    "forwardRangeMm": 50,
+    "lateralValuesRightPositiveMm": [
+      10,
+      10,
+      -2
+    ],
+    "maxAbsLateralMm": 10,
+    "interpretation": "Three operator-reported run displacements at one output/time point; mean and sample SD descriptive only. No brake distance, metrological error interval or production safety bound.",
+    "sameParameterRepetitionsFinished": true
+  }
+}

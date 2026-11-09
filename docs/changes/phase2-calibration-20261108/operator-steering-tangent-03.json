@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "smartcar.phase2-operator-tangent/1",
+  "recordedAtUtc": "2026-11-08T14:36:46.826430+00:00",
+  "rawReplies": [
+    "左偏,-0.39375",
+    "是，两轮分别测得相同值"
+  ],
+  "pulseUsContext": 1650,
+  "holdMsContext": 700,
+  "measurementPhase": "post-pulse-no-hold",
+  "angleReference": "vehicle longitudinal; right positive",
+  "reportedDirection": "left",
+  "tangentReported": -0.39375,
+  "principalAngleDegComputed": -21.49204003334457,
+  "wheelAssignment": "both separately measured; operator confirmed",
+  "leftTangentReported": -0.39375,
+  "rightTangentReported": -0.39375,
+  "productionApproved": false,
+  "notes": "Operator confirms separate left and right measurements with equal reported tangents. No repeated trials, raw dimensions or measurement uncertainty supplied; post-pulse-no-hold."
+}

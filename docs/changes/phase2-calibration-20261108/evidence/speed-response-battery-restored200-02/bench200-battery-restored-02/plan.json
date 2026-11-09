@@ -1,0 +1,12 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "command": "@motion line 200 1500",
+  "mode": "open",
+  "targetTicks10ms": null,
+  "closedLoopFeedforward": 0,
+  "normalStraightRequestPermille": 450,
+  "hardCapPermille": 600,
+  "configureRam": false,
+  "execute": true,
+  "scope": "One lifted-bench action; hardware motion is not run by default."
+}

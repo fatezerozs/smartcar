@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "smartcar.phase2-operator-tangent/1",
+  "recordedAtUtc": "2026-11-08T14:49:14.521666+00:00",
+  "rawReplies": [
+    "均为-0.0306",
+    "重新测量",
+    "0.0306是错误数据"
+  ],
+  "pulseUsContext": 1600,
+  "holdMsContext": 700,
+  "benchSequenceContext": 10,
+  "sweepDirection": "decreasing pulse; from 1650",
+  "measurementPhase": "post-pulse-no-hold",
+  "angleReference": "vehicle longitudinal; right positive",
+  "tangentReported": -0.0306,
+  "principalAngleDegComputed": -1.7527039356781422,
+  "wheelAssignment": "both; operator reports common value",
+  "leftTangentReported": -0.0306,
+  "rightTangentReported": -0.0306,
+  "productionApproved": false,
+  "notes": "Retained as reported; discrepancy requires review, not automatically excluded. No raw dimensions or uncertainty supplied; position not continuously held. Operator requests remeasurement; original value retained, neither corrected nor automatically excluded. No additional pulse sent for this request.",
+  "comparison": {
+    "earlierReport": "operator-steering-tangent-02.json",
+    "earlierAngleDeg": -10.120705520281675,
+    "absoluteAngleDifferenceDeg": 8.368001584603533,
+    "interpretation": "Single-pair discrepancy; not established servo hysteresis or accuracy."
+  },
+  "reviewStatus": "EXCLUDED_OPERATOR_CONFIRMED_ERROR",
+  "remeasurementRequestedByOperator": true,
+  "followupReport": "operator-steering-tangent-07.json",
+  "accepted": false,
+  "exclusionReason": "Operator explicitly identifies previous 0.0306 value as erroneous; original signed report -0.0306 retained. Excluded from calibration and subsequent comparisons."
+}

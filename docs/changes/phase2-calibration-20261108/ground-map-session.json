@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "smartcar.phase2-ground-map/1",
+  "status": "STATIC_CANDIDATE_WITH_NEAR250_LEFT_HELD_OUT_CHECK",
+  "sourceSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-wired-connected-20261108T180155494Z\\camera-g-20261109-020155-656-0cb87a27",
+  "port": "COM14",
+  "operatorWiredConnectionConfirmed": true,
+  "imageSize": [
+    94,
+    60
+  ],
+  "rawEvidenceSha256": {
+    "evidence/ground-map/static-preview/frame-000001.gray": "069815b38e34a06951bf681937d3e290c93fba46bfe78f972878f1ca45f0d90f",
+    "evidence/ground-map/static-preview/frame-000001.png": "1e2d7f6b77253af8a56dff5098cf095ea60a1983b3cb94b034ce746338a42834",
+    "evidence/ground-map/static-preview/frame-000001.preview.png": "5f6985dcfb4b2cf1025837bd13f943bdbace1539ad327fda4020724f8a24ae2b",
+    "evidence/ground-map/static-preview/frames.csv": "2615271196429d15a310a1166c6e511bf61ecb1c58cb8f8a90be1ee724c8c0e7",
+    "evidence/ground-map/static-preview/received.bin": "e3beef3dcab7097d34f09f63abe3ea3fffb3b729e0630a98e9c546c69a3edd84",
+    "evidence/ground-map/static-preview/session.json": "fb7afe58dc793260b090d1e3314428c3055c79085637dddf6cd26d6360bbab12",
+    "evidence/ground-map/six-screws/frame-000001.gray": "c5dd3be04dfabbc4571eaf5f4a1735d05ebde182c25249b6dde33d773962f663",
+    "evidence/ground-map/six-screws/frame-000001.png": "1046cab2d7fe3046e7dc07f29a498b5091c5c5111589b29752ac1f6a69048804",
+    "evidence/ground-map/six-screws/frame-000001.preview.png": "173544d18771dba0f1f7f82c40255d913e746553147fdf86e6ac8bbc964fb9ee",
+    "evidence/ground-map/six-screws/frame-000002.gray": "296164e2b0f52207f05d3318c96cab1f86aa80c9c994c59652bc36889427f666",
+    "evidence/ground-map/six-screws/frame-000002.png": "50651cab3ab1ae1dd92fad5a9846d92aa33689a9251a78b436fc357f8d53da6e",
+    "evidence/ground-map/six-screws/frame-000002.preview.png": "51efb9d45697203934e3d251538e8a156d5067c34f9a7eb4d8e1aa945dbaa207",
+    "evidence/ground-map/six-screws/frame-000003.gray": "8dd1d6b3f6d98d2da772f80ee6b8c4bd63aa7e49197abff427a112afc3c6c3c7",
+    "evidence/ground-map/six-screws/frame-000003.png": "2df6c529f9c68956e99933db8bdee2ce93c7bff877310347dd6d227e3eb66db8",
+    "evidence/ground-map/six-screws/frame-000003.preview.png": "317e20dd1569339720ecc2370f07017c3a8ec4853a8d26dbb9bfc11d06faeaf6",
+    "evidence/ground-map/six-screws/frames.csv": "2c7f52b10b938903338bbd22cff3cbcac51b3d915850f9b34593df947e86c4b5",
+    "evidence/ground-map/six-screws/received.bin": "0fb38b3f81f21918e841c5e3eb413f4be3d1bc948fc226f96a705c49909a0969",
+    "evidence/ground-map/six-screws/session.json": "71ea10e371ee9a9f646f9048014f764c80fec7fd4b42878c0d26989188672f55",
+    "evidence/ground-map/large-marks/frame-000001.gray": "29134a002d68714e67c5e424a286c305920506d70a44d1109a59cfbbeec7e534",
+    "evidence/ground-map/large-marks/frame-000001.png": "fd1d21af88a563fb99eb05ecbdd132f2c42a94704552924ddd3e6e0c68d65722",
+    "evidence/ground-map/large-marks/frame-000001.preview.png": "0e44b773b1d8a959820a5bf8a403bc84b08e8bdf82872154017686d4fe6fab24",
+    "evidence/ground-map/large-marks/frame-000002.gray": "de702f9fdd22ffbb512f40d984d0490f237236fe8cf5efa83ea42ea047cac63b",
+    "evidence/ground-map/large-marks/frame-000002.png": "c04713fdd5cc6b7d821ea5f81d59cbf1b9484b16e6068f4ecbcfa04e6ce1a1ab",
+    "evidence/ground-map/large-marks/frame-000002.preview.png": "bf1fc0c2760a97c5298ade9f17aaceb52de0e4f8242a8d04c92d7a98c8e68611",
+    "evidence/ground-map/large-marks/frame-000003.gray": "9109847a90f0f20ad0611cd6ec42950896c1e2c85cfb73ec00a13a9fb2c88302",
+    "evidence/ground-map/large-marks/frame-000003.png": "a4e5e4c57715d72269b47737728133df8544c87f4c99258bfcc3d9421dd2d5ff",
+    "evidence/ground-map/large-marks/frame-000003.preview.png": "cd546520ba031faedacd62fa2b60c21271fc5a0eea6c5562336594e4765cea3f",
+    "evidence/ground-map/large-marks/frames.csv": "ddc72e632f6f4722344c3598b8afcf45477747cad555d8092beb367ebfd47c71",
+    "evidence/ground-map/large-marks/received.bin": "5538bdf27f684b0e95fb2123f5fa84a69b8e438d05358bf50a48a283c0ea5818",
+    "evidence/ground-map/large-marks/session.json": "dfb80f9f841e3c9640ee15bb76037623e459889a195ccb6dcdd223691d0c6c62",
+    "evidence/ground-map/50mm/frame-000001.gray": "90d7912fa76ca13ab92e5de5785163806fb1337f16542ebcf6dfa334aa46140b",
+    "evidence/ground-map/50mm/frame-000001.png": "8c6f3f93d254b2087ba5e87f52c122179a7b113c416a9a049ec6d58426634115",
+    "evidence/ground-map/50mm/frame-000001.preview.png": "2184bc8d35249e317f40ff068aeaa2b367261f0672a46eab4f8fc8480fd518e6",
+    "evidence/ground-map/50mm/frame-000002.gray": "3666cb93541a78b5a8484ff870d0aecb46029f70b5b55ffcccc45d6b8f447e1d",
+    "evidence/ground-map/50mm/frame-000002.png": "20a3a8b775018cc8d6ae13c8ae6c46187688b66252fce3ba47881e4f702cb963",
+    "evidence/ground-map/50mm/frame-000002.preview.png": "5e2dadef11b97a4867d099050a8b328456b9e02377f5df22b10f3432d229c38a",
+    "evidence/ground-map/50mm/frame-000003.gray": "a2319292d20dfcc4ea5704ae40c20688359ca34dc10d4584fd557a1493f1be19",
+    "evidence/ground-map/50mm/frame-000003.png": "7d19029bc36950aeafab1b25822bf7b7b899222fbb30d99492eeef125045253c",
+    "evidence/ground-map/50mm/frame-000003.preview.png": "b563d8ba5346d606d1b1a246c484d749f2a05efda58852827f7bde0555da5693",
+    "evidence/ground-map/50mm/frames.csv": "d8e14559f2f87779a4f50ed9004265d0c2633e5952470db0818b9f36bc6be2a0",
+    "evidence/ground-map/50mm/received.bin": "6e4f902882a5e5c6d84717be85ff0074960df560526a6140eab9c1e331f4a6b9",
+    "evidence/ground-map/50mm/session.json": "3e54835d71a7287656de95b344d882d6767d66f6fd74615d597f4bc406904b31",
+    "evidence/ground-map/near350/frame-000001.gray": "d8f724fef56b702b52058e8cb68d14bfb68ae0ecc83e86d75d38118946cf3de6",
+    "evidence/ground-map/near350/frame-000001.png": "fd0c5d7f5420368c23cea709798ed8ddf2ff9c7125804fbb85f598eee0bae46a",
+    "evidence/ground-map/near350/frame-000001.preview.png": "fb40ea1ede189115250ec69acb0ef821d633a99ad07baeabd60ad2dbad0b5117",
+    "evidence/ground-map/near350/frame-000002.gray": "b07f8690d7da14896fe52b4295999445d6d1fd40724fbf8af185608e5831d0dd",
+    "evidence/ground-map/near350/frame-000002.png": "5b58fcf5b4ded027d2f4056c92ec59827461524e9987f4d40d7d688e5246188e",
+    "evidence/ground-map/near350/frame-000002.preview.png": "bb710154cb96e39fe3d0de26eebc9c10934ddb9e74f3b483271c2b8c2738454a",
+    "evidence/ground-map/near350/frame-000003.gray": "7da6a70c0c83d4f74e71b704da9fbc6caedf2b95c2c313de4ee36a01b5e683c7",
+    "evidence/ground-map/near350/frame-000003.png": "e216a0f14f519e7865ae26a36740245c86ae6291cd4544854ea39fb1f9837ec7",
+    "evidence/ground-map/near350/frame-000003.preview.png": "951f410e0604df130bdc4019ddccb447b2e91786fbbf781c47e1774f8c028f83",
+    "evidence/ground-map/near350/frames.csv": "1135541b873c2f466c40319cb442a76270225f5057bbc67563ff2759bc52419b",
+    "evidence/ground-map/near350/received.bin": "f9645edd59ef7ac0261687813b7d33c1e865f8b744fa53e902d1e43967e8f23f",
+    "evidence/ground-map/near350/session.json": "2721ebd80185a8c5ac016db304605d28c68985dec0a51994881e83e63d136f9b"
+  },
+  "motorCommandSent": false,
+  "coordinateConvention": "Camera optical-centre ground projection origin,x right,y forward,mm; rear-axle coordinates add197mm forward based on prior report.",
+  "proposedGroundPoints": [
+    {
+      "id": "A",
+      "xRightMm": -100,
+      "yForwardMm": 500,
+      "role": "fit"
+    },
+    {
+      "id": "B",
+      "xRightMm": 100,
+      "yForwardMm": 500,
+      "role": "fit"
+    },
+    {
+      "id": "C",
+      "xRightMm": -100,
+      "yForwardMm": 800,
+      "role": "independent_validation"
+    },
+    {
+      "id": "D",
+      "xRightMm": 100,
+      "yForwardMm": 800,
+      "role": "independent_validation"
+    },
+    {
+      "id": "E",
+      "xRightMm": -100,
+      "yForwardMm": 1100,
+      "role": "fit"
+    },
+    {
+      "id": "F",
+      "xRightMm": 100,
+      "yForwardMm": 1100,
+      "role": "fit"
+    }
+  ],
+  "pointPlacementConfirmed": true,
+  "homography": null,
+  "productionApproved": false,
+  "limits": [
+    "Static preview has no known point coordinates; no mapping inferred yet.",
+    "94x60 transmitted image, enlarged preview does not add spatial resolution.",
+    "Fixed header/length image transport has no CRC; retain raw bytes and inspect frames before accepting.",
+    "Proposed coordinates may need adjustment to actual visibility; never substitute proposed values for measurements.",
+    "Six screw heads not independently identifiable in inspected three-frame capture; bright ground saturates image. Do not fit guessed image coordinates."
+  ],
+  "operatorPlacementReply": "六点就绪，无黑色方形，使用六个螺钉代替",
+  "placementEvidence": "Operator says six points ready in response to proposed coordinates; no independent dimensional verification.",
+  "markerType": "screws, dimensions unknown",
+  "latestCaptureSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-centre250-20261108T182917679Z\\camera-g-20261109-022917-844-7c1982f3",
+  "sixMarkersIndividuallyLocated": true,
+  "imageDiagnostics": [
+    {
+      "file": "frame-000001.gray",
+      "centralLowerRoiFractionAt255": 0.9798941798941799
+    },
+    {
+      "file": "frame-000002.gray",
+      "centralLowerRoiFractionAt255": 0.9798941798941799
+    },
+    {
+      "file": "frame-000003.gray",
+      "centralLowerRoiFractionAt255": 0.9798941798941799
+    }
+  ],
+  "placementUpdates": [
+    {
+      "operatorReply": "标记加大",
+      "captureSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-large-marks-20261108T181319160Z\\camera-g-20261109-021319-321-4fe65178",
+      "frames": 3,
+      "sixIndividuallyLocated": false,
+      "assessment": "Only about3 isolated low-contrast tiny candidates visibly identifiable; other marks cannot be safely matched. Saturated ground remains. Exact marker size/material not supplied."
+    }
+  ],
+  "operator50mmReply": "就绪",
+  "homographyCandidate": "ground-homography-origin-corrected.json",
+  "near350Check": "ground-near350-check.json",
+  "coordinateCorrectionSource": "ground-origin-correction.json",
+  "nextPoint": {
+    "xCameraRightMm": 0,
+    "yCameraForwardMm": 250,
+    "xRearRightMm": 0,
+    "yRearForwardMm": 447,
+    "placementConfirmed": true,
+    "actualOperatorReportedCameraGroundMm": [
+      -100,
+      250
+    ],
+    "actualOperatorReportedRearGroundMm": [
+      -100,
+      447
+    ],
+    "centrePointMeasured": false,
+    "coordinateClarification": "横向仍在左侧100mm"
+  },
+  "centre250Check": "ground-centre250-check.json"
+}

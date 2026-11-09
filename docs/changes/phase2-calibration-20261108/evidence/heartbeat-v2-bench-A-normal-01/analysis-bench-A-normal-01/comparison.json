@@ -1,0 +1,127 @@
+{
+  "reports": [
+    {
+      "schemaVersion": "smartcar.speed-response-review/1",
+      "sourceSha256": "efeb32500490a3a21b649e305a7fd41e55eeae421eb0fa633564008ee7832304",
+      "version": "PHASE2_HEARTBEAT_DIAG_20261109_2",
+      "crcVerified": true,
+      "rows": 472,
+      "config": {
+        "requestPermille": 200,
+        "durationMs": 2500,
+        "profileCapPermille": 600,
+        "maximumTargetTicks10ms": 30,
+        "kpQ8": 512,
+        "kiQ8": 25,
+        "signLeftRawU32": 4294967295,
+        "signRightRawU32": 1,
+        "closedLoop": 1,
+        "servoUs": 1550
+      },
+      "firstZeroAfterArmMs": 2701,
+      "postZeroMs": 2007,
+      "stopReason": 1,
+      "faultDetailValues": [
+        0
+      ],
+      "faultValues": [
+        0
+      ],
+      "uniquePositiveTargetMatchedControls": 247,
+      "excludedZeroTargetPairingAnomalies": [],
+      "tailWindowsMs": {
+        "300": {
+          "uniqueControlSamples": 29,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": 0.13793103448275862,
+            "rangeCounts10ms": [
+              0,
+              1
+            ],
+            "rmseCounts10ms": 29.86405982055215,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          },
+          "r": {
+            "meanCounts10ms": 0.13793103448275862,
+            "rangeCounts10ms": [
+              0,
+              1
+            ],
+            "rmseCounts10ms": 29.86405982055215,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          }
+        },
+        "500": {
+          "uniqueControlSamples": 49,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": 0.12244897959183673,
+            "rangeCounts10ms": [
+              0,
+              1
+            ],
+            "rmseCounts10ms": 29.87934922658259,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          },
+          "r": {
+            "meanCounts10ms": 0.12244897959183673,
+            "rangeCounts10ms": [
+              0,
+              1
+            ],
+            "rmseCounts10ms": 29.87934922658259,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          }
+        }
+      },
+      "responseOnset": {
+        "l": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": 948,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        },
+        "r": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": 948,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        }
+      },
+      "outputCeiling": {
+        "l": {
+          "sampledAtCeiling": 151,
+          "sampledCeilingDurationMs": 1510,
+          "softwarePwmPeakPermille": 200.0
+        },
+        "r": {
+          "sampledAtCeiling": 150,
+          "sampledCeilingDurationMs": 1500,
+          "softwarePwmPeakPermille": 200.0
+        }
+      },
+      "driveNegativeRuns": {
+        "l": [],
+        "r": []
+      },
+      "signedRawTotalDeltaLeftRight": [
+        -436,
+        455
+      ],
+      "productionApproved": false,
+      "hardwareAccessed": false,
+      "limits": [
+        "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+        "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+        "Saturation duration is sample-window attribution, not electrical timing.",
+        "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+        "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+      ],
+      "sourceTrace": ".build\\phase2-calibration-20261108\\heartbeat-diag-20261109_2\\export-bench-A-normal-01\\trace.json"
+    }
+  ],
+  "productionApproved": false
+}

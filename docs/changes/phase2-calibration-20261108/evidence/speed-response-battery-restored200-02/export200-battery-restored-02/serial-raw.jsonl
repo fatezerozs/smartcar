@@ -1,0 +1,4 @@
+{"direction": "TX", "monotonic_ns": 6639532451600, "hex": "21730d0a"}
+{"direction": "TX", "monotonic_ns": 6639532703600, "hex": "780d0a"}
+{"direction": "RX", "monotonic_ns": 6639596213400, "hex": "5b"}
+{"direction": "RX", "monotonic_ns": 6639596392000, "hex": "4c494e4b5d2053544f500d0a5b4c494e4b5d2053544f500d0a5b4c494e4b5d2052454a45435420627573792f73746f703b2073746f702066697273742c207468656e20780d0a5b4649454c445d2053544f500d0a"}

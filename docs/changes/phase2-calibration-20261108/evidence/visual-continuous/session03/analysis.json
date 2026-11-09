@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "smartcar.visual-trace-analysis/1",
+  "version": "PHASE2_VISUAL_TRACE_20261109_1",
+  "frames": 750,
+  "captureSpanMs": 14974,
+  "captureIntervalMs": {
+    "n": 749,
+    "min": 19,
+    "p50": 20.0,
+    "p95": 20.0,
+    "p99": 20.0,
+    "max": 20
+  },
+  "missingCaptureSequenceNumbers": 0,
+  "copyFailureCounterFirstLast": [
+    2,
+    2
+  ],
+  "controlValidFarCounts": {
+    "1/1": 750
+  },
+  "independentBandSupportCounts": {
+    "1/1": 750
+  },
+  "rawValidCounts": {
+    "1": 750
+  },
+  "quality": {
+    "n": 750,
+    "min": 67,
+    "p50": 88.0,
+    "p95": 96.0,
+    "p99": 97.0,
+    "max": 98
+  },
+  "softwareStagesMs": {
+    "captureToObserveReturn": {
+      "n": 750,
+      "min": 3,
+      "p50": 4.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    },
+    "visionProcessing": {
+      "n": 750,
+      "min": 3,
+      "p50": 4.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    },
+    "recordImageAndDiagnostics": {
+      "n": 750,
+      "min": 0,
+      "p50": 0.0,
+      "p95": 1.0,
+      "p99": 1.0,
+      "max": 1
+    }
+  },
+  "controlRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 749,
+      "frames": 750,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 14974,
+      "state": {
+        "control_valid": 1,
+        "control_far_valid": 1
+      }
+    }
+  ],
+  "supportRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 749,
+      "frames": 750,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 14974,
+      "state": {
+        "near_band_support": 1,
+        "far_band_support": 1
+      }
+    }
+  ],
+  "cueRuns": [
+    {
+      "firstIndex": 0,
+      "lastIndex": 199,
+      "frames": 200,
+      "firstCaptureElapsedMs": 0,
+      "lastCaptureElapsedMs": 3979,
+      "state": {
+        "cue_bits": 0
+      }
+    },
+    {
+      "firstIndex": 200,
+      "lastIndex": 449,
+      "frames": 250,
+      "firstCaptureElapsedMs": 3999,
+      "lastCaptureElapsedMs": 8976,
+      "state": {
+        "cue_bits": 1
+      }
+    },
+    {
+      "firstIndex": 450,
+      "lastIndex": 749,
+      "frames": 300,
+      "firstCaptureElapsedMs": 8996,
+      "lastCaptureElapsedMs": 14974,
+      "state": {
+        "cue_bits": 3
+      }
+    }
+  ],
+  "productionBudgetCalibrated": false,
+  "limits": [
+    "Actual physical occlusion intervals require original-image annotation; cue bits are not ground truth.",
+    "Independent band support is algorithm geometry, not independently measured scene truth.",
+    "Static zero-PWM instrumented build; no RUNNING/MPC or exposure-to-electrical-PWM validation.",
+    "1ms time quantization; empirical maxima do not establish guaranteed limits."
+  ]
+}

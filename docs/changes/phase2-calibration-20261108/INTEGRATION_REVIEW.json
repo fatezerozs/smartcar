@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-09",
+  "pythonTests": {
+    "passed": 41,
+    "failed": 0
+  },
+  "hostTests": {
+    "responseAssertions": 14414,
+    "heartbeatAssertions": 815,
+    "turnAssertions": 4121,
+    "total": 19350,
+    "simulatedIO": true,
+    "reportOriginal": ".build/phase2-delivery-host-20261109/report.json"
+  },
+  "latestCandidatePreviouslyFlashed": true,
+  "newFlashOrMotionDuringIntegration": false,
+  "unrelatedPhase3RecorderChangesExcluded": true,
+  "productionCalibrationApproved": false,
+  "currentKnownIssue": "Shared effort governor produces right-wheel forward-pause-forward; independent wheel rollback not implemented.",
+  "stagedSnapshotPythonTestsPassed": 41,
+  "evidenceIndexRawByteMatches": 4266,
+  "hostReport": "integration-review-20261109/report.json",
+  "gitTlsFallback": "per-command OpenSSL; no global configuration changes",
+  "remoteCIForThisCommitVerified": false
+}

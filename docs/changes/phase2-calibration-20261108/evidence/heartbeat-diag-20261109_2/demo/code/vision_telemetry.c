@@ -1,0 +1,161 @@
+#include "main.h"
+#include "vision_drive.h"
+#include "vision_field.h"
+#include "vision_telemetry.h"
+#include "app_transport.h"
+#include "board_diagnostics.h"
+#include "vision_speed.h"
+#include "app_link.h"
+#if VISION_ROUTE_SWITCH && VISION_DUAL_UART_ENABLE
+static uint32_t trace_dump_run,trace_dump_revision,trace_dump_ms;
+static unsigned trace_dump_index,trace_dump_phase;
+#endif
+void vision_telemetry_run(uint32_t frames,uint32_t now,uint32_t frame_age,
+                          uint32_t max_process,uint32_t max_gap,
+                          const vision_result_t *lane,const tb_filter_t *track)
+{
+#if VISION_ROUTE_SWITCH && VISION_ENCODER_ENABLE
+    vd_speed_info_t speed;const vc_output_t *run=vision_drive_output();
+    vision_drive_speed_get(&speed);
+    /* One bounded nonblocking integer record replaces three floating-point
+     * lines. scale applies to errors/steering/demand/support, not wheel ticks.
+     * pwm_hz_cfg is the requested carrier, NOT an oscilloscope measurement. */
+    app_console_printf("[RUN] n=%lu ms=%lu age=%lu process_max=%lu gap_max=%lu enc_age=%lu e=%d h=%d u=%d duty=%d target=%d/%d measured=%d/%d pwm=%u/%u enabled=%u faults=%lu q=%u both=%u inferred=%u paired=%u edge=%u ring=%u side=%d guide=%u ring_seen=%u ring_candidate=%d ring_votes=%u bayes=%u accepted=%u pwm_hz_cfg=%u scale=1000\r\n",
+        (unsigned long)frames,(unsigned long)now,(unsigned long)frame_age,
+        (unsigned long)max_process,(unsigned long)max_gap,(unsigned long)(now-speed.sample_ms),
+        (int)(run->lateral*1000),(int)(run->heading*1000),(int)(run->steering*1000),
+        (int)(run->duty*1000),
+        speed.target_right,speed.target_left,speed.measured_right,speed.measured_left,
+        speed.pwm_right,speed.pwm_left,speed.enabled,(unsigned long)(speed.faults|run->faults),
+        lane->confidence,lane->measured_rows,lane->inferred_rows,
+        (unsigned)(run->paired_support*1000),(unsigned)(run->edge_support*1000),
+        lane->roundabout_state,lane->roundabout_side,lane->entry_guide_rows,
+        lane->roundabout_evidence,lane->roundabout_candidate,lane->roundabout_votes,
+        (unsigned)track->result.candidate,track->result.accepted,(unsigned)VISION_MOTOR_PWM_HZ);
+#else
+    (void)frames;(void)now;(void)frame_age;(void)max_process;(void)max_gap;(void)lane;(void)track;
+#endif
+}
+void vision_telemetry_trace_poll(uint32_t now)
+{
+#if VISION_ROUTE_SWITCH && VISION_DUAL_UART_ENABLE
+    vd_trace_info_t info;vd_trace_sample_t s;char line[448];int n;
+    vision_drive_trace_info(&info);
+    if(!info.frozen||!info.count||vision_drive_output()->state==VC_RUNNING)return;
+    if(trace_dump_run!=info.run||trace_dump_revision!=info.revision){trace_dump_run=info.run;trace_dump_revision=info.revision;trace_dump_index=trace_dump_phase=0;}
+    if(trace_dump_phase==3||(uint32_t)(now-trace_dump_ms)<35U)return;
+    trace_dump_ms=now;
+    if(!trace_dump_phase)n=snprintf(line,sizeof(line),"[TRACE_BEGIN] run=%lu count=%u dt_ms=60 scale=1000 revision=%lu\r\n",(unsigned long)info.run,info.count,(unsigned long)info.revision);
+    else if(trace_dump_index<info.count) {
+        if(!vision_drive_trace_read(trace_dump_index,&s))return;
+        n=snprintf(line,sizeof(line),"[TRACE] run=%lu i=%u ms=%lu frame=%lu e=%d h=%d u=%d duty=%d servo=%u raw=%d/%d target=%d/%d pwm=%u/%u v=%u q=%u f=%u w=%u cx=%u both=%u inferred=%u state=%u source=%u obs=%u faults=%lu junction=%u anchors=%u ring=%u ring_side=%d ring_rows=%u entry_guide=%u\r\n",
+            (unsigned long)info.run,trace_dump_index,(unsigned long)s.ms,(unsigned long)s.frame,
+            s.lateral,s.heading,s.steer,s.duty,s.servo_us,s.raw3,s.raw4,s.target_right,s.target_left,
+            s.pwm_right,s.pwm_left,s.valid,s.coverage,s.row_flags,s.width,s.center,s.measured,s.inferred,s.state,s.source,s.obs_flags,(unsigned long)s.faults,s.junction,s.anchors,s.ring,s.ring_side,s.ring_rows,s.entry_guide_rows);
+    } else n=snprintf(line,sizeof(line),"[TRACE_END] run=%lu count=%u\r\n",(unsigned long)info.run,info.count);
+    /* The TX queue is nonblocking. If RTS/queue is busy, retain this cursor and
+     * retry later. Dump only when stopped, never spend driving time on it. */
+    if(n<=0||(unsigned)n>=sizeof(line)||!app_link_send(app_transport_owner(),(const uint8_t *)line,(uint32_t)n))return;
+    if(!trace_dump_phase)trace_dump_phase=1;
+    else if(trace_dump_index<info.count)++trace_dump_index;
+    else trace_dump_phase=3;
+#else
+    (void)now;
+#endif
+}
+void vision_telemetry_speed(void)
+{
+#if VISION_ENCODER_ENABLE
+    vd_speed_info_t s;vision_drive_speed_get(&s);
+    app_console_printf("[SPEED] ms=%lu sample=%lu enabled=%u raw3_L=%d raw4_R=%d target_R/L=%d/%d measured_R/L=%d/%d pwm_R/L=%u/%u faults=%lu; counts/10ms\r\n",
+        (unsigned long)timer_get(GPT_TIM_1),(unsigned long)s.samples,s.enabled,s.raw3,s.raw4,s.target_right,s.target_left,s.measured_right,s.measured_left,
+        s.pwm_right,s.pwm_left,(unsigned long)s.faults);
+#if VISION_ROUTE_SWITCH
+    {const vc_output_t *turn=vision_drive_output();
+     app_console_printf("[TURN] u=%.3f command_us=%u near_valid=%u far_valid=%u search=%u source=%u speed_mode=%u; commanded PWM, not measured angle\r\n",
+        (double)turn->steering,vision_drive_servo_command_us(),turn->observation_valid,turn->far_valid,turn->recovering,turn->search_source,turn->speed_boost);}
+#endif
+    if(s.faults)app_console_printf("[SPEED_FAULT] detail=%s control_age_ms=%lu sample_age_ms=%lu interval_ms=%lu\r\n",
+        vision_drive_speed_fault_name(s.fault_detail),(unsigned long)s.fault_control_age_ms,
+        (unsigned long)s.fault_sample_age_ms,(unsigned long)s.fault_interval_ms);
+#endif
+}
+static uint8_t preview[VISION_PREVIEW_WIDTH*VISION_PREVIEW_HEIGHT];
+void vision_telemetry_preview(char mode,const uint8_t *gray,const uint8_t *binary,const vision_result_t *result)
+{
+    uint8_t header[12]={0xAA,0,0x02,0x02,VISION_PREVIEW_WIDTH,0,VISION_PREVIEW_HEIGHT,0,0x01,0,0,0};
+    uint8_t checksum=0;unsigned i;
+    vision_preview_mode_t kind=mode=='b'?VISION_PREVIEW_BINARY:mode=='o'?VISION_PREVIEW_OVERLAY:VISION_PREVIEW_GRAY;
+    vision_midterm_preview(gray,binary,result,preview,kind);
+    for(i=0;i<sizeof(header);++i)checksum=(uint8_t)(checksum+header[i]);
+    header[1]=checksum;
+    app_transport_frame(header,sizeof(header),preview,sizeof(preview));
+}
+
+static int coord(uint8_t value) {return value==VISION_INVALID_X?-1:value;}
+void vision_telemetry_help(void)
+{
+
+    app_console_printf("[FIELD] build=%s; @status, @startup, @servo, @motor, @motor_dir, @balance, @encoder_sign, @speed_cfg, @speed_mode\r\n",VISION_FIELD_BUILD);
+    app_console_printf("[RESPONSE] straight_request=450 hard_pwm_cap=600 first_request<=200 step<=50 ramp=300permille/s duration<=3000ms heartbeat_timeout=500ms; measured speed unknown\r\n");
+    app_console_printf("[RESPONSE] @motion line request ms only; h heartbeat !=STOP; visual arm, probes, reverse, shuttle and circle disabled; boot stopped\r\n");
+    app_console_printf("[RESPONSE] @response_info @response_config @response_row index @response_release generation @response_beep; frozen22field trace plus10field config CRC\r\n");
+    app_console_printf("[ENCODER_SPEED] enc3 LEFT sign=-1 enc4 RIGHT sign=+1 are operator-confirmed working configuration, not auto-restored; speed_mode0=open request,1=closed max_ticks target; feedforward0\r\n");
+    app_console_printf("[LINK] UART1 USB / UART8 radio1152008N1; x=claim while stopped; STOP on either port\r\n");
+    app_console_printf("[MODE] both switches OFF=OBSERVE(raw1/1), both ON=DRIVE(raw0/0); mode change=STOP; no automatic start\r\n");
+
+}
+
+
+void vision_telemetry_report(const vision_report_t *d)
+{
+    board_diagnostics_report();
+    vision_telemetry_speed();
+#if VISION_DRIVE_ENABLE
+            const vc_output_t *drive = vision_drive_output();
+#if VISION_ROUTE_SWITCH
+            {vd_last_stop_t stop;vision_drive_last_stop(&stop);
+             app_console_printf("[LAST_STOP] seq=%lu ms=%lu run_ms=%lu reason=%u faults=%lu speed_detail=%u raw3_L=%d raw4_R=%d target_R/L=%d/%d pwm_R/L=%u/%u prev_e=%.3f prev_h=%.3f prev_u=%.3f prev_servo_us=%u; retained_until_reset\r\n",
+                (unsigned long)stop.sequence,(unsigned long)stop.ms,(unsigned long)stop.run_ms,
+                stop.reason,(unsigned long)stop.faults,stop.speed_detail,stop.raw3,stop.raw4,
+                stop.target_right,stop.target_left,stop.pwm_right,stop.pwm_left,
+                (double)stop.previous_lateral,(double)stop.previous_heading,(double)stop.previous_steering,stop.previous_servo_us);}
+#endif
+            app_console_printf("[DRIVE] ready=%d state=%u faults=%lu near=%.3f heading=%.3f steer=%.3f duty=%.3f far_ok=%u\r\n",
+                   vision_drive_ready(), (unsigned)drive->state, (unsigned long)drive->faults, (double)drive->lateral,
+                   (double)drive->heading, (double)drive->steering, (double)drive->duty, drive->far_valid);
+            app_console_printf("[CAL] valid=%u far_ok=%u near_x=%.5f far_x=%.5f; confirm centered STRAIGHT before @camera\r\n",
+                   drive->observation_valid, drive->far_valid, (double)drive->near_center_x, (double)drive->far_center_x);
+#endif
+            if (d->timeout_reset) {
+                app_console_printf("[VISION2] NO_FRAME n=%lu camera stream stopped\r\n", (unsigned long)d->frames);
+            } else if (d->frames == 0) {
+                app_console_printf("[VISION2] waiting for first camera frame\r\n");
+            } else {
+                app_console_printf("[BAYES] mode=%s state=%s candidate=%s p=%.3f margin=%.3f entropy=%.3f accepted=%u trained=%u\r\n",
+                       d->midterm_mode ? "MIDTERM" : "FULL_OBSERVER", tb_state_name(d->track->result.state),
+                       tb_state_name(d->track->result.candidate), (double)d->track->result.probability,
+                       (double)d->track->result.margin, (double)d->track->result.entropy,
+                       d->track->result.accepted, d->track->result.trained);
+                app_console_printf("[FEATURE] n=%lu ms=%lu mask=%lu quality=%.3f heading=%.4f curvature=%.4f open_left=%.4f open_right=%.4f split=%.4f stripes=%.4f\r\n",
+                       (unsigned long)d->frames, (unsigned long)d->last_frame,
+                       (unsigned long)d->observation->mask, (double)d->observation->quality,
+                       (double)d->observation->x[TB_HEADING], (double)d->observation->x[TB_CURVATURE],
+                       (double)d->observation->x[TB_OPEN_LEFT], (double)d->observation->x[TB_OPEN_RIGHT],
+                       (double)d->observation->x[TB_SPLIT], (double)d->observation->x[TB_STRIPES]);
+                app_console_printf("[VISION2] n=%lu fps=%lu.%lu valid=%u state=%s q=%u thr=%u contrast=%u white=%u\r\n",
+                       (unsigned long)d->frames, (unsigned long)(d->fps_x10 / 10), (unsigned long)(d->fps_x10 % 10),
+                       d->lane->valid, vision_midterm_status_name(d->lane->status), d->lane->confidence,
+                       d->lane->threshold, d->lane->contrast, d->lane->white_percent);
+                app_console_printf("[VISION2] both=%u inferred=%u err=%.1f raw=%.1f bend=%.1f bend_ok=%u row90 L/M/R=%d/%d/%d width=%u flags=%u drop=%lu junction=%u anchors=%u\r\n",
+                       d->lane->measured_rows, d->lane->inferred_rows, (double)d->lane->error_px,
+                       (double)d->lane->raw_error_px, (double)d->lane->bend_px, d->lane->bend_valid,
+                       coord(d->lane->left[90]), coord(d->lane->center[90]), coord(d->lane->right[90]),
+                       d->lane->row_width[90],d->lane->row_flags[90],
+                        (unsigned long)d->dropped_copies,d->lane->junction_rows,d->lane->junction_anchors);
+                app_console_printf("[VISION2] age_ms=%lu proc_ms=%lu history_reset=%lu row90_thr=%u local_rows=%u ambiguous=%u ring=%u ring_side=%d ring_rows=%u path_fallback=%u entry_guide=%u ring_seen=%u ring_candidate=%d ring_votes=%u\r\n",
+                       (unsigned long)(uint32_t)(d->now - d->last_frame), (unsigned long)d->process_ms,
+                       (unsigned long)d->history_resets, d->lane->row_threshold[90], d->lane->adaptive_rows,
+                       d->lane->ambiguous_rows,d->lane->roundabout_state,d->lane->roundabout_side,d->lane->roundabout_rows,d->lane->path_fallback,d->lane->entry_guide_rows,d->lane->roundabout_evidence,d->lane->roundabout_candidate,d->lane->roundabout_votes);
+            }
+}

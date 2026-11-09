@@ -1,0 +1,8 @@
+{
+  "reports": 142,
+  "states": {
+    "1/0": 104,
+    "1/1": 38
+  },
+  "inputBufferDiscardedBeforeWindow": true
+}

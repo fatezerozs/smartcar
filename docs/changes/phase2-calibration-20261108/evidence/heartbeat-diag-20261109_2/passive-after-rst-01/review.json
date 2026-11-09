@@ -1,0 +1,48 @@
+{
+  "ports": [
+    {
+      "device": "COM3",
+      "description": "蓝牙链接上的标准串行 (COM3)"
+    },
+    {
+      "device": "COM4",
+      "description": "蓝牙链接上的标准串行 (COM4)"
+    },
+    {
+      "device": "COM6",
+      "description": "蓝牙链接上的标准串行 (COM6)"
+    },
+    {
+      "device": "COM7",
+      "description": "蓝牙链接上的标准串行 (COM7)"
+    },
+    {
+      "device": "COM10",
+      "description": "USB 串行设备 (COM10)"
+    },
+    {
+      "device": "COM14",
+      "description": "USB 串行设备 (COM14)"
+    }
+  ],
+  "passive": [
+    {
+      "port": "COM10",
+      "bytes": 0,
+      "selectedLines": []
+    },
+    {
+      "port": "COM14",
+      "bytes": 6776,
+      "selectedLines": [
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED",
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED",
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED",
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED",
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED",
+        "[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED"
+      ]
+    }
+  ],
+  "motionCommandSent": false
+}

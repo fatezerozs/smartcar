@@ -1,0 +1,36 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "requestPermille": 250,
+  "durationRequestedMs": 1500,
+  "generation": 2,
+  "rows": 331,
+  "crcVerified": true,
+  "postZeroMs": 2000,
+  "softwarePwmPeakPermille": 250,
+  "countDeltaLeftRight": [
+    0,
+    0
+  ],
+  "faults": [
+    0,
+    256
+  ],
+  "faultDetails": [
+    0,
+    11
+  ],
+  "firstZeroReason": 0,
+  "motionReasonsInSamples": [
+    0,
+    5
+  ],
+  "operatorObservation": "pending",
+  "physicalTestPassed": false,
+  "productionApproved": false,
+  "laterOperatorPowerReport": {
+    "text": "Battery voltage was insufficient; now handled",
+    "measuredVoltageV": null,
+    "scope": "Later user report; no synchronized voltage trace for each prior action",
+    "interpretation": "Prior no-response trials cannot establish a reliable starting request threshold or isolate firmware versus supply effects."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "motionCommandSent": false,
+  "owner": "[LINK] port=radio owner=radio rx=6582 tx=1788906 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+  "version": "[FIELD] build=PHASE2_TURN_GEOMETRY_20261109_2; @status, @startup, @servo, @motor, @motor_dir, @balance, @encoder_sign, @speed_cfg, @speed_mode",
+  "set": "[TURN_CONFIG] frozen=0 valid=1 request=250 duration=2500 speed=60 servo=1500/1600 soft_hits=12 min_cap=50",
+  "readback": "[TURN_CONFIG] frozen=0 valid=1 request=250 duration=2500 speed=60 servo=1500/1600 soft_hits=12 min_cap=50",
+  "speed": "[SPEED] enabled=0 max_ticks=23 kp=2.0000 ki=0.0977 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops",
+  "prepared": true
+}

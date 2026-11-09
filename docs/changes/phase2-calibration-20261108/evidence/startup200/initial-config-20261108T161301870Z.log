@@ -1,0 +1,9 @@
+# port=COM10 baud=115200 host_time=2026-11-09T00:13:02.0534588+08:00
+OP
+[TELEM] ms=29196 n=1430 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=29396 n=1440 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=29596 n=1450 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=29796 n=1460 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=29996 n=1470 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=30196 n=1480 state=0 faults=0 valid=0 owner=usb motion=0
+[TELEM] ms=30396 n=1490 state=0 faults=0 valid=0 owner=usb motion=0

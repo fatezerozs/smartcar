@@ -1,0 +1,28 @@
+PLAN: @motion line 150 2500; heartbeat every 100ms; STOP=0ms; external STOP=False; drop heartbeat=0ms
+[BOARD_IO] C[LINK] STOP
+[FIELD] STOP
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.29111 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_ENTRY p=0.851 margin=0.775 entropy=0.250 accepted=0 trained=0
+[FEATURE] n=10380 ms=208098 mask=60 quality=0.624 heading=0.0000 curvature=0.0000 open_left=0.5287 open_right=0.3218 split=0.7011 stripes=0.2372
+[VISION2] n=10380 fps=50.0 valid=1 state=TRACK q=50 thr=171 contrast=159 white=49
+[VISION2] both=44 inferred=0 err=-35.3 raw=-35.5 bend=13.0 bend_ok=1 row90 L/M/R=29/56/83 drop=0
+[VISION2] age_ms=10 proc_ms=3 history_reset=0 row90_thr=165 local_rows=86 ambiguous=0
+[LINK] port=radio owner=radio rx=135 tx=337329 overflow=0 errors=1 tx_rejected=0; x=claim while stopped
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.29211 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_ENTRY p=0.851 margin=0.775 entropy=0.250 accepted=0 trained=0
+[FEATURE] n=10405 ms=208598 mask=60 quality=0.627 heading=0.0000 curvature=0.0000 open_left=0.5402 open_right=0.3103 split=0.7011 stripes=0.2389
+[VISION2] n=10405 fps=50.0 valid=1 state=TRACK q=52 thr=172 contrast=160 white=50
+[VISION2] both=46 inferred=0 err=-35.3 raw=-35.2 bend=12.8 bend_ok=1 row90 L/M/R=29/56/83 drop=0
+[VISION2] age_ms=10 proc_ms=3 history_reset=0 row90_thr=165 local_rows=84 ambiguous=0
+Exception: C:\shengchanli\smartCar\smartcar\tools\motion_test.ps1:80
+Line |
+  80 |  … \] REJECT'){throw 'Firmware rejected the request; inspect profile, mo …
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Firmware rejected the request; inspect profile, mode, limits and coast.
+[MOTION] REJECT format/mode/profile/coast/

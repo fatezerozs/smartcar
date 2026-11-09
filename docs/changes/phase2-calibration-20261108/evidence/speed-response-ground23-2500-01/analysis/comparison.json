@@ -1,0 +1,134 @@
+{
+  "reports": [
+    {
+      "schemaVersion": "smartcar.speed-response-review/1",
+      "sourceSha256": "0ab14da34cedaa7b50c16683e26b04fe41cd333cd190761836798742b6c53f46",
+      "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+      "crcVerified": true,
+      "rows": 296,
+      "config": {
+        "requestPermille": 250,
+        "durationMs": 2500,
+        "profileCapPermille": 600,
+        "maximumTargetTicks10ms": 23,
+        "kpQ8": 512,
+        "kiQ8": 25,
+        "signLeftRawU32": 4294967295,
+        "signRightRawU32": 1,
+        "closedLoop": 1,
+        "servoUs": 1550
+      },
+      "firstZeroAfterArmMs": 935,
+      "postZeroMs": 2006,
+      "stopReason": 3,
+      "faultDetailValues": [
+        0
+      ],
+      "faultValues": [
+        0
+      ],
+      "uniquePositiveTargetMatchedControls": 69,
+      "excludedZeroTargetPairingAnomalies": [
+        {
+          "heldAtSequence": 43298,
+          "controlSequence": 43297,
+          "controlElapsedMs": 204,
+          "targetLeftRight": [
+            0,
+            0
+          ],
+          "heldFeedbackLeftRight": [
+            23,
+            22
+          ],
+          "rawFeedbackLeftRight": [
+            0,
+            0
+          ],
+          "reason": "held feedback does not match source sample"
+        }
+      ],
+      "tailWindowsMs": {
+        "300": {
+          "uniqueControlSamples": 0,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": null,
+            "rangeCounts10ms": null,
+            "rmseCounts10ms": null,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          },
+          "r": {
+            "meanCounts10ms": null,
+            "rangeCounts10ms": null,
+            "rmseCounts10ms": null,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          }
+        },
+        "500": {
+          "uniqueControlSamples": 0,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": null,
+            "rangeCounts10ms": null,
+            "rmseCounts10ms": null,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          },
+          "r": {
+            "meanCounts10ms": null,
+            "rangeCounts10ms": null,
+            "rmseCounts10ms": null,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 0
+          }
+        }
+      },
+      "responseOnset": {
+        "l": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": null,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        },
+        "r": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": null,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        }
+      },
+      "outputCeiling": {
+        "l": {
+          "sampledAtCeiling": 0,
+          "sampledCeilingDurationMs": 0,
+          "softwarePwmPeakPermille": 103.0
+        },
+        "r": {
+          "sampledAtCeiling": 0,
+          "sampledCeilingDurationMs": 0,
+          "softwarePwmPeakPermille": 105.0
+        }
+      },
+      "driveNegativeRuns": {
+        "l": [],
+        "r": []
+      },
+      "signedRawTotalDeltaLeftRight": [
+        -1,
+        4
+      ],
+      "productionApproved": false,
+      "hardwareAccessed": false,
+      "limits": [
+        "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+        "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+        "Saturation duration is sample-window attribution, not electrical timing.",
+        "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+        "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+      ],
+      "sourceTrace": ".build\\phase2-calibration-20261108\\speed-response-20261109_1-release\\export-ground-target23-cap250-2500-01\\trace.json"
+    }
+  ],
+  "productionApproved": false
+}

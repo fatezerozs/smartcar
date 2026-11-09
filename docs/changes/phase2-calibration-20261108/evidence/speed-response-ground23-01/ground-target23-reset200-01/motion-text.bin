@@ -1,0 +1,23 @@
+=0.7800 far=0.4600 half=0.0350
+[MOTOR] confirmed=1 dir=1/1 scale=1.0000/1.0000
+[BENCH] seq=0 kind=0 channel=0 value=0 level=0 hold_ms=0 active=0
+[STARTUP] enabled=0 delay_ms=2000 state=0 restored=0 switch_seen=0 closed=0 local=0
+[STORE] valid=0 slot=0 generation=0 error=1
+[MOTION] STARTED kind=1 requested=200 duration_ms=1500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=44068
+[SPEED] ms=44068 sample=4374 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=44168
+[SPEED] ms=44168 sample=4384 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=0 servo_us=1550 ms=44267
+[SPEED] ms=44267 sample=4394 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=29 servo_us=1550 ms=44367
+[SPEED] ms=44367 sample=4404 enabled=1 raw3_L=0 raw4_R=0 target_R/L=3/3 measured_R/L=0/0 pwm_R/L=7/7 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=59 servo_us=1550 ms=44467
+[SPEED] ms=44467 sample=4414 enabled=1 raw3_L=0 raw4_R=0 target_R/L=6/6 measured_R/L=0/0 pwm_R/L=17/17 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=89 servo_us=1550 ms=44567
+[SPEED] ms=44567 sample=4424 enabled=1 raw3_L=0 raw4_R=0 target_R/L=10/10 measured_R/L=0/0 pwm_R/L=33/33 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=119 servo_us=1550 ms=44667
+[SPEED] ms=44667 sample=4434 enabled=1 raw3_L=0 raw4_R=0 target_R/L=13/13 measured_R/L=0/0 pwm_R/L=50/50 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=149 servo_us=1550 ms=44767
+[SPEED] ms=44767 sample=4444 enabled=1 raw3_L=0 raw4_R=0 target_R/L=17/17 measured_R/L=0/0 pwm_R/L=73/73 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=

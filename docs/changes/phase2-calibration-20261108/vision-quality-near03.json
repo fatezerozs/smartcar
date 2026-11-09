@@ -1,0 +1,122 @@
+{
+  "operatorReply": "边界已盖住",
+  "requestedRangeFromCameraProjectionMm": [
+    250,
+    500
+  ],
+  "actualRangeIndependentlyMeasured": false,
+  "stage": "NEAR_BOUNDARY_OCCLUSION_OBSERVATION_INVALID",
+  "calReports": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "allObservationInvalid": true,
+  "visualInspection": "First preview inspected: objects obstruct both sides of the near lane, with distant lane visible above; physical placement/height not independently measured.",
+  "farBandIndependentValidityKnown": false,
+  "rawEvidenceSha256": {
+    "near.console.txt": "d9734ed11db7c42f43bcf7287590aeb51c1b22c415a49c1389fc0951166d2ac7",
+    "near.log": "f240639fac0dce77ea42bbbfaf75eae549c36fb4ea830b5fdf74ca81567abd83",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000001.gray": "36c98398b26d61c7a6858dc60f3dddda59a09bfc2b1542c3809106615620fccd",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000001.png": "bb58f36ed1a8a9c6fde1fe28596c46974d5e1d06cbca82c42fff24e8b690dde6",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000001.preview.png": "e4851a90295731d8b0c002145691a17cc134d5637365f7f97e95b11bf6d76551",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000002.gray": "c104dcab7398f50b66db2e4d5141917eadd15c18eaf7e58bb37edd07c398f441",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000002.png": "f903a30c2d053a33082fbd0a3e73ece455c9b5b8b88497e95fcbe171e1e328ee",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000002.preview.png": "23ca0e5f918675ea51a0b30c8a5d6b4fa32394016a67ac2e70ae85183dec436f",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000003.gray": "44484723933e998301583e5d6558ff1cc517873ddcd0b0c8813d168ca280f23d",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000003.png": "2bc97b0fe47f42ed99bac83313f99f921afe513a45f7d71b537cb7ec79a9a461",
+    "images\\camera-g-20261109-031029-661-77341b40\\frame-000003.preview.png": "92f44efabd42bfc5ff4ea6110e13d46866aade215f2b3880423fee1d2192dd49",
+    "images\\camera-g-20261109-031029-661-77341b40\\frames.csv": "76b5fdde69824f37afc144c7ab5cda7cedd3f894f8e87e0edab09bf57d674766",
+    "images\\camera-g-20261109-031029-661-77341b40\\received.bin": "2e68e9c0345171c676761dafbf57c17149686deb2ddcb3d0647bd31e07a63cb2",
+    "images\\camera-g-20261109-031029-661-77341b40\\session.json": "737edc4c8b6be80f92fb88f50499be9806b344a7e24259573a9743ce6467e63c"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false,
+  "limits": [
+    "CAL far_ok=0 after observation invalid is not independent proof that visible far band has failed.",
+    "Obstacles are not a calibrated image mask; scene/geometry isolation only visually assessed.",
+    "Static DISARMED test does not exercise running recovery or actual motor stop.",
+    "Images and subsequent text are separate captures."
+  ]
+}

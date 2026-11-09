@@ -9,6 +9,7 @@
 
 ## 从哪里阅读
 
+- **[Phase2实测成果与交接（2026-11-09）](docs/changes/phase2-calibration-20261108/DELIVERY_STATUS.md)**：落地响应、停车、无线与软回调成果，以及当前间歇转动问题和未完成标定。
 - **[主要工程索引与交接导航](docs/PROJECT_INDEX.md)**：工程关系图、阶段进度、待解决问题、工程入口与接手路线。
 - **[当前参数集与实测数据交付（2026-11-06）](docs/changes/vehicle-parameters-20261106/README.md)**：已采用的左右轮 CPR/方向、控制与舵机配置、几何参考、9 个 Encoder 原始窗口、Camera/SD 证据及联合候选待验状态。
 - **[测试框架与流程详细手册](docs/TESTING_FRAMEWORK_GUIDE.md)**：环境、架构、套件开发、执行流程、报告判读、CI、数据集接入与完整套件索引。
@@ -51,7 +52,7 @@ AUTO_TRACK与RecorderTrain后续统一接入MPC预算降级；预算规划未集
 | `docs/` | 演进档案、提交说明、参考与历史资料 |
 | `releases/`、`evidence/` | 明确版本的发布产物/校验与可复核证据 |
 
-原始串口、外部视频、临时构建和个人 IDE 状态保留本地；发布目录只归档明确选定的版本。
+选定的Phase2原始串口与采样证据已随文档归档；外部大视频、临时构建和个人IDE状态保留本地，发布目录只归档明确选定版本。
 测试统一入口为 `tools/testing/Invoke-TestPlan.ps1`；使用说明及证据见
 [测试体系](docs/TESTING_ARCHITECTURE.md) 和 [验收记录](docs/testing/VALIDATION.md)。
 main合并提交的[MSVC optimized/ASan CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)各49 PASS / 1 SKIPPED；此前完整本地PreFlash为63 PASS / 1 SKIPPED。跳过项是缺数据的`performance-host`，正式烧录放行仍单独判定。

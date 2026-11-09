@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "smartcar.phase2-manual/1",
+  "sessionId": "phase2-manual-20261108",
+  "date": "2026-11-08",
+  "timezone": "Asia/Shanghai",
+  "status": "COLLECTING",
+  "productionApproved": false,
+  "operator": null,
+  "vehicleId": null,
+  "conditionId": null,
+  "instrument": {
+    "id": "caliper-01",
+    "name": "游标卡尺（用户报告；本地编号caliper-01）",
+    "rangeMm": null,
+    "distanceResolutionMm": 0.1,
+    "angleResolutionDeg": null
+  },
+  "conditions": {
+    "surface": null,
+    "batteryAndPayload": null,
+    "tireState": null,
+    "otherTestReleasedVehicle": false,
+    "actuatorPowerIsolated": null
+  },
+  "encoderProfile": "../../../profiles/encoder-production-20261106.json",
+  "geometryCsv": "geometry.csv",
+  "rollingCsv": "rolling.csv",
+  "steeringCsv": "steering.csv",
+  "steeringTrianglesCsv": "steering-triangles.csv",
+  "notes": "Operator reports 0.1 mm distance resolution and no angle instrument. Original geometry reply 197;197;155;155 retained. Subsequent correction confirms tyre contact-centre track and changes rear/front track to 152.9/152.9 mm, measured using vernier caliper; left/right wheelbase remains 197/197 mm. caliper-01 is a locally assigned label, not a manufacturer serial number. Corrections and reaffirmations are not independent repeats. Caliper range/model/accuracy, measurement timestamp, load and vehicle release remain unconfirmed. No serial, flashing, servo or motor command executed by this package. Later operator confirms normal-load wheels-on-ground manual straight rolling and tape measure. Rolling data moved to a separate instrument session; caliper geometry load remains unconfirmed.",
+  "reportedRollingDistance": {
+    "rawReply": "统一为945mm",
+    "fiveTurnDistanceMm": 945,
+    "turnsFromPrompt": 5,
+    "independentRepeatsEstablished": false,
+    "measurementConditionsConfirmed": false,
+    "instrumentId": "tape-01",
+    "loadedConditionsConfirmed": true,
+    "session": "rolling-tape/session.json",
+    "instrumentResolutionMm": 1
+  },
+  "reportedCameraMount": {
+    "heightMm": 330,
+    "forwardOffsetMm": 197,
+    "rightOffsetMm": 0,
+    "sourceSession": "rolling-tape/session.json",
+    "instrumentId": "tape-01",
+    "source": "operator-readings-05.json",
+    "sameConditionsAsRollingConfirmed": false
+  }
+}

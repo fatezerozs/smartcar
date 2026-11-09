@@ -1,0 +1,256 @@
+{
+  "schemaVersion": "smartcar.speed-response-review/1",
+  "sourceSha256": "0df00e9f8c65b2e257c40f15628b6fe9f06a9ac50208d13c3e9306d2444ce7b1",
+  "version": "PHASE2_HEARTBEAT_DIAG_20261109_2",
+  "crcVerified": true,
+  "rows": 372,
+  "config": {
+    "requestPermille": 250,
+    "durationMs": 1500,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 40,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "firstZeroAfterArmMs": 1700,
+  "postZeroMs": 2001,
+  "stopReason": 1,
+  "faultDetailValues": [
+    0
+  ],
+  "faultValues": [
+    0
+  ],
+  "uniquePositiveTargetMatchedControls": 146,
+  "excludedZeroTargetPairingAnomalies": [
+    {
+      "heldAtSequence": 55355,
+      "controlSequence": 55354,
+      "controlElapsedMs": 204,
+      "targetLeftRight": [
+        0,
+        0
+      ],
+      "heldFeedbackLeftRight": [
+        29,
+        25
+      ],
+      "rawFeedbackLeftRight": [
+        0,
+        0
+      ],
+      "reason": "held feedback does not match source sample"
+    }
+  ],
+  "tailWindowsMs": {
+    "300": {
+      "uniqueControlSamples": 29,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 44.241379310344826,
+        "rangeCounts10ms": [
+          32,
+          52
+        ],
+        "rmseCounts10ms": 7.203926132612544,
+        "samplesWithin2Counts": 1,
+        "maxOvershootCounts": 12
+      },
+      "r": {
+        "meanCounts10ms": 44.3448275862069,
+        "rangeCounts10ms": [
+          31,
+          52
+        ],
+        "rmseCounts10ms": 7.139013744305253,
+        "samplesWithin2Counts": 4,
+        "maxOvershootCounts": 12
+      }
+    },
+    "500": {
+      "uniqueControlSamples": 49,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 37.30612244897959,
+        "rangeCounts10ms": [
+          22,
+          52
+        ],
+        "rmseCounts10ms": 10.04682912715271,
+        "samplesWithin2Counts": 1,
+        "maxOvershootCounts": 12
+      },
+      "r": {
+        "meanCounts10ms": 37.59183673469388,
+        "rangeCounts10ms": [
+          23,
+          52
+        ],
+        "rmseCounts10ms": 9.743653088559961,
+        "samplesWithin2Counts": 4,
+        "maxOvershootCounts": 12
+      }
+    }
+  },
+  "responseOnset": {
+    "l": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 891,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    },
+    "r": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 911,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    }
+  },
+  "outputCeiling": {
+    "l": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 236.0
+    },
+    "r": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 233.0
+    }
+  },
+  "driveNegativeRuns": {
+    "l": [],
+    "r": [
+      {
+        "firstSequence": 55410,
+        "lastSequence": 55410,
+        "samples": 1,
+        "elapsedSampleSpanMs": 0,
+        "minimumNormalizedCounts10ms": -1
+      }
+    ]
+  },
+  "signedRawTotalDeltaLeftRight": [
+    -4653,
+    4688
+  ],
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "limits": [
+    "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+    "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+    "Saturation duration is sample-window attribution, not electrical timing.",
+    "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+    "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+  ],
+  "sourceTrace": ".build\\phase2-calibration-20261108\\heartbeat-diag-20261109_2\\export-ground-target40-cap250-1500-01\\trace.json",
+  "operatorObservation": {
+    "forwardMm": 410,
+    "reportedForwardErrorMm": 20,
+    "lateralRightPositiveMm": -2,
+    "normalAndStopConfirmed": true,
+    "abnormalitiesReported": "all normal",
+    "errorIsStatisticalConfidenceInterval": false
+  },
+  "heartbeatDiagnostic": {
+    "rawReply": "[HB_DIAG] frozen=1 reason=1 stop=555360 lease=555271 age=89 rx_h=26/555268/272 parsed_h=26/555271/274 accepted_h=26/555271/274 radio_rx=19170/19249 quiet=1",
+    "coveredByTraceCrc": false,
+    "instrumentedBuild": true
+  },
+  "stopWheelReview": {
+    "schemaVersion": "smartcar.response-stop-wheel-review/1",
+    "source": "export-ground-target40-cap250-1500-01/trace.json",
+    "crcVerified": true,
+    "softwareZeroMs": 555360,
+    "stopSampleBracketOffsetsMs": [
+      -9,
+      1
+    ],
+    "candidateCountsPerMetre": {
+      "left": 11394,
+      "right": 11389
+    },
+    "wheelMetrics": {
+      "left": {
+        "wholeCaptureWheelMm": 408.37282780410743,
+        "postZeroSampleBracketWheelMm": [
+          204.31806213796736,
+          209.32069510268562
+        ],
+        "preZeroWindowSpeeds": [
+          {
+            "windowMs": 50,
+            "wheelMps": 0.43531683342109884
+          },
+          {
+            "windowMs": 100,
+            "wheelMps": 0.43268386870282605
+          },
+          {
+            "windowMs": 200,
+            "wheelMps": 0.42127435492364407
+          }
+        ],
+        "withinReportedForwardRange": true
+      },
+      "right": {
+        "wholeCaptureWheelMm": 411.6252524365616,
+        "postZeroSampleBracketWheelMm": [
+          204.58336991834224,
+          209.41259109667223
+        ],
+        "preZeroWindowSpeeds": [
+          {
+            "windowMs": 50,
+            "wheelMps": 0.4425322679778734
+          },
+          {
+            "windowMs": 100,
+            "wheelMps": 0.4249714636930371
+          },
+          {
+            "windowMs": 200,
+            "wheelMps": 0.4223373430503117
+          }
+        ],
+        "withinReportedForwardRange": true
+      }
+    },
+    "zeroToleranceSensitivity": [
+      {
+        "toleranceCountsPerSample": 0,
+        "lastAboveOffsetMs": 1121,
+        "firstFinalTailOffsetMs": 1131,
+        "finalTailDurationMs": 880,
+        "physicalStopVerified": false
+      },
+      {
+        "toleranceCountsPerSample": 1,
+        "lastAboveOffsetMs": 1071,
+        "firstFinalTailOffsetMs": 1081,
+        "finalTailDurationMs": 930,
+        "physicalStopVerified": false
+      },
+      {
+        "toleranceCountsPerSample": 2,
+        "lastAboveOffsetMs": 881,
+        "firstFinalTailOffsetMs": 891,
+        "finalTailDurationMs": 1120,
+        "physicalStopVerified": false
+      }
+    ],
+    "postZeroSubmittedPwmAllZero": true,
+    "productionApproved": false,
+    "limits": [
+      "Wheel-domain measures with unapproved scale; not independent ground stopping distance.",
+      "Zero-output event is software submission, not electrical PWM or mechanical stop.",
+      "Threshold sensitivity is descriptive; no production stop threshold adopted.",
+      "Single run, actual battery voltage unmeasured; no brake or jerk bound inferred."
+    ]
+  },
+  "performanceAccepted": false,
+  "scaleApproved": false,
+  "brakeBoundaryApproved": false
+}

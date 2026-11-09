@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "smartcar.turn-review/1",
+  "version": "PHASE2_TURN_GEOMETRY_20261109_1",
+  "config": {
+    "requestPermille": 170,
+    "durationMs": 1000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 0,
+    "servoUs": 1600
+  },
+  "info": {
+    "generation": 2,
+    "start_ms": 253478,
+    "stop_ms": 254270,
+    "count": 281,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 0,
+    "crc32": 1271683195
+  },
+  "verification": {
+    "crcVerified": true,
+    "rows": 281,
+    "postZeroMs": 2000,
+    "admissionSeedResetOffsetMs": 0,
+    "softwarePwmMaxUnits10000": 1700,
+    "productionApproved": false,
+    "electricalPwmVerified": false,
+    "mechanicalStopVerified": false
+  },
+  "heartbeatDiagnostic": {
+    "rawReply": "[HB_DIAG] frozen=1 reason=5 stop=254270 lease=254245 age=25 rx_h=14/254245/78 parsed_h=14/254245/78 accepted_h=14/254245/78 radio_rx=5978/6021 quiet=1",
+    "coveredByTraceCrc": false,
+    "instrumentedBuild": true
+  },
+  "rawDeltaLeftRight": [
+    -1035,
+    236
+  ],
+  "faultValues": [
+    0,
+    256
+  ],
+  "faultDetails": [
+    0,
+    12
+  ],
+  "rawRanges": {
+    "rl": [
+      -68,
+      6
+    ],
+    "rr": [
+      -2,
+      23
+    ]
+  },
+  "operatorObservation": {
+    "stoppedConfirmed": true,
+    "leftRightRelativeSpeed": null,
+    "abnormalSoundsOrBindingReported": false,
+    "originalReply": "停稳;没注意,时间太大UN了;无"
+  },
+  "operatorConfirmationPending": false,
+  "groundTestExecuted": false,
+  "productionApproved": false
+}

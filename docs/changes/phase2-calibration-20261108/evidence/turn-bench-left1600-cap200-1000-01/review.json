@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "smartcar.turn-review/1",
+  "version": "PHASE2_TURN_GEOMETRY_20261109_1",
+  "config": {
+    "requestPermille": 200,
+    "durationMs": 1000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 0,
+    "servoUs": 1600
+  },
+  "info": {
+    "generation": 1,
+    "start_ms": 93615,
+    "stop_ms": 94410,
+    "count": 281,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 0,
+    "crc32": 2819618230
+  },
+  "verification": {
+    "crcVerified": true,
+    "rows": 281,
+    "postZeroMs": 2000,
+    "admissionSeedResetOffsetMs": 0,
+    "softwarePwmMaxUnits10000": 1780,
+    "productionApproved": false,
+    "electricalPwmVerified": false,
+    "mechanicalStopVerified": false
+  },
+  "heartbeatDiagnostic": {
+    "rawReply": "[HB_DIAG] frozen=1 reason=5 stop=94410 lease=94379 age=31 rx_h=14/94379/157 parsed_h=14/94379/155 accepted_h=14/94379/155 radio_rx=356/398 quiet=1",
+    "coveredByTraceCrc": false,
+    "instrumentedBuild": true
+  },
+  "rawDeltaLeftRight": [
+    -1181,
+    283
+  ],
+  "faultValues": [
+    0,
+    256
+  ],
+  "faultDetails": [
+    0,
+    12
+  ],
+  "operatorObservation": {
+    "frontWheelsLeftConfirmed": true,
+    "bothDriveWheelsForwardConfirmed": true,
+    "leftFaster": null,
+    "stoppedConfirmed": true,
+    "abnormalSoundsOrBindingExplicitlyAnswered": false
+  },
+  "interpretation": "Short-arc left raw74 exceeds60; fault detail12; heartbeat not timed out. First software zero reason0 precedes fault cancellation reason5.",
+  "groundTestExecuted": false,
+  "productionApproved": false
+}

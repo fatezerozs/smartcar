@@ -1,0 +1,14 @@
+{
+  "recordedAtUtc": "2026-11-08T16:25:48.795184+00:00",
+  "rawReply": "5;0;几乎不前进",
+  "sequence": 14,
+  "requestPermille": 190,
+  "durationMs": 2500,
+  "forwardMm": 5,
+  "lateralRightPositiveMm": 0,
+  "operatorObservation": "几乎不前进",
+  "motorPowerContinuouslyOnConfirmed": null,
+  "accepted": null,
+  "exclusionReason": null,
+  "productionApproved": false
+}

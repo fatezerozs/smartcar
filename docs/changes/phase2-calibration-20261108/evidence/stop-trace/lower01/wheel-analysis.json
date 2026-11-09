@@ -1,0 +1,170 @@
+{
+  "schemaVersion": "smartcar.stop-wheel-analysis/1",
+  "checks": {
+    "interval_min_ms": 5,
+    "interval_max_ms": 10,
+    "post_zero_capture_ms": 2005,
+    "crc_verified": true,
+    "physical_pwm_or_mechanical_stop_verified": false
+  },
+  "conversion": {
+    "circumferenceM": 0.189,
+    "leftCpr": 2335.8,
+    "rightCpr": 2358.6,
+    "forwardRawMultipliers": [
+      -1,
+      1
+    ],
+    "uncertaintyVerified": false
+  },
+  "stopReason": 1,
+  "captureSpanMs": 4705,
+  "stopOffsetFromCaptureStartMs": 2700,
+  "bracketingSamplesOffsetMs": [
+    -5,
+    5
+  ],
+  "preZeroWheelSpeeds": [
+    {
+      "requestedWindowMs": 50,
+      "actualWindowMs": 50.0,
+      "endOffsetFromSoftwareZeroMs": -5,
+      "leftWheelMps": 0.38677112766503974,
+      "rightWheelMps": 0.3814296616636988
+    },
+    {
+      "requestedWindowMs": 100,
+      "actualWindowMs": 100.0,
+      "endOffsetFromSoftwareZeroMs": -5,
+      "leftWheelMps": 0.38596198304649365,
+      "rightWheelMps": 0.3678071737471381
+    },
+    {
+      "requestedWindowMs": 200,
+      "actualWindowMs": 200.0,
+      "endOffsetFromSoftwareZeroMs": -5,
+      "leftWheelMps": 0.3596647829437451,
+      "rightWheelMps": 0.359793945560926
+    }
+  ],
+  "wheelDistances": {
+    "left": {
+      "sampleBracketDistanceM": [
+        0.1656319034163884,
+        0.16983945543282813
+      ],
+      "signedWholeCaptureDistanceM": 0.3475276136655535
+    },
+    "right": {
+      "sampleBracketDistanceM": [
+        0.16443144238107352,
+        0.16859832103790384
+      ],
+      "signedWholeCaptureDistanceM": 0.3461714576443653
+    }
+  },
+  "settlingToleranceSensitivity": [
+    {
+      "toleranceCountsPer10ms": 0,
+      "lastAboveToleranceOffsetMs": 1015,
+      "firstFinalTailSampleOffsetMs": 1025,
+      "capturedTailDurationMs": 990,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPer10ms": 1,
+      "lastAboveToleranceOffsetMs": 885,
+      "firstFinalTailSampleOffsetMs": 895,
+      "capturedTailDurationMs": 1120,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPer10ms": 2,
+      "lastAboveToleranceOffsetMs": 805,
+      "firstFinalTailSampleOffsetMs": 815,
+      "capturedTailDurationMs": 1200,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    }
+  ],
+  "postZeroReverseSignedSamples": [
+    {
+      "offsetMs": 875,
+      "rawLeft": 0,
+      "rawRight": -2
+    },
+    {
+      "offsetMs": 885,
+      "rawLeft": 2,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 895,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 905,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 915,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 925,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 935,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 945,
+      "rawLeft": 0,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 955,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 965,
+      "rawLeft": 1,
+      "rawRight": 0
+    },
+    {
+      "offsetMs": 975,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 995,
+      "rawLeft": 1,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 1015,
+      "rawLeft": 0,
+      "rawRight": -1
+    }
+  ],
+  "productionApproved": false,
+  "physicalStoppingDistanceM": null,
+  "brakeDecelerationMps2": null,
+  "jerkLimitMps3": null,
+  "limits": [
+    "Wheel-domain observation, not independently verified ground velocity/distance.",
+    "Software PWM submissions, not measured electrical reload timing.",
+    "Sampling bracket excludes scale, slip and timing uncertainty.",
+    "Tolerance sensitivity is descriptive; no production zero-speed threshold adopted.",
+    "One run and unmeasured battery/load variation cannot establish a safe brake bound."
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "speed-planning-visual-trace",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.825469,
+  "exitCode": 0,
+  "startedAt": "2026-11-08T20:17:16.880+00:00",
+  "finishedAt": "2026-11-08T20:17:17.705+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\planning\\test_visual_supervisor_replay.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\speed-planning-visual-trace\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.823993,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261108T201710-042efde01c\\suites\\speed-planning-visual-trace",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Hybrid: 750 measured visual metadata frames and native C supervisor, synthetic zero-speed encoder; no distance, PI, metric-planner, target or production calibration claim",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "operatorReply": "远场已遮挡",
+  "stage": "STATIC_FAR_OCCLUSION",
+  "expectedCal": [
+    1,
+    0
+  ],
+  "calReports": [
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "allReportsMatchExpected": true,
+  "visionReports": [
+    {
+      "processedCount": 22658,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22683,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22708,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22733,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22758,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22783,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22808,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22833,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22858,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22883,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22908,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22933,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22958,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 22983,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23008,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23033,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23058,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23083,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23108,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23133,
+      "valid": 1,
+      "quality": 60
+    },
+    {
+      "processedCount": 23158,
+      "valid": 1,
+      "quality": 60
+    }
+  ],
+  "visualInspection": "First raw-preview image inspected: opaque board covers distant lane; near white lane remains visible. No per-frame synchronized image/state proof.",
+  "rawEvidenceSha256": {
+    "far.console.txt": "85b2eebfe0fc4bda278660ac9700652ca775dc5cbccfabe2edaf97c0c34eac7d",
+    "far.log": "b1edb75871cd15a07d805ee940b2d0a7a0963e6901af4d3e44ff0e4d9a40ed8b",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000001.gray": "ec225b8b5d5f2092c107bd45d705ed6bb90e34a1c4cf79ddfc01bf4ce484bb4a",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000001.png": "5bb60a83285228530d7cf70c31f9b76a0cad6c65f8e4b07d92ac3bc0bc7a03d0",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000001.preview.png": "5a86db8de6e37192b4938bf442f448d6b00bae7787c908d2dae0143d0cc4cefd",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000002.gray": "c042e2197ab700e5f6c60ad4480e31608597a03236c41614c24a7f8ea505cac0",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000002.png": "4bc3e760a75db2110415dc5d0cd50c55bdf556df3ebda2942bebb552190dcb7d",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000002.preview.png": "c8a3ea3646cd1cacac98357f42102cdae92190f98630cb9cb4c039eb8b3dfa00",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000003.gray": "7962efe022274458ee472ef6ea6ad92066082ef03c7c3eb2b6e86160b8ef83b3",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000003.png": "c3770774c979dc0e49b68c2314656998f41f2a03fd2145c1c30d168627c0b34e",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frame-000003.preview.png": "070a9e10bfe3adde572d64333612370946f3f40978021f3042cd0e07f75856c4",
+    "images\\camera-g-20261109-030157-869-77c0085d\\frames.csv": "cf0b0d18e6be8f8f26e3453bde39fb074b3dab85ef293234b3c8703cc211332d",
+    "images\\camera-g-20261109-030157-869-77c0085d\\received.bin": "0382d262844fd07e701e44b68eeb4f51c20cf948f458b300a886c6d85f0949a1",
+    "images\\camera-g-20261109-030157-869-77c0085d\\session.json": "851cb8ff8012e7bc8923ea48c3074bc1cc07b1a4ecefe941b3d8bf4099aa4448"
+  },
+  "recoveryNotYetMeasured": true,
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false
+}

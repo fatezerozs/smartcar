@@ -1,0 +1,40 @@
+r=0.7800 far=0.4600 half=0.0350
+[MOTOR] confirmed=1 dir=1/1 scale=1.0000/1.0000
+[BENCH] seq=0 kind=0 channel=0 value=0 level=0 hold_ms=0 active=0
+[STARTUP] enabled=0 delay_ms=2000 state=0 restored=0 switch_seen=0 closed=0 local=0
+[STORE] valid=0 slot=0 generation=0 error=1
+[MOTION] STARTED kind=1 requested=200 duration_ms=2500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=137531
+[SPEED] ms=137531 sample=13721 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=137631
+[SPEED] ms=137631 sample=13730 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=0 servo_us=1550 ms=137731
+[SPEED] ms=137731 sample=13740 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=29 servo_us=1550 ms=137831
+[SPEED] ms=137831 sample=13750 enabled=1 raw3_L=0 raw4_R=0 target_R/L=4/4 measured_R/L=0/0 pwm_R/L=9/9 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=60 servo_us=1550 ms=137931
+[SPEED] ms=137931 sample=13760 enabled=1 raw3_L=0 raw4_R=0 target_R/L=8/8 measured_R/L=0/0 pwm_R/L=23/23 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=90 servo_us=1550 ms=138031
+[SPEED] ms=138031 sample=13770 enabled=1 raw3_L=0 raw4_R=0 target_R/L=13/13 measured_R/L=0/0 pwm_R/L=43/43 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=119 servo_us=1550 ms=138131
+[SPEED] ms=138131 sample=13780 enabled=1 raw3_L=0 raw4_R=0 target_R/L=17/17 measured_R/L=0/0 pwm_R/L=66/66 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=149 servo_us=1550 ms=138231
+[SPEED] ms=138231 sample=13790 enabled=1 raw3_L=0 raw4_R=0 target_R/L=22/22 measured_R/L=0/0 pwm_R/L=95/95 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=180 servo_us=1550 ms=138331
+[SPEED] ms=138331 sample=13800 enabled=1 raw3_L=0 raw4_R=0 target_R/L=26/26 measured_R/L=0/0 pwm_R/L=126/126 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138431
+[SPEED] ms=138431 sample=13810 enabled=1 raw3_L=-1 raw4_R=1 target_R/L=30/30 measured_R/L=1/1 pwm_R/L=160/160 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138531
+[SPEED] ms=138531 sample=13820 enabled=1 raw3_L=-3 raw4_R=3 target_R/L=30/30 measured_R/L=3/3 pwm_R/L=183/183 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138631
+[SPEED] ms=138631 sample=13830 enabled=1 raw3_L=-8 raw4_R=7 target_R/L=30/30 measured_R/L=7/8 pwm_R/L=199/198 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138731
+[SPEED] ms=138731 sample=13840 enabled=1 raw3_L=-15 raw4_R=13 target_R/L=30/30 measured_R/L=13/15 pwm_R/L=199/197 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138831
+[SPEED] ms=138831 sample=13850 enabled=1 raw3_L=-14 raw4_R=18 target_R/L=30/30 measured_R/L=18/14 pwm_R/L=198/200 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=138931
+[SPEED] ms=138931 sample=13860 enabled=1 raw3_L=-14 raw4_R=16 target_R/L=30/30 measured_R/L=16/14 pwm_R/L=200/200 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=139031
+[SPEED] ms=139031 sample=13870 enabled=1 raw3_L=-7 raw4_R=7 target_R/L=30/30 measured_R/L=7/7 pwm_R/L=200/200 faults=0; counts/10ms
+[MOTION] seq=1 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=139131
+[SPEED] ms=139131 sample=13880 enabled=1 raw3_L=-13 raw4_R=14 target_R/L=30/30 measured_R/L=14/13 p

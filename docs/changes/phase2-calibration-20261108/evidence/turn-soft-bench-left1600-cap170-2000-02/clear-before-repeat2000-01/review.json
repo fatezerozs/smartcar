@@ -1,0 +1,10 @@
+{
+  "motionCommandSent": false,
+  "owner": "[LINK] port=radio owner=radio rx=12653 tx=2610901 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+  "version": "[FIELD] build=PHASE2_TURN_GEOMETRY_20261109_2; @status, @startup, @servo, @motor, @motor_dir, @balance, @encoder_sign, @speed_cfg, @speed_mode",
+  "infoBefore": "[RESPONSE_INFO] gen=2 start_ms=887572 stop_ms=888570 count=301 recording=0 frozen=1 stop_seen=1 overflow=0 reason=0 crc=02D04313",
+  "clear": "[SPEED] OK; stopped; RAM only; enable requires encoder signs, PI config, balance=1/1, 0<cap<=0.60; response_run cap<=requested; normal_request=450; @encoder_status readback",
+  "speed": "[SPEED] enabled=0 max_ticks=23 kp=2.0000 ki=0.0977 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops",
+  "infoAfter": "[RESPONSE_INFO] gen=2 start_ms=887572 stop_ms=888570 count=301 recording=0 frozen=1 stop_seen=1 overflow=0 reason=0 crc=02D04313",
+  "cleared": true
+}

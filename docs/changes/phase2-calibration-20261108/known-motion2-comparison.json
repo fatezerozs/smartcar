@@ -1,0 +1,169 @@
+{
+  "version": "MOTION_DIAG_2",
+  "axf": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\known-motion2-20261108T155749526152Z\\Objects\\rt1064.axf",
+  "axfSha256": "f9ac18f61a43eb8c0775dbfc19c61c43542ca769d57d3b0c6eaeddb033191649",
+  "project": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\known-motion2-20261108T155749526152Z\\known_motion2_download.uvprojx",
+  "exactHistoricalTestedArtifact": true,
+  "flashed": true,
+  "purpose": "Isolate current diagnostic versus previously operator-confirmed wireless motor drive; no new cap increase.",
+  "limits": "No encoder speed feedback in this firmware; use physical observations. Existing historical acceptance does not prove current mechanical conditions.",
+  "programAndVerifyPassed": true,
+  "runtimeIdentityVerified": true,
+  "motionSent": true,
+  "evidenceSha256": {
+    "evidence/known-motion2/flash-20261108T155837108Z.log": "b943449daa88a53b31dbe6b7870e73af8cc8e88f23409b77b1cf2160a103350b",
+    "evidence/known-motion2/after-flash-radio-status-20261108T155858751Z.log": "876f27b6d6a8ba6ea53cc7a28ad44e02ad9a83a100b1e2042513900c8ddc5df0",
+    "evidence/known-motion2/after-reset-radio-status-20261108T155946308Z.log": "e1308171006e4879179ffd6ebfc7d14de789a3a75022123bb05fe638c1eb5fa5",
+    "evidence/known-motion2/restore-ram-20261108T160119035Z.log": "9f97fda8c52637a30b6477f5e729d647174da7bb1679bd184a5a42f50e04fb1a",
+    "evidence/known-motion2/radio-baseline-run-20261108T160255225Z.console.txt": "0e921cedb2d7e80ad9347824cd08eb7691ab24bb3d6e5de8b8f06e974274e5d7",
+    "evidence/known-motion2/after-reject-status-20261108T160304375Z.log": "525a393354e7b04e9a73a1137bf3e7668440beb659fa70edd18f8c449e21ed4f",
+    "evidence/known-motion2/radio-baseline-retry-20261108T160422107Z.console.txt": "eb2af7d3701d3077e194a4477feec6dcc912b59c0124d44ffd97bd94a5452af0",
+    "evidence/known-motion2/20261109-000422-526.jsonl": "ff45a4f1d3d0c5feb43ba08088435e9d33d92d8180d201fddf35455816ae64c2",
+    "evidence/known-motion2/drive-mode-check-20261108T160403400Z.log": "d2e2d91d3a10db94dfd3ae179e2bcab7064ec547e06fc1023e36dfa2dabc978c",
+    "evidence/known-motion2/usb-same-profile-run-20261108T160534983Z.console.txt": "89975f330830870340874292af7907b48f6df169cafcec3c145ed13166c6f127",
+    "evidence/known-motion2/20261109-000535-377.jsonl": "625f374e807a2759821b02c97be5b1dd52324b87a30cd23f9aab3981b530614a",
+    "evidence/known-motion2/radio-equal150-run-20261108T160658501Z.console.txt": "e839cd066019f1333d47e601776abcc790b6647645337aafd77d95c1d463944a",
+    "evidence/known-motion2/20261109-000658-898.jsonl": "e273f077c2e63d1305d92acca5a6edd577e23bddb288fab2222a7e3036ad99a2",
+    "evidence/known-motion2/equal150-balance-20261108T160639731Z.log": "3c3e27ee0cefa7798d1617b81b430905fbf3e763946b91112373536cb380ddb2",
+    "evidence/known-motion2/radio-equal150-power-on-retry-20261108T160759175Z.console.txt": "d8bf6f8b60858cca03529aee141f3ed8abcf12367294f663435cf92f91d73e77",
+    "evidence/known-motion2/power-retry-reject-status-20261108T160808332Z.log": "0a2820ab8f03bb4a0b3288fa35873475770142a84162fd59b5d5495baaf2c645",
+    "evidence/known-motion2/power-on-restore-config-20261108T160831382Z.log": "b7c59cd5877116b7cc3a5815c4951a1d9179c146165adf9205716c5e26d4dc16",
+    "evidence/known-motion2/power-on-restore-config-20261108T160831382Z.log.console.txt": "269f480aeab22964b71e6ef99fbf5ed30ecff4ee5430ec383d81dc5f12527924",
+    "evidence/known-motion2/power-on-config-20261108T160847457Z.log": "a77f7d279fe32930fc63ccbd3878ec06dd69aff73dde7f33c02ee40101427634",
+    "evidence/known-motion2/power-on-config-20261108T160847457Z.log.console.txt": "177c6a9da680ee2b0de85ea32b36fc53ccde339bba91e52e8db015953789e7bb",
+    "evidence/known-motion2/radio-powered-restored-run-20261108T160909316Z.console.txt": "6ca72100c494ecf9387e7f08b20b69a81ddb1a56a5ae6f477071be85110cf639",
+    "evidence/known-motion2/20261109-000909-703.jsonl": "60f1a990811fa409c01a1e28405079157f1f9892b0a709f994a8c4b162e961d8"
+  },
+  "status": "RADIO_RIGHT_REAR_PHYSICAL_DRIVE_CONFIRMED_LEFT_NO_START_AT150",
+  "runtimeQueryOutcome": "Exact version and radio owner verified; actual raw C26/C27=0/0 DRIVE, not requested OFF. DISARMED faults0, hardware/servo unconfigured and cap0. No motor action.",
+  "runtimeVersion": "MOTION_DIAG_2",
+  "modeReadback": {
+    "c26Raw": 1,
+    "c27Raw": 1,
+    "mode": "OBSERVE",
+    "expectedObserveMatched": true
+  },
+  "configurationRestored": true,
+  "configuration": {
+    "servoUs": [
+      1550,
+      1430,
+      1670
+    ],
+    "rightSign": -1,
+    "motorDirections": [
+      1,
+      1
+    ],
+    "balanceRightLeft": [
+      1,
+      1
+    ],
+    "cruise": 0,
+    "cap": 0.15,
+    "risePerSecond": 0.1,
+    "persistence": "RAM only"
+  },
+  "operatorModeCorrection": "已经回拨",
+  "attempts": [
+    {
+      "recordedAtUtc": "2026-11-08T16:03:35.741064+00:00",
+      "operatorReadiness": "架空动力就绪",
+      "request": "@motion line 150 2500",
+      "sentOnce": true,
+      "accepted": false,
+      "outcome": "MOTION REJECT; no STARTED acknowledgement",
+      "modeReadback": "OBSERVE C26=1 C27=1",
+      "configurationPreserved": true,
+      "physicalMovementConfirmed": false,
+      "reasonAssessment": "OBSERVE interlock prevents motion; no actuator fault inferred."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:04:38.640344+00:00",
+      "operatorReadiness": "两拨码已ON",
+      "request": "@motion line 150 2500",
+      "balanceRightLeft": [
+        1,
+        0.667
+      ],
+      "sentOnce": true,
+      "accepted": true,
+      "sequence": 1,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "modeReadback": "DRIVE C26=0 C27=0",
+      "operatorObservation": "两轮均未转",
+      "physicalMovementConfirmed": false
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:05:51.460672+00:00",
+      "request": "@motion line 150 2500",
+      "port": "COM14",
+      "role": "usb",
+      "balanceRightLeft": [
+        1,
+        0.667
+      ],
+      "configurationChanged": false,
+      "firmwareChanged": false,
+      "sentOnce": true,
+      "accepted": true,
+      "sequence": 2,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "operatorObservation": "两轮均未转",
+      "physicalMovementConfirmed": false,
+      "purpose": "Same-firmware same-profile lifted USB versus preceding radio comparison."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:07:17.780921+00:00",
+      "operatorRequest": "你看一下之前成功测试的参数,重新试一下呀",
+      "request": "@motion line 150 2500",
+      "port": "COM10",
+      "role": "radio",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "configurationChanged": "balance only, from 1/0.667 to 1/1",
+      "firmwareChanged": false,
+      "sentOnce": true,
+      "accepted": true,
+      "sequence": 3,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "operatorObservation": "再试一次,刚才我忘记开电源了",
+      "physicalMovementConfirmed": false,
+      "parameterProvenance": "Current-session ENCODER_SPEED_DIAG_5 equal150 lifted success; applied request/profile to MOTION_DIAG_2, not same firmware.",
+      "physicalOutcomeInterpretableForDrive": false,
+      "exclusionReason": "Operator reports motor power was not enabled for preceding run; do not use as firmware/transport failure evidence."
+    },
+    {
+      "recordedAtUtc": "2026-11-08T16:09:30.413880+00:00",
+      "request": "@motion line 150 2500",
+      "port": "COM10",
+      "role": "radio",
+      "balanceRightLeft": [
+        1,
+        1
+      ],
+      "resetObservedBeforeRun": true,
+      "configurationRestored": true,
+      "initialRequestRejectedUnconfigured": true,
+      "acceptedActionCount": 1,
+      "accepted": true,
+      "sequence": 1,
+      "finalPhase": 0,
+      "stopReason": 1,
+      "operatorObservation": "仅一轮转，已停稳",
+      "physicalMovementConfirmed": false,
+      "oneWheelMovementConfirmed": true,
+      "movingWheel": "right rear drive wheel",
+      "physicalStopConfirmedByOperator": true,
+      "bothWheelsMovementConfirmed": false,
+      "operatorSideConfirmation": "右后驱动轮"
+    }
+  ],
+  "motionAccepted": true,
+  "currentFinding": "Latest powered COM10 test physically moved right rear only; stopped confirmed. Native radio motor drive exists. Left startup is inconsistent at <=150 permille across prior USB/radio attempts; cause unresolved, no physical PWM measurement."
+}

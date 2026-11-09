@@ -1,0 +1,18 @@
+{
+  "version": "PHASE2_VISUAL_TRACE_20261109_1",
+  "info": {
+    "gen": 0,
+    "count": 0,
+    "active": 0,
+    "reason": 0,
+    "start": 0,
+    "cue1": 0,
+    "cue2": 0,
+    "finish": 0,
+    "cues": 0,
+    "capacity": 750,
+    "payload": 22624,
+    "baud": 921600,
+    "zero_pwm": 1
+  }
+}

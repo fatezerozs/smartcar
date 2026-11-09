@@ -1,0 +1,7 @@
+{
+  "rawInstruction": "以编码器为准,而后推进到下一步",
+  "workingAuthority": "Encoder cumulative counts and sample times with adoptedCPR/circumference",
+  "videoRole": "Auxiliary physical-motion/order-of-magnitude check",
+  "metrologicalAccuracyVerified": false,
+  "productionApproved": false
+}

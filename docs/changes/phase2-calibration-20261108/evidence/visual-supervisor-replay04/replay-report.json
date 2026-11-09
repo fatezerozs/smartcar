@@ -1,0 +1,1526 @@
+{
+  "schemaVersion": "smartcar.visual-supervisor-replay/1",
+  "sourceSession": "C:\\shengchanli\\smartCar\\smartcar\\docs\\changes\\phase2-calibration-20261108\\evidence\\visual-continuous\\session04",
+  "sourceSessionSha256": "6464a1a579d4419df95235452682ffb79116765f56e3e95d4e70065f2a74d970",
+  "evidence": "hybrid-measured-visual-metadata-and-synthetic-stationary-encoder",
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "sourceFrames": 750,
+  "sourceIntegrity": {
+    "schemaVersion": "smartcar.visual-trace-analysis/1",
+    "version": "PHASE2_VISUAL_TRACE_20261109_1",
+    "frames": 750,
+    "captureSpanMs": 14973,
+    "captureIntervalMs": {
+      "n": 749,
+      "min": 19,
+      "p50": 20.0,
+      "p95": 20.0,
+      "p99": 20.0,
+      "max": 20
+    },
+    "missingCaptureSequenceNumbers": 0,
+    "copyFailureCounterFirstLast": [
+      6,
+      6
+    ],
+    "controlValidFarCounts": {
+      "1/0": 331,
+      "1/1": 419
+    },
+    "independentBandSupportCounts": {
+      "1/0": 331,
+      "1/1": 419
+    },
+    "rawValidCounts": {
+      "1": 750
+    },
+    "quality": {
+      "n": 750,
+      "min": 49,
+      "p50": 62.0,
+      "p95": 89.0,
+      "p99": 90.0,
+      "max": 90
+    },
+    "softwareStagesMs": {
+      "captureToObserveReturn": {
+        "n": 750,
+        "min": 3,
+        "p50": 4.0,
+        "p95": 4.0,
+        "p99": 4.0,
+        "max": 4
+      },
+      "visionProcessing": {
+        "n": 750,
+        "min": 3,
+        "p50": 4.0,
+        "p95": 4.0,
+        "p99": 4.0,
+        "max": 4
+      },
+      "recordImageAndDiagnostics": {
+        "n": 750,
+        "min": 0,
+        "p50": 0.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 1
+      }
+    },
+    "controlRuns": [
+      {
+        "firstIndex": 0,
+        "lastIndex": 50,
+        "frames": 51,
+        "firstCaptureElapsedMs": 0,
+        "lastCaptureElapsedMs": 999,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 51,
+        "lastIndex": 51,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1019,
+        "lastCaptureElapsedMs": 1019,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 52,
+        "lastIndex": 54,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1039,
+        "lastCaptureElapsedMs": 1079,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 55,
+        "lastIndex": 55,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1099,
+        "lastCaptureElapsedMs": 1099,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 56,
+        "lastIndex": 58,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1119,
+        "lastCaptureElapsedMs": 1159,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 59,
+        "lastIndex": 59,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1179,
+        "lastCaptureElapsedMs": 1179,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 60,
+        "lastIndex": 62,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1199,
+        "lastCaptureElapsedMs": 1239,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 63,
+        "lastIndex": 75,
+        "frames": 13,
+        "firstCaptureElapsedMs": 1259,
+        "lastCaptureElapsedMs": 1499,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 76,
+        "lastIndex": 77,
+        "frames": 2,
+        "firstCaptureElapsedMs": 1519,
+        "lastCaptureElapsedMs": 1539,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 78,
+        "lastIndex": 80,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1559,
+        "lastCaptureElapsedMs": 1599,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 81,
+        "lastIndex": 82,
+        "frames": 2,
+        "firstCaptureElapsedMs": 1619,
+        "lastCaptureElapsedMs": 1639,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 83,
+        "lastIndex": 85,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1659,
+        "lastCaptureElapsedMs": 1699,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 86,
+        "lastIndex": 86,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1719,
+        "lastCaptureElapsedMs": 1719,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 87,
+        "lastIndex": 89,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1739,
+        "lastCaptureElapsedMs": 1779,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 90,
+        "lastIndex": 90,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1799,
+        "lastCaptureElapsedMs": 1799,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 91,
+        "lastIndex": 91,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1819,
+        "lastCaptureElapsedMs": 1819,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 92,
+        "lastIndex": 92,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1839,
+        "lastCaptureElapsedMs": 1839,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 93,
+        "lastIndex": 95,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1859,
+        "lastCaptureElapsedMs": 1899,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 96,
+        "lastIndex": 96,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1919,
+        "lastCaptureElapsedMs": 1919,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 97,
+        "lastIndex": 97,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1939,
+        "lastCaptureElapsedMs": 1939,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 98,
+        "lastIndex": 102,
+        "frames": 5,
+        "firstCaptureElapsedMs": 1959,
+        "lastCaptureElapsedMs": 2039,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 103,
+        "lastIndex": 273,
+        "frames": 171,
+        "firstCaptureElapsedMs": 2059,
+        "lastCaptureElapsedMs": 5457,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 274,
+        "lastIndex": 288,
+        "frames": 15,
+        "firstCaptureElapsedMs": 5477,
+        "lastCaptureElapsedMs": 5757,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 289,
+        "lastIndex": 292,
+        "frames": 4,
+        "firstCaptureElapsedMs": 5777,
+        "lastCaptureElapsedMs": 5837,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 293,
+        "lastIndex": 294,
+        "frames": 2,
+        "firstCaptureElapsedMs": 5857,
+        "lastCaptureElapsedMs": 5877,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 295,
+        "lastIndex": 296,
+        "frames": 2,
+        "firstCaptureElapsedMs": 5897,
+        "lastCaptureElapsedMs": 5917,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 297,
+        "lastIndex": 316,
+        "frames": 20,
+        "firstCaptureElapsedMs": 5937,
+        "lastCaptureElapsedMs": 6317,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 317,
+        "lastIndex": 317,
+        "frames": 1,
+        "firstCaptureElapsedMs": 6337,
+        "lastCaptureElapsedMs": 6337,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 318,
+        "lastIndex": 527,
+        "frames": 210,
+        "firstCaptureElapsedMs": 6357,
+        "lastCaptureElapsedMs": 10535,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 528,
+        "lastIndex": 528,
+        "frames": 1,
+        "firstCaptureElapsedMs": 10555,
+        "lastCaptureElapsedMs": 10555,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 529,
+        "lastIndex": 529,
+        "frames": 1,
+        "firstCaptureElapsedMs": 10575,
+        "lastCaptureElapsedMs": 10575,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 530,
+        "lastIndex": 548,
+        "frames": 19,
+        "firstCaptureElapsedMs": 10595,
+        "lastCaptureElapsedMs": 10955,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 549,
+        "lastIndex": 556,
+        "frames": 8,
+        "firstCaptureElapsedMs": 10975,
+        "lastCaptureElapsedMs": 11115,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 557,
+        "lastIndex": 578,
+        "frames": 22,
+        "firstCaptureElapsedMs": 11135,
+        "lastCaptureElapsedMs": 11555,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 579,
+        "lastIndex": 579,
+        "frames": 1,
+        "firstCaptureElapsedMs": 11575,
+        "lastCaptureElapsedMs": 11575,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 580,
+        "lastIndex": 581,
+        "frames": 2,
+        "firstCaptureElapsedMs": 11595,
+        "lastCaptureElapsedMs": 11615,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      },
+      {
+        "firstIndex": 582,
+        "lastIndex": 582,
+        "frames": 1,
+        "firstCaptureElapsedMs": 11635,
+        "lastCaptureElapsedMs": 11635,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 0
+        }
+      },
+      {
+        "firstIndex": 583,
+        "lastIndex": 749,
+        "frames": 167,
+        "firstCaptureElapsedMs": 11655,
+        "lastCaptureElapsedMs": 14973,
+        "state": {
+          "control_valid": 1,
+          "control_far_valid": 1
+        }
+      }
+    ],
+    "supportRuns": [
+      {
+        "firstIndex": 0,
+        "lastIndex": 50,
+        "frames": 51,
+        "firstCaptureElapsedMs": 0,
+        "lastCaptureElapsedMs": 999,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 51,
+        "lastIndex": 51,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1019,
+        "lastCaptureElapsedMs": 1019,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 52,
+        "lastIndex": 54,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1039,
+        "lastCaptureElapsedMs": 1079,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 55,
+        "lastIndex": 55,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1099,
+        "lastCaptureElapsedMs": 1099,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 56,
+        "lastIndex": 58,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1119,
+        "lastCaptureElapsedMs": 1159,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 59,
+        "lastIndex": 59,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1179,
+        "lastCaptureElapsedMs": 1179,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 60,
+        "lastIndex": 62,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1199,
+        "lastCaptureElapsedMs": 1239,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 63,
+        "lastIndex": 75,
+        "frames": 13,
+        "firstCaptureElapsedMs": 1259,
+        "lastCaptureElapsedMs": 1499,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 76,
+        "lastIndex": 77,
+        "frames": 2,
+        "firstCaptureElapsedMs": 1519,
+        "lastCaptureElapsedMs": 1539,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 78,
+        "lastIndex": 80,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1559,
+        "lastCaptureElapsedMs": 1599,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 81,
+        "lastIndex": 82,
+        "frames": 2,
+        "firstCaptureElapsedMs": 1619,
+        "lastCaptureElapsedMs": 1639,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 83,
+        "lastIndex": 85,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1659,
+        "lastCaptureElapsedMs": 1699,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 86,
+        "lastIndex": 86,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1719,
+        "lastCaptureElapsedMs": 1719,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 87,
+        "lastIndex": 89,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1739,
+        "lastCaptureElapsedMs": 1779,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 90,
+        "lastIndex": 90,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1799,
+        "lastCaptureElapsedMs": 1799,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 91,
+        "lastIndex": 91,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1819,
+        "lastCaptureElapsedMs": 1819,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 92,
+        "lastIndex": 92,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1839,
+        "lastCaptureElapsedMs": 1839,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 93,
+        "lastIndex": 95,
+        "frames": 3,
+        "firstCaptureElapsedMs": 1859,
+        "lastCaptureElapsedMs": 1899,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 96,
+        "lastIndex": 96,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1919,
+        "lastCaptureElapsedMs": 1919,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 97,
+        "lastIndex": 97,
+        "frames": 1,
+        "firstCaptureElapsedMs": 1939,
+        "lastCaptureElapsedMs": 1939,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 98,
+        "lastIndex": 102,
+        "frames": 5,
+        "firstCaptureElapsedMs": 1959,
+        "lastCaptureElapsedMs": 2039,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 103,
+        "lastIndex": 273,
+        "frames": 171,
+        "firstCaptureElapsedMs": 2059,
+        "lastCaptureElapsedMs": 5457,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 274,
+        "lastIndex": 288,
+        "frames": 15,
+        "firstCaptureElapsedMs": 5477,
+        "lastCaptureElapsedMs": 5757,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 289,
+        "lastIndex": 292,
+        "frames": 4,
+        "firstCaptureElapsedMs": 5777,
+        "lastCaptureElapsedMs": 5837,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 293,
+        "lastIndex": 294,
+        "frames": 2,
+        "firstCaptureElapsedMs": 5857,
+        "lastCaptureElapsedMs": 5877,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 295,
+        "lastIndex": 296,
+        "frames": 2,
+        "firstCaptureElapsedMs": 5897,
+        "lastCaptureElapsedMs": 5917,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 297,
+        "lastIndex": 316,
+        "frames": 20,
+        "firstCaptureElapsedMs": 5937,
+        "lastCaptureElapsedMs": 6317,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 317,
+        "lastIndex": 317,
+        "frames": 1,
+        "firstCaptureElapsedMs": 6337,
+        "lastCaptureElapsedMs": 6337,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 318,
+        "lastIndex": 527,
+        "frames": 210,
+        "firstCaptureElapsedMs": 6357,
+        "lastCaptureElapsedMs": 10535,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 528,
+        "lastIndex": 528,
+        "frames": 1,
+        "firstCaptureElapsedMs": 10555,
+        "lastCaptureElapsedMs": 10555,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 529,
+        "lastIndex": 529,
+        "frames": 1,
+        "firstCaptureElapsedMs": 10575,
+        "lastCaptureElapsedMs": 10575,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 530,
+        "lastIndex": 548,
+        "frames": 19,
+        "firstCaptureElapsedMs": 10595,
+        "lastCaptureElapsedMs": 10955,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 549,
+        "lastIndex": 556,
+        "frames": 8,
+        "firstCaptureElapsedMs": 10975,
+        "lastCaptureElapsedMs": 11115,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 557,
+        "lastIndex": 578,
+        "frames": 22,
+        "firstCaptureElapsedMs": 11135,
+        "lastCaptureElapsedMs": 11555,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 579,
+        "lastIndex": 579,
+        "frames": 1,
+        "firstCaptureElapsedMs": 11575,
+        "lastCaptureElapsedMs": 11575,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 580,
+        "lastIndex": 581,
+        "frames": 2,
+        "firstCaptureElapsedMs": 11595,
+        "lastCaptureElapsedMs": 11615,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      },
+      {
+        "firstIndex": 582,
+        "lastIndex": 582,
+        "frames": 1,
+        "firstCaptureElapsedMs": 11635,
+        "lastCaptureElapsedMs": 11635,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 0
+        }
+      },
+      {
+        "firstIndex": 583,
+        "lastIndex": 749,
+        "frames": 167,
+        "firstCaptureElapsedMs": 11655,
+        "lastCaptureElapsedMs": 14973,
+        "state": {
+          "near_band_support": 1,
+          "far_band_support": 1
+        }
+      }
+    ],
+    "cueRuns": [
+      {
+        "firstIndex": 0,
+        "lastIndex": 199,
+        "frames": 200,
+        "firstCaptureElapsedMs": 0,
+        "lastCaptureElapsedMs": 3978,
+        "state": {
+          "cue_bits": 0
+        }
+      },
+      {
+        "firstIndex": 200,
+        "lastIndex": 449,
+        "frames": 250,
+        "firstCaptureElapsedMs": 3998,
+        "lastCaptureElapsedMs": 8976,
+        "state": {
+          "cue_bits": 1
+        }
+      },
+      {
+        "firstIndex": 450,
+        "lastIndex": 749,
+        "frames": 300,
+        "firstCaptureElapsedMs": 8996,
+        "lastCaptureElapsedMs": 14973,
+        "state": {
+          "cue_bits": 3
+        }
+      }
+    ],
+    "productionBudgetCalibrated": false,
+    "limits": [
+      "Actual physical occlusion intervals require original-image annotation; cue bits are not ground truth.",
+      "Independent band support is algorithm geometry, not independently measured scene truth.",
+      "Static zero-PWM instrumented build; no RUNNING/MPC or exposure-to-electrical-PWM validation.",
+      "1ms time quantization; empirical maxima do not establish guaranteed limits."
+    ]
+  },
+  "referenceId": "C1-reference-v0.3-20261106",
+  "referenceSha256": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
+  "policy": {
+    "frameTimeoutMs": 100,
+    "encoderTimeoutMs": 30,
+    "zeroSamples": 3,
+    "zeroSpeedMps": 0.02,
+    "farDistanceM": 0.24
+  },
+  "syntheticInputs": {
+    "encoderValid": true,
+    "encoderSequence": "index+1",
+    "encoderMs": "observe_end_ms",
+    "odometerM": 0,
+    "speedMps": 0
+  },
+  "compilerFamily": "gcc",
+  "compilerMode": "optimized",
+  "compileCommand": [
+    "C:/Program Files/mingw64/bin/gcc.exe",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\visual-supervisor-replay04-final-v2",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\visual_supervisor_runner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\visual-supervisor-replay04-final-v2\\visual-supervisor.exe"
+  ],
+  "sourcesSha256": {
+    "visual_supervisor_runner.c": "766aae0c61a8b300d55b6954534ce169a00adf7e758b7ffafc6a2af0a0d4a6e8",
+    "speed_planner.c": "d0d6ee93c03c925cd0d075914b9a7aa9485d25433efc6529316076cf401f64e1",
+    "replay_visual_supervisor.py": "20b3af1d0dbf02713477928904aed0f93c78fcf9f2bbc73f2458a84d92e3b881"
+  },
+  "experiments": [
+    {
+      "case": "initial-admission-only",
+      "explicitArmIndex": 0,
+      "armAccepted": false,
+      "farBudgetMs": 600,
+      "farRecoveryFrames": 3,
+      "allRowsMatchIndependentOracle": true,
+      "transitions": [
+        {
+          "index": 0,
+          "captureElapsedMs": 0,
+          "mode": "DISARMED"
+        }
+      ],
+      "finalMode": "DISARMED",
+      "csvSha256": "42daea25cebb8286c5f8aad9014c9dfcb0d53bff260490ecdc1970f96f0c292a"
+    },
+    {
+      "case": "reference-time-budget",
+      "explicitArmIndex": 103,
+      "armAccepted": true,
+      "farBudgetMs": 600,
+      "farRecoveryFrames": 3,
+      "allRowsMatchIndependentOracle": true,
+      "transitions": [
+        {
+          "index": 0,
+          "captureElapsedMs": 0,
+          "mode": "DISARMED"
+        },
+        {
+          "index": 103,
+          "captureElapsedMs": 2059,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 274,
+          "captureElapsedMs": 5477,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 291,
+          "captureElapsedMs": 5817,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 293,
+          "captureElapsedMs": 5857,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 323,
+          "captureElapsedMs": 6457,
+          "mode": "CONTROLLED_STOP"
+        },
+        {
+          "index": 326,
+          "captureElapsedMs": 6517,
+          "mode": "STOP_LATCHED"
+        }
+      ],
+      "finalMode": "STOP_LATCHED",
+      "csvSha256": "300dd657e5986e037c0ce3ba84a7e854606864daafe345f6100a44db098fe550"
+    },
+    {
+      "case": "diagnostic-recovery-1",
+      "explicitArmIndex": 103,
+      "armAccepted": true,
+      "farBudgetMs": 10000,
+      "farRecoveryFrames": 1,
+      "allRowsMatchIndependentOracle": true,
+      "transitions": [
+        {
+          "index": 0,
+          "captureElapsedMs": 0,
+          "mode": "DISARMED"
+        },
+        {
+          "index": 103,
+          "captureElapsedMs": 2059,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 274,
+          "captureElapsedMs": 5477,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 289,
+          "captureElapsedMs": 5777,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 293,
+          "captureElapsedMs": 5857,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 295,
+          "captureElapsedMs": 5897,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 297,
+          "captureElapsedMs": 5937,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 317,
+          "captureElapsedMs": 6337,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 318,
+          "captureElapsedMs": 6357,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 528,
+          "captureElapsedMs": 10555,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 529,
+          "captureElapsedMs": 10575,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 530,
+          "captureElapsedMs": 10595,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 549,
+          "captureElapsedMs": 10975,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 557,
+          "captureElapsedMs": 11135,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 579,
+          "captureElapsedMs": 11575,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 580,
+          "captureElapsedMs": 11595,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 582,
+          "captureElapsedMs": 11635,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 583,
+          "captureElapsedMs": 11655,
+          "mode": "NORMAL_TRACK"
+        }
+      ],
+      "finalMode": "NORMAL_TRACK",
+      "csvSha256": "03e32506968bceac6a9aae5ad1f1ed2e846f1d7704eff864573f05a107cca148"
+    },
+    {
+      "case": "diagnostic-recovery-3",
+      "explicitArmIndex": 103,
+      "armAccepted": true,
+      "farBudgetMs": 10000,
+      "farRecoveryFrames": 3,
+      "allRowsMatchIndependentOracle": true,
+      "transitions": [
+        {
+          "index": 0,
+          "captureElapsedMs": 0,
+          "mode": "DISARMED"
+        },
+        {
+          "index": 103,
+          "captureElapsedMs": 2059,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 274,
+          "captureElapsedMs": 5477,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 291,
+          "captureElapsedMs": 5817,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 293,
+          "captureElapsedMs": 5857,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 532,
+          "captureElapsedMs": 10635,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 549,
+          "captureElapsedMs": 10975,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 559,
+          "captureElapsedMs": 11175,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 579,
+          "captureElapsedMs": 11575,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 585,
+          "captureElapsedMs": 11695,
+          "mode": "NORMAL_TRACK"
+        }
+      ],
+      "finalMode": "NORMAL_TRACK",
+      "csvSha256": "8bd4eddc0735345b46f0ec22171b5bc2bc75bb88a40117a54ff859691e012dbc"
+    },
+    {
+      "case": "diagnostic-recovery-5",
+      "explicitArmIndex": 103,
+      "armAccepted": true,
+      "farBudgetMs": 10000,
+      "farRecoveryFrames": 5,
+      "allRowsMatchIndependentOracle": true,
+      "transitions": [
+        {
+          "index": 0,
+          "captureElapsedMs": 0,
+          "mode": "DISARMED"
+        },
+        {
+          "index": 103,
+          "captureElapsedMs": 2059,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 274,
+          "captureElapsedMs": 5477,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 534,
+          "captureElapsedMs": 10675,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 549,
+          "captureElapsedMs": 10975,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 561,
+          "captureElapsedMs": 11215,
+          "mode": "NORMAL_TRACK"
+        },
+        {
+          "index": 579,
+          "captureElapsedMs": 11575,
+          "mode": "DEGRADED_FAR_LOSS"
+        },
+        {
+          "index": 587,
+          "captureElapsedMs": 11735,
+          "mode": "NORMAL_TRACK"
+        }
+      ],
+      "finalMode": "NORMAL_TRACK",
+      "csvSha256": "69c669cd798486dba2119f16b4c21a3083c4641b1a15c508b5d3345292a008e9"
+    }
+  ],
+  "observationRecoverySensitivity": {
+    "1": [
+      {
+        "firstIndex": 0,
+        "confirmedRecoveryIndex": 51,
+        "elapsedCaptureMs": 1019,
+        "leftCensored": true,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 52,
+        "confirmedRecoveryIndex": 55,
+        "elapsedCaptureMs": 60,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 56,
+        "confirmedRecoveryIndex": 59,
+        "elapsedCaptureMs": 60,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 60,
+        "confirmedRecoveryIndex": 63,
+        "elapsedCaptureMs": 60,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 76,
+        "confirmedRecoveryIndex": 78,
+        "elapsedCaptureMs": 40,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 81,
+        "confirmedRecoveryIndex": 83,
+        "elapsedCaptureMs": 40,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 86,
+        "confirmedRecoveryIndex": 87,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 90,
+        "confirmedRecoveryIndex": 91,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 92,
+        "confirmedRecoveryIndex": 93,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 96,
+        "confirmedRecoveryIndex": 97,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 98,
+        "confirmedRecoveryIndex": 103,
+        "elapsedCaptureMs": 100,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 274,
+        "confirmedRecoveryIndex": 289,
+        "elapsedCaptureMs": 300,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 293,
+        "confirmedRecoveryIndex": 295,
+        "elapsedCaptureMs": 40,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 297,
+        "confirmedRecoveryIndex": 317,
+        "elapsedCaptureMs": 400,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 318,
+        "confirmedRecoveryIndex": 528,
+        "elapsedCaptureMs": 4198,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 529,
+        "confirmedRecoveryIndex": 530,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 549,
+        "confirmedRecoveryIndex": 557,
+        "elapsedCaptureMs": 160,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 579,
+        "confirmedRecoveryIndex": 580,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 582,
+        "confirmedRecoveryIndex": 583,
+        "elapsedCaptureMs": 20,
+        "leftCensored": false,
+        "rightCensored": false
+      }
+    ],
+    "3": [
+      {
+        "firstIndex": 0,
+        "confirmedRecoveryIndex": 65,
+        "elapsedCaptureMs": 1299,
+        "leftCensored": true,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 76,
+        "confirmedRecoveryIndex": 80,
+        "elapsedCaptureMs": 80,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 81,
+        "confirmedRecoveryIndex": 85,
+        "elapsedCaptureMs": 80,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 86,
+        "confirmedRecoveryIndex": 89,
+        "elapsedCaptureMs": 60,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 90,
+        "confirmedRecoveryIndex": 95,
+        "elapsedCaptureMs": 100,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 96,
+        "confirmedRecoveryIndex": 105,
+        "elapsedCaptureMs": 180,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 274,
+        "confirmedRecoveryIndex": 291,
+        "elapsedCaptureMs": 340,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 293,
+        "confirmedRecoveryIndex": 532,
+        "elapsedCaptureMs": 4778,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 549,
+        "confirmedRecoveryIndex": 559,
+        "elapsedCaptureMs": 200,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 579,
+        "confirmedRecoveryIndex": 585,
+        "elapsedCaptureMs": 120,
+        "leftCensored": false,
+        "rightCensored": false
+      }
+    ],
+    "5": [
+      {
+        "firstIndex": 0,
+        "confirmedRecoveryIndex": 67,
+        "elapsedCaptureMs": 1339,
+        "leftCensored": true,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 76,
+        "confirmedRecoveryIndex": 107,
+        "elapsedCaptureMs": 620,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 274,
+        "confirmedRecoveryIndex": 534,
+        "elapsedCaptureMs": 5198,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 549,
+        "confirmedRecoveryIndex": 561,
+        "elapsedCaptureMs": 240,
+        "leftCensored": false,
+        "rightCensored": false
+      },
+      {
+        "firstIndex": 579,
+        "confirmedRecoveryIndex": 587,
+        "elapsedCaptureMs": 160,
+        "leftCensored": false,
+        "rightCensored": false
+      }
+    ]
+  },
+  "limits": [
+    "No image algorithm replay: uses stored controller validity flags.",
+    "Encoder, zero speed and zero path are synthetic, not synchronized vehicle measurements.",
+    "One supervisor call per acquired frame; no inter-frame10ms schedule or hardware output.",
+    "10s diagnostic budget is an intentionally permissive software experiment, never a proposed production value.",
+    "No distance-budget, metric planner, PI, actual stopping or MPC target validation."
+  ]
+}

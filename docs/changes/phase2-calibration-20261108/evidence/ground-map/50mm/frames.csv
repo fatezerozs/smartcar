@@ -1,0 +1,4 @@
+"sequence","frame","ms","host_received_at","mode","image","gray","state","heading","curvature","open_left","open_right","split","stripes","notes"
+"camera-g-20261109-022105-139-ff3d220b","1","654","2026-11-09T02:21:06.4225295+08:00","g","frame-000001.png","frame-000001.gray","","","","","","","",""
+"camera-g-20261109-022105-139-ff3d220b","2","1595","2026-11-09T02:21:07.3623126+08:00","g","frame-000002.png","frame-000002.gray","","","","","","","",""
+"camera-g-20261109-022105-139-ff3d220b","3","2608","2026-11-09T02:21:08.3753577+08:00","g","frame-000003.png","frame-000003.gray","","","","","","","",""

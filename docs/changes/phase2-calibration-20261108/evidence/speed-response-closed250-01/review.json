@@ -1,0 +1,61 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "requestedCeilingPermille": 250,
+  "targetTicks10ms": 23,
+  "durationRequestedMs": 1500,
+  "rows": 307,
+  "crcVerified": true,
+  "info": {
+    "generation": 4,
+    "start_ms": 276288,
+    "stop_ms": 277334,
+    "count": 307,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 0,
+    "crc32": 1557919729
+  },
+  "countDeltaLeftRight": [
+    -107,
+    19
+  ],
+  "ranges": {
+    "pr": [
+      0,
+      1350
+    ],
+    "pl": [
+      0,
+      1190
+    ],
+    "target_r": [
+      0,
+      22
+    ],
+    "target_l": [
+      0,
+      22
+    ],
+    "measured_r": [
+      -2,
+      6
+    ],
+    "measured_l": [
+      0,
+      23
+    ],
+    "faults": [
+      0,
+      256
+    ],
+    "detail": [
+      0,
+      8
+    ]
+  },
+  "operatorObservation": "pending",
+  "physicalTestPassed": false,
+  "productionApproved": false
+}

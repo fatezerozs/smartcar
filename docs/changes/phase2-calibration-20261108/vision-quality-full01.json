@@ -1,0 +1,224 @@
+{
+  "operatorReply": "全视野已遮挡",
+  "stage": "FULL_VIEW_TEXTURE_OCCLUSION",
+  "calReports": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "allControlObservationInvalid": true,
+  "visionReports": [
+    {
+      "processedCount": 57472,
+      "valid": 0,
+      "quality": 3
+    },
+    {
+      "processedCount": 57497,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 57522,
+      "valid": 0,
+      "quality": 1
+    },
+    {
+      "processedCount": 57547,
+      "valid": 1,
+      "quality": 31
+    },
+    {
+      "processedCount": 57572,
+      "valid": 0,
+      "quality": 3
+    },
+    {
+      "processedCount": 57597,
+      "valid": 0,
+      "quality": 22
+    },
+    {
+      "processedCount": 57622,
+      "valid": 0,
+      "quality": 20
+    },
+    {
+      "processedCount": 57647,
+      "valid": 1,
+      "quality": 26
+    },
+    {
+      "processedCount": 57672,
+      "valid": 0,
+      "quality": 21
+    },
+    {
+      "processedCount": 57697,
+      "valid": 1,
+      "quality": 26
+    },
+    {
+      "processedCount": 57722,
+      "valid": 0,
+      "quality": 17
+    },
+    {
+      "processedCount": 57747,
+      "valid": 1,
+      "quality": 51
+    },
+    {
+      "processedCount": 57772,
+      "valid": 0,
+      "quality": 1
+    },
+    {
+      "processedCount": 57797,
+      "valid": 0,
+      "quality": 17
+    },
+    {
+      "processedCount": 57822,
+      "valid": 0,
+      "quality": 1
+    },
+    {
+      "processedCount": 57847,
+      "valid": 0,
+      "quality": 4
+    },
+    {
+      "processedCount": 57872,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 57897,
+      "valid": 1,
+      "quality": 35
+    },
+    {
+      "processedCount": 57922,
+      "valid": 0,
+      "quality": 16
+    },
+    {
+      "processedCount": 57947,
+      "valid": 1,
+      "quality": 28
+    },
+    {
+      "processedCount": 57972,
+      "valid": 0,
+      "quality": 20
+    }
+  ],
+  "rawVisionValidReports": 6,
+  "visualInspection": "First preview inspected: textured material fills entire view; actual lane not visible. Not a black-frame or camera-stream-loss test.",
+  "rawEvidenceSha256": {
+    "full.console.txt": "6561905104ed4074149c112dacd1a709e0a7a43a52ae4d446929219b74cbcdb9",
+    "full.log": "e7d7b4404df495fa3f3959692f236e22304cd8aa2da4f353bc6cda082b7540e4",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000001.gray": "6c650aec81be047f4f5468eae33accbd0db64a993c8e094976083f9ffb502280",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000001.png": "8ca29a220aea10d63cae30a67091867af2c4a26b722d812f1d95446f30a77600",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000001.preview.png": "8d444cc34d331bf294859e7b9ff0ec4761dc2fae0e480ecf581f7efc9e4f75fe",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000002.gray": "4d8103f0670b8ccadf0f7c308c9ac1149ae32fefe207fc1b0b9d1f4042329385",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000002.png": "d75c894bf3dd8fa121d4cbda8cbc9b79a90dec73d90339c27b2ccb21bbf379c9",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000002.preview.png": "43cd733ed40e4b9ef2e4553bd836f7b1e562eed7eb343b8dd9309d1b6a2e608c",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000003.gray": "05219fe4b9e42fb3eb6e4d654f5b94b60d0c715e22c16ab6f0acfe59c47fb9a2",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000003.png": "350d21a812b6f7b890f9c447e5312efaeb66aac3fd939e0061b783a8d8fb5fc2",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frame-000003.preview.png": "2234950416e96ecf3e875c3ec81f476a0ecaabb2faacba0429ea5e823635599a",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\frames.csv": "d350dadaf96511da70931fb96b53f4ebd12e36ee2285fb7832cf4ccd0dd476a7",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\received.bin": "433be0b96b93743fc3b176cba2f7e6166a5e4ce92afdd312665874b148f7a810",
+    "images\\camera-g-20261109-031333-678-3b510ed0\\session.json": "942aade8a32d73e3f14924b322bfac0efbd39ff3edb4acaad8e31e82cb969931"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false,
+  "limits": [
+    "Sparse text reports do not establish every intervening frame rejection.",
+    "Raw vision valid and controller observation valid have different gates.",
+    "Not camera disconnect/frozen-frame testing or dynamic STOP testing.",
+    "Images and subsequent text are separate captures."
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "recordedAtUtc": "2026-11-08T16:27:21.869224+00:00",
+  "rawReply": "870;10;无",
+  "sequence": 15,
+  "firmware": "PHASE2_STARTUP_200_20261108_1",
+  "requestPermille": 200,
+  "durationMs": 3000,
+  "forwardMm": 870,
+  "lateralRightPositiveMm": 10,
+  "operatorReportsAnomaly": "无",
+  "referencePointFromPrompt": "Rear axle centre relative to marked start",
+  "unitsFromPrompt": "mm",
+  "productionApproved": false,
+  "brakingDistanceMeasured": false,
+  "repeatabilityVerified": false
+}

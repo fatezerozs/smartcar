@@ -1,0 +1,4 @@
+trial_id,quantity,value_mm,condition_id,instrument_id,measured_at,accepted,notes
+C01,camera_height_mm,330,,tape-01,,,User reports optical centre 330 mm above ground; time/load/pose details and repeated trials unconfirmed
+C02,camera_offset_forward_mm,197,,tape-01,,,197 mm forward horizontal projection from rear axle midpoint per preceding prompt; not an axle-length repeat
+C03,camera_offset_right_mm,0,,tape-01,,,User reports optical centre on vehicle centreline; actual alignment uncertainty and repeatability unknown

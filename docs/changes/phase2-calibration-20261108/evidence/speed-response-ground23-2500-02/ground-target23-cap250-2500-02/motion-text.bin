@@ -1,0 +1,17 @@
+NDS] near=0.7800 far=0.4600 half=0.0350
+[MOTOR] confirmed=1 dir=1/1 scale=1.0000/1.0000
+[BENCH] seq=0 kind=0 channel=0 value=0 level=0 hold_ms=0 active=0
+[STARTUP] enabled=0 delay_ms=2000 state=0 restored=0 switch_seen=0 closed=0 local=0
+[STORE] valid=0 slot=0 generation=0 error=1
+[MOTION] STARTED kind=1 requested=250 duration_ms=2500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast
+[MOTION] seq=4 kind=1 phase=1 reason=0 requested=250 actual=0 servo_us=1550 ms=863468
+[SPEED] ms=863468 sample=86314 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=4 kind=1 phase=1 reason=0 requested=250 actual=0 servo_us=1550 ms=863568
+[SPEED] ms=863568 sample=86324 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=4 kind=1 phase=1 reason=0 requested=250 actual=0 servo_us=1550 ms=863668
+[SPEED] ms=863668 sample=86334 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=4 kind=1 phase=2 reason=0 requested=250 actual=0 servo_us=1550 ms=863668
+[SPEED] ms=863668 sample=86334 enabled=1 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[MOTION] seq=4 kind=1 phase=2 reason=0 requested=250 actual=29 servo_us=1550 ms=863768
+[SPEED] ms=863768 sample=86344 enabled=1 raw3_L=0 raw4_R=0 target_R/L=2/2 measured_R/L=0/0 pwm_R/L=4/4 faults=0; counts/10ms
+[MOTION] seq=4 kind=1 phase=2 reaso

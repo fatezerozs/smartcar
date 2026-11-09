@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "smartcar.phase2-passive-distance-check/1",
+  "recordedAtUtc": "2026-11-08T17:45:18.100945+00:00",
+  "operatorReadiness": "准备就绪",
+  "requestedGroundDistanceMm": 1000,
+  "actualGroundDistanceMm": 1000,
+  "before": {
+    "totalLeft": -27549,
+    "totalRight": 27675,
+    "samples": 226548,
+    "sampleMs": 2265800,
+    "raw": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-27549 total4=27675 samples=226548 sample_ms=2265800 sign3=-1 sign4=1 confirmed=1"
+  },
+  "after": {
+    "totalLeft": -38888,
+    "totalRight": 39170,
+    "samples": 251980,
+    "sampleMs": 2520120,
+    "raw": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-38888 total4=39170 samples=251980 sample_ms=2520120 sign3=-1 sign4=1 confirmed=1"
+  },
+  "motorCommandSent": false,
+  "status": "SECOND_PASSIVE_DISTANCE_CHECK_RECORDED_REVIEW_PENDING",
+  "productionApproved": false,
+  "evidenceSha256": {
+    "evidence/passive-distance/push1000-repeat-before-20261108T174425876Z.log": "63299f503611567151cdc34ae8c12af432e4f7b2e8b4299e67437d1672de0743",
+    "evidence/passive-distance/push1000-repeat-after-20261108T174840255Z.log": "dd74c1dd1c96fdf3f1b3cba247fbfb7239bb8ff7b4aba3f0b9915db13f5e903d"
+  },
+  "operatorCompletion": "已推",
+  "distanceInterpretation": "1000mm per preceding explicit prompt; no different distance reported.",
+  "rawCountDeltasLeftRight": [
+    -11339,
+    11495
+  ],
+  "normalizedForwardCountDeltasLeftRight": [
+    11339,
+    11495
+  ],
+  "observedCountsPerMetreLeftRight": [
+    11339,
+    11495
+  ],
+  "oldBaselineCountsPerMetreLeftRight": [
+    12358.730158730159,
+    12479.36507936508
+  ],
+  "oldScaleDistanceMLeftRight": [
+    0.9174890829694323,
+    0.9211205800050878
+  ],
+  "distanceErrorRelativeToReportedPercentLeftRight": [
+    -8.251091703056767,
+    -7.887941999491222
+  ],
+  "limits": [
+    "Two independent user-reported1m pushes, distance/straightness uncertainty not quantified.",
+    "No revolution measurement; cannot isolateCPR versus rolling circumference versus count fidelity."
+  ]
+}

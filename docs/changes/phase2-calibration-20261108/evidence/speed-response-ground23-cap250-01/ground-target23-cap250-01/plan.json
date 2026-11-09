@@ -1,0 +1,16 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "command": "@motion line 250 1500",
+  "mode": "closed",
+  "targetTicks10ms": 23,
+  "closedLoopFeedforward": 0,
+  "normalStraightRequestPermille": 450,
+  "hardCapPermille": 600,
+  "configureRam": false,
+  "execute": true,
+  "scope": "One operator-prepared ground action",
+  "kpRequested": 2.0,
+  "kiRequested": 0.1,
+  "kpQ8": 512,
+  "kiQ8": 25
+}

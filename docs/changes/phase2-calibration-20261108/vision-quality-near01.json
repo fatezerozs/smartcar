@@ -1,0 +1,225 @@
+{
+  "operatorReply": "近场已遮挡",
+  "requestedCondition": "Near segment covered; far lane visible",
+  "observedCondition": "Broad occlusion includes both near and far image bands; bottom lane remnant visible",
+  "stage": "BROAD_OCCLUSION_NOT_ISOLATED_NEAR",
+  "isolatedNearTestConditionMet": false,
+  "calReports": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "allCalInvalid": true,
+  "visionReports": [
+    {
+      "processedCount": 31384,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31409,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31434,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31459,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31484,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31509,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31534,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31559,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31584,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31609,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31634,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31659,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31684,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31709,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31734,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31759,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31784,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31809,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31834,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31859,
+      "valid": 0,
+      "quality": 5
+    },
+    {
+      "processedCount": 31884,
+      "valid": 0,
+      "quality": 5
+    }
+  ],
+  "visualInspection": "First raw gray preview inspected: opaque material covers most central/upper image including far lane; cannot classify as near-only occlusion.",
+  "rawEvidenceSha256": {
+    "near.console.txt": "1f5f6ef8c1aa0bb3127f306020c5ac19f8115bc29a5f9024751545889e13ea34",
+    "near.log": "2ce1e9fb702c4019d5a93abf7ae1d78a07dba091581de7662700b411c2c570f1",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000001.gray": "d6553d5267428e188e24f99d13771609ff487d23778ad4f4049cad356383557b",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000001.png": "3290886cdc45ba06556d14e36cc18adbc93135feb51111c304e888dcb001eb45",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000001.preview.png": "b7dceb0105a2067e2b367e7be042d8a1c0e0f9f73a7be247a4282acff114ad6d",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000002.gray": "654e8cbf7b5fa19de7aa3e2561ce2b21abee0c887d62420b7d36af022cbf3496",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000002.png": "3650bef6523ec664dbb312c92cfdd647d9a544a7500ff6d10dba391f519075bc",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000002.preview.png": "023238a07ad7b6461e14f663bf8bdb4dd83c66bfd49c9bd78857c84220749e62",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000003.gray": "5eb622c72388e94717c73864dabe92ab6df21bbf367d2d48c3822b683fa84d93",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000003.png": "6ff8353fb4ddd62c48b174cfcdbd452fd6923974c5115f9c9e39116888760b43",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frame-000003.preview.png": "d5a21bf861a123e39b59e5497ac296c99104920b4252902470d2d9030bd4caea",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\frames.csv": "97d7f13a701d5c5fd39f373716d9da821d5ca9964b39b7017a74eb25b87038ee",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\received.bin": "d3275563111fd12bf4bb1e7d544c76ceba513b38e60e690f810008dedb57ae52",
+    "images\\camera-g-20261109-030452-220-a4d8e2b7\\session.json": "63fcd2aaef0eaf9d10b96342f0bb2337006240c0288275ff7ba9df903a3fbe08"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false,
+  "limits": [
+    "CAL far_ok=0 with invalid observation is not proof of independent far-band failure.",
+    "Broad occlusion, not completely opaque full-frame coverage.",
+    "Images and subsequent telemetry are separate captures."
+  ]
+}

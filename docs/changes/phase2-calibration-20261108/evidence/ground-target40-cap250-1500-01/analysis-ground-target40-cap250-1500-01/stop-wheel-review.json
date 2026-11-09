@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "smartcar.response-stop-wheel-review/1",
+  "source": "export-ground-target40-cap250-1500-01/trace.json",
+  "crcVerified": true,
+  "softwareZeroMs": 555360,
+  "stopSampleBracketOffsetsMs": [
+    -9,
+    1
+  ],
+  "candidateCountsPerMetre": {
+    "left": 11394,
+    "right": 11389
+  },
+  "wheelMetrics": {
+    "left": {
+      "wholeCaptureWheelMm": 408.37282780410743,
+      "postZeroSampleBracketWheelMm": [
+        204.31806213796736,
+        209.32069510268562
+      ],
+      "preZeroWindowSpeeds": [
+        {
+          "windowMs": 50,
+          "wheelMps": 0.43531683342109884
+        },
+        {
+          "windowMs": 100,
+          "wheelMps": 0.43268386870282605
+        },
+        {
+          "windowMs": 200,
+          "wheelMps": 0.42127435492364407
+        }
+      ]
+    },
+    "right": {
+      "wholeCaptureWheelMm": 411.6252524365616,
+      "postZeroSampleBracketWheelMm": [
+        204.58336991834224,
+        209.41259109667223
+      ],
+      "preZeroWindowSpeeds": [
+        {
+          "windowMs": 50,
+          "wheelMps": 0.4425322679778734
+        },
+        {
+          "windowMs": 100,
+          "wheelMps": 0.4249714636930371
+        },
+        {
+          "windowMs": 200,
+          "wheelMps": 0.4223373430503117
+        }
+      ]
+    }
+  },
+  "zeroToleranceSensitivity": [
+    {
+      "toleranceCountsPerSample": 0,
+      "lastAboveOffsetMs": 1121,
+      "firstFinalTailOffsetMs": 1131,
+      "finalTailDurationMs": 880,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPerSample": 1,
+      "lastAboveOffsetMs": 1071,
+      "firstFinalTailOffsetMs": 1081,
+      "finalTailDurationMs": 930,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPerSample": 2,
+      "lastAboveOffsetMs": 881,
+      "firstFinalTailOffsetMs": 891,
+      "finalTailDurationMs": 1120,
+      "physicalStopVerified": false
+    }
+  ],
+  "postZeroSubmittedPwmAllZero": true,
+  "productionApproved": false,
+  "limits": [
+    "Wheel-domain measures with unapproved scale; not independent ground stopping distance.",
+    "Zero-output event is software submission, not electrical PWM or mechanical stop.",
+    "Threshold sensitivity is descriptive; no production stop threshold adopted.",
+    "Single run, actual battery voltage unmeasured; no brake or jerk bound inferred."
+  ]
+}

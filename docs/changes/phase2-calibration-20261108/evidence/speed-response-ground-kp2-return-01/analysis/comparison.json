@@ -1,0 +1,146 @@
+{
+  "reports": [
+    {
+      "schemaVersion": "smartcar.speed-response-review/1",
+      "sourceSha256": "66a100bc3d6b7c71fa2d47ff7397e84b71e845d3f0eb69fbdda30da5a9eb4bc1",
+      "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+      "crcVerified": true,
+      "rows": 472,
+      "config": {
+        "requestPermille": 250,
+        "durationMs": 2500,
+        "profileCapPermille": 600,
+        "maximumTargetTicks10ms": 23,
+        "kpQ8": 512,
+        "kiQ8": 25,
+        "signLeftRawU32": 4294967295,
+        "signRightRawU32": 1,
+        "closedLoop": 1,
+        "servoUs": 1550
+      },
+      "firstZeroAfterArmMs": 2700,
+      "postZeroMs": 2007,
+      "stopReason": 1,
+      "faultDetailValues": [
+        0
+      ],
+      "faultValues": [
+        0
+      ],
+      "uniquePositiveTargetMatchedControls": 246,
+      "excludedZeroTargetPairingAnomalies": [
+        {
+          "heldAtSequence": 130893,
+          "controlSequence": 130892,
+          "controlElapsedMs": 204,
+          "targetLeftRight": [
+            0,
+            0
+          ],
+          "heldFeedbackLeftRight": [
+            27,
+            27
+          ],
+          "rawFeedbackLeftRight": [
+            0,
+            0
+          ],
+          "reason": "held feedback does not match source sample"
+        }
+      ],
+      "tailWindowsMs": {
+        "300": {
+          "uniqueControlSamples": 29,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": 30.551724137931036,
+            "rangeCounts10ms": [
+              24,
+              34
+            ],
+            "rmseCounts10ms": 7.84988469056536,
+            "samplesWithin2Counts": 1,
+            "maxOvershootCounts": 11
+          },
+          "r": {
+            "meanCounts10ms": 30.310344827586206,
+            "rangeCounts10ms": [
+              26,
+              32
+            ],
+            "rmseCounts10ms": 7.570359623398759,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 9
+          }
+        },
+        "500": {
+          "uniqueControlSamples": 49,
+          "notSteadyStateCertification": true,
+          "l": {
+            "meanCounts10ms": 31.20408163265306,
+            "rangeCounts10ms": [
+              24,
+              37
+            ],
+            "rmseCounts10ms": 8.54997314711143,
+            "samplesWithin2Counts": 2,
+            "maxOvershootCounts": 14
+          },
+          "r": {
+            "meanCounts10ms": 30.571428571428573,
+            "rangeCounts10ms": [
+              26,
+              35
+            ],
+            "rmseCounts10ms": 7.864931204857602,
+            "samplesWithin2Counts": 0,
+            "maxOvershootCounts": 12
+          }
+        }
+      },
+      "responseOnset": {
+        "l": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": 1097,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        },
+        "r": {
+          "thresholdCounts10ms": 3,
+          "firstSampleElapsedMs": 1087,
+          "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+        }
+      },
+      "outputCeiling": {
+        "l": {
+          "sampledAtCeiling": 0,
+          "sampledCeilingDurationMs": 0,
+          "softwarePwmPeakPermille": 217.0
+        },
+        "r": {
+          "sampledAtCeiling": 0,
+          "sampledCeilingDurationMs": 0,
+          "softwarePwmPeakPermille": 220.0
+        }
+      },
+      "driveNegativeRuns": {
+        "l": [],
+        "r": []
+      },
+      "signedRawTotalDeltaLeftRight": [
+        -4079,
+        4054
+      ],
+      "productionApproved": false,
+      "hardwareAccessed": false,
+      "limits": [
+        "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+        "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+        "Saturation duration is sample-window attribution, not electrical timing.",
+        "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+        "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+      ],
+      "sourceTrace": ".build\\phase2-calibration-20261108\\speed-response-20261109_1-release\\export-ground-target23-kp2-return-01\\trace.json"
+    }
+  ],
+  "productionApproved": false
+}

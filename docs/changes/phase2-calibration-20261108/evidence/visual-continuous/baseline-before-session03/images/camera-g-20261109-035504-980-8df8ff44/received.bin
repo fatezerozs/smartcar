@@ -1,0 +1,220 @@
+
+HOST_TX !s
+[LINK] STOP
+[FIELD] STOP
+[LINK] STOP
+
+HOST_TX x
+[LINK] port=usb owner=usb rx=11556 tx=606410 overflow=0 errors=0 tx_rejected=260; x=claim while stopped
+
+HOST_TX ?t
+[ENCODER_SPEED] encoder3 LEFT C3/C4, encoder4 RIGHT C5/C25; vendor PULSE_DIR counting; @encoder_status; @encoder_hw; @encoder_sign s3 s4; @speed_cfg max_ticks kp ki; @speed_mode 0/1; PI OFF by default
+[MOTION_DIAG] max 150 permille; manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP
+[THRESHOLD_DIAG] manual single-wheel bench; first <=100, step <=10, max 200 permille / 1500ms; local autostart disabled; !=STOP
+[MOTION] @motion line/shuttle permille ms; @motion circle permille ms pulse_us; requires hardware calibration, cruise=0; h heartbeat, !=STOP, v=confirm reverse while stopped
+
+[VISION2] MIDTERM: camera steering / open-loop motor; UART arm/stop; physical keys removed; boot is stopped
+[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/pause/reset disarms
+[FIELD] build=PHASE2_VISUAL_TRACE_20261109_1; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 level2, @duration ms; newline; !=STOP
+[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM is NOT measured speed
+[STARTUP] @startup enabled delay_ms; @save, @load; physical keys removed; boot does not auto-arm; remote a requires h heartbeat
+[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first 1500us then <=50us step; STOP/timeout off
+[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=200 permille / 1500ms; NOT forward confirmation
+[LINK] dual UART1/UART8 115200 8N1; x=claim this port while stopped; !=STOP on either port
+[MODE] C26/C27 ON=ground: 00 OBSERVE, 10 SERVO, 01 MOTOR, 11 DRIVE; change=STOP; keys removed; a/h/s via UART
+[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help
+[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset
+[BAYES] default model UNTRAINED; posterior is not measured accuracy
+[VISION2] image: SeekFree V2, GRAY 94x60, header=12 bytes; no mixed text
+[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control
+
+HOST_TX @vq_info
+[VQ_INFO] gen=1 count=750 active=0 reason=1 start=260297 cue1=264297 cue2=269300 finish=275277 cues=3 capacity=750 payload=22624 baud=921600 zero_pwm=1
+
+HOST_TX @vq_clear 1
+[VQ] CLEARED gen=1
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=677127 sample=67682 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.112 heading=-0.281 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.46409; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.539 margin=0.198 entropy=0.443 accepted=0 trained=0
+[FEATURE] n=25136 ms=677115 mask=63 quality=0.486 heading=-0.2806 curvature=-0.2922 open_left=0.1034 open_right=0.2759 split=0.3908 stripes=0.1096
+[VISION2] n=25136 fps=50.0 valid=1 state=TRACK q=81 thr=205 contrast=124 white=55
+[VISION2] both=71 inferred=0 err=3.4 raw=3.5 bend=-11.4 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=12 proc_ms=4 history_reset=750 row90_thr=212 local_rows=80 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[
+HOST_TX t
+BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=677627 sample=67732 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.112 heading=-0.312 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52941 far_x=0.45521; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.486 margin=0.073 entropy=0.431 accepted=0 trained=0
+[FEATURE] n=25161 ms=677615 mask=63 quality=0.490 heading=-0.3118 curvature=-0.2753 open_left=0.1034 open_right=0.2874 split=0.3793 stripes=0.1084
+[VISION2] n=25161 fps=50.0 valid=1 state=TRACK q=81 thr=202 contrast=125 white=57
+[VISION2] both=71 inferred=0 err=1.5 raw=1.5 bend=-14.1 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=12 proc_ms=4 history_reset=750 row90_thr=210 local_rows=75 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=678127 sample=67782 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.113 heading=-0.272 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.52975 far_x=0.46591; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.632 margin=0.371 entropy=0.405 accepted=0 trained=0
+[FEATURE] n=25186 ms=678115 mask=63 quality=0.506 heading=-0.2718 curvature=-0.2738 open_left=0.1034 open_right=0.2989 split=0.4138 stripes=0.1113
+[VISION2] n=25186 fps=50.0 valid=1 state=TRACK q=82 thr=200 contrast=129 white=56
+[VISION2] both=72 inferred=0 err=2.8 raw=3.0 bend=-11.8 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=12 proc_ms=3 history_reset=750 row90_thr=208 local_rows=79 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=678627 sample=67832 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=-0.210 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.48095; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.807 margin=0.718 entropy=0.298 accepted=0 trained=0
+[FEATURE] n=25211 ms=678615 mask=63 quality=0.596 heading=-0.2100 curvature=-0.3055 open_left=0.1149 open_right=0.3218 split=0.4253 stripes=0.0978
+[VISION2] n=25211 fps=50.0 valid=1 state=TRACK q=82 thr=198 contrast=152 white=56
+[VISION2] both=72 inferred=0 err=4.3 raw=4.3 bend=-7.7 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=12 proc_ms=3 history_reset=750 row90_thr=200 local_rows=82 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=679127 sample=67882 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=0.086 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.52975; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.890 margin=0.821 entropy=0.197 accepted=0 trained=0
+[FEATURE] n=25236 ms=679115 mask=63 quality=0.675 heading=0.0857 curvature=-0.0494 open_left=0.1494 open_right=0.2874 split=0.4368 stripes=0.1198
+[VISION2] n=25236 fps=50.0 valid=1 state=TRACK q=82 thr=199 contrast=172 white=53
+[VISION2] both=72 inferred=0 err=6.2 raw=6.2 bend=0.3 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=12 proc_ms=3 history_reset=750 row90_thr=194 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=679627 sample=67932 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.119 heading=0.133 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53108 far_x=0.53576; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.886 margin=0.839 entropy=0.208 accepted=0 trained=0
+[FEATURE] n=25261 ms=679614 mask=63 quality=0.804 heading=0.1335 curvature=-0.0040 open_left=0.2414 open_right=0.3333 split=0.4368 stripes=0.0913
+[VISION2] n=25261 fps=50.0 valid=1 state=TRACK q=73 thr=192 contrast=205 white=54
+[VISION2] both=64 inferred=0 err=6.4 raw=6.4 bend=1.1 bend_ok=1 row90 L/M/R=53/100/146 width=94 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=13 proc_ms=4 history_reset=750 row90_thr=194 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=680127 sample=67982 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.119 heading=1.001 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53108 far_x=0.57821; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_R_IN p=0.336 margin=0.013 entropy=0.505 accepted=0 trained=0
+[FEATURE] n=25286 ms=680114 mask=63 quality=0.804 heading=1.0005 curvature=0.8594 open_left=0.2644 open_right=0.3678 split=0.4368 stripes=0.1235
+[VISION2] n=25286 fps=50.0 valid=1 state=TRACK q=66 thr=190 contrast=205 white=53
+[VISION2] both=58 inferred=0 err=7.2 raw=7.1 bend=7.8 bend_ok=1 row90 L/M/R=53/100/146 width=94 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=13 proc_ms=4 history_reset=750 row90_thr=212 local_rows=85 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=680627 sample=68032 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.119 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=1 far_ok=0 near_x=0.53108 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.332 margin=0.026 entropy=0.591 accepted=0 trained=0
+[FEATURE] n=25311 ms=680614 mask=60 quality=0.788 heading=0.0000 curvature=0.0000 open_left=0.2529 open_right=0.3678 split=0.4368 stripes=0.1288
+[VISION2] n=25311 fps=50.0 valid=1 state=TRACK q=60 thr=191 contrast=201 white=53
+[VISION2] both=53 inferred=0 err=6.5 raw=6.5 bend=1.8 bend_ok=1 row90 L/M/R=53/100/146 width=94 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=13 proc_ms=3 history_reset=750 row90_thr=194 local_rows=85 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=681127 sample=68082 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.120 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=1 far_ok=0 near_x=0.53142 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.741 margin=0.631 entropy=0.381 accepted=0 trained=0
+[FEATURE] n=25336 ms=681114 mask=60 quality=0.808 heading=0.0000 curvature=0.0000 open_left=0.2414 open_right=0.3563 split=0.4368 stripes=0.1068
+[VISION2] n=25336 fps=50.0 valid=1 state=TRACK q=60 thr=191 contrast=206 white=54
+[VISION2] both=53 inferred=0 err=6.4 raw=6.4 bend=1.6 bend_ok=1 row90 L/M/R=53/100/146 width=94 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=13 proc_ms=3 history_reset=750 row90_thr=193 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=681627 sample=68132 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.119 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=1 far_ok=0 near_x=0.53108 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.871 margin=0.831 entropy=0.240 accepted=0 trained=0
+[FEATURE] n=25361 ms=681613 mask=60 quality=0.804 heading=0.0000 curvature=0.0000 open_left=0.1839 open_right=0.3563 split=0.3333 stripes=0.1129
+[VISION2] n=25361 fps=50.0 valid=1 state=TRACK q=62 thr=188 contrast=205 white=54
+[VISION2] both=54 inferred=0 err=5.9 raw=5.9 bend=0.1 bend_ok=1 row90 L/M/R=53/100/146 width=94 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=14 proc_ms=4 history_reset=750 row90_thr=197 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=682127 sample=68182 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=0.036 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.52788; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.830 margin=0.724 entropy=0.254 accepted=0 trained=0
+[FEATURE] n=25386 ms=682113 mask=63 quality=0.757 heading=0.0361 curvature=0.0339 open_left=0.0000 open_right=0.3563 split=0.4253 stripes=0.1023
+[VISION2] n=25386 fps=50.0 valid=1 state=TRACK q=74 thr=189 contrast=193 white=56
+[VISION2] both=65 inferred=0 err=5.7 raw=5.5 bend=0.2 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=14 proc_ms=4 history_reset=750 row90_thr=196 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=682627 sample=68232 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=-0.163 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.48797; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.911 margin=0.848 entropy=0.158 accepted=0 trained=0
+[FEATURE] n=25411 ms=682613 mask=63 quality=0.796 heading=-0.1629 curvature=0.0371 open_left=0.0000 open_right=0.3563 split=0.3333 stripes=0.0738
+[VISION2] n=25411 fps=50.0 valid=1 state=TRACK q=78 thr=185 contrast=203 white=60
+[VISION2] both=68 inferred=0 err=2.2 raw=2.2 bend=-7.9 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=14 proc_ms=4 history_reset=750 row90_thr=200 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=683127 sample=68282 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=-0.163 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.48797; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.918 margin=0.852 entropy=0.142 accepted=0 trained=0
+[FEATURE] n=25436 ms=683113 mask=63 quality=0.788 heading=-0.1628 curvature=0.0517 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0746
+[VISION2] n=25436 fps=50.0 valid=1 state=TRACK q=79 thr=185 contrast=201 white=60
+[VISION2] both=69 inferred=0 err=2.3 raw=2.2 bend=-7.9 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=14 proc_ms=3 history_reset=750 row90_thr=200 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=683627 sample=68332 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.115 heading=-0.160 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53008 far_x=0.48830; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.919 margin=0.853 entropy=0.140 accepted=0 trained=0
+[FEATURE] n=25461 ms=683613 mask=63 quality=0.820 heading=-0.1604 curvature=0.0145 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0689
+[VISION2] n=25461 fps=50.0 valid=1 state=TRACK q=81 thr=185 contrast=209 white=60
+[VISION2] both=71 inferred=0 err=2.3 raw=2.4 bend=-7.7 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=14 proc_ms=3 history_reset=750 row90_thr=200 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=684127 sample=68382 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.115 heading=-0.163 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53008 far_x=0.48763; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.919 margin=0.854 entropy=0.139 accepted=0 trained=0
+[FEATURE] n=25486 ms=684112 mask=63 quality=0.792 heading=-0.1629 curvature=0.0316 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0705
+[VISION2] n=25486 fps=50.0 valid=1 state=TRACK q=80 thr=185 contrast=202 white=60
+[VISION2] both=70 inferred=0 err=2.2 raw=2.2 bend=-7.7 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=15 proc_ms=4 history_reset=750 row90_thr=201 local_rows=85 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=684627 sample=68432 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=-0.165 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.48763; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.920 margin=0.854 entropy=0.139 accepted=0 trained=0
+[FEATURE] n=25511 ms=684612 mask=63 quality=0.808 heading=-0.1645 curvature=0.0584 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0721
+[VISION2] n=25511 fps=50.0 valid=1 state=TRACK q=79 thr=184 contrast=206 white=60
+[VISION2] both=69 inferred=0 err=2.1 raw=2.0 bend=-7.9 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=15 proc_ms=4 history_reset=750 row90_thr=201 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=685127 sample=68482 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.115 heading=-0.161 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53008 far_x=0.48830; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.921 margin=0.856 entropy=0.138 accepted=0 trained=0
+[FEATURE] n=25536 ms=685112 mask=63 quality=0.796 heading=-0.1607 curvature=0.0341 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0730
+[VISION2] n=25536 fps=50.0 valid=1 state=TRACK q=82 thr=185 contrast=203 white=61
+[VISION2] both=72 inferred=0 err=2.1 raw=2.1 bend=-7.7 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=15 proc_ms=4 history_reset=750 row90_thr=201 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected
+HOST_TX g
+:mux5/dir1/out0/fast0
+[SPEED] ms=685627 sample=68532 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.116 heading=-0.164 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.53041 far_x=0.48763; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.919 margin=0.853 entropy=0.140 accepted=0 trained=0
+[FEATURE] n=25561 ms=685612 mask=63 quality=0.824 heading=-0.1643 curvature=0.0365 open_left=0.0000 open_right=0.3563 split=0.3218 stripes=0.0689
+[VISION2] n=25561 fps=50.0 valid=1 state=TRACK q=80 thr=184 contrast=210 white=60
+[VISION2] both=70 inferred=0 err=2.1 raw=2.1 bend=-7.8 bend_ok=1 row90 L/M/R=52/99/146 width=95 flags=3 drop=2 junction=0 anchors=0
+[VISION2] age_ms=15 proc_ms=3 history_reset=750 row90_thr=201 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+ªI^ <    &,&&.-/4399AMP\åùúøıüúııÿışıïÚĞÆË¿Üşşÿÿşÿÿÿÿõ„€‚´x|{ğûşööóòèÕ»Ôñ°òıû¤×‘õşıûøûıùûıúüúùúúöóïí'/&&(-/110;>JJWäöùúúıúşüüüıîÊÃ»ØØêÉüşşÿÿüşÿÿòƒÒ‹îúùôóòòëÊ¸Øè¤ûûşfzßûú÷÷ÿüûúùüüùú÷úóñìğ)(",,+0//7@FIXÙñ÷÷÷ù÷÷üûıü‡ÏÂ¾»Åİ´ûıüşııışıìúô÷óìÒÈ”wÓûïãŒàìÈºŞô¥üüÜ’gméûû÷ûûøıøùùúûöø÷óñïï *'&'')40/6;EIQ¿íòòËÎÉÄÕüüùêÑÁ½º¼ÁÃïüÿışşüıäÜÖÒÊÇ¶¯«¹Áøá¢ÀhåçÎÆçñ½ùûŠobfñùĞ¯|‡Šµèøûöøöùôñîî"%&$())-009=EGOœâğóÍÒÓÕ×öùùéÛÀ¸µ·±²èğĞøúşşıûûøûüúúö÷ø÷üé™­f©åÑÍğèÙûñkcfø÷ø¡ÄËÅ¹¯®‘‘”™¢¯Ô!(*'*()..-8;CEPcš§µ¨¬ÆÑîøøìÜÈµ±µ–˜«¸¼¯ÃÄüüöÜŞÓÕøúùøüúöùêx˜_ƒãÍÓóÊêò”z}°Õ¶¥˜’–›¡¡˜–“‹ƒ}Ïê $'#'%',+16=DDN\È›ÖÅÉÏÇÅŞõáïÙÕdpf¬Ÿ¹¾§Š‚ÎÁÂÀÏÕÒğïÖ°ÒÀµá`flf«µª§¡—™–~¬¶´­½ˆÇš€ßÌ²Ë¯©®”Åñ…¦íí!$&$('(.//79CGOQ­¦vÊÄÍÇ‰ƒ¢ÎÉé±Y†¥©¦£«ÂÓ÷òêğïíèŠËÊ¹šd\db]¨”·×«ÄÀï—›²·ô»›Î–©ô÷òÉÃôêªïï“Æîí!#%!'('*,,69CFNN•Á¶ÂÁÉ»Ä³¢¿tŒ¬–d®±±…½»ÃÍËß°ìËãÍ‡kÈÖ«Í{ZZ`_Z§¶·İ¸Ÿ¾ÈÚº’ÑÍÍ«ªÄ‹ßôÚ½Äïøµ­ğÆ£èìê # %++(-+.6;FHOO¬¯®ÍÎÒÒÛØÊÖíç§vl‹º½¼ä¼½»ÆÇîéç²ÌÒÑßéçĞİ‰hbVWZ‘Ï´ãÆ±ÂáÆÍ¨Óä¡¬º·ŒÛïÕÑÀöõÉñ¡­éèâ#!#%(%)*,*89DHQTÊÈÊßòõùèøûûüø÷íÆÃÁÀÂ¼ÄÃÃÊÓÛÛİÚĞÎÌâÖÜØÙwcVRU}Î`»ËÃÈó·Ë£Ğê·¯Ò´¤ÔÚĞ·ôğŸğñ¤ÂëåÔ " "&+*(+*+88DGRVÓĞÓÛâîŒ…Éûüüüı÷üùùòÌÎĞ×èôùùúùøûöèÕÊÄËh{ˆzÁºÁaÓîÈÕ°ßÍğÁ®Ê³×¤Œ›ßØÈØôÆ›òÓ§æèâÑ $"!!,,())-2:FIOWÖÙÙİÜÚ±nvèèŞ×ÑÖúüıûııúıúııûûıüüúûûüùñ~z›‘{½rÉÆÈÉ¾¾ÎÔÆÓ±£º¶Í“|·ÚØÁïô¢¼ó·ªãÜÒÎ!#%.((,,'5;BGPTùûüûûûüûıüüùıüıüûıùûıòääâìêâØÔÎÌÏÌÏÍÇÆ¨Üòò“u†|Æª¾ÒÓ¿Ñ¹µ²¯¿‘mÄåÙ´ññ˜ğñ²¿áÕÉÇ"'.)!.*)(%(14@GTW×Şáåçì÷øşşışşÿüşışıüşÿÿüşşşşıûïÙÓÑÑÎÍÉ¸¬›¤¬«¢áíÏÚÂÈÆ®ÌsµáÜº_bªĞ¯ñ×•óØ¬èäÖ½S#*32.:2),*,/27BSZ×İáæúıÿşıÿÿşşışÿúÛÙŞäêìëïôşşœşüÿûıüûõÓÁ³Ó­°µ¹±¼òòÂÁ±ÏÙ»‚Ê¬İ®ª¤ŸÃÅë¡‹Ò¼¦ãÜtF\$&+7<›I.-.*+.;DNWûşûûşÿÿÿşşşÿÿşòŞÜùßâçéëêëîêèïúııüşşşııı÷º®¿ÁÂ½½¿¸ÀùóõêìäÅ®ß×¬© Ù¾³©—xl¹‡cHH=a&)(/6ñÙ70+*,2>?HRÜúûşÿşÿşûóèèæáÜÜàßààæêëéëëêíêışÿşşşÿüÿşÿû¹¸ºÀ½¾»¼¸Èõ÷õõóxá½ ÙÜëÙ©È¿ÂÃ‘˜dKI;Fa())*-Ñ÷H7/)48=:BGÑ×ÛİàßááãâãàÏŞàÜÜŞßáåèéèêéëêÿııÿşıÿşşÿıüüÙÁ¼½»½¾»º±³ïõöğğˆkoÃŞİÍ“Á][«½¡XF;:`b'*&)5e‡R@5*/.;<=Cc¼ÕØÛÛŞİİßŞÕÜŞÜÜİßßàåæèèçæñışÿÿıÿşıışşşşÿıÈÃÀÃÀ»¼»¶°±àøôñåëİßÍàÆĞÙ—œ¥Â¼Ì’Obc+*(>Sb}]B>/0)42_q_±ĞÓÖØÚŞÜÜÜŞÙÛáàßàßâäååææ÷ğÿÿşşşıÿşşÿüşşışêÇÅÁÀÁº¸·µ±­Î÷ôòîğğït„â×½ádŒÁ³±·c~D.3EQboc^:8:05\w||‹›ÌÄÖÜÚÜŞßŞßŞŞİßáàääæäôâÿÿşÿÿışşÿşÿÿşşıüşÌÆÄÂÁÁ¾·µ´±ª»ùñòóïïçîèÚÕé½µ­›¹Ë­ŠšXLFOR\ge]5[pivfr{‡ˆ¦­±»ÙÛİİŞŞßİŞßßàããåêáşÿşşşıÿÿÿşÿÿşÿşşşş÷ÊÆÅÃÃÁ¼¸´´­¥¢¦òõóïñöòğòòäâÜÕÒ¸¨´šXTWSR[VOwjhsueukiimux‡|Œ¡ÖØÛÛÜİŞİİßââããæîïÿÿÿışşşıÿÿÿşÿşÿÿÿÿüÒÈÇÄÃÂ½¾º¯«¤¢¦ºöõõ÷ôïñğíóîâÑÙÕÌÆOQPR?Mahsuqi{vzwzzzphc–ĞÓØÛÚÚÛÛİàààààúäÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÉÈÅÃÂÁ¿½¶­¤£££¢©íõöòóòïíñïîÙÖÒÎÊIOAP\chqk]mbbhpzynbkaq‚˜¿ÏÕÖ×Ù×ÚÙÛêãßáùÜıÿÿÿşÿüşÿşÿÿÿÿÿşÿÿÿşşıßÉÆÄÃÁ½¼¹²¬©¦¦§¨£º÷óóøóõôóóçáİÖÓQ\^acfiw}^Z``TKLWntz‹±½ÇĞÔÔÕÖÖÖØÙÜßŞğ×õşÿşşıÿşÿÿÿÿÿÿÿÿÿÿÿşıÿşüËÆÄÄ¿¾ºµ²«ª¦¥¤¡£¡£ğôôóôòôóèäãáİab`bdhjnoa\_dkmtu}ˆŠ¡ª­ÁËÍĞÑĞÓÒÓÖÕÙÙâêãÿÿÿÿÿÿÿşıÿÿÿşÿÿÿışÿÿşüııçÅÄÃÃ¼Á¶°««©£¢ Ÿ ŸÁõòøõõñëçæäâefffgfglqghknrtx…š©²ÄÉÍÎÍÏĞÏÒÒÓÔÖÚøİışÿşşÿşÿşÿÿÿÿÿÿÿşÿÿşşÿÿÿşşÈÄÂÂ½¸µ¸­¬§«£›Ÿ  òô÷òïîæèãâiiigfgjmtrnqqux}ˆ”Ÿ³ÁÅÊÑÍÍÎÍÍÍÎÑÕÙúÕôÿşÿÿÿıÿÿşÿşÿÿÿÿÿÿÿÿşşÿÿÿşıóÅÂ¾½·²¬¨Å§£¥œœ›šœŸ´óóóîíäåäljijgklnrvusty{~…¤´ÁÆËÎÌËÌÊËËÎĞÒóÔßÿÿÿşÿÿÿşÿşşÿşşÿÿÿÿÿÿÿÿÿşşşşıÌÃ¿½³±­¬«¨²£¡œŸ›œ˜·›ñõóëéçåmkjkkmmoquuuuxy}ˆ˜£´ÀÇËËÑËÊÉÊÊËÏäé×üşÿÿşÿşÿÿşÿşşÿÿşşÿÿÿşÿÿÿşşÿşşüÃ¿¹¯±­«ª¦«¤Ÿ›™›˜˜›¿™—¾ôğéèènmnnlonnruvvuy|€ˆ¢±»ÇÏÎÎÜÉÉÊÉÍÔøÖóıÿşÿşüşÿÿÿÿşÿşÿÿÿÿÿşÿÿüşşÿıÿışÔ¿¼²°¯ª¨¨¥¢œ™˜˜˜—œ¹”—ïíëèpqnqmnopruuvuy|€‡œ¯íÆÌÎÑüÉÈÉÊÍøÈÛşÿÿşşıÿÿşşÿÿÿÿÿÿÿÿÿÿÿşııÿışıışÿıÂ¾µ°­««¦¥¤ ˜˜——”“–«Ãìèqppnnppssstwuw|€„…Š™¢¸ÂÉËÍÊËÈÉÊôÉĞıÿşşÿşşÿışşşşÿÿÿÿÿÿÿÿÿşÿşşıüşşşÿüâ¼¸³¯ª¬¥¦¡Ÿ ™–•”•‘”‘åsrqnnqtustvyx{}ƒ†–Ÿ°¿ÆÈÈÈÇÇÇìêÎóÿÿşÿşşÿşşşÿÿÿÿşÿşÿÿÿÿÿıÿışııışşúşşÁ¹¶±­­§¥£¡ ›™˜—•“’ŠŠ¥vsprsrrtvswzz~~……‰’›ª¸ÁÅÆÇÇÇÙóÌÕşşÿÿşÿÿşÿüıÿÿşÿÿÿÿÿÿÿÿşşÿıışşÿşşşÿşóº´´¬®§¥¤¡Ÿš–˜•’“ŒŠ‡‰Šuwsrrrtssuuyz|}…‚‰’™¥²¿ÃÄÅÅËò¹ËûıÿÿÿşıÿşşşşıÿÿÿÿşÿÿÿÿÿıışÿşüÿıüşıÿıúÃ¶²®¬¨£¡ ›––—“ŒŒ‰ˆ„„yxttssrtsttxz€ƒƒ‹‘˜¡©¸¿ÀÂÇøÃÈóışşÿşşşşÿşşşşşÿÿÿşÿÿşÿÿışşşıışşşışıÿıú·±­«¨¥£ Ÿ›—‘“•öƒ“ˆ…„„{xwuqqrrttwx€€ƒ‹‘–¡§°¹ÀÃõçÇÓşÿıÿÿÿıÿÿÿşışÿşşÿÿÿÿÿşşışÿÿşÿıûüşüÿşÿüıÒ²®ª§¤£Ÿœ››š—•Éï—ë‡ƒƒyywurqsvtww}}|ƒ‹ˆ‹‘™¦±¸¾æîÅÈûşşşşşışüÿışûşşÿÿÿşÿşÿÿııÿÿÿıÿÿÿüÿşşşıüıû´««¦£¢™œ™Ÿ–”–“•ğõó‡ƒyzuuttvuwx{}y|€ƒ„†Œ’–¦«¸Ïñ±Æóşışııışıÿÿşşşÿÿÿşıÿÿÿşşüÿşıÿıÿşşşşüÿüıûıûß®ª¤£ ›œ—”““’øá‰ˆ……y{xxuwxww{zy|€„ƒˆ•Ÿ¡¬ºúºÅÒüüşÿışııÿışışÿşıÿşÿÿÿÿÿÿÿÿışıışüışıüıüüûıüø³ª¥¢š—š™–““’•‘Œ†ƒzyyrxxwwzy{|}‚„ˆ‹’˜œ£­ôçÁÃşşşÿşışşüşışışşÿüışşÿşÿÿüııÿşşıûıüşüüúşıüûûûï«££ ™™™••“’’‘ŒŒ‡ƒxxwxwxzzy{y|}……‹”˜Ÿ¨ñö¸Áöşııÿüıışÿşşÿÿşışşÿşıÿşÿÿıÿÿşşüışşışÿÿûışüüıüüµ¥ š˜•–“›‘Œ‹ˆŠˆ…‚‚xzywvwzw|xz{||€…‡Š‘™ ÕÖ£½Ñüüûüşşışşşşışşşÿÿÿışÿÿÿÿÿÿşÿüıûüüşııÿşüûüşıüùüú§Ÿš–—”“‹‹ˆŠ‰„„‚yyyzxzy|z|z}{€‚‡‡Œ’œ´ñ¶¸¾÷úüıûıüüşşüşüıııÿüıÿıışıÿÿşşışÿÿúııûışÿúüıışüûùúÄ¢™”•‘‹Œ‡†……ƒ€„yzyzy{|x}||{€‚‚‡ˆŒ‘—õå³º÷ûúüşüııışışşışıüşüışşıÿıÿÿşışÿşıÿşıÿüÿüüııûùûûûı÷¤Ÿ˜˜–“‹Œ‰‹ˆ†‡ƒ‚€‚x{|{{|y{}}{}€„ˆŠ’˜òê£²Ò÷úüûıııüışıışııışşıışşşşÿışıÿşûşışüüışıü÷ışşıúûùûı×—”“‘ŒˆŠ‡„……ƒ~€z{|}{|{|}||}€‚ƒ‰Š•ãç•¨¸úüûıııûıüüüüşıııûúııışÿşşÿÿşÿşışÿúüıúüûûııüşúüúúøûõø¡š““ŒŠŠ…†„„„ƒ~}z}~zy}|~|}ƒ†ˆ‹¿Ô±¦¬öûúúûııüüııúüÿıúşıüııüÿşÿışııışÿüüıışüüüûûıüúûûùûı÷ûûé™•‘‘‹Š‰†…„‚~~|}{}||z{}}}x€ƒ†‡‹Œšêå ªËúøüüıûıüüşúşûüşúÿşışıÿÿşûüşşüıÿüüşüüúıûûşıûûûüıøùøüúùû¤•‘Œ‹Š‡††‚€|{|{}}{{|||~y‚‚‡‡‹‘óâ˜¤²øûûúùûüıùÿúûşşúûışÿüüüşıÿıûÿşşıÿşşüüúıúüıüü÷ùııüúşúûõüùö˜‘‹‰ˆ†ƒ„€{zyz{}}{}~}w~ƒƒ‰èÄ‹Ÿªøøúûşûúûüıûüıııüúüşüııÿüÿışüüÿüıüşûıùúû÷ıüûûùûúûúúıúûúûøù®’Šˆ††…„zxwwz{~{|}|{€‚ƒ†ŠÒÁ¯™£Ëúøùüûùüûùúùûüıüüıûüıûııüşşşüşşıüıûşúúùûûıùûùúûüûıû÷ùùûùöøô”Š‰‡†…„€{vvwwƒ}|zy|~~€€ƒ…ˆ¨ğè•œ¨õùøú÷şûııúûışûûıûûüüûüûÿışıüúşşıüÿûúûúııøüûüúüûúùüùøûúúö÷÷úÁŒ†„…„‚~„{xwt}{||x}}~€€ƒ…ôôŒ—öøù÷øúùüüüüøûüúııûûûûûûüûùûıüÿııüşıûùıûşûüşùüûúııûøùùıûùûõü÷ø’‡…ƒ‚‚~}€~zt{||z|}~~€„ˆéñƒ’›Äö÷üõıûûùúüùúüüûúúüûıüşûûşüüşüıışüûıüúıúüúúıúüøúûùùøõûşûôøúöøöàˆ„„€€}||€xutz|}||~}~€„…Üï®‘—˜õ÷÷÷÷øùøúùûùúıûüøüúúşıüıøışûıüúûüşııüıüùıüÿûûøüúûûúûûøöúõùöû÷÷õ¡‰†‚‚~|{z{xtt|}{{|}€‚ƒµãŞˆ“™÷ö÷÷ùùúûùùûùùúúùúùúøúıüúüüşüıúûûûşûúûüùüûûùüûûüúùüùùùùúöøú÷ùøù÷õè‹†…~|zx{vvªI^ <    2/-0.39?ACJT_æ÷ûóúùøıüúııÿşşıñÛÒÈÍÃŞşÿÿÿşÿÿÿÿõ„ƒ´x}}ğûşöõôóèÔ»Õñ¯ğıû£×‘õşıû÷ûıúûıúüúùúùöóïíu4110479BCGP[¤õùğøúúûıúşüüüıïÌÆÀÛÚëÍüşÿÿÿışÿÿñƒ‚ÒƒïúùóôóòëË·Øé¥üüşfzŞûû÷÷şüûùùıüúú÷ùóñìï}A500857<?DMVgó÷ñóø÷øùøøüüııÑÅÁÀÈŞ·üıüışşıÿıíùó÷óíÓÈ”vÔüğã†€áìÉ»ßô¥üıÛ’inéûü÷ûûùı÷ùúúüöù÷ôòïï{s6/+317>A?ISañóğğóóÏĞÌÇØüıùìÓÆÁ½ÀÃ‘ÄğüÿışşüıãŞ×ÓËÈ¹°¬¹Âøá–½içéÎÆçò¿ùûŒpdgñùĞ°}†Œ ´çùûöøöùôñîî~{G4.3439>?EN[àñğåñôĞÓÖ×ÙöúùëİÂ¼º»¸‘µèñÒøùşşıûüøûüúùöø÷÷üê ­e§æĞÍğéØûñkcgøøø¡ÄÌÆº±¯’’•— ®Ô‚~8045;;=AFJW°—¢˜¢®¹¬°ÈÒïúùîŞÍ¹µº˜±¾Á³ÅÆûı÷ŞßÓÖøûùùüú÷ùé|›_„äÍÒóËëò•{²Õµ¦˜”™Ÿ¡¢¡œš—’Œ…|Îé|‰vY49879?@ELSvÀçÌ¡ØÇÊĞÍÍßçãğÜ×¢hui°¤¾Á©…ÏÃÂÂÏÕÓñï×±ÔÁµßaflf©¶­©¡™š—~¯¶´¬¾ŠÉœßÍ´Í®«¯”Çñ„¨íî}th‘39;6=;?FISd½Ô´ª{ÍÇÎÇ™†¦‘ĞËêµ`‹¨«ª§®¡ÄÔ÷òêñïíèËÊ“ºše^ec_ª•¹Ø¬Ä¿î—›³¸ó½›Ğ˜ªô÷òÊÅôé«ğğ—Æïí{qj—@;899<>DEQ\…ŠšÃ¼ÆÄÊ¾ªµÁÃw­œi‘´¶µ‰Á¼ÆÎÎà°íÍãÎ‡mÇÖ¬Î}^[ba^¨µ·Ü»¿ÉÛ»“ÒÌÍ¬ªÅßôÜ¿Æïøµ«ñÈ¦èíêvy~_><8=<9?EPO~«±³²ÍÏÔÕÌÈÍĞîç©{p¼¿¿ä½À¿ÈÈîéç²ÌÓÑàêçÑİŠi`WY[“Ï¶äÆ±ÂàÇÎªÓå¢¬º»İïÕÓÁ÷ö¡Ìñ¤­êéâuƒ…•ËF?9=A8<HMOVÂÎÉÌàòõùü¼ˆÎüø÷ïÉÅÃÃÃ¿ÆÅÅÊÕŞÜŞÜÑÏÌã×İÙÙye[TZ€Ïb»ÌÄÈóºË¥Ğé¸±Ñµ£ÕÚÓ»ôğŸğñ§ÃëçÕµåäãß•C<=:3DEIQ`€×ÑÓÜâïùùûüúüüııøıúùòÎĞĞØèôùùûùùüöéÖÊÄÌk}ˆz€À»ÁcÕïÉÖ°áÎğÀ¯ÉµØ£ŒœßØÌØôÅŸòÓ¬æêäÒL‰”“N@B<@@JRT^cÛÙÚÜİİááâèêêßØÒ×úııûııúıúşüûúıüıûüûûúñ}zš’{¾tËÆÈÉ¿ÀÏÕÈÓ°¤»¸Î“z¸ÚÙÃğô¡¾ò·«äİÓÎ=W—œŸ§–KC<AA@GJT^úûüûüûüıııûúıüıüûıùûıòäåäíéâÚÔĞÍÎÍĞÍÆÆªŸÜòò–t‡ŸÈ¬¿ÔÔ¿Ò¸µ±±À’mÄæÛµññ˜ğñ¶ÂãÔÊÈAK…óòõôXFD<<>BKU²ÜßâæçìøùşÿşışÿüıışşışÿÿışşşşıüïØÓÒÒĞÎË¹ªŸ›£®¬¡ãîÑÚÂÈÈ¯Ír´ŞÜ»_c¬Ğ²ñØ—ôÙ³èåÖ¾S?EOˆóöõ¯MFDD>FD\ÕÜİâçúşÿÿıÿÿşşışÿúİÙßåêíìîôÿşœıüÿüııüöÔÃ·Ô«³¶º²½òòÂÁ±ĞÚ»‚Êªİ¯­¦¤ÆÆì¢Ó¾§ãİwI]DLWfòóòö`RGpUWs‰ãâşûüşÿÿÿşşÿÿÿşòßÛùàâæëëêìïìèïûııüşÿşışş÷º­¾ÂÂ¼¾À·ÁúóõêëäÆ®àØ¬ª¢Û¿µ¬–ym¼ˆdJG@cB»©ôñùöóú‹‰’ œ¹ğàûşÿÿÿşüóêéèáİŞáààáåêìêëíëïìışÿşşşÿıÿÿÿü¼·»Á½¿¾¼·Èö÷öõôxâ¾ ÛàìÛªÈÂÂÄ“›cKH<Hb<]ï÷óôø÷‚ˆ”‚œ“¹×ŞßàáãäääàÏßáÜÜŞàâåèëêëêíëÿşşÿşşÿşÿÿşşüÛÁ¾½½¾¾½º²³ïõöğñˆmoÄİßĞ–Ã]]¯¿¥XI>:bc?H˜¤¥§zv}|{’Ÿ ¡¬ÇÜŞàáàáá×İİİÜŞßàáæéêééèòıÿÿÿşÿÿışÿÿÿşÿşÉÃÂÄ¿¼¾»¶²±áøõòåëŞßÏáÇÑÛ™œ©ÄŸÂÍ“Pcd_X…–˜ ¢pgjgfkmy„¯®–¨ÖÚŞÜİÜİØÜáàßááäæççççøñÿÿşÿşıÿşşÿıÿÿşşêÇÅÁÁÁ»¼º´³®Î÷ôóïññğt†äÖ¿àeÃ¸´»ekpy™œ ¢gabigdlfhrv}”ÕÛÛÜŞßßßáàßßááåæçäôãÿÿşşÿüşşÿşÿÿşşıışÌÆÅÄÁÃ½º¸¶´©»ùñòôğïéïéÜØê¾µ¯œ»Ê­‰œhbfoŒ’–šŸ¢¤Ÿ¯°†`UPNFGM‘ÔØÚÜŞŞßŞàßßßààãäåëàşÿşÿÿıÿÿÿşÿÿşÿşÿşş÷ËÇÆÄÁ¿½¸µ´®§¡§óõóğò÷óğòóåãİ×Ô¸©µ›Zb^j{‹’–š£©«­²´°¯‘OGPjÁÓØÛİÛÜÜİİŞŞßàâãæîğÿÿÿşşşşşÿÿÿşÿşÿÿÿÿüÓÉÈÅÄÂ¿À»°ª¦¤ ¨»÷õõ÷ôïòñíóîâÑÚÕÍÇR\dj{‰‘’–•˜š¤¡iXZfp€´ÑÒÓØÙØØÙÚÚŞŞßßŞùäÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÊÉÅÄÂÁ¾»·¬¤¤¤¥¢¨íõöóòóğîòïîÚÖÑÏÊgjnoy…‰Œ”š™˜|prt|ˆ˜ÄÏĞÖÖÖ×ÖØØÙçàŞŞøÛışÿÿşÿışÿşÿÿÿÿÿşÿÿÿşşıßÉÇÄÃÂ½»»´ª©§¦¨¨¥»÷óôøôõôôóæàİ×Ôlmnpx‚†‰‹Œ‘“Œ‰yy~ƒœ¿ÆÎÓÓÔÓÔÔÓÖ×ÙÜÛïÕôÿÿşşıÿşÿÿÿÿÿÿÿÿşÿÿşıÿşüËÇÅÄ¿À»·¶®«¥¥¥¡¥¢£ğôõòôòõóèäâáİmoorw…Œ’‘‹‰‹}}Š¢­²ÆÎĞÒÒÒÒÑÒÕÔ×ØàêáÿÿşşÿşÿşüÿÿÿşÿÿÿıÿÿÿşıııèÇÄÃÂ¾Áµ±«­¨¤¤  ¡ Áöòøõôñêææäámmptw}„ŠŒ‰ˆ~|~ƒ‡‡‘Ÿ¬±ÅÉÎÏÎĞÏÑÑÒÑÒÔ×÷ÛışşşşÿşÿşşÿÿÿÿÿÿşÿÿşşşÿÿışÉÄÃÂ¼º¶¹­­ª«¤Ÿœòô÷òïíåçááoqsvz}…‹ŒŠ†~‚ƒˆ…—ŸµÁÅÌÓÎÍÏÎÏÌÎĞÔ×úÓóÿşÿÿÿıÿÿÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿÿşóÅÁÀ¾¹³¯¨Ç¥¥§›œœ››œ´óòóíìãääspsvw~‚ˆŒ‰†„……‡„‹”¥³ÂÈËÍÌÌÍËÌÊÎÏÓòÓÜÿÿÿşÿÿÿÿÿÿÿÿÿşÿÿÿÿÿÿÿşÿşşşşşÍÃÀ½µ±¯¯«¨³¥¡œ¡œš¸ŸœŸğõòëéæåpssvw}‚†‰‰ˆ†‚ƒ…†Œ•¡±ÁÇËÌÓËÊÉÊÊÌÎåè×ûşÿÿıÿşÿÿşÿÿşÿÿÿÿÿÿÿÿÿÿÿışÿşşüÃ¿º®±¯¬«§¬¥¡Ÿœœ›™šš¾™—¾ôğççéqttxx€„†‹‰ˆ‡€ƒ‚††‹”¥±¼ÇĞÎÍÜÊÊÊÉÎÕùÕóüÿşÿşüşÿÿÿÿşÿşÿÿÿÿÿşÿÿışşÿıÿşşÕ¿¼´²±¬ª§¥£ Ÿš™™—˜šº”–ğìëærutyx~‚„‹Š‰…€„†“—¦±íÅÍÎÑûÉÉÉÉÎøÇÛşşÿşşıÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿışÿşÿıışÿıÄ¿¹²±«¬¦¥¥ Ÿœœš™—•”“–¬Âìèquuwx€†‰‰†‡€‡Œ‘–¤¬¼ÂÉËÌËËÉÈÊõÊĞıÿşşÿşşÿşşşşşÿÿÿÿÿÿÿÿÿÿÿşşıışşşÿıã¿»¶°«¬¦¤££ Ÿœš˜–•–’“‘æruuwy~€„……†…‚‚„†‰˜ «³¿ÇÈÉÉÇÇÈìêÏôÿÿşÿşşÿşÿşÿÿÿÿÿÿÿÿÿÿÿÿşÿşÿışıÿşûşşÁ»¶´®¬¨¦¦ ¢Ÿ›™—–””‘‹Œ¤suvy||„„ƒ…ƒ„ƒ‰‹‘“š£°ºÂÆÆÇÆÇÙòÌÔıışÿşÿÿşÿışÿÿÿÿÿÿÿÿÿÿÿşÿÿşıÿÿÿşşÿşşó¼·´­­©¨¤¢Ÿ Ÿ™—™–•“‰†‰‹twxwxy}~€‚„ƒ‚††—š¢«´¿ÄÄÄÅÊò¹ËûıÿÿÿÿşÿşşÿşşÿÿÿÿÿÿÿÿÿÿşÿÿÿşüÿıışşÿşûÃ¹³°¯©£¢ Ÿ¡ ›—”––’Œ‹ˆ…ƒvxwwwxy|{~~‚„ƒ†ˆ–—Ÿ¥¬¸ÀÀÂÆøÀÇòüşşşışışÿşÿşÿÿÿÿÿÿÿÿÿÿÿşÿÿşşşÿÿşışşÿıûº²°¬ª¥£¢¡Ÿ›˜“”–÷‚•ˆ‡…†zwwvuwxy{|~‚„„„‡’‘—›§ª²ºÀÁõçÇÔşÿıÿÿÿşşÿÿşışÿÿşÿÿÿÿÿÿÿışÿÿşÿşııÿıÿşÿııÒ´¯®©§¤Ÿœ™˜–“Éğ—ìŠ„ƒwwxwtswzy}}„‚€‚…Œ–¢«±·¼åîÄÇüşşşşşşşüÿışüşÿÿÿÿÿÿÿÿÿşıÿÿÿşşÿÿıÿÿÿşıışü¸¯¬§¥£Ÿœš˜”™“—ñõóˆ„yvuuuvwxz|€~‚‚‡‡‰—˜ §«¶Ïğ²Æòıııışışıÿÿÿşşÿÿÿÿıÿÿÿÿşşÿşıÿşÿÿÿşşşÿışüıüá¯­¦¦¢ŸŸŸ™”“””øáŠ‡†„uvwvvvyyy~~}„„††”˜£¤¬¹û¸ÃÒıûşÿışıışışşşÿÿşÿÿÿÿÿÿÿÿÿÿşÿşşÿıışışşışüııùµ¬¨¥¡šœ™–•“””‘†‚ƒvvupvyvx}|~‚ƒ„ˆŠ”š¦®ôæÁÃşşşÿşışşüşışşşÿÿııÿÿÿşÿÿışşÿşşıışışııüşşüüüüñ­¥£¡œ™›–•””‘‘‡„‚vsvuuyxyz~{~‚‰‰Œ—™¢¨ğö¶Áöşııÿüıışÿşşÿşÿşşşÿÿşÿÿÿÿşÿÿşşııÿşşÿÿÿüıÿıııüü¸«¤ œ˜—˜–›‘‘‹Œˆ‰‡……suuvswyx~y|}€ƒ†ˆ‹•šŸÔÔ£¼Òüüûüşşüÿşşşışşşÿÿÿşşÿÿÿÿÿÿÿÿşÿıııÿÿıÿşıüışşıúıû¨£ š™˜—–“Œ‹ˆ‰‰…„‚ƒtwwutyy}y||}‚„‰ˆ—œ³ò¶¸¿øúüşûıüüşşışüıııÿışÿşıÿşÿÿÿÿÿÿÿÿüşÿıÿÿÿûışşÿşüùûÆ£›˜—Ÿ“‘‹ˆ‰ˆ†‚…uvvwvy{x{}~{‚„ˆ‹’– öã²¹öúúüşüüıışışşışıüÿışÿşşÿÿÿÿÿşşÿÿşÿşşÿıÿşışıüûüıüıø¦ š˜˜•”Š‹‰ˆˆ†‚uuvwvyyz~|z}ƒ…ŠŠ‘“˜òé£²ÑöúüûıııüüşıüşıııÿşışÿÿÿşÿşşşÿÿüşşÿıışşşşùşşÿşûûúüıÙ¢›–””’‹‹‰ˆˆ‡†„€vxvxwxzz|{y~„„‹Š•ãç•¨¶úüûııüúıüüıüşıııüúşşşşÿşÿÿÿşÿÿşÿÿûışüıüüııüÿüıûûùûöù¤œ—•’‘‹‡‰„…„„~~uxyyvz{|}||}€„…‰Œ‘¿Ñ°¦­öûùùûşüüüşüúûÿıûşıııııÿÿÿşşşışÿÿşşıışışıûüııûûüúüıùûûëœ—•’‹Š‡……‚ƒ~{vwwxxx|z{~v…†ŠŒ›êä ©Êúøüüşûşûüıúşûüşúÿşıÿıÿÿşûışşııÿıışııûşüıÿşüıüüşúùúıúúû§–’‘ŒŠŠ‡†…ƒ‚~|{}wx{xwyz{|x|‚‚…‡Šóá˜¢¯øûúúùûüıùÿûûşşúûşşÿûıüÿşÿşüÿÿşşÿÿşııûşûışıüøûşııûşúûöüù÷™“‹ˆˆ……ƒ‚}yzzvwwywyxxt}|€€†èÁŠ§øøúúıûúüûüûüııüüûüşüışÿıÿşÿııÿışıÿüşúüûùşıüıúüûüüüıúüûüøù¯•Š‡ˆ„…‚€€}zwwttwux{yx}|~€‚…ŠÑÀ®˜ Éûøøüûøüûúúùúüıüüşûııüışıÿÿşıÿÿıışüşüüúüüşûüüûûüûıüùúúıúöøõ™ŒŠ‡‡†…ƒ‚‚{wxwt{xvvuw{{||€ƒˆ¨ğç‘š¥ôù÷ú÷şüııúûışûûıüúıüüüüÿşşııûşÿııÿüûüüşÿùıüıûıüüûşúùüúúöø÷úÁ’ˆ††…„€„|yvuxuwwqyy{}}~„ŒôôŠ—öùøøøúøüüüüøûıûııûûüüüüüûùûşıÿşııÿşüúıüÿıışúıüûııüøúûşüùûöıøú•ˆ…†ƒ„€€yxtwwsvyyz|}~ƒ‡éñƒ’˜Âõ÷üõıúûøúüùùıüûûúüüşışıûşıışııışüüışûşûıûüşüıúüüúûø÷üşüõùû÷ù÷àŒ‡„ƒƒ€|yvttxuwwz{{}|‚Üï­”˜õø÷÷÷ùùøûùúøùüúıùüúûşıüıøıÿûşıüüışııüşıûııÿûüùıúüüüüüùøú÷úøüù÷õ£Œˆƒƒƒ}}z|{vtowvvxxy||€´ãŞˆ‘–öö÷÷úúûûùùûùùúúùùùúøûıüûıüıııúüüüşüûüıûıüüúıüûşûúıúúûûû÷úú÷úùú÷öê‰„ƒ€~{y{vuªI^ <    =`_²¯‹„Œ°ÍÏËÍøøüöûúùşüúşşÿşşığÜÓÉÎÃŞşÿÿÿÿÿÿÿÿõ…ƒµy~|ğûşööôòéÔºÓò±ñıû¤Ø‘õşıûøûıúüıúüûúúùöóïî>Yu”Å¡–®–’˜Ï¿ôöùñøúûûıúşıüüıïÌÇÂÛÚëÌışşÿÿüşÿÿñ‹€‚Ò‚}ŒîúúõôóóëÌ¸Øê¢üüşgzŞûû÷÷ÿüûùùüüúú÷úóñìï6Ly‰›Œµ£¡¿­ğõ÷òôùø÷ùùøüüııŒÒÆÂ¿Èß¶ûıüışııÿıìùóøôíÒÈ•uÕüïäˆàíÈ»ßô¨üüÜ“inéûû÷ûûøıøúúúüöù÷óñîï8Jq†‚‰––…¦—âôõòñóôÏĞÍÉÙııùìÓÆÀ¾¿Å“Åğüÿışşüıåİ×ÓËÇº®¬¹Áøá˜¾iæéÍÆçòÀùûŠqdhğùĞ¯}‡‹Ÿ´èùûöøöùôñîî6Et„Œ”Œ˜‹•©ÄîòñéòôÑÖ×ØÚ÷ùúëİÃ¾¹ºµ’µéòÓøúşşşüüùûüûúöøøøüê£°fªæÒÍğéÙûñjbgøøø¢ÆÍÅ¼°±’‘•™¡¯Ô8D‚~x–…Œ‰‰’¸‡éŸ§¥°¼±±ÉÔîùùîŞË»·º›°¼ÁµÅÅüü÷İßÒÕøûúùüú÷ùë|™`†äÍÒôËëò“z°Õ´©š”™Ÿ ¢Ÿš—‘…}Ğë;Er€¾¢˜–œ Ã·–·ÅéÏ¥ÚËËĞÔÎßöãïÛ×£iuk¯£¿Â©†ĞÃÃÁĞÕÒñï×±ÔÁ·â`fngª·¬¨¢››—­´µ­¿ˆËƒßÎ´Í°ª®–Çñ‡¨íî>Gg™xŠª’”š˜r›ÀÖ¶®€ÎÇÎÊš‡¨’ĞÊêµ`Š©¬¬¦¯¢ÅÔøòêğğíèÊË’»›f^dc`¬•ºØ¬¡ÄÀï˜³·ó¾Ñ™ªô÷óÌÅôé«ğğ˜Çîï@If™–±»¤¡£}„‹Å¿ÆÅË½¿¶©Äy°h“µ·¶Š¿½ÆÏÎá°íÍäÏ‡nÈ×¬Ï}]\ab]ªµ¹Ş»Ÿ¿ÈÛº”ÓÍÌ®¨È‘àôÜ¿Æï÷·­ñÉ¥éíëAIk„rz¡˜ ¹½º®œ ©²µ·³ÎÑÕ|ƒàÌØîè®|p½À½æ¿À½ÈÈïêè³ÌÒÑßëèÑŞ‹hcZY^’Î´äÈ³ÁáÈÎ¨Óå¡°¼¹ÜïÖÒÂ÷öËñ§®ééâAKm›ÒáíññğğéÑÀ¸ÇÇĞÉÍáóõùüûûûüø÷ïÈÆÃÃÃÀÆÅÅËÕİÜİÛÒĞËãØİÚÙxfZSXÎc½ËÄÈô»Ì¤Ğê·±Òµ£ÕÚÓ¹óñ ğñªÄëè×BO•åäÌ¹®¨¨©®·ÀÀÒÓÙÓÕÜãïùúûüûıüüıøüùùòÍÏĞØèóùúûøøûöéÖËÄÌk}Š{ÂºÂcÔïÈÖ°àÎğÁ®Ë¶Ù§›ŞÙÊÙôÅŸñÕ®æëäÒEOw–š¤­«´´¸¿ÅÇØÜßİÜßŞßããåêìêŞØÓ×ûııûüşúıûşıûûıüıûüüüùò}{›‘{¾tÉÇÉÊ¿ÀĞÕÇÔ±¤¾·Ğ–z¸ÚÚÄïô¡¼ò»¬ãŞÓÏFO`œ£±Ñîñøõùö÷÷üúûûıüıüıışıûùüüıûûıùüşòæääîêâÙÔÏÎÏÍĞÍÆÇ¨Üóò”t‡~Èª¿ÓÕ¿Òºµ´±Ä”nÃçÛ·ñò˜ïñºÁäÖÊÉGQaãòôöôõùïÖÍÏÑÙßââåçéìøùşşıışÿüışşşıÿÿÿışşÿÿıüğØÓÑÒĞÎÊ¹©Ÿ¤­«¤áíĞÚÁÉÇ®Ís·áŞ¼’_d«Ó°òØ—óÚ³èåÙ¿VE\Óóó÷õØÃÂÄÆÈÌÏÔİàáãèúıÿşüÿÿşşışÿúİÚßæëííïõÿş£şıÿüııüõÔÂµÓ®±¶º²»óòÃÁ±ĞÚ»ƒÌ°à°®©¦ÇÇë¢ŒÓÀ¨âŞwK^bo…«ğòòõúõöùöû÷÷üûşûüşÿÿÿşşÿÿÿÿòßİùáäéëìììïëèğûııışşşııı÷¹¬¾ÁÃ¾¿À¹ÁúôõëìåÉ®âÙ®ª¢ÛÁ¶«—zn½†fJH@brp‰¸÷õóùôò÷ö÷úûüüúûşÿşÿşıôëêèâŞŞáááâæëììííìïìşÿÿşÿÿÿıÿÿÿü¼¹»Á½¾¿¼¹ÉõøöõôxâÀ ÛáìÜ¬ÉÃÃÄ”›dNI>Hb`ljŸåîôöõöõ÷öõøóåÜÜßàãâåææåæãÕáâŞŞáàäæêëêëêííÿşşÿşşÿÿÿÿşıüÚÂ¿¿¾¾½¾»³µğõöòò‰moÅİàÏ•Ã]^¯Á¥ZGA8bb[fq~™œ¦«²¶¾ÃÆÉÎÑÕØÚÛßßàâáâáÙßàßßàááãçêééêèòşşÿÿşÿÿışÿÿÿşÿıÉÄÃÅÀ¾¿¾¸³±áøöòæìàáÏãÈÑÛ™©ÅŸÁÍ”PcdnsvŠ˜¦®´»ÀÄÇÉÍÑÖÖØÛÛİáßßßàÜßâãâãâåææèèèøòÿÿşÿşıÿşşÿışÿışëÆÅÂÁÁ¾¼¹¶³±Ïøõóğññğt‡ã×¾áe‘Ã¸´»eƒpruy…’—š¢§«µºÁÅÉÌÏÓÕ×ÚÚİİŞßáßáâáááâãääæçåõäÿÿşÿÿüşşÿşşÿşşıüıÌÇÄÄÂÂÀ¹¸¶´«½úñòóñïéîéÛØé¿·²»Ë°Šorvu~‰’—¦§¯ºÁÅÈÊÍĞÓÕ×ÖÚÛİßàááàáßààááååæëâşÿşşşıÿÿÿşÿÿşÿşÿÿÿ÷ËÆÆÄÃÁ½¸¶µ­©£ªóöóğòöòñòòæäİ×Ôºª´œrruvz‡’™¥ª²¸ÀÅÇÉÌÎĞÒÔÔØÙÚİßßßŞßßàáâãäåçîğÿÿÿşşşşşÿÿÿşÿşÿÿÿÿüÒÉÇÄÃÁ¿À¼±«¥¥ §¼÷õö÷ôïòñîóïãÑÚÕÏÇruvw|…–£§°¶¾ÂÅÆÈÉÌÏÓÓÖÙÖØÚÛÜÛŞŞŞáàáâáúåÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÿÿşÉÉÅÄÂ¿¿»·®¥¤¤£¤ªíõöóòòñîòïíÙÖÒÏÌvvxx|ƒ—£¨­³»¾ÂÃÇÊËÏÏÔÔÓÔÚÙÚÚÚÜŞİìåàãùİıÿÿÿÿÿışÿşÿşÿÿÿÿÿÿÿışıßÈÇÄÃÁ¿¼º²®©§¨©§¦º÷ôõøóõôôòæáÜÖÕvwwy{‚Š—›Ÿ¤¬®µº¾ÃÄÉËÎĞÓÓÔ×ÙØØÙÙÙÛÛŞáàñÙöÿÿşşıÿşÿÿÿÿÿÿÿÿşÿÿşşÿşûÊÅÄÃÀÁ¼¹³¬«§¦§¡¤¢¤ïôõóôòõóèåâáŞw{}|…‹‘š ¡¥ª´¸¾ÁÄÆÉÌÎÌÑÔÕÕØÕÖ××ÚØÛÜäìäÿÿÿÿÿÿÿÿıÿÿÿÿÿÿÿışÿÿşüııçÆÄÃÂ½Áµ²­®¨¥¤ ¡¡¡ Áõòøöõğëçæãáz}}€ƒˆ•š¤©¯µ»ÁÃÇÉËÌÑÔÕÕÓÔÓÔÕÕÖØÚŞùáÿÿÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿşşÿÿÿışÉÄÂÁ½¹¶º¬«ª¬§ŸŸœ¢¡òô÷òïîææãâ~€~€†Œ‘–¢§®²¹¿ÁÄÆÌĞĞÔØÔÓÔÔÓÒÓÕÚÜûØõÿÿÿÿÿşÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿşóÅÃÀ¾·´«ªÅ¦¥¥ŸœœŸµóóôïíäää~}€‚ƒ‹—˜¢¦ª±·»ÁÂÇÊÎÓÓÕÒÑÒĞÑĞÔÕØôØãÿÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿÿÿÿÿşÿÿşşşşÌÅÀ¿¶³®­­ª²¦£ŸŸœœ¸ › ñõóëéçæ{}}}‰‹‘—¥«­±³½ÂÄÇÍÑÔÓØÒĞÑĞÑÑÕéëİıÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿışÿşşüÄÁ¼±²¯¬«©®¤  ›››¿™šÀõğéèéz}€„„†Œ‘˜¡¨«¯³¸¾ÄÈÉÒÙÖÖãÑĞÑĞÔÜúÜõşÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿıÿşÿıÿşşÖÀ¼µ³±­¬¨§¥   Ÿ››š™šœ»•˜ñíìé{}|‚~‚„ƒŠ•™£¥¬®µ¹ÃÇóÏÖÖÚıĞĞĞĞÔúÎáÿÿÿÿÿşÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿıÿÿşÿşıÿÿıÄ¿º´°­­¨¨¦¡ŸŸ Ÿ›™™—••˜­’Äëèz}|~~„ƒ‡‰˜™Ÿ¢ª¯²·ÂÃÉÍÒÔÕÒÒÏĞÒöÑØıÿşÿÿÿşÿÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿşışÿÿÿıäÀ¼·±­¬¨¦¥¢£ŸŸ›˜˜•—“‘–Ÿ’ç{}}}…‡Šˆ‹–—¢¤«­·ºÁÆÊĞÑÑĞĞÏÏğîÕöÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÿşÿışıÿşüÿşÃ¼¹´¯¯«©§¥££œšš–••Œ‘¦y{|ƒ…„„‡Š“–œ¦©­±·½ÃÇÍÎĞÎÏÏßõÓİÿÿÿÿşÿÿÿÿıÿÿÿÿÿÿÿÿÿÿÿÿşÿÿşşÿşÿşşÿÿşó¾¹¸°¯©«§£Ÿ  ššœ™••Šˆ‰‹{€~~„„ˆˆ‹‘“–š£¢«±³¹ÀÄËÌÍÍÎÔöÂÓüşÿÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿüÿşıÿıÿşûÆ»¶±²¬¦¦¢ ¢¡Ÿ——™˜“‘‹ˆ……~~ƒ‚‡…‡‡‘˜š ¨²³·½ÁÆÉÊÌÏùËÑ÷şÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÿÿÿşşÿÿşşşşÿşû½µ²­¬¨¥¤£¡Ÿ›””•÷…“‹‰‡‡‚~ƒ‡‡ŠŒ“——šŸ©©®²¾¿ÃÇÉËöìÒÜÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşşÿÿÿÿşııÿşÿÿÿışÔ¹±°ªª§¢  š—–’Ëñ“˜íŠ…†}‡…Š‰‘‘”›¤£§­µº¼ÂÅÉêóÎÑıÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿÿÿÿÿÿÿşşÿÿÿşÿÿÿıÿşÿÿıışü¼³­ª¦¤¡œ ˜˜™•˜òöóˆ†€~}ƒƒ…„‰ŒŒ“š›¤®¯¶»½ÅØõ¼Ğ÷ÿşşÿÿÿÿşÿÿÿÿşÿÿÿÿşÿÿÿÿÿşÿşşÿşÿÿÿşşşÿşşüııâ²®©¨¤  ŸŸš—–“•”øãŒ‹‡†}€‚ƒ†„†ˆ‹’•–—¥©®¶¸ÁÇüÄÍÚşşÿÿÿÿÿşÿÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÿÿşıÿışşışüşıù·®ª¦¢Ÿ›œš””“”’˜”‰ƒ…€zƒ…‚†Šˆ‘““™¢§®²¹ÂõíËÎÿÿÿÿÿşÿÿıÿşÿşÿÿÿşşÿÿÿÿÿÿşÿÿÿÿÿşışşÿııüşşıüüıñ±©¦¤™™–“’‘’‰„ƒ}‚„…†ˆ‹‰‘’—š  ©­µºóùÅÊúÿÿÿÿşÿşÿÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿÿÿÿşşışÿşşÿÿÿüşÿıışııº«¦¢œ›˜—”’Š‹ˆ‡„„~‚ƒ€ƒˆ†Œ‡‹Š“˜™¦§¯´Şâ°ÉÛıışşÿÿşÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿşÿşışÿÿşÿÿşışÿşıúıûª¥¢››——““‹Š‰‡†……€ƒƒ‚…‡‹‡‹‹”š™£©±ÂõÀÅÉúıışışşşÿÿşÿışşşÿşşÿÿşÿşÿÿÿÿÿÿÿÿüşÿıÿÿÿüışşÿşüúüÇ¥¡˜™¢•‘ŠŠ‰ˆ„‚†€ƒƒ‚ƒ‡ˆ†‰Š“—˜›Ÿ¢«³÷êÃÇúüışÿşşşÿÿşÿşşÿÿşÿşÿÿÿÿÿÿÿÿÿÿÿÿÿşÿÿÿÿşÿşışşıûııışù¨¢šš™–‘‹Š‰‰‡„‚ƒ€‚ƒ†…†ˆˆŒ‰Œ“—› ¥«ôò·ÃÛúıışÿşşşşÿÿşÿşşşÿÿşÿÿÿÿÿÿşÿşÿÿıÿÿÿıışÿşşúşşÿşüüúşıÚ£š––•‘ŒŒ‹ˆ‡‰…„‚‚……†…ˆˆ‰ŠŠŠ’–¢§êî¡¿Èüşışşşışşşÿşÿÿşşıüşÿşÿÿÿÿÿÿşÿÿşÿÿûşşüışışııÿüıüûúü÷ù¥˜––“Š‰†…‡ƒƒ€€ƒ††„„ˆˆ‹‹‹‘•˜œ¡ÌŞ¸¼Àùıüüşÿÿşşÿşııÿşıÿÿşşÿÿÿÿÿşÿşşşÿÿşşşşÿışşüüşşüııúışúüüë˜–“Œ‹‰‰‡ƒ„‚€~†‡………ˆ‹ˆ‹‡“—™®îêµ½×üúşşÿşÿşışıÿşşÿüÿÿşÿşÿÿşüşÿÿııÿşşşııûşııÿşüıüışûúûıûûû©˜–”‘ŒŠŠ‰…ƒƒ€|~††‹ˆ…‰‰ŠŠ…’”–š£öè©·Âûıııûışşüÿüıÿÿüışÿÿşşşÿÿÿÿıÿÿÿşÿÿşışüÿûıÿüıùûşşıûÿûü÷ıú÷š•‘ŠŠ‡ˆ…‚‚~}|{…ˆ‰ˆ‡Š‰ˆƒ’•Ÿš íÑ•´¼úúııÿıışışışşşşşüşÿışÿÿşÿÿÿııÿışşÿışûüüøşÿııûıüüüüıûıûüùú²™’ŒˆŠ‡‡„‚„}{z{ƒƒ‡†‡Š‰ˆ”•˜ŸÜÎ¶­¶Øıûüııûşıûüûışşşşÿşşşışşşÿÿşıÿÿşışıÿııûüüşüıüüüıüÿüùûûıûøùöš’‹Šˆˆƒ„‚~{yw‚‡‡…„Š‹”—œ¸ôì¨±¼÷ûûüúÿşşÿıışÿşışşüşşışıÿşşşıüÿÿşşÿıüıüÿÿúşüıüııüûşûúıûû÷ùøûÅ“‘Šˆ‰…„ƒ‡zxvˆ…††ƒŠ‹Œ‘•™¡÷÷š­´øúûûûüûşışşûışışÿııııııııûıÿıÿÿşşÿşıûşüÿıışúşüûşşüùûüşıúü÷şøú™‘‹‰‡††‚‚{‘w„†‡ƒ†ˆ‰’–™îôŒª®Íøùı÷şüüûüşûüşııüüşışıÿşıÿşşÿşşşÿşüışüşüşüüşüıúüüûûø÷ıÿüöùû÷ùøâ‘Œˆˆ†„‚€‚|ywƒ†…†‰‰‰‹’”áõ¶¥¬¥øúúùúûûûüúıüüşışúıûüÿşıÿúşÿışıııışşşışıûşıÿüıùıûııüüüúøú÷û÷ûùøö¥Œ‰‡…„€~~|}xw~†ˆ†ˆ‰Š“”Áêç©«ùøúúüüüıüüıüüüüûüûüúûşşüşışşÿüıüışüûııûııüûııüşûúıúûûûûøúûøûùûøöë‹‡ƒ…€~~y~xvªI^ <    o`[°«‰€‰­ÊÎËÌøøüõûûøşüúııÿşÿıïÙÏÇÊÀİşÿÿÿşÿÿÿÿõ‹€{~°uyyyïûşõöóòæÒ¶Òï­ğıüŸÕõşşû÷ûşúûıúüúùúúöñîë|erÂ›“«““ÌºôöúñøûúûıúşıüüıîËÃ¼Ù×êÊüşÿÿÿışÿÿñ‰€}~ĞŠ~zˆíúùôôòñèÇ²Õçûûş‰cuÜûú÷÷ÿüûúùıûúù÷ùòğëî[ku„š™‡°Ÿ›™¼¦íó÷ñôøøøùø÷üûıü‡ÏÂ½»ÄÜ²ûıüışııÿıëùóøôëÏÆ‘pÑüïß~ƒŞêÆ¶ÜóŸüüÙagæûüöûûøıøúùúüöøöóğíí*qm~Œ„‹‘€£“àóôñïóóÌÏÊÄ×ııúêĞÀº·»ÀÁïüÿıÿşııâÛÔĞÈÄ´¨¥³¼÷ß¡iaèçÌÃåğ¹ùû…k\ağùÍ­w‡š¯çùûöøõøóğìí"Yo€‡‰ŠŒ†’„¥ÀìñğæñóÏÓÕÔ×÷ùúèÚÀ·³·±‹°æñÏøúşşşüüùûüûúöøø÷üå¿oY®äÎËïçÖûğˆd[_÷÷øÃÉÂ¶¬«ŠŒŠŒ”œ©Ò&7zr“€—ˆ„ƒ‹µç˜¢—¢ª·©¬ÈÒîùùîİÈµ²´”™«¸½­ÂÃüı÷ÛØÏÒùûúùüú÷øâ—lU€áËĞòÈéñtzˆ¬Ò²¡••—œŸš”“ˆˆ€xÎé)6g}{»’‘˜˜¹³‘´ÂèÍ ØÈÉÏÌÌİõâïÚÔ epf­¡¸¾¥‰ÎÁ¿½ÍÓĞïîÕ«Ğ½¯ÛW_ea¥²§£›””’{©¯±¨¼…É™}İË¯Ì«¤ªÃï‚¤ìì+9Y•u†§‘—’„‘~•¿Óµ¬}ÌÇÍÆ—ƒ¦ÎÉé²[‡§¨¨¡©ŸÁĞ÷ñéğîëæˆˆÈÉ¶•^Ua^V§‘µÖ©œÂ¾î”˜®´ó½˜Ğ—¨ô÷òÉÁôé¨ğî”Äìì5@R˜•”®¸¡˜™|‰Œ›ÃºÅÅÊ½­µ¤Áu­˜e³´±…½¼ÃÌÊŞ®ëÉáÍ„jÅÔ©ÍyVV]YU¦´µÜ¶œ½ÇÚ¹ÑÊË¬§ÆßõÚ¾Äï÷²ªğÇ¤èëê4?K~pxœ– µ¸±˜‘¦®±±±ÍĞÔÔÍÙËÖíç¨xnŒ¹»¼äº½ºÆÅîèå®ÉÑĞŞéåÎÜ…b\PSTÌ³âÂ®¿áÄÌ¥ÑäŸ«¹¹ŠÚíÓÒÀ÷öœÉğ¢«ççá6BKÎßëğñïğèÎ»µÆÇÏÈÌßòöùüûûûıù÷íÇÃÁÀÀ¿ÃÃÂÉÒÛÚÛÙÏÍËâÖÚØØu`RKQ‹~Ï\ºÉÁÅó·ËŸÏé¶±Ò´ ÔÙÑ¶óğœğñ¥ÀéåÔ@GLŸÍÊ³«¥¦§«°»½ĞÑØĞÓÛáïøúûüûüüüıøüùùòÍÍÏØçóùúûùøüöèÔÈÁËfy…x~¿¹À_ÓíÇÕ®ŞÍğ½ªÊ³Ù¥Š™İÙÊ×ôÃ›ñÓ«äéâÑFRxŒ™›ª¦¯±³ºÃÅÔØÜÚÚÛİÛààáèëéŞÕÒÔúııûüşúıùıüûûşııûüûûùñzu—wºpÉÅÇÆ½¾ÍÓÅÒ­¡¼³Î‘wµØÙÂïô¹ò·¨âÛÑÌsx‰˜¦Ììñ÷õùõ÷

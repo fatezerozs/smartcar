@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "smartcar.turn-soft-review/1",
+  "version": "PHASE2_TURN_GEOMETRY_20261109_2",
+  "config": {
+    "requestPermille": 170,
+    "durationMs": 2000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 0,
+    "servoUs": 1600
+  },
+  "info": {
+    "generation": 3,
+    "start_ms": 1140944,
+    "stop_ms": 1143144,
+    "count": 422,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 1,
+    "crc32": 2855042772
+  },
+  "verification": {
+    "crcVerified": true,
+    "rows": 422,
+    "postZeroMs": 2006,
+    "admissionSeedResetOffsetMs": 0,
+    "softwarePwmMaxUnits10000": 1700,
+    "productionApproved": false,
+    "electricalPwmVerified": false,
+    "mechanicalStopVerified": false
+  },
+  "turnConfiguration": {
+    "rawReply": "[TURN_CONFIG] frozen=1 valid=1 request=250 duration=2500 speed=60 servo=1500/1600 soft_hits=20 min_cap=50",
+    "coveredByTraceCrc": false
+  },
+  "heartbeatDiagnostic": {
+    "rawReply": "[HB_DIAG] frozen=1 reason=1 stop=1143144 lease=1143110 age=34 rx_h=36/1143108/175 parsed_h=36/1143110/174 accepted_h=36/1143110/174 radio_rx=12895/13004 quiet=1",
+    "coveredByTraceCrc": false,
+    "instrumentedBuild": true
+  },
+  "rawDeltaLeftRight": [
+    -3377,
+    1414
+  ],
+  "faultValues": [
+    0
+  ],
+  "faultDetails": [
+    0
+  ],
+  "operatorConfirmationPending": false,
+  "operatorObservation": {
+    "originalReply": "没有持续向前,先向前一段时间,停止,再向前",
+    "rightWheelMotion": "forward, pause, forward",
+    "visibleReverseConfirmed": false,
+    "finalStopExplicitlyConfirmed": false,
+    "leftRightRelativeSpeed": null,
+    "abnormalSoundsOrBinding": null
+  },
+  "productionApproved": false,
+  "continuousForwardResponseAccepted": false
+}

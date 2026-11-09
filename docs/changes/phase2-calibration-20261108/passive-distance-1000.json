@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "smartcar.phase2-passive-distance-check/1",
+  "recordedAtUtc": "2026-11-08T17:39:27.733747+00:00",
+  "operatorReadiness": "直推核对就绪",
+  "requestedGroundDistanceMm": 1000,
+  "actualGroundDistanceMm": 1000,
+  "before": {
+    "totalLeft": -16129,
+    "totalRight": 16346,
+    "samples": 193621,
+    "sampleMs": 1936530,
+    "raw": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-16129 total4=16346 samples=193621 sample_ms=1936530 sign3=-1 sign4=1 confirmed=1"
+  },
+  "after": {
+    "totalLeft": -27578,
+    "totalRight": 27629,
+    "samples": 205210,
+    "sampleMs": 2052420,
+    "raw": "[ENCODER] mode=PULSE_DIR period_ms=10 enc3=LEFT C3/C4 enc4=RIGHT C5/C25 raw3=0 raw4=0 total3=-27578 total4=27629 samples=205210 sample_ms=2052420 sign3=-1 sign4=1 confirmed=1"
+  },
+  "motorCommandSent": false,
+  "status": "ONE_PASSIVE_DISTANCE_CHECK_RECORDED_REVIEW_PENDING",
+  "productionApproved": false,
+  "evidenceSha256": {
+    "evidence/passive-distance/push1000-before-20261108T173856622Z.log": "5ed9989ef618d4db097121b59895438adafa53e7ca4152c8ae72442354c50fbc",
+    "evidence/passive-distance/push1000-after-20261108T174052529Z.log": "6c6ae073c8803307e7eae606c89d932d39ee60045da10b0f963b83da875dde73"
+  },
+  "operatorCompletion": "已推1000mm",
+  "rawCountDeltasLeftRight": [
+    -11449,
+    11283
+  ],
+  "normalizedForwardCountDeltasLeftRight": [
+    11449,
+    11283
+  ],
+  "observedCountsPerMetreLeftRight": [
+    11449,
+    11283
+  ],
+  "oldBaselineCountsPerMetreLeftRight": [
+    12358.730158730159,
+    12479.36507936508
+  ],
+  "oldScaleDistanceMLeftRight": [
+    0.9263896737734395,
+    0.904132536250318
+  ],
+  "distanceErrorRelativeToReportedPercentLeftRight": [
+    -7.361032622656049,
+    -9.586746374968202
+  ],
+  "equivalentCircumferenceMUsingAdoptedCprLeftRight": [
+    0.2040178181500568,
+    0.20904014889657005
+  ],
+  "limits": [
+    "Single operator-reported1000mm forward push; no independent repeat/uncertainty assessment.",
+    "Same powered MCU session supported by increasing sample time/sequence; no reset observed.",
+    "No waveform proof or counted revolutions supplied; do not changeCPR based on distance alone."
+  ]
+}

@@ -1,0 +1,94 @@
+# port=COM14 baud=115200 host_time=2026-11-08T23:14:12.8837685+08:00
+[LINK] STOP
+[LINK] STOP
+[TELEM] ms=15995 n=770 state=0 faults=0 valid=0 owner=radio motion=0
+[TELEM] ms=16195 n=780 state=0 faults=0 valid=0 owner=radio motion=0
+[LINK] port=usb owner=usb rx=7 tx=14236 overflow=0 errors=0 tx_rejected=0; x=claim while stopped
+[ENCODER_SPEED] encoder3 LEFT C3/C4, encoder4 RIGHT C5/C25; vendor PULSE_DIR counting; @encoder_status; @encoder_hw; @encoder_sign s3 s4; @speed_cfg max_ticks kp ki; @speed_mode 0/1; PI OFF by default
+[MOTION_DIAG] max 150 permille; manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP
+[THRESHOLD_DIAG] manual single-wheel bench; first <=100, step <=10, max 200 permille / 1500ms; local autostart disabled; !=STOP
+[MOTION] @motion line/shuttle permille ms; @motion circle permille ms pulse_us; requires hardware calibration, cruise=0; h heartbeat, !=STOP, v=confirm reverse while stopped
+
+[VISION2] MIDTERM: camera steering / open-loop motor; UART arm/stop; physical keys removed; boot is stopped
+[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/pause/reset disarms
+[FIELD] build=ENCODER_SPEED_DIAG_5; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 level2, @duration ms; newline; !=STOP
+[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM is NOT measured speed
+[STARTUP] @startup enabled delay_ms; @save, @load; physical keys removed; boot does not auto-arm; remote a requires h heartbeat
+[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first 1500us then <=50us step; STOP/timeout off
+[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=200 permille / 1500ms; NOT forward confirmation
+[LINK] dual UART1/UART8 115200 8N1; x=claim this port while stopped; !=STOP on either port
+[MODE] C26/C27 ON=ground: 00 OBSERVE, 10 SERVO, 01 MOTOR, 11 DRIVE; change=STOP; keys removed; a/h/s via UART
+[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help
+[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset
+[BAYES] default model UNTRAINED; posterior is not measured accuracy
+[VISION2] image: SeekFree V2, GRAY 94x60, header=12 bytes; no mixed text
+[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control
+[VISION2] tracking history cleared
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=16248 sample=1592 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=UNKNOWN p=0.000 margin=0.000 entropy=0.000 accepted=0 trained=0
+[FEATURE] n=783 ms=16244 mask=0 quality=0.000 heading=0.0000 curvature=0.0000 open_left=0.0000 open_right=0.0000 split=0.0000 stripes=0.0000
+[VISION2] n=783 fps=50.0 valid=0 state=NO_LANE q=0 thr=0 contrast=0 white=0
+[VISION2] both=0 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=-1/-1/-1 width=0 flags=0 drop=0 junction=0 anchors=0
+[VISION2] age_ms=4 proc_ms=4 history_reset=0 row90_thr=0 local_rows=0 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=16748 sample=1642 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=UNKNOWN p=0.652 margin=0.426 entropy=0.386 accepted=0 trained=0
+[FEATURE] n=808 ms=16744 mask=60 quality=0.941 heading=0.0000 curvature=0.0000 open_left=0.7931 open_right=0.0000 split=0.8046 stripes=0.1480
+[VISION2] n=808 fps=50.0 valid=0 state=NO_LANE q=13 thr=145 contrast=240 white=53
+[VISION2] both=12 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R=38/62/85 width=48 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=4 proc_ms=3 history_reset=0 row90_thr=110 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=17248 sample=1692 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=-0.414 heading=1.320 steer=0.000 duty=0.000 far_ok=1
+[CAL] valid=1 far_ok=1 near_x=0.40795 far_x=0.53030; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=UNKNOWN p=0.847 margin=0.771 entropy=0.227 accepted=0 trained=0
+[FEATURE] n=833 ms=17244 mask=63 quality=0.945 heading=1.3202 curvature=1.0127 open_left=0.7931 open_right=0.0000 split=0.7471 stripes=0.1374
+[VISION2] n=833 fps=50.0 valid=1 state=TRACK q=42 thr=141 contrast=241 white=55
+[VISION2] both=37 inferred=0 err=-8.1 raw=-8.1 bend=20.9 bend_ok=1 row90 L/M/R=38/80/122 width=85 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=4 proc_ms=3 history_reset=0 row90_thr=103 local_rows=86 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[ENCODER_SPEED] encoder3 LEFT C3/C4, encoder4 RIGHT C5/C25; vendor PULSE_DIR counting; @encoder_status; @encoder_hw; @encoder_sign s3 s4; @speed_cfg max_ticks kp ki; @speed_mode 0/1; PI OFF by default
+[MOTION_DIAG] max 150 permille; manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP
+[THRESHOLD_DIAG] manual single-wheel bench; first <=100, step <=10, max 200 permille / 1500ms; local autostart disabled; !=STOP
+[MOTION] @motion line/shuttle permille ms; @motion circle permille ms pulse_us; requires hardware calibration, cruise=0; h heartbeat, !=STOP, v=confirm reverse while stopped
+
+[VISION2] MIDTERM: camera steering / open-loop motor; UART arm/stop; physical keys removed; boot is stopped
+[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/pause/reset disarms
+[FIELD] build=ENCODER_SPEED_DIAG_5; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 level2, @duration ms; newline; !=STOP
+[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM is NOT measured speed
+[STARTUP] @startup enabled delay_ms; @save, @load; physical keys removed; boot does not auto-arm; remote a requires h heartbeat
+[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first 1500us then <=50us step; STOP/timeout off
+[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=200 permille / 1500ms; NOT forward confirmation
+[LINK] dual UART1/UART8 115200 8N1; x=claim this port while stopped; !=STOP on either port
+[MODE] C26/C27 ON=ground: 00 OBSERVE, 10 SERVO, 01 MOTOR, 11 DRIVE; change=STOP; keys removed; a/h/s via UART
+[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help
+[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset
+[BAYES] default model UNTRAINED; posterior is not measured accuracy
+[VISION2] image: SeekFree V2, GRAY 94x60, header=12 bytes; no mixed text
+[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control
+[BOARD_IO] C26=1 C27=1 mode=OBSERVE ready=1; keys=REMOVED
+[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0
+[SPEED] ms=17748 sample=1742 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms
+[DRIVE] ready=0 state=0 faults=0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0
+[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm centered STRAIGHT before @camera
+[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_R_EXIT p=0.450 margin=0.080 entropy=0.447 accepted=0 trained=0
+[FEATURE] n=858 ms=17743 mask=60 quality=0.945 heading=0.0000 curvature=0.0000 open_left=0.8046 open_right=0.0000 split=0.7471 stripes=0.1243
+[VISION2] n=858 fps=50.0 valid=1 state=TRACK q=31 thr=143 contrast=241 white=54
+[VISION2] both=27 inferred=0 err=-18.4 raw=-19.2 bend=0.0 bend_ok=0 row90 L/M/R=33/68/102 width=70 flags=3 drop=0 junction=0 anchors=0
+[VISION2] age_ms=5 proc_ms=4 history_reset=0 row90_thr=92 local_rows=87 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0 ring_votes=0
+[TELEM] ms=17995 n=870 state=0 faults=0 valid=0 owner=radio motion=0
+[TELEM] ms=18195 n=880 state=0 faults=0 valid=1 owner=radio motion=0
+# TX @status
+[LINK] REJECT not owner; x=claim while stopped
+[TELEM] ms=18395 n=890 state=0 faults=0 valid=1 owner=radio motion=0
+[TELEM] ms=18595 n=900 state=0 faults=0 valid=1 owner=radio motion=0
+[TELEM] ms=18795 n=910 state=0 faults=0 valid=1 owner=radio motion=0
+[TELEM] ms=18995 n=920 state=0 faults=0 valid=1 owner=radio motion=0
+[TELEM] ms=19195 n=930 state=0 faults=0 valid=1 owner=radio motion=0

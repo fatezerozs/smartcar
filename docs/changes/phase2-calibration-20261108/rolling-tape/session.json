@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "smartcar.phase2-manual/1",
+  "sessionId": "phase2-rolling-tape-20261108",
+  "date": "2026-11-08",
+  "timezone": "Asia/Shanghai",
+  "status": "COLLECTING",
+  "productionApproved": false,
+  "operator": null,
+  "vehicleId": null,
+  "conditionId": null,
+  "instrument": {
+    "id": "tape-01",
+    "name": "卷尺（用户报告；本地编号tape-01）",
+    "rangeMm": null,
+    "distanceResolutionMm": 1,
+    "angleResolutionDeg": null
+  },
+  "conditions": {
+    "surface": null,
+    "batteryAndPayload": "用户确认正常装载；具体电池及装载明细未提供",
+    "tireState": "用户确认轮胎落地、人工直推",
+    "normalOperatingLoadReported": true,
+    "wheelsOnGroundReported": true,
+    "manuallyPushedStraightReported": true,
+    "otherTestReleasedVehicle": false,
+    "actuatorPowerIsolated": null
+  },
+  "encoderProfile": "../../../../profiles/encoder-production-20261106.json",
+  "geometryCsv": "geometry.csv",
+  "rollingCsv": "rolling.csv",
+  "steeringCsv": "steering.csv",
+  "steeringTrianglesCsv": "steering-triangles.csv",
+  "notes": "Operator reports shared 945 mm for five turns and normal-load wheels-on-ground straight manual rolling using tape-01; later confirms tape graduation 1 mm and camera optical centre height/forward/right offsets 330/197/0 mm. Camera acquisition conditions matching rolling conditions are unconfirmed; all rows remain pending and condition_id is unset. No independent repeats, accuracy or acquisition timestamps provided. No hardware accessed.",
+  "cameraMeasurementSameConditionsAsRollingConfirmed": false
+}

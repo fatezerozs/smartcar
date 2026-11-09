@@ -1,0 +1,151 @@
+{"time":"2026-11-09T01:33:19.0418653+08:00","elapsed_ms":70,"direction":"TX","data":"\r\n!\r\n"}
+{"time":"2026-11-09T01:33:19.0570852+08:00","elapsed_ms":84,"direction":"RX","data":"[BOARD_IO] C26=0 C27[LINK] STOP\r\n[FIELD] STOP\r\n"}
+{"time":"2026-11-09T01:33:19.1976056+08:00","elapsed_ms":225,"direction":"RX","data":"[BOARD_I"}
+{"time":"2026-11-09T01:33:19.2118496+08:00","elapsed_ms":239,"direction":"RX","data":"O] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED\r\n[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0\r\n[SPEED] ms=1596625 sample=159630 ena"}
+{"time":"2026-11-09T01:33:19.2272650+08:00","elapsed_ms":255,"direction":"RX","data":"bled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[DRIVE] ready=0 state=0 faults=0 near=0.168 heading=-0.311 steer=0.000 duty=0.000 far_ok=1\r\n[CAL] v"}
+{"time":"2026-11-09T01:33:19.2430555+08:00","elapsed_ms":270,"direction":"RX","data":"alid=1 far_ok=1 near_x=0.54445 far_x=0.46557; confirm center"}
+{"time":"2026-11-09T01:33:19.2593987+08:00","elapsed_ms":287,"direction":"RX","data":"ed STRAIGHT before @camera\r\n[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.667 margin=0.456 entropy=0.414 accepted=0 "}
+{"time":"2026-11-09T01:33:19.2739066+08:00","elapsed_ms":301,"direction":"RX","data":"trained=0\r\n[FEATURE] n=79836 ms=1596605 mask=63 quality=0.604 heading=-0.3106 curvature=-0.2032 open_left=0.0000 open_right=0.2759 split=0.2759 stripes=0.0840\r\n[VISION2] n=79836 fps=50.0 vali"}
+{"time":"2026-11-09T01:33:19.2899707+08:00","elapsed_ms":317,"direction":"RX","data":"d=1 state=TRACK q=96 thr=192 contrast=154 white=56\r\n[VISION2] both=84 inferred=0 err=4.2 raw=4.1 bend=-14.6 bend_ok=1 row90 L/M/R=54/102/150 width=97 flags=3 drop=0 junction=0 anchors=0\r\n[VISION2] age_ms=20 proc_"}
+{"time":"2026-11-09T01:33:19.3053501+08:00","elapsed_ms":333,"direction":"RX","data":"ms=4 history_reset=0 row90_thr=196 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallback=0 entry_guide=0 ring_seen=0 ring_candidate=0"}
+{"time":"2026-11-09T01:33:19.3211008+08:00","elapsed_ms":348,"direction":"RX","data":" ring_votes=0\r\n"}
+{"time":"2026-11-09T01:33:19.4620604+08:00","elapsed_ms":489,"direction":"TX","data":"x\r\n"}
+{"time":"2026-11-09T01:33:19.4635803+08:00","elapsed_ms":491,"direction":"RX","data":"[LI"}
+{"time":"2026-11-09T01:33:19.4922343+08:00","elapsed_ms":520,"direction":"RX","data":"NK] port=radio owner=radio rx=16150 tx=3648548 overflow=0 errors=1 tx_rejected=59; x=claim while stopped\r\n"}
+{"time":"2026-11-09T01:33:19.4939951+08:00","elapsed_ms":521,"direction":"TX","data":"t\r\n"}
+{"time":"2026-11-09T01:33:19.6925601+08:00","elapsed_ms":720,"direction":"RX","data":"[BOARD"}
+{"time":"2026-11-09T01:33:19.7081612+08:00","elapsed_ms":735,"direction":"RX","data":"_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED\r\n[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0\r\n[SPEED] ms=1597125 sample=159680 enabled=0 raw3_L=0 raw"}
+{"time":"2026-11-09T01:33:19.7239296+08:00","elapsed_ms":751,"direction":"RX","data":"4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[DRIVE] ready=0 s"}
+{"time":"2026-11-09T01:33:19.7387351+08:00","elapsed_ms":766,"direction":"RX","data":"tate=0 faults=0 near=0.168 heading=-0.311 steer=0.000 duty=0.000 far_ok=1\r\n[CAL"}
+{"time":"2026-11-09T01:33:19.7540233+08:00","elapsed_ms":781,"direction":"RX","data":"] valid=1 far_ok=1 near_x=0.54445 far_x=0.46557; confirm centered STRAIGHT before @camera\r\n[BAYES] mode=MIDTERM state=UNKNOWN candidate=RING_L_EXIT p=0.632 margin=0.428 entropy=0.448 accepted"}
+{"time":"2026-11-09T01:33:19.7698437+08:00","elapsed_ms":797,"direction":"RX","data":"=0 trained=0\r\n[FEATURE] n=79861 ms=1597105 mask=63 quality=0.604 heading=-0.3113 curvature=-0.2217 open_left=0.0000 open_right=0.2759 split=0.2759 stripes=0.0823\r\n[VISI"}
+{"time":"2026-11-09T01:33:19.7860055+08:00","elapsed_ms":813,"direction":"RX","data":"ON2] n=79861 fps=50.0 valid=1 state=TRACK q=96 thr=192 contrast=154 white=56\r\n[VISION2] both=84 inferred=0 err=4.3 raw=4.3 bend=-14.7 bend_ok=1 row90 L/M/R=54/102/150 width=97 flags=3 drop=0 "}
+{"time":"2026-11-09T01:33:19.8014125+08:00","elapsed_ms":829,"direction":"RX","data":"junction=0 anchors=0\r\n[VISION2] age_ms=20 proc_ms=4 history_reset=0 row90_thr=196 local_rows=84 ambiguous=0 ring=0 ring_side=0 ring_rows=0 path_fallba"}
+{"time":"2026-11-09T01:33:19.8171232+08:00","elapsed_ms":844,"direction":"RX","data":"ck=0 entry_guide=0 ring_seen=0 ring_candidate=0 "}
+{"time":"2026-11-09T01:33:19.8321431+08:00","elapsed_ms":859,"direction":"RX","data":"ring_votes=0\r\n"}
+{"time":"2026-11-09T01:33:19.9124888+08:00","elapsed_ms":0,"direction":"TX","data":"@motion line 200 2500\r\n"}
+{"time":"2026-11-09T01:33:19.9173243+08:00","elapsed_ms":5,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:19.9209078+08:00","elapsed_ms":9,"direction":"RX","data":"[MOTION"}
+{"time":"2026-11-09T01:33:19.9573446+08:00","elapsed_ms":45,"direction":"RX","data":"] STARTED kind=1 requested=200 duration_ms=2500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast\r\n[MOTION] seq=3 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=1597355\r\n[SPEED] ms=1597355 sample=159703 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:19.9879862+08:00","elapsed_ms":76,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.0191638+08:00","elapsed_ms":107,"direction":"RX","data":"[MOTION"}
+{"time":"2026-11-09T01:33:20.0345192+08:00","elapsed_ms":122,"direction":"RX","data":"] seq=3 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=1597455\r\n[SPEED] m"}
+{"time":"2026-11-09T01:33:20.0501826+08:00","elapsed_ms":138,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.0516824+08:00","elapsed_ms":139,"direction":"RX","data":"s=1597455 sample=159713 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:20.1122584+08:00","elapsed_ms":200,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.1170475+08:00","elapsed_ms":205,"direction":"RX","data":"[MOTION"}
+{"time":"2026-11-09T01:33:20.1436456+08:00","elapsed_ms":231,"direction":"RX","data":"] seq=3 kind=1 phase=1 reason=0 requested=200 actual=0 servo_us=1550 ms=1597555\r\n[SPEED] ms=1597555 sample=159723 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/"}
+{"time":"2026-11-09T01:33:20.1590277+08:00","elapsed_ms":247,"direction":"RX","data":"L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=0 servo_us=15"}
+{"time":"2026-11-09T01:33:20.1744239+08:00","elapsed_ms":262,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.1759607+08:00","elapsed_ms":264,"direction":"RX","data":"50 ms=1597555\r\n[SPEED] ms=1597555 sample=159723 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:20.2206923+08:00","elapsed_ms":308,"direction":"RX","data":"[MOTIO"}
+{"time":"2026-11-09T01:33:20.2371150+08:00","elapsed_ms":325,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.2678619+08:00","elapsed_ms":356,"direction":"RX","data":"N] seq=3 kind=1 phase=2 reason"}
+{"time":"2026-11-09T01:33:20.2837239+08:00","elapsed_ms":371,"direction":"RX","data":"=0 requested=200 actual=9 serv"}
+{"time":"2026-11-09T01:33:20.2990638+08:00","elapsed_ms":387,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.3453021+08:00","elapsed_ms":433,"direction":"RX","data":"o_us=1550 ms=1597655\r\n[SPEED] "}
+{"time":"2026-11-09T01:33:20.3606804+08:00","elapsed_ms":448,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.3618091+08:00","elapsed_ms":449,"direction":"RX","data":"ms=1597655 sample=159733 enabl"}
+{"time":"2026-11-09T01:33:20.4063070+08:00","elapsed_ms":494,"direction":"RX","data":"ed=0 raw3_L=0 raw4_R=0 target_"}
+{"time":"2026-11-09T01:33:20.4215758+08:00","elapsed_ms":509,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.4367963+08:00","elapsed_ms":524,"direction":"RX","data":"R/L=0/0 measured_R/L=0/0 pwm_R"}
+{"time":"2026-11-09T01:33:20.4678227+08:00","elapsed_ms":556,"direction":"RX","data":"/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:20.4830326+08:00","elapsed_ms":571,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.4842541+08:00","elapsed_ms":572,"direction":"RX","data":"[MOTION] seq=3 kind=1 phase=2 "}
+{"time":"2026-11-09T01:33:20.5138549+08:00","elapsed_ms":602,"direction":"RX","data":"reason=0 requested=200 actual="}
+{"time":"2026-11-09T01:33:20.5297716+08:00","elapsed_ms":617,"direction":"RX","data":"20 servo_us=1550 ms=1597755\r\n["}
+{"time":"2026-11-09T01:33:20.5445866+08:00","elapsed_ms":632,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.5757046+08:00","elapsed_ms":663,"direction":"RX","data":"SPEED] ms=1597755 sample=15974"}
+{"time":"2026-11-09T01:33:20.6063045+08:00","elapsed_ms":694,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.6074765+08:00","elapsed_ms":695,"direction":"RX","data":"3 enabled=0 raw3_L=0 raw4_R=0 "}
+{"time":"2026-11-09T01:33:20.6372567+08:00","elapsed_ms":725,"direction":"RX","data":"target_R/L=0/0 measured_R/L=0/"}
+{"time":"2026-11-09T01:33:20.6531004+08:00","elapsed_ms":741,"direction":"RX","data":"0 pwm_R/L=0/0 faults=0; counts"}
+{"time":"2026-11-09T01:33:20.6688204+08:00","elapsed_ms":757,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.7155055+08:00","elapsed_ms":803,"direction":"RX","data":"/10ms\r\n[MOTION] seq=3 kind=1 p"}
+{"time":"2026-11-09T01:33:20.7314036+08:00","elapsed_ms":819,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.7325407+08:00","elapsed_ms":820,"direction":"RX","data":"hase=2 reason=0 requested=200 "}
+{"time":"2026-11-09T01:33:20.7775933+08:00","elapsed_ms":865,"direction":"RX","data":"actual=29 servo_us=1550 ms=159"}
+{"time":"2026-11-09T01:33:20.7932717+08:00","elapsed_ms":881,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.8238715+08:00","elapsed_ms":912,"direction":"RX","data":"7855\r\n[SPEED] ms=1597855 sampl"}
+{"time":"2026-11-09T01:33:20.8404844+08:00","elapsed_ms":928,"direction":"RX","data":"e=159753 enabled=0 raw3_L=0 ra"}
+{"time":"2026-11-09T01:33:20.8543839+08:00","elapsed_ms":942,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.8698208+08:00","elapsed_ms":958,"direction":"RX","data":"w4_R=0 target_R/L=0/0 measured"}
+{"time":"2026-11-09T01:33:20.9003538+08:00","elapsed_ms":988,"direction":"RX","data":"_R/L=0/0 pwm_R/L=0/0 faults=0;"}
+{"time":"2026-11-09T01:33:20.9157190+08:00","elapsed_ms":1003,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:20.9170490+08:00","elapsed_ms":1005,"direction":"RX","data":" counts/10ms\r\n[MOTION] seq=3 k"}
+{"time":"2026-11-09T01:33:20.9466056+08:00","elapsed_ms":1034,"direction":"RX","data":"ind=1 phase=2 reason=0 request"}
+{"time":"2026-11-09T01:33:20.9772755+08:00","elapsed_ms":1065,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.0240600+08:00","elapsed_ms":1112,"direction":"RX","data":"ed=200 actual=40 servo_us=1550"}
+{"time":"2026-11-09T01:33:21.0399419+08:00","elapsed_ms":1128,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.0708953+08:00","elapsed_ms":1159,"direction":"RX","data":" ms=1597955\r\n[SPEED] ms=1597955 sample=159763 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] "}
+{"time":"2026-11-09T01:33:21.0859879+08:00","elapsed_ms":1174,"direction":"RX","data":"seq=3 kind=1 phase=2 reason=0 requested=200 actual=49 servo_us=1550 ms=1598055\r\n[SPEED] ms=1598055 sample=159773 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=59 servo_us=1550 ms=1598155\r\n[SPEED] ms=1598155 sample=159783 "}
+{"time":"2026-11-09T01:33:21.1166781+08:00","elapsed_ms":1204,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.1181980+08:00","elapsed_ms":1206,"direction":"RX","data":"enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=69 servo_us=1550 ms=1598255\r\n[SPEED] ms=1598255 sample=159793 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=79 servo_us=1550 ms=1598355\r\n[SPEED] ms=1598355 sample=159803 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=90 servo_us=1550 ms=1598455\r\n[SPEED] ms=1598455 sample=159813 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0"}
+{"time":"2026-11-09T01:33:21.1472978+08:00","elapsed_ms":1235,"direction":"RX","data":"/0 faults=0; counts/10ms\r\n[MOT"}
+{"time":"2026-11-09T01:33:21.1790178+08:00","elapsed_ms":1267,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.1801967+08:00","elapsed_ms":1268,"direction":"RX","data":"ION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=99 servo_us=1550 ms=1598555\r\n[SPEED] ms=1598555 sample=159823 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:21.2239951+08:00","elapsed_ms":1312,"direction":"RX","data":"[MOTION] seq=3 kind=1"}
+{"time":"2026-11-09T01:33:21.2389792+08:00","elapsed_ms":1327,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.2402621+08:00","elapsed_ms":1328,"direction":"RX","data":" phase=2 reason=0 requested=200 actual=109 servo_us=1550 ms=1598655\r\n[SPEED] ms=1598655 sample=159833 enabled=0 raw3_L=0 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R"}
+{"time":"2026-11-09T01:33:21.2697244+08:00","elapsed_ms":1357,"direction":"RX","data":"/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:21.3000667+08:00","elapsed_ms":1388,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.3312353+08:00","elapsed_ms":1419,"direction":"RX","data":"[MOTION] seq=3 kind="}
+{"time":"2026-11-09T01:33:21.3466029+08:00","elapsed_ms":1434,"direction":"RX","data":"1 phase=2 reason=0 requested=200 actual=119 servo_us=1550 ms=1598755\r\n[SPEED] ms=1598755 sample=159843 enabled=0 raw3_L=-1 raw4_R=0 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:21.3614130+08:00","elapsed_ms":1449,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.4226416+08:00","elapsed_ms":1510,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.4237249+08:00","elapsed_ms":1511,"direction":"RX","data":"[MOTION] seq=3 kind="}
+{"time":"2026-11-09T01:33:21.4534459+08:00","elapsed_ms":1541,"direction":"RX","data":"1 phase=2 reason=0 requested=200 actual=129 servo_us=1550 ms=1598855\r\n[SPEED] ms=1598855 sample=159853 enabled=0 raw3_L=-1 raw4_R=1 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:21.4846898+08:00","elapsed_ms":1572,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.5312003+08:00","elapsed_ms":1619,"direction":"RX","data":"[MOTION] seq=3 kind=1 phase=2 reason=0 req"}
+{"time":"2026-11-09T01:33:21.5469131+08:00","elapsed_ms":1635,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.5479978+08:00","elapsed_ms":1636,"direction":"RX","data":"uested=200 actual=139 servo_us=1550 ms=1598955\r\n[SPEED] ms=1598955 sample=159863 enabled=0 raw3_L=-2 raw4_R=3 target_R/L"}
+{"time":"2026-11-09T01:33:21.5924213+08:00","elapsed_ms":1680,"direction":"RX","data":"=0/0 measured_R/L=0/0 pwm_R/L="}
+{"time":"2026-11-09T01:33:21.6076177+08:00","elapsed_ms":1695,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.6680305+08:00","elapsed_ms":1756,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.6691848+08:00","elapsed_ms":1757,"direction":"RX","data":"0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=149 servo_us=1550 ms=1599055\r\n[SPEED] ms=1599055 sample=159873 enabled=0 raw3_L=-4 raw4_R=4 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/"}
+{"time":"2026-11-09T01:33:21.6998828+08:00","elapsed_ms":1788,"direction":"RX","data":"10ms\r\n"}
+{"time":"2026-11-09T01:33:21.7307144+08:00","elapsed_ms":1818,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.7318244+08:00","elapsed_ms":1820,"direction":"RX","data":"[MOTION] seq=3 ki"}
+{"time":"2026-11-09T01:33:21.7616415+08:00","elapsed_ms":1849,"direction":"RX","data":"nd=1 phase=2 reason=0 requested=200 actual=159 servo_us=1550"}
+{"time":"2026-11-09T01:33:21.7915685+08:00","elapsed_ms":1879,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.7927968+08:00","elapsed_ms":1880,"direction":"RX","data":" ms=1599155\r\n[SPEED] ms=159915"}
+{"time":"2026-11-09T01:33:21.8230019+08:00","elapsed_ms":1911,"direction":"RX","data":"5 sample=159883 enabled=0 raw3"}
+{"time":"2026-11-09T01:33:21.8536248+08:00","elapsed_ms":1941,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.8548491+08:00","elapsed_ms":1943,"direction":"RX","data":"_L=-5 raw4_R=6 target_R/L=0/0 "}
+{"time":"2026-11-09T01:33:21.9148256+08:00","elapsed_ms":2003,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.9453611+08:00","elapsed_ms":2033,"direction":"RX","data":"measured_R/L=0/0 pwm_R/L=0/0 f"}
+{"time":"2026-11-09T01:33:21.9754924+08:00","elapsed_ms":2063,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:21.9768018+08:00","elapsed_ms":2064,"direction":"RX","data":"aults=0; counts/10ms\r\n[MOTION]"}
+{"time":"2026-11-09T01:33:22.0364809+08:00","elapsed_ms":2124,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.0987057+08:00","elapsed_ms":2186,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.1284780+08:00","elapsed_ms":2216,"direction":"RX","data":" seq=3 kind=1 phase=2 reason=0"}
+{"time":"2026-11-09T01:33:22.1588978+08:00","elapsed_ms":2247,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.1599724+08:00","elapsed_ms":2248,"direction":"RX","data":" requested=200 actual=169 serv"}
+{"time":"2026-11-09T01:33:22.1892923+08:00","elapsed_ms":2277,"direction":"RX","data":"o_us=1550 ms=1599255\r\n[SPEED] ms=1599255 sample=159893 enabl"}
+{"time":"2026-11-09T01:33:22.2223937+08:00","elapsed_ms":2310,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.2364537+08:00","elapsed_ms":2324,"direction":"RX","data":"ed=0 raw3_L=-10 raw4_R=9 targe"}
+{"time":"2026-11-09T01:33:22.2674920+08:00","elapsed_ms":2355,"direction":"RX","data":"t_R/L=0/0 measured_R/L=0/0 pwm"}
+{"time":"2026-11-09T01:33:22.2832962+08:00","elapsed_ms":2371,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.3146203+08:00","elapsed_ms":2402,"direction":"RX","data":"_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actua"}
+{"time":"2026-11-09T01:33:22.3292593+08:00","elapsed_ms":2417,"direction":"RX","data":"l=179 servo_us=1550 ms=1599355\r\n[SPEED] ms=1599355 sample=159903 enabled=0 raw3_L=-9 raw4_R=11 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=190 servo_us=1550 ms=1599455\r\n[SPEED] ms=1599455 sample=159913 enabled=0 raw3_L=-8 raw4_R=10 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0"}
+{"time":"2026-11-09T01:33:22.3439467+08:00","elapsed_ms":2432,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.3449747+08:00","elapsed_ms":2433,"direction":"RX","data":" requested=200 actual=199 servo_us=1550 ms=1599555\r\n[SPEED] ms=1599555 sample=159923 enabled=0 raw3_L=-14 raw4_R=15 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=1599655\r\n[SPEED] ms=1599655 sample=159933 enabled=0 raw3_L=-23 raw4_R=22 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 k"}
+{"time":"2026-11-09T01:33:22.4041416+08:00","elapsed_ms":2492,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.4053941+08:00","elapsed_ms":2493,"direction":"RX","data":"ind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=1599755\r\n[SPEED] ms=1599755 sample=159943 enabled=0 raw3_L=-28 raw4_R=28 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:22.4360860+08:00","elapsed_ms":2524,"direction":"RX","data":"[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=1599855\r\n[SPEE"}
+{"time":"2026-11-09T01:33:22.4515033+08:00","elapsed_ms":2539,"direction":"RX","data":"D] ms=1599855 sample=159953 enabled=0 raw3_L=-37 raw4_R=39 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:22.4671160+08:00","elapsed_ms":2555,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.5285638+08:00","elapsed_ms":2616,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.5297559+08:00","elapsed_ms":2617,"direction":"RX","data":"[MOTION] se"}
+{"time":"2026-11-09T01:33:22.5595595+08:00","elapsed_ms":2647,"direction":"RX","data":"q=3 kind=1 phase=2 reason=0 re"}
+{"time":"2026-11-09T01:33:22.5756397+08:00","elapsed_ms":2663,"direction":"RX","data":"quested=200 actual=200 servo_u"}
+{"time":"2026-11-09T01:33:22.5907237+08:00","elapsed_ms":2678,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.6360654+08:00","elapsed_ms":2724,"direction":"RX","data":"s=1550 ms=1599955\r\n[SPEED] ms="}
+{"time":"2026-11-09T01:33:22.6512828+08:00","elapsed_ms":2739,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.6523449+08:00","elapsed_ms":2740,"direction":"RX","data":"1599955 sample=159963 enabled="}
+{"time":"2026-11-09T01:33:22.6976197+08:00","elapsed_ms":2785,"direction":"RX","data":"0 raw3_L=-45 raw4_R=45 target_"}
+{"time":"2026-11-09T01:33:22.7127918+08:00","elapsed_ms":2800,"direction":"TX","data":"h\r\n"}
+{"time":"2026-11-09T01:33:22.7138904+08:00","elapsed_ms":2802,"direction":"RX","data":"R/L=0/0 measured_R/L=0/0 pwm_R"}
+{"time":"2026-11-09T01:33:22.7593830+08:00","elapsed_ms":2847,"direction":"RX","data":"/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=2 reason=0 requested=200 actual=200 servo_us=1550 ms=1600055\r\n[SPEED] ms=1600055 sample=159973 enabled=0 raw3_L=-51 raw4_R=50 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n[MOTION] seq=3 kind=1 phase=0 reason=1 requested=200 actual=0 servo_us=1550 ms=1600055\r\n[SPEED] ms=1600055 sample=159973 enabled=0 raw3_L=-51 raw4_R=50 target_R/L=0/0 measured_R/L=0/0 pwm_R/L=0/0 faults=0; counts/10ms\r\n"}
+{"time":"2026-11-09T01:33:22.7614541+08:00","elapsed_ms":2849,"direction":"RESULT","data":"phase=0 reason=1 expected=1"}
+{"time":"2026-11-09T01:33:22.7688093+08:00","elapsed_ms":2856,"direction":"TX","data":"!\r\n"}

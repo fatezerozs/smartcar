@@ -1,0 +1,13 @@
+trial_id,wheel,direction,turns,distance_mm,condition_id,instrument_id,measured_at,accepted,notes
+R01,left,forward,5,945,,tape-01,,,Shared reported five-turn distance; normal load wheels on ground manually pushed straight confirmed; tape resolution/date/direction/repeats unknown; see operator-readings-04.json
+R02,left,forward,,,,,,,
+R03,left,forward,,,,,,,
+R04,right,forward,5,945,,tape-01,,,Shared reported five-turn distance; normal load wheels on ground manually pushed straight confirmed; tape resolution/date/direction/repeats unknown; see operator-readings-04.json
+R05,right,forward,,,,,,,
+R06,right,forward,,,,,,,
+R07,left,reverse,,,,,,,
+R08,left,reverse,,,,,,,
+R09,left,reverse,,,,,,,
+R10,right,reverse,,,,,,,
+R11,right,reverse,,,,,,,
+R12,right,reverse,,,,,,,

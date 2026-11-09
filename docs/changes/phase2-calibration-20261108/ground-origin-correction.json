@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "smartcar.phase2-ground-origin-correction/1",
+  "recordedAtUtc": "2026-11-08T18:28:02.197685+00:00",
+  "rawReply": "嗯,刚才所有的距离我都是以摄像头为原点测量的",
+  "scope": "Current ground-marker placement dialogue; not retroactively applied to rolling distance, stopping displacement or wheelbase. Broader scope requires confirmation.",
+  "previousInterpretation": "Rear axle ground projection origin, per assistant placement prompt",
+  "operatorReportedOrigin": "camera",
+  "horizontalGroundProjectionConfirmed": true,
+  "cameraOffsetForwardFromRearAxleMmPreviouslyReported": 197,
+  "cameraOffsetRightMmPreviouslyReported": 0,
+  "conditionalTransform": "If coordinates are horizontal ground-plane distances from optical-centre ground projection: x_rear=x_camera; y_rear=y_camera+197. If slant distances, this translation is insufficient.",
+  "mappedRowDistancesCameraMm": [
+    350,
+    500,
+    800,
+    1100
+  ],
+  "conditionalMappedRowDistancesRearMm": [
+    547,
+    697,
+    997,
+    1297
+  ],
+  "near250PointPlacementConfirmed": false,
+  "productionApproved": false,
+  "confirmationReply": "是，沿地面量水平距离",
+  "status": "CAMERA_GROUND_ORIGIN_CONFIRMED_REAR_OFFSET_TRANSLATION_ADOPTED_FOR_CANDIDATE"
+}

@@ -1,0 +1,10 @@
+{
+  "bench-left1600-cap170-2000-02/motion-text.bin": "e706132f0f62419cb54a5873715abdecc442fe05ed22fd5e192e5130a156f1d0",
+  "bench-left1600-cap170-2000-02/plan.json": "7a11239c8486c58b8e78326d6d89b6201e494541b7ac373f1b86c254893b14b3",
+  "bench-left1600-cap170-2000-02/serial-raw.jsonl": "7f6947428021920fb300df2c1fabd9ef5f5bbc10936ecf6a53afb4ba27d70d60",
+  "clear-before-repeat2000-01/review.json": "cc814155e3eb1a11b3440918fb81735e92ffb755cf682d063b3eb0b0295b6d5d",
+  "clear-before-repeat2000-01/serial-raw.jsonl": "94dc294500b5de22a3ba9f3fdf170a47f9c1f44bf4ddebe6562f69a2adad86f3",
+  "export-bench-left1600-cap170-2000-02/serial-raw.jsonl": "5c22f015b93a528c5374e1401f151d02fe2016805d370e1accb19062df26e468",
+  "export-bench-left1600-cap170-2000-02/trace.json": "77381832f7e31f9a011cc1eb5618c82e6381b35f52bffaf5956ff713f9e78578",
+  "review.json": "f96dcd073c8ff0c9691eeb700d7e875a90f655ba19ea36f8cc9c40b81d9bf63b"
+}

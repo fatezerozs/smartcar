@@ -1,0 +1,63 @@
+{
+  "version": "PHASE2_TURN_GEOMETRY_20261109_1",
+  "baseline": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\heartbeat-diag-20261109_2",
+  "output": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\turn-geometry-20261109_1",
+  "sourceSha256": {
+    "vision_profile.h": "910fa85ac7845fa2a68407dd1dfb0f6374b4fbdb2ce78f6b30a5c55256ed1487",
+    "vision_motion.c": "8943de69b6cc6e97c78b79b92e3f7659b6ef4112979c79df27dd189cceb14f5b",
+    "vision_speed.c": "fbe75acbe3003a58139389005da5f8a8a60ebc352d2046f6abbbf8cb66030f1c",
+    "vision_telemetry.c": "b21e63d7e3450213343f3e9e02ddbaba07c5663b3e009bb068c5b999518456c3"
+  },
+  "flashed": true,
+  "buildPassed": true,
+  "productionApproved": false,
+  "arcLimits": {
+    "openLoopOnly": true,
+    "maxRequestPermille": 250,
+    "maxDurationMs": 1500,
+    "servoUs": [
+      1500,
+      1600
+    ],
+    "requiredCenterUs": 1550,
+    "overspeedRawCountsPerSample": 60
+  },
+  "existingProtectionsRetained": [
+    "500ms heartbeat",
+    "first200/+50 request gate",
+    "PWM final request cap",
+    "1m candidate encoder cutoff",
+    "signs/fresh samples/stationary admission",
+    "reverse/nocount/sample faults",
+    "frozen trace release",
+    "STOP and switch veto"
+  ],
+  "limits": [
+    "Left1600 measured; right1500 only mirrored reference.",
+    "Equal open-loop effort does not imply equal wheel speed; no curvature compensation.",
+    "Wheel counts do not establish ground curvature or tire grip.",
+    "Servo PWM ends with motor zero; coast may change wheel angle. Final pose is not driven curvature.",
+    "60counts/sample is a diagnostic trip, not certified ground speed or lateral acceleration bound."
+  ],
+  "keilErrors": 0,
+  "keilWarnings": 0,
+  "hostAssertionsByProgram": {
+    "response": 14414,
+    "heartbeat": 815,
+    "turn": 2987
+  },
+  "pythonTestsPassed": 19,
+  "axfSha256": "d85235c53147761311afd0de48b16e37b9509fce08bc215f7a39f28a80f1fd4e",
+  "changedFiles": [
+    "demo/code/vision_motion.c",
+    "demo/code/vision_profile.h",
+    "demo/code/vision_speed.c",
+    "demo/code/vision_telemetry.c"
+  ],
+  "runtimeIdentityVerified": true,
+  "verifyPassed": true,
+  "runtimeVerifiedPort": "COM10",
+  "ramConfigured": true,
+  "quietCurrent": 1,
+  "speedLoopEnabled": false
+}

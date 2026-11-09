@@ -1,0 +1,29 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "mode": "lifted-open-loop",
+  "requestedPermille": 200,
+  "durationMs": 1000,
+  "rows": 321,
+  "crcVerified": true,
+  "postZeroMs": 2000,
+  "reason": 1,
+  "softwarePwmPeakPermille": 200,
+  "rawCountDeltaLeftRight": [
+    0,
+    0
+  ],
+  "allRawCountsZero": true,
+  "faultsObserved": [
+    0
+  ],
+  "operatorObservation": "User: no wheel rotation; motor power enabled",
+  "motorPowerConfirmedForThisAction": true,
+  "physicalTestPassed": false,
+  "productionApproved": false,
+  "laterOperatorPowerReport": {
+    "text": "Battery voltage was insufficient; now handled",
+    "measuredVoltageV": null,
+    "scope": "Later user report; no synchronized voltage trace for each prior action",
+    "interpretation": "Prior no-response trials cannot establish a reliable starting request threshold or isolate firmware versus supply effects."
+  }
+}

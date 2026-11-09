@@ -1,0 +1,3 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\planning\test_visual_supervisor_replay.py
+{"frames": 750, "cases": 5, "oracleChecks": 3750, "finalModes": {"initial-admission-only": "DISARMED", "reference-time-budget": "STOP_LATCHED", "diagnostic-recovery-1": "NORMAL_TRACK", "diagnostic-recovery-3": "NORMAL_TRACK", "diagnostic-recovery-5": "NORMAL_TRACK"}, "productionApproved": false}
+[PASS] Completed within declared software evidence scope

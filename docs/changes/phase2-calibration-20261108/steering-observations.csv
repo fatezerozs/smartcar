@@ -1,0 +1,4 @@
+observation_id,pulse_us,hold_ms,operator_observation,numeric_left_angle_deg,numeric_right_angle_deg,position_phase,command_ack,final_active_readback,notes
+SO01,1500,300,没有观察到转动,,,after bounded pulse; no continuous PWM hold,true,false,Operator observation only; no angle measurement
+SO02,1500,700,已经转动,,,after bounded pulse; no continuous PWM hold,true,false,Operator observation only; no angle measurement
+SO03,1550,700,刚才已经成功回正,,,after bounded pulse; no continuous PWM hold,true,unknown,Visual centre confirmation only; do not set 0 degrees. Final status unavailable due ownership change.

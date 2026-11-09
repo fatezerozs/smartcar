@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "smartcar.phase2-operator-tangent/1",
+  "recordedAtUtc": "2026-11-08T14:31:44.295664+00:00",
+  "rawReplies": [
+    "0",
+    "都是0"
+  ],
+  "pulseUsContext": 1550,
+  "holdMsContext": 700,
+  "measurementPhase": "post-pulse-no-hold",
+  "angleReference": "vehicle longitudinal; right positive",
+  "leftTangentReported": 0,
+  "rightTangentReported": 0,
+  "leftPrincipalAngleDegComputed": 0,
+  "rightPrincipalAngleDegComputed": 0,
+  "method": "Operator supplies tangent; underlying dimensions and measurement uncertainty not supplied",
+  "measurementTimestamp": null,
+  "productionApproved": false,
+  "notes": "Operator confirms both wheels. Principal arctan conversion only; not proof of exact mechanical zero, repeatability or energized holding calibration."
+}

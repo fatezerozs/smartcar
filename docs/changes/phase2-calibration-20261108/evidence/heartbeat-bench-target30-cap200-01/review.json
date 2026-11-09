@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "smartcar.speed-response-review/1",
+  "sourceSha256": "471bab32c98c3a8b08d353e5e31bde1f2d073c31e6afbf911476bb38553a4194",
+  "version": "PHASE2_HEARTBEAT_DIAG_20261109_1",
+  "crcVerified": true,
+  "rows": 471,
+  "config": {
+    "requestPermille": 200,
+    "durationMs": 2500,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 30,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "firstZeroAfterArmMs": 2700,
+  "postZeroMs": 2000,
+  "stopReason": 1,
+  "faultDetailValues": [
+    0
+  ],
+  "faultValues": [
+    0
+  ],
+  "uniquePositiveTargetMatchedControls": 246,
+  "excludedZeroTargetPairingAnomalies": [],
+  "tailWindowsMs": {
+    "300": {
+      "uniqueControlSamples": 29,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 36.41379310344828,
+        "rangeCounts10ms": [
+          33,
+          40
+        ],
+        "rmseCounts10ms": 6.679871978950825,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 10
+      },
+      "r": {
+        "meanCounts10ms": 35.93103448275862,
+        "rangeCounts10ms": [
+          33,
+          39
+        ],
+        "rmseCounts10ms": 6.302708777266683,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 9
+      }
+    },
+    "500": {
+      "uniqueControlSamples": 49,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 36.69387755102041,
+        "rangeCounts10ms": [
+          33,
+          41
+        ],
+        "rmseCounts10ms": 6.9045976991968985,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 11
+      },
+      "r": {
+        "meanCounts10ms": 36.63265306122449,
+        "rangeCounts10ms": [
+          33,
+          40
+        ],
+        "rmseCounts10ms": 6.979562000174919,
+        "samplesWithin2Counts": 0,
+        "maxOvershootCounts": 10
+      }
+    }
+  },
+  "responseOnset": {
+    "l": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 970,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    },
+    "r": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 960,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    }
+  },
+  "outputCeiling": {
+    "l": {
+      "sampledAtCeiling": 45,
+      "sampledCeilingDurationMs": 450,
+      "softwarePwmPeakPermille": 200.0
+    },
+    "r": {
+      "sampledAtCeiling": 44,
+      "sampledCeilingDurationMs": 440,
+      "softwarePwmPeakPermille": 200.0
+    }
+  },
+  "driveNegativeRuns": {
+    "l": [],
+    "r": []
+  },
+  "signedRawTotalDeltaLeftRight": [
+    -5403,
+    5342
+  ],
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "limits": [
+    "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+    "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+    "Saturation duration is sample-window attribution, not electrical timing.",
+    "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+    "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+  ],
+  "sourceTrace": ".build\\phase2-calibration-20261108\\heartbeat-diag-20261109_1\\export-bench-target30-cap200-01\\trace.json",
+  "heartbeatDiagnostic": {
+    "frozen": 1,
+    "reason": 1,
+    "stopMs": 140231,
+    "leaseMs": 140218,
+    "ageMs": 13,
+    "rx": {
+      "count": 42,
+      "lastMs": 140218,
+      "maxGapMs": 324
+    },
+    "parsed": {
+      "count": 42,
+      "lastMs": 140218,
+      "maxGapMs": 324
+    },
+    "accepted": {
+      "count": 42,
+      "lastMs": 140218,
+      "maxGapMs": 324
+    },
+    "radioRxAtArm": 709,
+    "radioRxAtStop": 836,
+    "coveredByTraceCrc": false
+  },
+  "hostHeartbeat": {
+    "count": 45,
+    "maxSendGapMs": 78.6697,
+    "countWindow": "host action window includes heartbeats after board timed completion"
+  },
+  "operatorObservation": {
+    "bothWheelsForwardAndStoppedConfirmed": true,
+    "abnormalitiesReported": "all normal"
+  },
+  "performanceAccepted": false,
+  "rootCauseProven": false,
+  "heartbeatFailureReproduced": false
+}

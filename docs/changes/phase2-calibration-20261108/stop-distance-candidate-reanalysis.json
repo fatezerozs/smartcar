@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "smartcar.phase2-distance-candidate-reanalysis/1",
+  "distanceScaleSource": "passive-distance-summary.json",
+  "countsPerMetreLeftRight": [
+    11394,
+    11389
+  ],
+  "oldScaleMultipliersLeftRight": [
+    1.08467001568634,
+    1.0957384387887505
+  ],
+  "cprChanged": false,
+  "productionParametersChanged": false,
+  "status": "OFFLINE_CANDIDATE_NOT_PRODUCTION_APPROVED",
+  "rationale": "Two independently baselined user-reported1m pushes both under-read with prior189mm conversion. New distance-scale candidate retained separately.",
+  "runs": [
+    {
+      "source": "evidence/stop-trace/lower01/wheel-analysis.json",
+      "sourceSha256": "59c0a7fd2d65a0a5d88bc3059e6e6945f0d91f914eef43f3b5157239e61e1386",
+      "preZero100msCandidateWheelMpsLeftRight": [
+        0.41864139020537117,
+        0.40302045833699185
+      ],
+      "candidateCoastBracketMmLeftRight": [
+        [
+          179.65595927681235,
+          184.21976478848515
+        ],
+        [
+          180.1738519624199,
+          184.73966107647732
+        ]
+      ],
+      "candidateWholeCaptureMmLeftRight": [
+        376.95278216605226,
+        379.31337255246297
+      ]
+    },
+    {
+      "source": "evidence/stop-trace/video02/wheel-analysis.json",
+      "sourceSha256": "da7e3724db6db2384ac8b3554aba49f48d071951d3e0b8565c96ef6fbaea3fbc",
+      "preZero100msCandidateWheelMpsLeftRight": [
+        0.538002457433737,
+        0.5522872947580999
+      ],
+      "candidateCoastBracketMmLeftRight": [
+        [
+          279.6208530805687,
+          284.79901702650517
+        ],
+        [
+          277.8997278075336,
+          283.25577311440867
+        ]
+      ],
+      "candidateWholeCaptureMmLeftRight": [
+        606.4595401088292,
+        605.9355518482747
+      ]
+    },
+    {
+      "source": "evidence/stop-trace/video03/wheel-analysis.json",
+      "sourceSha256": "0385698d50683ad3bf7ef81d251c21e1b03c4f0ebe52bb701b1add777410fcf9",
+      "preZero100msCandidateWheelMpsLeftRight": [
+        0.6722836580656485,
+        0.6673105628237773
+      ],
+      "candidateCoastBracketMmLeftRight": [
+        [
+          389.32771634193426,
+          396.17342460944354
+        ],
+        [
+          390.02546316621306,
+          397.48880498726845
+        ]
+      ],
+      "candidateWholeCaptureMmLeftRight": [
+        891.5218536071615,
+        897.6205110194048
+      ]
+    }
+  ],
+  "limits": [
+    "Two1m observations only; no physical uncertainty certification.",
+    "Hand-push scale applicability to powered coast depends on slip/ground/load.",
+    "Existing raw counts and old189mm analysis preserved.",
+    "No conservative brake or jerk parameter certified."
+  ]
+}

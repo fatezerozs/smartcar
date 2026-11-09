@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "smartcar.turn-soft-review/1",
+  "version": "PHASE2_TURN_GEOMETRY_20261109_2",
+  "config": {
+    "requestPermille": 170,
+    "durationMs": 2000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 0,
+    "servoUs": 1600
+  },
+  "info": {
+    "generation": 2,
+    "start_ms": 887572,
+    "stop_ms": 888570,
+    "count": 301,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 0,
+    "crc32": 47203091
+  },
+  "verification": {
+    "crcVerified": true,
+    "rows": 301,
+    "postZeroMs": 2000,
+    "admissionSeedResetOffsetMs": 0,
+    "softwarePwmMaxUnits10000": 1700,
+    "productionApproved": false,
+    "electricalPwmVerified": false,
+    "mechanicalStopVerified": false
+  },
+  "turnConfiguration": {
+    "rawReply": "[TURN_CONFIG] frozen=1 valid=1 request=250 duration=2500 speed=60 servo=1500/1600 soft_hits=12 min_cap=50",
+    "coveredByTraceCrc": false
+  },
+  "heartbeatDiagnostic": {
+    "rawReply": "[HB_DIAG] frozen=1 reason=5 stop=888570 lease=888510 age=60 rx_h=16/888510/72 parsed_h=16/888510/72 accepted_h=16/888510/72 radio_rx=6824/6873 quiet=1",
+    "coveredByTraceCrc": false,
+    "instrumentedBuild": true
+  },
+  "rawDeltaLeftRight": [
+    -1784,
+    740
+  ],
+  "faultValues": [
+    0,
+    256
+  ],
+  "faultDetails": [
+    0,
+    8
+  ],
+  "operatorConfirmationPending": false,
+  "operatorObservation": {
+    "originalReply": "没看清,很快停止",
+    "visibleRightReverse": null,
+    "leftRightSpeedDifference": null,
+    "stoppedQuicklyReported": true,
+    "abnormalSoundsOrBinding": null
+  },
+  "interpretation": "Soft speed governor did not hard-trip; right raw -5 three consecutive samples triggered separate reverse detector detail8 after common cap fell to50permille. Visible reverse unconfirmed.",
+  "productionApproved": false
+}

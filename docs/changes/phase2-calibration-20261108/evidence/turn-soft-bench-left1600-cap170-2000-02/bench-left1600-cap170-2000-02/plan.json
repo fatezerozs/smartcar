@@ -1,0 +1,19 @@
+{
+  "version": "PHASE2_TURN_GEOMETRY_20261109_2",
+  "command": "@motion circle 170 2000 1600",
+  "mode": "open",
+  "targetTicks10ms": null,
+  "closedLoopFeedforward": 0,
+  "normalStraightRequestPermille": 450,
+  "hardCapPermille": 600,
+  "configureRam": false,
+  "execute": true,
+  "scope": "One lifted-bench action; hardware motion is not run by default.",
+  "kpRequested": 2.0,
+  "kiRequested": 0.1,
+  "kpQ8": 512,
+  "kiQ8": 25,
+  "kind": "circle",
+  "servoUs": 1600,
+  "turnConfigurationReadback": "[TURN_CONFIG] frozen=0 valid=1 request=250 duration=2500 speed=60 servo=1500/1600 soft_hits=12 min_cap=50"
+}

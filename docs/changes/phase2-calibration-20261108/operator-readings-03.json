@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "smartcar.operator-calibration-reading/1",
+  "recordedDate": "2026-11-08",
+  "measurementTimestamp": null,
+  "source": "User response to left/right wheel five-turn ground-distance request",
+  "rawReply": "统一为945mm",
+  "mappingBasis": "Use 945 mm as the shared five-turn distance for left and right wheels according to the preceding prompt. This does not establish six independent measurements or actual direction/load conditions.",
+  "reportedDistinctValuesMm": [945],
+  "turnsFromPrecedingPrompt": 5,
+  "appliesToWheels": ["left", "right"],
+  "directionConfirmed": false,
+  "loadedRollingConditionsConfirmed": false,
+  "instrumentIdentity": null,
+  "distanceResolutionMm": null,
+  "measurementAccuracyMm": null,
+  "trialReferences": ["R01", "R04"],
+  "repeatedMeasurementsProvided": false,
+  "independentLeftRightTrialsEstablished": false,
+  "independentlyVerified": false,
+  "productionApproved": false
+}

@@ -1,0 +1,22 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "port": "COM14",
+  "baud": 115200,
+  "commands": [
+    "@startup 0 2000",
+    "@servo 1550 1430 1670 -1",
+    "@motor 0 0.6 0.3",
+    "@motor_dir 1 1",
+    "@balance 1 1",
+    "@encoder_sign -1 1",
+    "@speed_cfg 23 2 0.1",
+    "@speed_mode 0"
+  ],
+  "runtimeIdentityVerified": true,
+  "mode": "OBSERVE",
+  "configuredInRam": true,
+  "closedLoopEnabled": false,
+  "cruise": 0,
+  "pwmCapPermille": 600,
+  "motionCommandSent": false
+}

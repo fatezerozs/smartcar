@@ -1,0 +1,10 @@
+trial_id,quantity,value_mm,condition_id,instrument_id,measured_at,accepted,notes
+G01,wheelbase_left_mm,197,,,,,User reported 197;197;155;155 in requested order; one reading; measurement time and conditions unconfirmed
+G02,wheelbase_right_mm,197,,,,,User reported 197;197;155;155 in requested order; one reading; measurement time and conditions unconfirmed
+G03,rear_track_mm,155,,,,false,Superseded by operator correction G08 to 152.9 mm; original reply preserved; not an independent repeat
+G04,front_track_mm,155,,,,false,Superseded by operator correction G09 to 152.9 mm; original reply preserved; not an independent repeat
+G05,camera_height_mm,,,,,,
+G06,camera_offset_right_mm,,,,,,
+G07,camera_offset_forward_mm,,,,,,
+G08,rear_track_mm,152.9,,caliper-01,,,Operator corrected contact-centre track to 152.9 mm using vernier caliper; range/time/load/repeats unconfirmed
+G09,front_track_mm,152.9,,caliper-01,,,Same operator correction applies to front and rear track in preceding question; not an independent repeat

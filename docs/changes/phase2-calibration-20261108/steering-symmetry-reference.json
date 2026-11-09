@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "smartcar.phase2-steering-symmetry-reference/1",
+  "recordedAtUtc": "2026-11-08T14:54:56.336163+00:00",
+  "operatorInstruction": "不需要右偏了,直接左偏数据对称即可",
+  "centrePulseUs": 1550,
+  "rule": "p_mirror=2*1550-p; tan_mirror=-tan; angle_mirror=-atan(tan)",
+  "angleConvention": "right positive",
+  "rightSidePhysicallyMeasured": false,
+  "productionApproved": false,
+  "phase2AngleCalibrationComplete": false,
+  "measuredReports": [
+    {
+      "pulseUs": 1550,
+      "reportedTangent": 0,
+      "computedPrincipalAngleDeg": 0.0,
+      "source": "operator-steering-tangent-01.json",
+      "branch": "increasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1600,
+      "reportedTangent": -0.1785,
+      "computedPrincipalAngleDeg": -10.120705520281675,
+      "source": "operator-steering-tangent-02.json",
+      "branch": "increasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1650,
+      "reportedTangent": -0.39375,
+      "computedPrincipalAngleDeg": -21.49204003334457,
+      "source": "operator-steering-tangent-03.json",
+      "branch": "increasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1670,
+      "reportedTangent": -0.50175,
+      "computedPrincipalAngleDeg": -26.645209105513214,
+      "source": "operator-steering-tangent-04.json",
+      "branch": "increasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1650,
+      "reportedTangent": -0.3865,
+      "computedPrincipalAngleDeg": -21.13151707521033,
+      "source": "operator-steering-tangent-05.json",
+      "branch": "return-decreasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1600,
+      "reportedTangent": -0.258,
+      "computedPrincipalAngleDeg": -14.46682835003908,
+      "source": "operator-steering-tangent-07.json",
+      "branch": "return-decreasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1550,
+      "reportedTangent": 0,
+      "computedPrincipalAngleDeg": 0.0,
+      "source": "operator-steering-tangent-08.json",
+      "branch": "return-decreasing-pulse",
+      "measurementPhase": "post-pulse-no-hold",
+      "productionApproved": false
+    }
+  ],
+  "rightSideDerivedReferences": [
+    {
+      "pulseUs": 1500,
+      "referenceTangent": 0.1785,
+      "referenceAngleDeg": 10.120705520281675,
+      "source": "operator-steering-tangent-02.json",
+      "sourcePulseUs": 1600,
+      "sourceBranch": "increasing-pulse",
+      "mirroredBranch": "decreasing-pulse",
+      "provenance": "USER_AUTHORIZED_SYMMETRY_ASSUMPTION_NOT_MEASURED",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1450,
+      "referenceTangent": 0.39375,
+      "referenceAngleDeg": 21.49204003334457,
+      "source": "operator-steering-tangent-03.json",
+      "sourcePulseUs": 1650,
+      "sourceBranch": "increasing-pulse",
+      "mirroredBranch": "decreasing-pulse",
+      "provenance": "USER_AUTHORIZED_SYMMETRY_ASSUMPTION_NOT_MEASURED",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1430,
+      "referenceTangent": 0.50175,
+      "referenceAngleDeg": 26.645209105513214,
+      "source": "operator-steering-tangent-04.json",
+      "sourcePulseUs": 1670,
+      "sourceBranch": "increasing-pulse",
+      "mirroredBranch": "decreasing-pulse",
+      "provenance": "USER_AUTHORIZED_SYMMETRY_ASSUMPTION_NOT_MEASURED",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1450,
+      "referenceTangent": 0.3865,
+      "referenceAngleDeg": 21.13151707521033,
+      "source": "operator-steering-tangent-05.json",
+      "sourcePulseUs": 1650,
+      "sourceBranch": "return-decreasing-pulse",
+      "mirroredBranch": "return-increasing-pulse",
+      "provenance": "USER_AUTHORIZED_SYMMETRY_ASSUMPTION_NOT_MEASURED",
+      "productionApproved": false
+    },
+    {
+      "pulseUs": 1500,
+      "referenceTangent": 0.258,
+      "referenceAngleDeg": 14.46682835003908,
+      "source": "operator-steering-tangent-07.json",
+      "sourcePulseUs": 1600,
+      "sourceBranch": "return-decreasing-pulse",
+      "mirroredBranch": "return-increasing-pulse",
+      "provenance": "USER_AUTHORIZED_SYMMETRY_ASSUMPTION_NOT_MEASURED",
+      "productionApproved": false
+    }
+  ],
+  "excludedReports": [
+    "operator-steering-tangent-06.json"
+  ],
+  "limits": [
+    "Unpowered post-pulse positions, not continuously held servo mapping.",
+    "Increasing and return branches retained separately; no averaging.",
+    "Single reported trials, measurement accuracy and repeatability not established.",
+    "Symmetry is an operator-authorized model assumption, not validation of right-side mechanics."
+  ]
+}

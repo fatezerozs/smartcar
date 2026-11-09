@@ -1,0 +1,110 @@
+{
+  "sourceSha256": "30f644e77f6a580d5ccf1b47056c01897958e8bc0c92a7ef577fdb01535239f0",
+  "source": "docs\\changes\\phase2-calibration-20261108\\evidence\\speed-response-ground23-2500-02\\export-ground-target23-cap250-2500-02\\trace.json",
+  "baselineKpQ8": 512,
+  "candidateKpQ8": 768,
+  "kiQ8": 25,
+  "targetCounts10ms": 23,
+  "perRunCapPermille": 250,
+  "durationMs": 2500,
+  "executed": false,
+  "hardwareAccessed": false,
+  "productionApproved": false,
+  "windows": [
+    {
+      "fromMs": 200,
+      "toMsExclusive": 800,
+      "samples": 56,
+      "l": {
+        "meanFeedback": 0.0,
+        "integralPermilleRange": [
+          0.09765625,
+          44.921875
+        ]
+      },
+      "r": {
+        "meanFeedback": 0.0,
+        "integralPermilleRange": [
+          0.09765625,
+          44.921875
+        ]
+      }
+    },
+    {
+      "fromMs": 800,
+      "toMsExclusive": 1200,
+      "samples": 40,
+      "l": {
+        "meanFeedback": 0.9,
+        "integralPermilleRange": [
+          46.484375,
+          122.36328125
+        ]
+      },
+      "r": {
+        "meanFeedback": 0.85,
+        "integralPermilleRange": [
+          46.484375,
+          122.55859375
+        ]
+      }
+    },
+    {
+      "fromMs": 1200,
+      "toMsExclusive": 1700,
+      "samples": 50,
+      "l": {
+        "meanFeedback": 8.1,
+        "integralPermilleRange": [
+          124.31640625,
+          195.1171875
+        ]
+      },
+      "r": {
+        "meanFeedback": 8.66,
+        "integralPermilleRange": [
+          124.51171875,
+          192.578125
+        ]
+      }
+    },
+    {
+      "fromMs": 1700,
+      "toMsExclusive": 2200,
+      "samples": 50,
+      "l": {
+        "meanFeedback": 28.62,
+        "integralPermilleRange": [
+          167.67578125,
+          197.265625
+        ]
+      },
+      "r": {
+        "meanFeedback": 28.1,
+        "integralPermilleRange": [
+          167.67578125,
+          193.84765625
+        ]
+      }
+    },
+    {
+      "fromMs": 2200,
+      "toMsExclusive": 2700,
+      "samples": 49,
+      "l": {
+        "meanFeedback": 31.081632653061224,
+        "integralPermilleRange": [
+          129.00390625,
+          166.796875
+        ]
+      },
+      "r": {
+        "meanFeedback": 30.897959183673468,
+        "integralPermilleRange": [
+          129.8828125,
+          166.9921875
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "version": "PHASE2_HEARTBEAT_DIAG_20261109_2",
+  "baseline": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\speed-response-20261109_1-release",
+  "output": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\heartbeat-diag-20261109_2",
+  "baselineModifiedFilesSha256": {
+    "vision_profile.h": "788faf8a22ceb469e6afbd31fd795afc3c3eec6d1061378facc487f68c8521b9",
+    "vision_motion.c": "e8e27a473ca5047cb7c9440b0e70a4374dc3ec5de1dd40dc243efc935641d05f",
+    "vision_drive.c": "b4277de4880f9138b38e3d50fedf3159637e09daf786f3b4e17d39d3d130306e",
+    "app_runtime.c": "5afdbd0443fe28913719dd5aabfd79212cc06125b3a5094c962b576bd3924cb6",
+    "app_link.c": "66ab2807c841f3238be8a680f5f4331a64bc534e1ea72049ca7a6d0ffdc7c165",
+    "vision_field.c": "5cfc40174ef82627252603d22e2bd9a1a1072a2b6f1562100316a03c721dda7f"
+  },
+  "flashed": true,
+  "buildPassed": true,
+  "heartbeatTimeoutMs": 500,
+  "protectionsChanged": false,
+  "quietControlAvailable": true,
+  "quietDefault": 0,
+  "limits": [
+    "Radio rx_h counts literal h bytes before field parsing, not verified heartbeat packets.",
+    "parsed_h counts top-level h offered to command dispatch; accepted_h counts active-motion lease writes.",
+    "Counters reset at explicit motion admission; snapshots survive later STOP and queries, not reset or next admission.",
+    "Query is stop-only through the existing field parser; no live query during motion.",
+    "Instrumentation changes timing; diagnostic evidence does not certify the uninstrumented image."
+  ],
+  "keilErrors": 0,
+  "keilWarnings": 0,
+  "hostAssertions": 15230,
+  "pythonTestsPassed": 18,
+  "axfSha256": "37fdcd83a8dada690a80494b23257cdc313ad2787a1f71b28ba2169c897ff8ef",
+  "changesFromDiagnosticV1": [
+    "demo/code/app_runtime.c",
+    "demo/code/heartbeat_diag.h",
+    "demo/code/vision_field.c",
+    "demo/code/vision_motion.c",
+    "demo/code/vision_profile.h"
+  ],
+  "nativeTraceBytesEqualDiagnosticV1": true,
+  "runtimeIdentityVerified": true,
+  "verifyPassed": true,
+  "runtimeVerifiedPort": "COM10",
+  "radioRuntimeVerified": true,
+  "ramConfigured": true,
+  "radioRxProbe": {
+    "hostSentHeartbeatCount": 10,
+    "boardLiteralHCountBefore": 0,
+    "boardLiteralHCountAfter": 0,
+    "scope": "USB owner; stopped; literal radio RX monitoring independent of owner",
+    "rootCauseProven": false
+  },
+  "quietCurrent": 0,
+  "batteryChargedReported": true,
+  "measuredBatteryVoltage": null
+}

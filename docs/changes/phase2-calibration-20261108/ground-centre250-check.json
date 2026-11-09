@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "smartcar.phase2-centre250-check/1",
+  "status": "OPERATOR_COORDINATES_CONFIRMED_HELD_OUT_CHECK",
+  "sourceSession": "C:\\shengchanli\\smartCar\\smartcar\\.build\\phase2-calibration-20261108\\ground-map-centre250-20261108T182917679Z\\camera-g-20261109-022917-844-7c1982f3",
+  "operatorReply": "就绪",
+  "requestedCameraGroundMm": [
+    0,
+    250
+  ],
+  "requestedRearGroundMm": [
+    0,
+    447
+  ],
+  "evaluationModel": "ground-homography-origin-corrected.json",
+  "refitPerformed": false,
+  "centroidRoiExclusive": [
+    36,
+    44,
+    51,
+    57
+  ],
+  "centroidMethod": "gray<245, weight255-gray, zero-based pixels",
+  "frames": [
+    {
+      "file": "frame-000001.gray",
+      "uv": [
+        39.51528117359413,
+        54.13080684596577
+      ],
+      "mappedCameraGroundMm": [
+        -120.66632693338386,
+        216.17173448368095
+      ]
+    },
+    {
+      "file": "frame-000002.gray",
+      "uv": [
+        39.5119558553035,
+        54.136725935009196
+      ],
+      "mappedCameraGroundMm": [
+        -120.67770552395284,
+        216.10666639619097
+      ]
+    },
+    {
+      "file": "frame-000003.gray",
+      "uv": [
+        39.511070110701105,
+        54.13653136531365
+      ],
+      "mappedCameraGroundMm": [
+        -120.6847412300309,
+        216.1068841107974
+      ]
+    }
+  ],
+  "mappedCameraGroundMeanMm": [
+    -120.6762578957892,
+    216.1284283302231
+  ],
+  "residualToRequestedPointMm": 125.3397087403344,
+  "actualPointCoordinatesIndependentlyConfirmed": false,
+  "productionApproved": false,
+  "evidenceSha256": {
+    "frame-000001.gray": "420d6f9915de2be41b286bf18d69e8c70b43cf45016bc85106729793cad132bc",
+    "frame-000001.png": "d1f03a63322ee8b9e6f9529075e14b869a65e158726af15dc8e9b896671aea46",
+    "frame-000001.preview.png": "6cd51da3a6c6c433c70201af59596c8ee262390340895e50b9489608866b071b",
+    "frame-000002.gray": "5bb63e93b00064d22f99fb3fe2ee78c3423b5e2590f3e85e979d5542a127dc15",
+    "frame-000002.png": "6be29a160c93c11b90f1fa95ef902ad60daffa62e8e23688a83592dd345927e6",
+    "frame-000002.preview.png": "6f87bc31ff74184bad3bcf055dee33eaf976abda1007b3d5a28a89947c832526",
+    "frame-000003.gray": "19d8b160b8a16185865f8e81db1a5ce2b1cd7541ef70b484a9d2856c59a8a9bc",
+    "frame-000003.png": "058735f61b4e8219be453bedaa34db309cf3ac3908c4474afa8324d26bb32762",
+    "frame-000003.preview.png": "2ac829f284ebf2976a94ab03663eb67e0b847f7f50d4cd2e4f05232ee97f9227",
+    "frames.csv": "522383bf29bc855ef0f58b4a1c83429cfbf526de7ab250e31bb43a1e70e380bf",
+    "received.bin": "5a86732eb69c472e94186f3ce0a22db824e3ccbc6ba7b92b8d2c3104683eb5cd",
+    "session.json": "2712ae7aa2f7419967fd999f0e362055e69b2425dbc4bc9554a2d79bda7a306d"
+  },
+  "limits": [
+    "Actual lateral coordinate clarified by operator; physical coordinates not independently verified.",
+    "Original requested centre coordinate and its discrepancy retained for audit, superseded by operator-reported left100mm coordinate.",
+    "Near mark visually identified; no refit or production parameter change.",
+    "Image transport has no CRC; three-frame agreement does not prove content integrity."
+  ],
+  "operatorCoordinateClarification": "横向仍在左侧100mm",
+  "operatorReportedCameraGroundMm": [
+    -100,
+    250
+  ],
+  "operatorReportedRearGroundMm": [
+    -100,
+    447
+  ],
+  "coordinateProvenance": "Operator confirmed lateral position remained100mm left;250mm longitudinal placement from preceding ready reply, not independent metrology.",
+  "residualToOperatorReportedPointMm": 39.68363652633184,
+  "errorVectorCameraMm": [
+    -20.676257895789206,
+    -33.8715716697769
+  ],
+  "placementAmbiguityResolved": true
+}

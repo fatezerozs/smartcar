@@ -1,0 +1,15 @@
+{
+  "recordedAtUtc": "2026-11-08T16:23:39.802546+00:00",
+  "rawReply": "270;-1;无",
+  "firmware": "PHASE2_STARTUP_200_20261108_1",
+  "sequence": 13,
+  "requestPermille": 190,
+  "durationMs": 2500,
+  "forwardMm": 270,
+  "lateralRightPositiveMm": -1,
+  "slipDragOrObviousYawReported": "无",
+  "unitsFromPrompt": "mm",
+  "referencePointFromPrompt": "Rear axle centre projection relative to new marked start",
+  "productionApproved": false,
+  "brakingDistanceMeasured": false
+}

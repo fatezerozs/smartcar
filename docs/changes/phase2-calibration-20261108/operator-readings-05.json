@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "smartcar.operator-calibration-reading/1",
+  "recordedDate": "2026-11-08",
+  "measurementTimestamp": null,
+  "source": "User response to optical-centre height, forward horizontal offset, lateral offset and tape graduation request",
+  "rawReply": "离地330mm;197mm;0mm;1mm",
+  "mappingBasis": "Order and measurement definitions from preceding question; not independent repeats",
+  "cameraOpticalCentreMm": {
+    "heightAboveGround": 330,
+    "forwardOfRearAxleMidpoint": 197,
+    "rightOfVehicleCentreline": 0
+  },
+  "forwardDistanceDefinition": "Horizontal projection as requested, not slant distance",
+  "instrumentId": "tape-01",
+  "reportedTapeGraduationMm": 1,
+  "instrumentAccuracyMm": null,
+  "cameraMeasurementLoadAndPoseDetailed": false,
+  "sameConditionsAsRollingSessionConfirmed": false,
+  "independentRepeatsProvided": false,
+  "cameraPitchMeasured": false,
+  "groundHomographyCalibrated": false,
+  "independentlyVerified": false,
+  "productionApproved": false
+}

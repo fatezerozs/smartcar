@@ -1,0 +1,169 @@
+#include "vision_drive_internal.h"
+
+void vision_drive_schedule_boot(uint32_t boot_ms, uint32_t now)
+{
+#if VISION_DRIVE_ENABLE
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)boot_ms;(void)now;return; /* Dedicated startup owner only. */
+#else
+    /* Not re-schedulable within a boot, including after STOP/clear/configure. */
+    if (vd.auto_info.restored) return;
+#if VISION_MOTOR_THRESHOLD_DIAG
+    /* Ignore saved automatic-start settings in the separate bench build. */
+    vd.profile.autostart_enabled=0;
+#endif
+    vd.auto_info.restored=1; vd.auto_info.boot_ms=boot_ms;
+    vd.auto_info.delay_ms=vd.profile.startup_delay_ms;
+    vd.switch_boot_pending=vd.profile.autostart_enabled;
+    if(vd.profile.autostart_enabled)vd.auto_info.state=VD_AUTO_WAITING;
+    if (vd.profile.autostart_enabled && (uint32_t)(now-boot_ms)>=vd.profile.startup_delay_ms) {
+        vd.switch_boot_pending=0;vd.auto_info.state=VD_AUTO_BLOCKED;
+    }
+#endif
+#else
+    (void)boot_ms; (void)now;
+#endif
+}
+
+void vision_drive_get_auto(vd_auto_info_t *out)
+{
+    *out=vd.auto_info;
+#if VISION_DRIVE_ENABLE
+    out->switch_seen=vd.switch_seen;out->switch_closed=vd.switch_closed;
+#endif
+}
+
+void vision_drive_set_local_allowed(int allowed)
+{
+#if VISION_DRIVE_ENABLE
+    vd.local_permitted=(uint8_t)(allowed!=0);
+    if(!allowed && (vd.auto_info.state==VD_AUTO_WAITING || vd.control.local_run))vision_drive_stop();
+#else
+    (void)allowed;
+#endif
+}
+
+int vision_drive_is_local(void) { return vd.control.output.state==VC_RUNNING && vd.control.local_run; }
+
+#if VISION_DRIVE_ENABLE
+void vd_startup_poll_switch(uint32_t now)
+{
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now;return; /* No legacy switch rearm/clear authority. */
+#else
+    if (vd.switch_stop_pending) {
+        uint32_t mask=__get_PRIMASK();__disable_irq();
+        vd.switch_stop_pending=0;__set_PRIMASK(mask);
+        vision_drive_stop();
+    }
+    if (vd.switch_seen && !vd.switch_closed &&
+        (uint32_t)(now-vd.switch_changed_ms)>=VISION_START_SWITCH_REARM_MS) {
+        vd.switch_rearm=1;
+    }
+    if (vd.switch_seen && vd.switch_closed &&
+        (uint32_t)(now-vd.switch_changed_ms)>=VISION_START_SWITCH_DEBOUNCE_MS) {
+        vd.switch_inhibit=0;
+#if !VISION_MOTOR_THRESHOLD_DIAG
+        if (vd.auto_info.restored && vd.profile.autostart_enabled && (vd.switch_boot_pending || vd.switch_rearm)) {
+            uint32_t base=vd.switch_boot_pending?vd.auto_info.boot_ms:vd.switch_changed_ms;
+            vd.switch_boot_pending=0;vd.switch_rearm=0;
+            vd.auto_info.boot_ms=base;vd.auto_info.delay_ms=vd.profile.startup_delay_ms;
+            vd.auto_info.state=vd.local_permitted && vd.hardware_ready && vd.control.output.state==VC_DISARMED &&
+                (uint32_t)(now-base)<vd.auto_info.delay_ms ? VD_AUTO_WAITING:VD_AUTO_BLOCKED;
+        }
+#endif
+    }
+#endif
+}
+void vd_startup_poll_deadline(uint32_t now)
+{
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now; /* Only midterm_boot owns the C31 continuous-track launch. */
+#else
+    if (vd.auto_info.state==VD_AUTO_WAITING &&
+        (uint32_t)(now-vd.auto_info.boot_ms)>=vd.auto_info.delay_ms) {
+        /* A blocked deadline is terminal for this boot: never creep into
+         * motion later when a person moves away or a new scene becomes valid. */
+        int accepted=0;
+#if !VISION_MOTOR_THRESHOLD_DIAG
+        accepted=app_mode_allows(APP_MODE_DRIVE) && vd.local_permitted && vd.switch_seen && vd.switch_closed && !vd.switch_inhibit &&
+            !vd.guard_faults && !vd.probe_active && vd.hardware_ready &&
+            vd_output_arm(now,1);
+#endif
+        vd.auto_info.state=accepted?VD_AUTO_STARTED:VD_AUTO_BLOCKED;
+        vd_output_apply(); /* First command is zero duty; next fresh frame ramps. */
+    }
+#endif
+}
+#endif
+
+#if VISION_ROUTE_SWITCH
+/* C26 owns admission. A fault is never acknowledged by a held ON level.
+ * Stable physical OFF may acknowledge ONLY visual/frame faults; severe faults
+ * retain the explicit clear/configuration procedure. No output is restored. */
+static uint8_t route_operator_stop,route_released;
+void vd_route_switch_init(void){route_operator_stop=route_released=0;}
+void vd_route_switch_cancel(void){route_operator_stop=1;}
+void vd_route_switch_mode_stop(void)
+{
+    uint8_t stopped=route_operator_stop;
+    vision_drive_stop();route_operator_stop=stopped;
+}
+void vd_route_switch_poll(uint32_t now)
+{
+#if VISION_MIDTERM_AUTONOMOUS
+    (void)now; /* Defense in depth: no clear, arm or restart through C26. */
+#else
+    vd_speed_info_t s;
+    if(!app_mode_allows(APP_MODE_DRIVE)) {
+        /* STOP/query while already OFF must not inhibit the next ON. */
+        if(app_mode_allows(APP_MODE_OBSERVE))route_operator_stop=0;
+        if(app_mode_allows(APP_MODE_OBSERVE) && !route_released) {
+            vision_drive_speed_get(&s);
+            if(s.samples && (uint32_t)(now-s.sample_ms)<=VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS) {
+                uint32_t mask=__get_PRIMASK();__disable_irq();
+                uint32_t recoverable=VC_FAULT_VISION|VC_FAULT_FRAME;
+                uint32_t faults=vd.guard_faults|vd.control.output.faults|s.faults;
+                vd.guard_running=0;vd.probe_active=0;vd_output_zero();
+                /* Recheck live ISR faults under the mask. Never clear an
+                 * encoder/numeric/config/external/unknown bit as a side effect
+                 * of switching OFF, including a mixed visual+severe fault. */
+                if(!(faults&~recoverable)) {
+                    uint32_t sequence=vd.control.last_sequence,frame_ms=vd.control.last_frame_ms;
+                    uint8_t have_frame=vd.control.have_frame;
+                    vd.guard_faults&=~recoverable;
+                    vc_clear_fault(&vd.control);
+                    /* Reset admission/history, but keep the publication
+                     * watermark: replayed pre-OFF frames are not new evidence. */
+                    vd.control.last_sequence=sequence;vd.control.last_frame_ms=frame_ms;
+                    vd.control.have_frame=have_frame;
+                }
+                __set_PRIMASK(mask);
+                if(!(faults&~recoverable))(void)vision_drive_speed_enable(1);
+                route_released=1;route_operator_stop=0;
+            }
+        }
+        return;
+    }
+    route_released=0;
+    /* Remember the fault even if an explicit UART clear later clears its
+     * status bits. That command cannot substitute for physical OFF->ON. */
+    if(vd.guard_faults || vd.control.output.faults)route_operator_stop=1;
+    if(app_mode_change_pending() || route_operator_stop)return;
+    /* Fresh vision while ON cannot acknowledge a latched fault. Stable OFF
+     * above clears only the allowed class and discards old visual history;
+     * subsequent admission still needs fresh frames and every existing gate. */
+    if(vd.control.output.state!=VC_DISARMED)return;
+    vision_drive_speed_get(&s);
+    if(!vd.local_permitted || !s.enabled || s.faults || (uint32_t)(now-s.sample_ms)>VD_SPEED_STARTUP_SAMPLE_MAX_AGE_MS ||
+       vd.guard_faults || vd.probe_active || vd.motion.phase || !vd.hardware_ready)return;
+    {
+        uint32_t mask=__get_PRIMASK();int accepted;__disable_irq();
+        accepted=app_mode_allows(APP_MODE_DRIVE) && !app_mode_change_pending() &&
+            vd_output_arm(now,1);
+        if(accepted)vd_output_apply();
+        __set_PRIMASK(mask);
+    }
+#endif
+}
+#endif

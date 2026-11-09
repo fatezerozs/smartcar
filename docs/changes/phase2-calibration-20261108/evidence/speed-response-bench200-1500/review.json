@@ -1,0 +1,35 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "requestPermille": 200,
+  "durationMs": 1500,
+  "rows": 331,
+  "crcVerified": true,
+  "postZeroMs": 2000,
+  "stopReason": 0,
+  "faultDetailValues": [
+    0,
+    11
+  ],
+  "faults": [
+    0,
+    256
+  ],
+  "countDeltaLeftRight": [
+    0,
+    0
+  ],
+  "softwarePwmPeakPermille": 200,
+  "operatorObservation": "User confirmed both wheels did not rotate",
+  "250PermilleMotionSent": false,
+  "restartObservedBeforeAction": true,
+  "physicalTestPassed": false,
+  "productionApproved": false,
+  "restartExplanation": "User confirmed manual reset between first test and next attempt",
+  "spontaneousFirmwareRestartClaim": false,
+  "laterOperatorPowerReport": {
+    "text": "Battery voltage was insufficient; now handled",
+    "measuredVoltageV": null,
+    "scope": "Later user report; no synchronized voltage trace for each prior action",
+    "interpretation": "Prior no-response trials cannot establish a reliable starting request threshold or isolate firmware versus supply effects."
+  }
+}

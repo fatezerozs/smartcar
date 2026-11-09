@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "smartcar.static-latency-analysis/1",
+  "version": "PHASE2_LATENCY_STATIC_20261109_1",
+  "generation": 1,
+  "frames": 256,
+  "clockResolutionMs": 1,
+  "captureSpanMs": 5097,
+  "captureIntervalMs": {
+    "n": 255,
+    "min": 19,
+    "p50": 20.0,
+    "p95": 20.0,
+    "p99": 20.0,
+    "max": 20
+  },
+  "stagesMs": {
+    "capture_to_copy_start": {
+      "n": 256,
+      "min": 0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "max": 1
+    },
+    "copy_to_process_start": {
+      "n": 256,
+      "min": 0,
+      "p50": 0.0,
+      "p95": 0.25,
+      "p99": 1.0,
+      "max": 1
+    },
+    "vision_and_configured_bayes": {
+      "n": 256,
+      "min": 3,
+      "p50": 3.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    },
+    "post_vision_to_observe_return": {
+      "n": 256,
+      "min": 0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 1.0,
+      "max": 1
+    },
+    "capture_to_observe_return": {
+      "n": 256,
+      "min": 3,
+      "p50": 3.0,
+      "p95": 4.0,
+      "p99": 4.0,
+      "max": 4
+    }
+  },
+  "missingCaptureSequenceNumbers": 0,
+  "copyFailureCounterFirst": 0,
+  "copyFailureCounterLast": 0,
+  "productionLatencyCalibrated": false,
+  "percentileMethod": "Linear interpolation at index (n-1)*q; empirical only",
+  "limits": [
+    "OFF/OBSERVE, private zero-PWM driver; RUNNING and MPC execution not measured.",
+    "CSI completion is not exposure time; observe return is not physical PWM reload.",
+    "1ms clock: zero stage delta means unresolved below clock granularity, not zero physical duration.",
+    "One 256-frame session; empirical maxima and percentiles are not guaranteed bounds."
+  ]
+}

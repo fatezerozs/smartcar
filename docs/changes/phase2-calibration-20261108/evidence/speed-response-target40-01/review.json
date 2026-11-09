@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "smartcar.speed-response-review/1",
+  "sourceSha256": "9d4f7d437a693bb2567ca6f1d33123ac8b9efeaf646956610770c2729ed3f5b9",
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "crcVerified": true,
+  "rows": 522,
+  "config": {
+    "requestPermille": 250,
+    "durationMs": 3000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 40,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "firstZeroAfterArmMs": 3200,
+  "postZeroMs": 2008,
+  "stopReason": 1,
+  "faultDetailValues": [
+    0
+  ],
+  "faultValues": [
+    0
+  ],
+  "uniquePositiveTargetMatchedControls": 297,
+  "excludedZeroTargetPairingAnomalies": [
+    {
+      "heldAtSequence": 158990,
+      "controlSequence": 158989,
+      "controlElapsedMs": 204,
+      "targetLeftRight": [
+        0,
+        0
+      ],
+      "heldFeedbackLeftRight": [
+        29,
+        24
+      ],
+      "rawFeedbackLeftRight": [
+        0,
+        0
+      ],
+      "reason": "held feedback does not match source sample"
+    }
+  ],
+  "tailWindowsMs": {
+    "300": {
+      "uniqueControlSamples": 29,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 39.793103448275865,
+        "rangeCounts10ms": [
+          34,
+          47
+        ],
+        "rmseCounts10ms": 3.713906763541037,
+        "samplesWithin2Counts": 13,
+        "maxOvershootCounts": 7
+      },
+      "r": {
+        "meanCounts10ms": 40.93103448275862,
+        "rangeCounts10ms": [
+          33,
+          47
+        ],
+        "rmseCounts10ms": 3.926040384846834,
+        "samplesWithin2Counts": 11,
+        "maxOvershootCounts": 7
+      }
+    },
+    "500": {
+      "uniqueControlSamples": 49,
+      "notSteadyStateCertification": true,
+      "l": {
+        "meanCounts10ms": 40.16326530612245,
+        "rangeCounts10ms": [
+          34,
+          48
+        ],
+        "rmseCounts10ms": 3.822596617217043,
+        "samplesWithin2Counts": 21,
+        "maxOvershootCounts": 8
+      },
+      "r": {
+        "meanCounts10ms": 40.42857142857143,
+        "rangeCounts10ms": [
+          32,
+          47
+        ],
+        "rmseCounts10ms": 3.976974544878587,
+        "samplesWithin2Counts": 14,
+        "maxOvershootCounts": 7
+      }
+    }
+  },
+  "responseOnset": {
+    "l": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 738,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    },
+    "r": {
+      "thresholdCounts10ms": 3,
+      "firstSampleElapsedMs": 828,
+      "interpretation": "Thresholded sampled encoder response, not exact physical start or reliable deadband."
+    }
+  },
+  "outputCeiling": {
+    "l": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 130.0
+    },
+    "r": {
+      "sampledAtCeiling": 0,
+      "sampledCeilingDurationMs": 0,
+      "softwarePwmPeakPermille": 157.0
+    }
+  },
+  "driveNegativeRuns": {
+    "l": [],
+    "r": [
+      {
+        "firstSequence": 159047,
+        "lastSequence": 159047,
+        "samples": 1,
+        "elapsedSampleSpanMs": 0,
+        "minimumNormalizedCounts10ms": -1
+      }
+    ]
+  },
+  "signedRawTotalDeltaLeftRight": [
+    -9440,
+    9092
+  ],
+  "productionApproved": false,
+  "hardwareAccessed": false,
+  "limits": [
+    "Measured elapsed counts and held PI state are matched by sample identity; seed0 is excluded.",
+    "PWM columns are held software submissions, not guaranteed to belong to the PI calculation in the same row.",
+    "Saturation duration is sample-window attribution, not electrical timing.",
+    "Short lifted tests and unmeasured battery voltage cannot establish stationary or ground performance.",
+    "Forward/reverse sampled counts do not independently prove visible rotation or encoder correctness."
+  ],
+  "sourceTrace": ".build\\phase2-calibration-20261108\\speed-response-20261109_1-release\\export-closed250-target40-01\\trace.json",
+  "operatorObservation": "All normal: both forward, no unusual noise, stopped",
+  "operatorNormalAndStopConfirmed": true,
+  "configChangesFromPrevious": {
+    "maximumTargetTicks10ms": [
+      30,
+      40
+    ]
+  },
+  "performanceAccepted": false
+}

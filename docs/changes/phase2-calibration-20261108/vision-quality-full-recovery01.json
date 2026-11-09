@@ -1,0 +1,114 @@
+{
+  "operatorReply": "视野已恢复",
+  "stage": "STATIC_FULL_VIEW_REMOVED_RECOVERY",
+  "expectedCal": [
+    1,
+    1
+  ],
+  "calReports": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      1
+    ]
+  ],
+  "allReportsMatchExpected": true,
+  "visualInspection": "First preview inspected: actual lane visible near and far after cover removed; person visible off lane on left.",
+  "rawEvidenceSha256": {
+    "recovery.console.txt": "cd75e73b325bcd9d0bc13c383c4028dd430a5358baa248a330a4c65080dbbcb1",
+    "recovery.log": "5cb5b566f1226a0e414f75b998218fbbaab4cf48972b70cc22206a95cac15cdb",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000001.gray": "64468610edda8eb36b599da7d624d1418fbacc2d47b8815710cbe19ea0d27715",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000001.png": "31b3523e2765cc57d8db747d722b196893b76e05bba671670b7c52b0db356b22",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000001.preview.png": "4b5d9cce3a91f702f3f91f73e50eb2c87650158285964009ae1b91b77094401b",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000002.gray": "29fe27e1a87cdc6e7ac129c1eed5af5d4542e4b85ada6265215349d0702953d9",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000002.png": "1c93fc1c68a51208c9b01cef7ffe99ac7072ae6ececf1bd33f385d751a46ca53",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000002.preview.png": "84d87d49f9ef8d9517f105d4f08f91b2de0581d0604dc8fd1e1bc58b48c74819",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000003.gray": "0f575fa0e9216172a4c26bac623c4e0129557bf0c36c73e108f8cff19ec9a2b6",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000003.png": "1a8b82f17a274bb826596de0addc41fab6e944d351e7260c3f40f0a850a168c3",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frame-000003.preview.png": "ce6820dbdc786e9db866bdbc6d766e31326cdae5649a2b3468006efae7cd57c7",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\frames.csv": "508261e1327980c9ba117cf391d0c9048c5c55298dbcc208f037914032940153",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\received.bin": "9d64f4e34d369a24c7f49b0e2b72321eca92dc452f9b56f524cd622b25fc6076",
+    "images\\camera-g-20261109-031455-000-bc570c6f\\session.json": "e6b4595139b95e6ef702c842ea4b0873bfc51828cc48f3d853e3cd1df740154b"
+  },
+  "preciseTransitionTimingMeasured": false,
+  "productionBudgetValidated": false
+}

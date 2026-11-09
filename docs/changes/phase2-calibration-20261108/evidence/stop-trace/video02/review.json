@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "smartcar.stop-video-review/1",
+  "recordedAtUtc": "2026-11-08T17:13:04.458827+00:00",
+  "sourceVideo": "C:\\download_temp\\VID_20261109_010805.mp4",
+  "sourceSha256": "1d57f4b16f58d9fdeb8680c27f33e1336eb7b9f348fff1bdf9ecd23d48e6904d",
+  "sourceBytes": 24784958,
+  "media": {
+    "durationSeconds": 8.8,
+    "encodedSize": [
+      1920,
+      1080
+    ],
+    "displayRotationDegrees": -90,
+    "reportedCaptureFps": 60,
+    "nominalStreamFps": 60.02,
+    "audioOriginalRateHz": 48000,
+    "audioChannels": 2
+  },
+  "videoInspection": {
+    "vehicleMovedAndThenStoppedObserved": true,
+    "cameraMoves": true,
+    "groundScaleVisible": true,
+    "groundHomographyOrRulerReadoutVerified": false,
+    "physicalStoppingDistanceMm": null,
+    "physicalStopTimePreciselyVerified": false,
+    "method": "Original decoded contact frames and denser2.2..4.0s frames visually inspected; no camera-pixel displacement converted to mm."
+  },
+  "audioInspection": {
+    "dominantShortToneHz": 2687.5,
+    "tonalWindowStartRangeSeconds": [
+      2.24,
+      2.42
+    ],
+    "analysisWindowSeconds": 0.064,
+    "analysisHopSeconds": 0.01,
+    "association": "Short high-tonality episode consistent with commanded200ms buzzer; candidate sync marker, acoustic/output offset uncalibrated.",
+    "preciseOnsetSeconds": null
+  },
+  "trace": {
+    "file": "trace.json",
+    "rows": 522,
+    "crcVerified": true,
+    "stopReason": 1,
+    "softwareZeroMs": 87384,
+    "samplesStraddlingZeroOffsetMs": [
+      -4,
+      6
+    ],
+    "postZeroCaptureMs": 2006,
+    "lastPostZeroNonzeroSampleOffsetMs": 1216,
+    "remainingCapturedZeroTailMs": 790,
+    "wheelEquivalentPostZeroDistanceBoundsMm": {
+      "left": [
+        257.7934754687901,
+        262.56742871821217
+      ],
+      "right": [
+        253.6186720936149,
+        258.5067412872043
+      ]
+    },
+    "boundsMeaning": "Discrete cumulative-count bracket using samples6ms after and4ms before software-zero; not total physical uncertainty or a safety bound.",
+    "lastNonzeroMeaning": "Last nonzero wheel sample including isolated1-count event; not certified mechanical settling criterion."
+  },
+  "productionApproved": false,
+  "phase2Complete": false,
+  "limitations": [
+    "Single run at one open-loop input and nominal battery; not conservative deceleration certification.",
+    "0.189m circumference adopted by user without repeatability verification.",
+    "Software zero/driver writes and audio are not independently measured PWM reload.",
+    "Moving camera and unverified planar scale prevent defensible physical mm result in this preliminary review.",
+    "No global stop threshold, jerk limit or safe degradation budget inferred."
+  ],
+  "evidenceLayers": [
+    "structured_parsed: media metadata, raw trace JSON",
+    "computed: CRC, hashes, FFT tonal screening, wheel-count conversions",
+    "original decoded video frames: direct visual movement/stop inspection; no new pdf_verified"
+  ]
+}

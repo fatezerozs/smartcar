@@ -1,0 +1,22 @@
+{
+  "reports": 12,
+  "states": {
+    "1/1": 12
+  },
+  "quality": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    70,
+    68,
+    68,
+    68,
+    70,
+    68
+  ],
+  "configurationChanged": false,
+  "motionCommandSent": false
+}

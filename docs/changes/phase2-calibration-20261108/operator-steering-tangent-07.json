@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "smartcar.phase2-operator-tangent/1",
+  "recordedAtUtc": "2026-11-08T14:52:26.283656+00:00",
+  "rawReplies": [
+    "均为-0.258",
+    "轮位稳定，量具未推动车轮"
+  ],
+  "pulseUsContext": 1600,
+  "holdMsContext": 700,
+  "benchSequenceContext": 11,
+  "sweepDirection": "return branch; same-pulse repeat after 1650 to 1600",
+  "measurementPhase": "post-pulse-no-hold",
+  "angleReference": "vehicle longitudinal; right positive",
+  "tangentReported": -0.258,
+  "principalAngleDegComputed": -14.46682835003908,
+  "wheelAssignment": "both; operator reports common value",
+  "leftTangentReported": -0.258,
+  "rightTangentReported": -0.258,
+  "productionApproved": false,
+  "reviewStatus": "OPERATOR_STABILITY_CONFIRMED_DISCREPANCY_UNRESOLVED",
+  "notes": "New measurement after a new same-pulse command; does not overwrite or invalidate previous -0.0306 observation. Single reports, no raw dimensions or measured uncertainty. Not certified hysteresis.",
+  "comparison": {
+    "increasingPulseReport": "operator-steering-tangent-02.json",
+    "increasingPulseAngleDeg": -10.120705520281675,
+    "absoluteDifferenceFromIncreasingDeg": 4.346122829757405,
+    "previousReturnReport": "operator-steering-tangent-06.json",
+    "previousReturnAngleDeg": -1.7527039356781422,
+    "previousReturnExcluded": true,
+    "previousReturnExclusionSource": "operator-steering-tangent-06.json",
+    "absoluteDifferenceFromPreviousReturnDegHistoricalOnly": 12.714124414360938
+  },
+  "positionStableDuringMeasurementReported": true,
+  "instrumentPushedWheelReported": false
+}

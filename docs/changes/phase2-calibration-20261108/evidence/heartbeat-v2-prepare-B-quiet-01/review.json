@@ -1,0 +1,12 @@
+{
+  "motionCommandSent": false,
+  "recordReleased": false,
+  "stop": "[LINK] STOP",
+  "owner": "[LINK] port=radio owner=radio rx=9685 tx=693515 overflow=0 errors=1 tx_rejected=0; x=claim while stopped",
+  "version": "[FIELD] build=PHASE2_HEARTBEAT_DIAG_20261109_2; @status, @startup, @servo, @motor, @motor_dir, @balance, @encoder_sign, @speed_cfg, @speed_mode",
+  "quiet": "[HB_QUIET] value=1; stopped; RAM only",
+  "speed": "[SPEED] enabled=1 max_ticks=30 kp=2.0000 ki=0.0977 target_R/L=0/0 measured_R/L=1/1 pwm_R/L=0/0 faults=0; units=counts/10ms; query stops",
+  "snapshot": "[HB_DIAG] frozen=1 reason=1 stop=108884 lease=108808 age=76 rx_h=42/108806/350 parsed_h=42/108808/348 accepted_h=42/108808/348 radio_rx=589/716 quiet=0",
+  "info": "[RESPONSE_INFO] gen=1 start_ms=106183 stop_ms=108884 count=472 recording=0 frozen=1 stop_seen=1 overflow=0 reason=1 crc=1ADC7112",
+  "prepared": true
+}

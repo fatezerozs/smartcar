@@ -1,0 +1,82 @@
+{"time":"2026-11-09T00:05:35.4825634+08:00","elapsed_ms":96,"direction":"TX","data":"\r\n!\r\n"}
+{"time":"2026-11-09T00:05:35.5506325+08:00","elapsed_ms":164,"direction":"RX","data":"[TELEM] ms=367820 n=18335 state=0 faults=0 valid=0 owner=radio motion=0\r\n[LINK] STOP\r\n"}
+{"time":"2026-11-09T00:05:35.6432746+08:00","elapsed_ms":257,"direction":"RX","data":"[TELEM] ms=368020 n=18345 state=0 faults=0 valid=0 owner=radio motion=0\r\n"}
+{"time":"2026-11-09T00:05:35.8452674+08:00","elapsed_ms":459,"direction":"RX","data":"[TELEM] ms=368220 n=18355 state=0 faults=0 valid=0 owner=radio motion=0\r\n"}
+{"time":"2026-11-09T00:05:35.9071885+08:00","elapsed_ms":521,"direction":"TX","data":"x\r\n"}
+{"time":"2026-11-09T00:05:35.9221631+08:00","elapsed_ms":535,"direction":"RX","data":"[LINK] port=usb owner=usb rx=6 tx=161902 overflow=0 errors=0 tx_rejected=0; x=claim while stopped\r\n[MOTION_DIAG] max 150 permille;"}
+{"time":"2026-11-09T00:05:35.9242025+08:00","elapsed_ms":538,"direction":"TX","data":"t\r\n"}
+{"time":"2026-11-09T00:05:35.9545236+08:00","elapsed_ms":568,"direction":"RX","data":" manual profile required; no auto-start; ramp 100 permille/s; h every 100ms, !=STOP\r\n[THRESHOLD_DIAG] manual single-wheel bench; first <=100, step <=10, max 200 permille / 1500ms; local autostart disabled; !=STOP\r\n[MOTION] @motion line/shuttle permille ms; @motion circle permille ms pulse_us; requires hardwa"}
+{"time":"2026-11-09T00:05:35.9693965+08:00","elapsed_ms":583,"direction":"RX","data":"re calibration, cruise=0; h heartbeat, !=STOP, v=confirm reverse whil"}
+{"time":"2026-11-09T00:05:35.9842601+08:00","elapsed_ms":598,"direction":"RX","data":"e stopped\r\n\r\n[VISION2] MIDTERM: camera steering / open-loop motor; UART arm/stop; physical keys removed; boot is stopped\r\n[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/p"}
+{"time":"2026-11-09T00:05:36.0003076+08:00","elapsed_ms":614,"direction":"RX","data":"ause/reset disarms\r\n[FIELD] build=MOTION_DIAG_2; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 l"}
+{"time":"2026-11-09T00:05:36.0156340+08:00","elapsed_ms":629,"direction":"RX","data":"evel2, @duration ms; newline; !=STOP\r\n[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM "}
+{"time":"2026-11-09T00:05:36.0309765+08:00","elapsed_ms":644,"direction":"RX","data":"is NOT measured speed\r\n[STARTUP] @startup enabled delay_ms; @save, @l"}
+{"time":"2026-11-09T00:05:36.0467268+08:00","elapsed_ms":660,"direction":"RX","data":"oad; physical keys removed; boot does not auto-arm; remote a requires h heartbeat\r\n[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first 1500us then <=50us step; STOP/timeout off\r"}
+{"time":"2026-11-09T00:05:36.0626809+08:00","elapsed_ms":676,"direction":"RX","data":"\n[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=200 permille / 1500ms; NOT forward confirmation\r\n[LINK] dual UART1/UART8 115200 8N1; x=claim this port while "}
+{"time":"2026-11-09T00:05:36.0783786+08:00","elapsed_ms":692,"direction":"RX","data":"stopped; !=STOP on either port\r\n[MODE] C26/C27 ON=ground: 00 OBSERVE, 10 SERVO, 01 MOTOR, 11 DRIVE; change=STOP; keys re"}
+{"time":"2026-11-09T00:05:36.0942451+08:00","elapsed_ms":708,"direction":"RX","data":"moved; a/h/s via UART\r\n[VISION2] t=text g=gray b=binary o=overlay p=pause r=reset ?=help\r\n[BAYES] f=full-track observer (NO DRIVE), m=midterm control; both stop/reset\r\n[BAYES] default model"}
+{"time":"2026-11-09T00:05:36.1099625+08:00","elapsed_ms":723,"direction":"RX","data":" UNTRAINED; posterior is not measured accuracy\r\n[VISION2] image: Seek"}
+{"time":"2026-11-09T00:05:36.1247357+08:00","elapsed_ms":738,"direction":"RX","data":"Free V2, GRAY 94x60, header=12 bytes; no mixed text\r\n[VISION2] err>0 means lane is RIGHT; valid=0 means DO NOT use err for control\r\n[VISION2] tracking history cleared\r\n"}
+{"time":"2026-11-09T00:05:36.2018863+08:00","elapsed_ms":815,"direction":"RX","data":"[BOARD_IO] C26=0 C27=0 mode=DRIVE ready=1; keys=REMOVED\r\n[B11] level=0 mux=5 dir=1 out=0 fast=0 pad=0x00000048 expected:mux5/dir1/out0/fast0\r\n[DRIVE] ready=0 state=0 faults="}
+{"time":"2026-11-09T00:05:36.2169599+08:00","elapsed_ms":830,"direction":"RX","data":"0 near=0.000 heading=0.000 steer=0.000 duty=0.000 far_ok=0\r\n[CAL] valid=0 far_ok=0 near_x=0.00000 far_x=0.00000; confirm"}
+{"time":"2026-11-09T00:05:36.2328162+08:00","elapsed_ms":846,"direction":"RX","data":" centered STRAIGHT before @camera\r\n[BAYES] mode=MIDTERM state=UNKNOWN"}
+{"time":"2026-11-09T00:05:36.2484083+08:00","elapsed_ms":862,"direction":"RX","data":" candidate=CROSS p=0.738 margin=0.559 entropy=0.355 accepted=0 trained=0\r\n[FEATURE] n=18373 ms=368567 mask=60 quality=0.620 heading=0.0000 curvature=0.0000 open_left=0.7011 open_right=0.574"}
+{"time":"2026-11-09T00:05:36.2634901+08:00","elapsed_ms":877,"direction":"RX","data":"7 split=0.8621 stripes=0.2588\r\n[VISION2] n=18373 fps=50.0 valid=0 state=NO_LANE q=1 thr=170 contrast=158 white=50\r\n[VISION2] both=1 inferred=0 err=0.0 raw=0.0 bend=0.0 bend_ok=0 row90 L/M/R"}
+{"time":"2026-11-09T00:05:36.2788064+08:00","elapsed_ms":892,"direction":"RX","data":"=-1/-1/-1 drop=0\r\n[VISION2] age_ms=5 proc_ms=3 history_reset=1 row90_thr=165 local_rows=86 ambiguous=0\r\n"}
+{"time":"2026-11-09T00:05:36.3427785+08:00","elapsed_ms":0,"direction":"TX","data":"@motion line 150 2500\r\n"}
+{"time":"2026-11-09T00:05:36.3468469+08:00","elapsed_ms":4,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.3726750+08:00","elapsed_ms":30,"direction":"RX","data":"[MOTION] STARTED kind=1 requested=150 duration_ms=2500 servo_us=1550; h=heartbeat !=STOP v=confirm reverse AFTER stop/coast\r\n[MOTION] seq=2 kind=1 phase=1 reason=0 requested=150 actual=0 servo_us=1550 ms=368733\r\n"}
+{"time":"2026-11-09T00:05:36.4511107+08:00","elapsed_ms":108,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.4668625+08:00","elapsed_ms":124,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=1 reason=0 requested=150 actual=0 servo_us=1550 ms=368833\r\n"}
+{"time":"2026-11-09T00:05:36.5597037+08:00","elapsed_ms":217,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.5608851+08:00","elapsed_ms":218,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=0 servo_us=1550 ms=368933\r\n"}
+{"time":"2026-11-09T00:05:36.6677622+08:00","elapsed_ms":325,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.6695393+08:00","elapsed_ms":327,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=10 servo_us=1550 ms=369033\r\n"}
+{"time":"2026-11-09T00:05:36.7609291+08:00","elapsed_ms":418,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=20 servo_us=1550 ms=369133\r\n"}
+{"time":"2026-11-09T00:05:36.7762079+08:00","elapsed_ms":434,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.8543010+08:00","elapsed_ms":512,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=30 servo_us=1550 ms=369233\r\n"}
+{"time":"2026-11-09T00:05:36.8842774+08:00","elapsed_ms":542,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:36.9599181+08:00","elapsed_ms":617,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=40 servo_us=1550 ms=369333\r\n"}
+{"time":"2026-11-09T00:05:36.9913335+08:00","elapsed_ms":649,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.0682244+08:00","elapsed_ms":726,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=50 servo_us=1550 ms=369433\r\n"}
+{"time":"2026-11-09T00:05:37.0995716+08:00","elapsed_ms":757,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.1602802+08:00","elapsed_ms":818,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=60 servo_us=1550 ms=369533\r\n"}
+{"time":"2026-11-09T00:05:37.2064188+08:00","elapsed_ms":864,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.2683933+08:00","elapsed_ms":926,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=70 servo_us=1550 ms=369633\r\n"}
+{"time":"2026-11-09T00:05:37.3150754+08:00","elapsed_ms":972,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.3613482+08:00","elapsed_ms":1019,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=80 servo_us=1550 ms=369733\r\n"}
+{"time":"2026-11-09T00:05:37.4226564+08:00","elapsed_ms":1080,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.4540696+08:00","elapsed_ms":1111,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=89 servo_us=1550 ms=369833\r\n"}
+{"time":"2026-11-09T00:05:37.5312054+08:00","elapsed_ms":1189,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.5614080+08:00","elapsed_ms":1219,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=99 servo_us=1550 ms=369933\r\n"}
+{"time":"2026-11-09T00:05:37.6390769+08:00","elapsed_ms":1296,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.6547568+08:00","elapsed_ms":1312,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=110 servo_us=1550 ms=370033\r\n"}
+{"time":"2026-11-09T00:05:37.7480158+08:00","elapsed_ms":1405,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.7629996+08:00","elapsed_ms":1420,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=120 servo_us=1550 ms=370133\r\n"}
+{"time":"2026-11-09T00:05:37.8559187+08:00","elapsed_ms":1513,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.8574150+08:00","elapsed_ms":1515,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=130 servo_us=1550 ms=370233\r\n"}
+{"time":"2026-11-09T00:05:37.9628642+08:00","elapsed_ms":1620,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:37.9640782+08:00","elapsed_ms":1621,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=139 servo_us=1550 ms=370333\r\n"}
+{"time":"2026-11-09T00:05:38.0559997+08:00","elapsed_ms":1713,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=149 servo_us=1550 ms=370433\r\n"}
+{"time":"2026-11-09T00:05:38.0717162+08:00","elapsed_ms":1729,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.1652975+08:00","elapsed_ms":1823,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=370533\r\n"}
+{"time":"2026-11-09T00:05:38.1807724+08:00","elapsed_ms":1838,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.2580289+08:00","elapsed_ms":1915,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=370633\r\n"}
+{"time":"2026-11-09T00:05:38.2890535+08:00","elapsed_ms":1946,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.3654057+08:00","elapsed_ms":2023,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=370733\r\n"}
+{"time":"2026-11-09T00:05:38.3963722+08:00","elapsed_ms":2054,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.4578808+08:00","elapsed_ms":2115,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=370833\r\n"}
+{"time":"2026-11-09T00:05:38.5051485+08:00","elapsed_ms":2163,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.5669011+08:00","elapsed_ms":2224,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=370933\r\n"}
+{"time":"2026-11-09T00:05:38.6119319+08:00","elapsed_ms":2269,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.6597634+08:00","elapsed_ms":2317,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=371033\r\n"}
+{"time":"2026-11-09T00:05:38.7222409+08:00","elapsed_ms":2380,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.7542804+08:00","elapsed_ms":2412,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=371133\r\n"}
+{"time":"2026-11-09T00:05:38.8307333+08:00","elapsed_ms":2488,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.8615501+08:00","elapsed_ms":2519,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=371233\r\n"}
+{"time":"2026-11-09T00:05:38.9382605+08:00","elapsed_ms":2596,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:38.9540320+08:00","elapsed_ms":2611,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=2 reason=0 requested=150 actual=150 servo_us=1550 ms=371333\r\n"}
+{"time":"2026-11-09T00:05:39.0460923+08:00","elapsed_ms":2703,"direction":"TX","data":"h"}
+{"time":"2026-11-09T00:05:39.0610935+08:00","elapsed_ms":2718,"direction":"RX","data":"[MOTION] seq=2 kind=1 phase=0 reason=1 requested=150 actual=0 servo_us=1550 ms=371433\r\n"}
+{"time":"2026-11-09T00:05:39.0635097+08:00","elapsed_ms":2721,"direction":"RESULT","data":"phase=0 reason=1 expected=1"}
+{"time":"2026-11-09T00:05:39.0741032+08:00","elapsed_ms":2731,"direction":"TX","data":"!\r\n"}

@@ -1,0 +1,11 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "kpQ8": 512,
+  "kiQ8": 25,
+  "targetCounts10ms": 23,
+  "speedEnabled": true,
+  "faultsReadback": 0,
+  "motionCommandSent": false,
+  "resetSent": false,
+  "bufferReleased": false
+}

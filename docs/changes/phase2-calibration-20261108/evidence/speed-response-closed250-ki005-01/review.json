@@ -1,0 +1,38 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "configChangesFromBaseline": {
+    "kiQ8": [
+      25,
+      12
+    ]
+  },
+  "info": {
+    "generation": 7,
+    "start_ms": 1029381,
+    "stop_ms": 1030901,
+    "count": 353,
+    "recording": 0,
+    "frozen": 1,
+    "stop_seen": 1,
+    "overflow": 0,
+    "reason": 0,
+    "crc32": 2261399593
+  },
+  "rows": 353,
+  "crcVerified": true,
+  "softwarePwmPeakPermille": 142,
+  "countDeltaLeftRight": [
+    -96,
+    93
+  ],
+  "faultDetail": 9,
+  "operatorObservation": "Both wheels had no visible motion",
+  "actualVisibleReverseConfirmed": false,
+  "performanceAccepted": false,
+  "productionApproved": false,
+  "limits": [
+    "Small encoder counts are retained despite no visible motion; they do not prove observed reverse.",
+    "Fault before planned end; this is not a completed3000ms steady response trial.",
+    "No synchronized battery voltage; lowerKi is not isolated as sole cause by one trial."
+  ]
+}

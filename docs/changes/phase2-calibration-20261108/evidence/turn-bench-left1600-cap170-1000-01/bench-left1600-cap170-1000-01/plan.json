@@ -1,0 +1,18 @@
+{
+  "version": "PHASE2_TURN_GEOMETRY_20261109_1",
+  "command": "@motion circle 170 1000 1600",
+  "mode": "open",
+  "targetTicks10ms": null,
+  "closedLoopFeedforward": 0,
+  "normalStraightRequestPermille": 450,
+  "hardCapPermille": 600,
+  "configureRam": false,
+  "execute": true,
+  "scope": "One lifted-bench action; hardware motion is not run by default.",
+  "kpRequested": 2.0,
+  "kiRequested": 0.1,
+  "kpQ8": 512,
+  "kiQ8": 25,
+  "kind": "circle",
+  "servoUs": 1600
+}

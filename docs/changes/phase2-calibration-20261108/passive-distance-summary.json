@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "smartcar.phase2-passive-scale-summary/1",
+  "sourceTrials": [
+    "passive-distance-1000.json",
+    "passive-distance-1000-repeat.json"
+  ],
+  "reportedDistanceMmEach": 1000,
+  "forwardCountsLeftRightByTrial": [
+    [
+      11449,
+      11283
+    ],
+    [
+      11339,
+      11495
+    ]
+  ],
+  "descriptiveMeanCountsPerMetreLeftRight": [
+    11394,
+    11389
+  ],
+  "relativeTrialDifferencePercentOfMeanLeftRight": [
+    -0.9654203967000177,
+    1.861445254192642
+  ],
+  "candidateScaleOnly": true,
+  "productionApproved": false,
+  "old189mmBaselineChanged": false,
+  "limits": "No uncertainty certification. Do not merge inconsistent trials automatically or alterCPR from distance alone.",
+  "candidateStopReanalysis": "stop-distance-candidate-reanalysis.json",
+  "review": "Same-direction two1m trials support distance-scale candidate; not production accuracy approval."
+}

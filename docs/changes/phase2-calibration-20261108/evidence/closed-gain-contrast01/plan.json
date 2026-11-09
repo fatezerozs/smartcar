@@ -1,0 +1,153 @@
+{
+  "version": "PHASE2_SPEED_RESPONSE_20261109_1",
+  "baselineTrace": "docs\\changes\\phase2-calibration-20261108\\evidence\\speed-response-closed250-3000-01\\export-closed250-3000-01\\trace.json",
+  "baselineTraceSha256": "ba1bdd81d4e99f3f1f14472239bf4e03f80ae9776bf433f251f0a36393242278",
+  "baselineConfig": {
+    "requestPermille": 250,
+    "durationMs": 3000,
+    "profileCapPermille": 600,
+    "maximumTargetTicks10ms": 23,
+    "kpQ8": 512,
+    "kiQ8": 25,
+    "signLeftRawU32": 4294967295,
+    "signRightRawU32": 1,
+    "closedLoop": 1,
+    "servoUs": 1550
+  },
+  "proposedChanges": {
+    "kiRequested": [
+      0.1,
+      0.05
+    ],
+    "kiQ8": [
+      25,
+      12
+    ]
+  },
+  "unchanged": {
+    "kpRequested": 2,
+    "kpQ8": 512,
+    "targetCounts10ms": 23,
+    "perRunPwmCapPermille": 250,
+    "durationMs": 3000,
+    "feedforward": 0
+  },
+  "executed": false,
+  "productionApproved": false,
+  "newFlashRequired": false,
+  "analysisWindows": [
+    {
+      "fromMs": 1000,
+      "toMsExclusive": 1500,
+      "samples": 46,
+      "l": {
+        "feedbackRange": [
+          0,
+          32
+        ],
+        "mean": 20.08695652173913,
+        "integralPermilleRange": [
+          91.9921875,
+          112.01171875
+        ]
+      },
+      "r": {
+        "feedbackRange": [
+          0,
+          26
+        ],
+        "mean": 11.41304347826087,
+        "integralPermilleRange": [
+          92.1875,
+          142.28515625
+        ]
+      }
+    },
+    {
+      "fromMs": 1500,
+      "toMsExclusive": 2000,
+      "samples": 50,
+      "l": {
+        "feedbackRange": [
+          18,
+          32
+        ],
+        "mean": 23.92,
+        "integralPermilleRange": [
+          97.16796875,
+          104.58984375
+        ]
+      },
+      "r": {
+        "feedbackRange": [
+          16,
+          32
+        ],
+        "mean": 23.68,
+        "integralPermilleRange": [
+          137.98828125,
+          142.28515625
+        ]
+      }
+    },
+    {
+      "fromMs": 2000,
+      "toMsExclusive": 2500,
+      "samples": 50,
+      "l": {
+        "feedbackRange": [
+          18,
+          30
+        ],
+        "mean": 22.82,
+        "integralPermilleRange": [
+          94.53125,
+          100.68359375
+        ]
+      },
+      "r": {
+        "feedbackRange": [
+          15,
+          33
+        ],
+        "mean": 24.66,
+        "integralPermilleRange": [
+          130.56640625,
+          138.0859375
+        ]
+      }
+    },
+    {
+      "fromMs": 2500,
+      "toMsExclusive": 3200,
+      "samples": 69,
+      "l": {
+        "feedbackRange": [
+          18,
+          31
+        ],
+        "mean": 23.782608695652176,
+        "integralPermilleRange": [
+          94.140625,
+          99.90234375
+        ]
+      },
+      "r": {
+        "feedbackRange": [
+          14,
+          30
+        ],
+        "mean": 22.391304347826086,
+        "integralPermilleRange": [
+          129.58984375,
+          134.66796875
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Single-variable proposal, not an optimized/validated gain.",
+    "Less integral may delay or prevent start; inspect raw response and do not relax protection.",
+    "Source windows describe a short lifted trial; voltage/load not synchronized."
+  ]
+}

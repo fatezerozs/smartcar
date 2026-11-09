@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "smartcar.stop-wheel-analysis/1",
+  "checks": {
+    "interval_min_ms": 3,
+    "interval_max_ms": 10,
+    "post_zero_capture_ms": 2003,
+    "crc_verified": true,
+    "physical_pwm_or_mechanical_stop_verified": false
+  },
+  "conversion": {
+    "circumferenceM": 0.189,
+    "leftCpr": 2335.8,
+    "rightCpr": 2358.6,
+    "forwardRawMultipliers": [
+      -1,
+      1
+    ],
+    "uncertaintyVerified": false
+  },
+  "stopReason": 1,
+  "captureSpanMs": 5203,
+  "stopOffsetFromCaptureStartMs": 3200,
+  "bracketingSamplesOffsetMs": [
+    -7,
+    3
+  ],
+  "preZeroWheelSpeeds": [
+    {
+      "requestedWindowMs": 50,
+      "actualWindowMs": 50.0,
+      "endOffsetFromSoftwareZeroMs": -7,
+      "leftWheelMps": 0.6117133316208578,
+      "rightWheelMps": 0.6458661918087001
+    },
+    {
+      "requestedWindowMs": 100,
+      "actualWindowMs": 100.0,
+      "endOffsetFromSoftwareZeroMs": -7,
+      "leftWheelMps": 0.6198047778063189,
+      "rightWheelMps": 0.6090053421521241
+    },
+    {
+      "requestedWindowMs": 200,
+      "actualWindowMs": 200.0,
+      "endOffsetFromSoftwareZeroMs": -7,
+      "leftWheelMps": 0.5943167223221165,
+      "rightWheelMps": 0.6017934367845331
+    }
+  ],
+  "wheelDistances": {
+    "left": {
+      "sampleBracketDistanceM": [
+        0.35893655278705366,
+        0.36524788081171333
+      ],
+      "signedWholeCaptureDistanceM": 0.8219291035191368
+    },
+    "right": {
+      "sampleBracketDistanceM": [
+        0.35594759603154413,
+        0.3627588399898245
+      ],
+      "signedWholeCaptureDistanceM": 0.8191923174764691
+    }
+  },
+  "settlingToleranceSensitivity": [
+    {
+      "toleranceCountsPer10ms": 0,
+      "lastAboveToleranceOffsetMs": 1293,
+      "firstFinalTailSampleOffsetMs": 1303,
+      "capturedTailDurationMs": 710,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPer10ms": 1,
+      "lastAboveToleranceOffsetMs": 1263,
+      "firstFinalTailSampleOffsetMs": 1273,
+      "capturedTailDurationMs": 740,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    },
+    {
+      "toleranceCountsPer10ms": 2,
+      "lastAboveToleranceOffsetMs": 1213,
+      "firstFinalTailSampleOffsetMs": 1223,
+      "capturedTailDurationMs": 790,
+      "tailAtLeast200ms": true,
+      "physicalStopVerified": false
+    }
+  ],
+  "postZeroReverseSignedSamples": [
+    {
+      "offsetMs": 1263,
+      "rawLeft": 0,
+      "rawRight": -2
+    },
+    {
+      "offsetMs": 1283,
+      "rawLeft": 0,
+      "rawRight": -1
+    },
+    {
+      "offsetMs": 1293,
+      "rawLeft": 1,
+      "rawRight": 0
+    }
+  ],
+  "productionApproved": false,
+  "physicalStoppingDistanceM": null,
+  "brakeDecelerationMps2": null,
+  "jerkLimitMps3": null,
+  "limits": [
+    "Wheel-domain observation, not independently verified ground velocity/distance.",
+    "Software PWM submissions, not measured electrical reload timing.",
+    "Sampling bracket excludes scale, slip and timing uncertainty.",
+    "Tolerance sensitivity is descriptive; no production zero-speed threshold adopted.",
+    "One run and unmeasured battery/load variation cannot establish a safe brake bound."
+  ]
+}

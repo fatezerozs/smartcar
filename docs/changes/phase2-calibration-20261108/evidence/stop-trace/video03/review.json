@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "smartcar.stop-video-manual-check/1",
+  "recordedAtUtc": "2026-11-08T17:28:26.567867+00:00",
+  "sourceVideo": "C:\\download_temp\\VID_20261109_011745.mp4",
+  "sourceSha256": "953c1fcc5c85066395a93ca29885ee9f7128757ee935a6a1424680d3254fc296",
+  "rawReplies": [
+    "可能有清晰度的问题,我这边人眼识别的时候后轮轴在蜂鸣声响在59cm处,停止位置在89cm处",
+    "你可以对照一下"
+  ],
+  "operatorVideoReadings": {
+    "reference": "rear axle",
+    "atAudibleMarkerCm": 59,
+    "atStopCm": 89,
+    "computedDisplacementMm": 300,
+    "readingPrecisionOrUncertainty": null,
+    "exactVideoFramesIdentified": false,
+    "readingStatus": "ROUGH_ESTIMATE_OPERATOR_EXPLICIT",
+    "audibleMarkerTimingErrorUnquantified": true
+  },
+  "assistantOriginalFrameCheck": {
+    "atMarkerCandidateFrameSeconds": 2.04,
+    "atStoppedFrameSeconds": 4.0,
+    "rearAxleNearUpperImageEdgeAtMarker": true,
+    "ruler59Then89VisuallyConsistent": true,
+    "inspection": "Original decoded2.04s and4.0s frames inspected. Rear axle near marker is partially near frame top and motion blurred;59/89cm plausible, exact frame/ground projection not independently certified.",
+    "physicalDistanceIndependentlyCertified": false
+  },
+  "wheelComparison": {
+    "leftBracketMm": [
+      358.93655278705364,
+      365.24788081171334
+    ],
+    "rightBracketMm": [
+      355.94759603154415,
+      362.7588399898245
+    ],
+    "pairedMidpointMm": 360.7227174050339,
+    "wheelMinusOperatorPhysicalMm": 60.722717405033904,
+    "differenceRelativeToOperatorPhysicalPercent": 20.240905801677968,
+    "operatorPhysicalToWheelRatio": 0.8316637281902819,
+    "interpretation": "Wheel-domain software-zero interval and physical audible-marker interval are related but not identical. Comparison requires timing, scale, projection/slip review; do not re-fit CPR/circumference from this one event."
+  },
+  "media": {
+    "durationSeconds": 4.58,
+    "captureFpsReported": 60,
+    "streamFpsNominal": 60.02,
+    "audioPresent": true
+  },
+  "audioCandidate": {
+    "frequencyHz": 2687.5,
+    "highTonalityWindowStartRangeSeconds": [
+      1.98,
+      2.18
+    ],
+    "windowSeconds": 0.064,
+    "preciseAudioOnsetVerified": false
+  },
+  "productionApproved": false,
+  "brakeDecelerationApproved": false,
+  "remainingCausesToCheck": [
+    "Audible onset versus software-zero and actual PWM reload timing",
+    "Rear axle ground projection versus ruler plane and residual camera motion",
+    "Adopted189mm circumference/CPR conversion and rolling/slip conditions",
+    "Manual frame/ruler reading uncertainty"
+  ],
+  "evidenceLayers": [
+    "operator_report:59/89cm video readings",
+    "original-layout decoded video:qualitative frame consistency",
+    "structured_parsed:522-row CRC-verified trace",
+    "computed:300mm difference and wheel-domain comparison"
+  ],
+  "comparisonConclusion": "Video estimate300mm and wheel estimate361mm agree on few-tenths-of-metre coast; discrepancy retained, neither precise agreement nor sensor calibration inferred."
+}
