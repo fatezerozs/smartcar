@@ -10,6 +10,7 @@
 
 | 问题 | 当前事实入口 | 使用限制 |
 | --- | --- | --- |
+| 下一步先做什么 | [影子验证待做清单](changes/phase3-progress-20261109/README.md#待做清单推进有效运动影子验证) | 四项必要步骤均待完成；完整降级、最终生产定参及完整SD录像不作为首次影子验证前置阻塞 |
 | Phase2此前发布成果 | [Phase2交付与交接](changes/phase2-calibration-20261108/DELIVERY_STATUS.md)，对应main提交`bd94f27` | 对应此前Phase2发布范围；本轮Phase3/Recorder源码与证据归档见页首最新进度 |
 | 最后核对的板载是什么 | [V4停机核对](changes/phase3-v4-boardcheck-20261109/README.md) | 已确认PHASE3_C26_SHADOW_20261109_4；Phase2 CURRENT_STATUS仅记录其独立诊断构型，不能代替最新板载身份 |
 | 工程之间是什么关系 | [工程导航](PROJECT_INDEX.md) | 主工程MPC_20261106、隔离Phase2诊断、Recorder/B2/B3、工作区Phase3分别构建/验收 |
