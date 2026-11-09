@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** 本文独立SD工程的已验收事实与历史输入保持不变；Phase2最新诊断没有SD运动联合验收，也未更新本工程发布镜像。跨工程的当前进度与入口由统一维护总览区分。 统一状态与历史适用范围见[文档维护总览](../../docs/DOCUMENTATION_STATUS.md)。
+
 # 交付索引
 
 - 独立 Keil 工程：[mdk/sd_diagnostic.uvprojx](mdk/sd_diagnostic.uvprojx)

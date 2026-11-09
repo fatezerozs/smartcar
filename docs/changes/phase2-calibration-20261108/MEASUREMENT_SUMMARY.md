@@ -1,5 +1,7 @@
 # Phase 2当前实测汇总
 
+当前事实统一登记于[CURRENT_STATUS.json](CURRENT_STATUS.json)，阅读摘要见[成果与交接](DELIVERY_STATUS.md)。历史会话保持原值，“未定参/未验收”不等于“未测量”；现场状态须下次操作重新确认。
+
 **最新状态（2026-11-09）：** 完整成果及版本关系见[交付总览](DELIVERY_STATUS.md)。板载转弯软回调V2；落地直线40目标两点与停车观测已归档，架空软回调可正常结束但右轮间歇转动，地面转弯未执行，生产参数未批准。下方按各自时点保留历史采集与更新。
 
 更新：2026-11-09。当前板载`PHASE2_STARTUP_200_20261108_1`，无线COM10，开环、配平1/1，中位1550µs。当前Phase 2未完成，未改生产参数。机器可读结果见[MEASUREMENT_SUMMARY.json](MEASUREMENT_SUMMARY.json)。

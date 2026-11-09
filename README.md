@@ -9,6 +9,8 @@
 
 ## 从哪里阅读
 
+- **[全库文档状态与维护口径](docs/DOCUMENTATION_STATUS.md)**：当前成果、历史版本、工作区增量与各工程验收范围。
+
 - **[Phase2实测成果与交接（2026-11-09）](docs/changes/phase2-calibration-20261108/DELIVERY_STATUS.md)**：落地响应、停车、无线与软回调成果，以及当前间歇转动问题和未完成标定。
 - **[主要工程索引与交接导航](docs/PROJECT_INDEX.md)**：工程关系图、阶段进度、待解决问题、工程入口与接手路线。
 - **[当前参数集与实测数据交付（2026-11-06）](docs/changes/vehicle-parameters-20261106/README.md)**：已采用的左右轮 CPR/方向、控制与舵机配置、几何参考、9 个 Encoder 原始窗口、Camera/SD 证据及联合候选待验状态。

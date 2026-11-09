@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** Phase2实测与诊断工具已单独发布于bd94f27；没有据此验收Recorder运动写卡、Camera/SD/PI组合或正式训练数据集。现有静止/软件结果按本文原构型阅读；其他未提交Recorder/Phase3实现不能写成main已发布或当前车载配置。 统一状态与历史适用范围见[文档维护总览](../DOCUMENTATION_STATUS.md)。
+
 # VDS-0 现状与边界（2026-11-04）
 
 基线、提交日期、固件事实见 [采集基线审计](../vision_recorder/C31_BASELINE_AUDIT.md)。

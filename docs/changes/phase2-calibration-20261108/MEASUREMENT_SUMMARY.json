@@ -172,5 +172,8 @@
     "stabilityAccepted": false,
     "radioIssueResolved": false,
     "review": "evidence/speed-response-ground23-2500-02/review.json"
-  }
+  },
+  "documentScope": "Historical cumulative measurements; original firmware and recordedAtUtc describe initial capture, not latest board identity.",
+  "currentStatusReference": "CURRENT_STATUS.json",
+  "latestDeliveryReference": "DELIVERY_STATUS.md"
 }

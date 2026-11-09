@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** Phase2实测与诊断工具已单独发布于bd94f27；没有据此验收Recorder运动写卡、Camera/SD/PI组合或正式训练数据集。现有静止/软件结果按本文原构型阅读；其他未提交Recorder/Phase3实现不能写成main已发布或当前车载配置。 统一状态与历史适用范围见[文档维护总览](../DOCUMENTATION_STATUS.md)。
+
 # 持续边采边写：实施和验收计划
 
 原计划日期：2026-11-04；维护：2026-11-07。Recorder/RTOS、SCRAW-1 PC adapter、独立测试与构建已实施，源码现已合入main，见[实施记录](IMPLEMENTATION.md)。后续B2独立静止短窗、B3零实际输出记录和独立SD实测已有局部证据；H0组合边界尚未全部关闭，H1/H2/H3也未完成。PC/Mock或局部静止通过不算持续运动采集与稳定行驶通过。[当前工程导航](../PROJECT_INDEX.md)

@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** Phase2实测与诊断工具已单独发布于bd94f27；没有据此验收Recorder运动写卡、Camera/SD/PI组合或正式训练数据集。现有静止/软件结果按本文原构型阅读；其他未提交Recorder/Phase3实现不能写成main已发布或当前车载配置。 统一状态与历史适用范围见[文档维护总览](../DOCUMENTATION_STATUS.md)。
+
 # 车载采集训练版：决策与未决事项
 
 维护：2026-11-07。代码归档已在main `00bb7a4`完成，当前main optimized/ASan各49 PASS / 1 SKIPPED；这关闭软件未发布问题，不关闭物理/运动验收。[主线记录](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)

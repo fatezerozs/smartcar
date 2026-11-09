@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** 本文独立SD工程的已验收事实与历史输入保持不变；Phase2最新诊断没有SD运动联合验收，也未更新本工程发布镜像。跨工程的当前进度与入口由统一维护总览区分。 统一状态与历史适用范围见[文档维护总览](../../docs/DOCUMENTATION_STATUS.md)。
+
 # SD Performance 独立性能测试固件
 
 原交付：2026-11-06；维护：2026-11-07。状态：独立实板的24.75MHz、49.5MHz两档16MiB写入与全量回读均已通过，见[性能实测报告](evidence/performance-hardware-20261105T163728Z/PERFORMANCE_REPORT.md)。后续5文件另有[断电后PC校验](evidence/readback-20261105T183635Z-9052/PERSISTENCE_REPORT.md)。

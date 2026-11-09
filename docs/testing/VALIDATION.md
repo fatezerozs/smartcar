@@ -1,10 +1,12 @@
+> **维护口径（2026-11-09）：** `00bb7a4`、72定义、49 PASS/1 SKIPPED等数字属于2026-11-06被测版本，不能代表最新HEAD或未提交catalog。Phase2整合提交bd94f27另有41项Python与19350项模拟IO断言，本轮未核定该提交远程CI；它们不是统一Host/PreFlash套件计数，也不代替实车验收。 统一状态与历史适用范围见[文档维护总览](../DOCUMENTATION_STATUS.md)。
+
 # 测试验收入口与C32原始记录
 
-维护：2026-11-07。当前main合并基准`00bb7a4`的[远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)已完成：MSVC optimized与ASan各49 PASS / 1 SKIPPED。唯一跳过项为缺数据的performance-host，不代表性能实测通过。
+维护：2026-11-07。原合并CI基准`00bb7a4`的[远端CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)已完成：MSVC optimized与ASan各49 PASS / 1 SKIPPED。唯一跳过项为缺数据的performance-host，不代表性能实测通过。
 
 | 证据 | 实际运行与范围 |
 | --- | --- |
-| 当前main Host | `00bb7a4` / workflow `42243602219`；两种MSVC模式分别运行，均49 PASS / 1 SKIPPED |
+| 历史main Host（被测00bb7a4） | `00bb7a4` / workflow `42243602219`；两种MSVC模式分别运行，均49 PASS / 1 SKIPPED |
 | MPC更正后的本地PreFlash | `20261106T114440-8e894432c2`；GCC补充Host、ARM编译、九种Keil构型，63 PASS / 1 SKIPPED |
 | 随后两份测试的兼容性修正 | `20261106T115628-c46e55a1e3`；8项Host及依赖通过，生产源码未再变化；最终完整MSVC范围由分支与main CI覆盖 |
 | C32原始框架交付 | 下文2026-11-02记录及[validation.json](validation.json)，数字仅适用于该时点 |

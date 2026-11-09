@@ -1,6 +1,8 @@
+> **维护口径（2026-11-09）：** Phase2实测与诊断工具已单独发布于bd94f27；没有据此验收Recorder运动写卡、Camera/SD/PI组合或正式训练数据集。现有静止/软件结果按本文原构型阅读；其他未提交Recorder/Phase3实现不能写成main已发布或当前车载配置。 统一状态与历史适用范围见[文档维护总览](../DOCUMENTATION_STATUS.md)。
+
 # PC 数据链条软件验证（2026-11-04）
 
-2026-11-07维护说明：下文保留2026-11-04的synthetic/mock软件验收时点，33项与66定义不能替代当前数字。工具现已实现SCRAW-1 adapter并合入main；当前清单72个定义，main `00bb7a4`的optimized/ASan各49 PASS / 1 SKIPPED。B2另有[真实静止短窗PC回读链](../changes/recorder-camera-stages-20261106/B2_CAMERA_SESSION_VALIDATION.md)，但本PC主链的真人审核、运动数据Release与批准基线仍待完成。[当前流程](README.md) · [主线证据](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
+2026-11-07维护说明：下文保留2026-11-04的synthetic/mock软件验收时点，33项与66定义不能替代当前数字。工具现已实现SCRAW-1 adapter并合入main；2026-11-06清单72个定义，main `00bb7a4`的optimized/ASan各49 PASS / 1 SKIPPED。B2另有[真实静止短窗PC回读链](../changes/recorder-camera-stages-20261106/B2_CAMERA_SESSION_VALIDATION.md)，但本PC主链的真人审核、运动数据Release与批准基线仍待完成。[当前流程](README.md) · [主线证据](../changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
 
 基准：`main` / `de1415743b004160f520d385c9e3e63008f52007`，工作区 dirty。
 本轮用户授权 PC 软件实现及 synthetic/mock 验证；没有真实硬件或 Label Studio 写入。

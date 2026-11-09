@@ -1,9 +1,11 @@
+> **维护口径（2026-11-09）：** `00bb7a4`、72定义、49 PASS/1 SKIPPED等数字属于2026-11-06被测版本，不能代表最新HEAD或未提交catalog。Phase2整合提交bd94f27另有41项Python与19350项模拟IO断言，本轮未核定该提交远程CI；它们不是统一Host/PreFlash套件计数，也不代替实车验收。 统一状态与历史适用范围见[文档维护总览](DOCUMENTATION_STATUS.md)。
+
 # SmartCar 测试框架与流程详细手册
 
 维护日期：2026-11-07；基础C32归档日期2026-11-02。适用范围：main上的C32测试框架及Recorder/规划扩展，Manifest/Result/Benchmark契约1.0。
 框架最初交付为`d78eb9d`，当前主线合并基准为`00bb7a4`。本文是持续维护的操作与开发手册，引用已有实际运行，不签发烧录授权。
 
-当前为72个定义，包含Recorder与速度规划专项。main合并提交`00bb7a4`的[MSVC optimized/ASan CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)各49 PASS / 1 SKIPPED；完整本地PreFlash为63 PASS / 1 SKIPPED，后续测试专属修正以8项Host补充覆盖。身份和范围见[主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。
+2026-11-06记录为72个定义，包含Recorder与速度规划专项。main合并提交`00bb7a4`的[MSVC optimized/ASan CI](https://github.com/fatezerozs/smartcar/actions/runs/42243602219)各49 PASS / 1 SKIPPED；完整本地PreFlash为63 PASS / 1 SKIPPED，后续测试专属修正以8项Host补充覆盖。身份和范围见[主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。
 
 合并前功能提交`7d2ff6d`的[分支CI](https://github.com/fatezerozs/smartcar/actions/runs/42214055736)与主线运行分别记录；此前失败与更正保留在[CI兼容性证据](changes/2026-11-06_MPC_CI_COMPATIBILITY.json)。Host通过不覆盖硬件与赛道验收。
 
@@ -86,7 +88,7 @@ Suite ID 不区分大小写，示例统一用清单中的小写 ID。Profile、C
 按示例的规范拼写使用，避免 PowerShell 与 Python 参数检查的大小写差异。
 PowerShell 数组及经 `pwsh -File` 传递的逗号分隔 Suite 均由入口拆分处理。
 
-C32最初清单为66个定义；当前清单为72个定义，Host闭包50个、Diagnostic闭包48个、PreFlash闭包64个。当前结果见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
+C32最初清单为66个定义；2026-11-06清单为72个定义，Host闭包50个、Diagnostic闭包48个、PreFlash闭包64个。当前结果见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)。
 这些数量包含环境、可选占位等节点，**不是独立场景数或断言数**。七个 aggregate
 和一个手工硬件节点不因“清单里存在”就自动加入普通 Profile。
 

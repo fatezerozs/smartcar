@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "smartcar.phase2-current-status/1",
+  "updatedDateAsiaShanghai": "2026-11-09",
+  "publishedEvidenceCommit": "bd94f271e47bbdd0c80bce6e409e7acbad232a81",
+  "engineeringProject": "MPC_20261106",
+  "phase2Complete": false,
+  "productionParametersApproved": false,
+  "lastVerifiedFirmware": {
+    "build": "PHASE2_TURN_GEOMETRY_20261109_2",
+    "variant": "turn-geometry-20261109_2-soft",
+    "axfSha256": "489155cc56adc984674dc25b3ca6b4febd97869b33ddde9962455d4b4401081c",
+    "port": "COM10",
+    "baud": 115200,
+    "speedLoopEnabled": false,
+    "quiet": 1,
+    "hardwareStateIsHistoricalObservation": true
+  },
+  "latestPhysicalAttempt": {
+    "review": "evidence/turn-soft-bench-left1600-cap170-2000-02/review.json",
+    "normalTimedEnd": true,
+    "crcRows": 422,
+    "requestPermille": 170,
+    "servoUs": 1600,
+    "durationMs": 2000,
+    "softRollbackCount": 20,
+    "minimumSharedEffortCapPermille": 50,
+    "operatorRightWheelMotion": "forward-pause-forward",
+    "physicalReverseConfirmed": false,
+    "finalStopExplicitlyConfirmed": false
+  },
+  "implemented": [
+    "Shared integer soft effort rollback",
+    "Stopped configurable turn experiment parameters",
+    "Periodic motion telemetry quiet mode",
+    "Frozen trace CRC/export and diagnostic snapshots"
+  ],
+  "notImplemented": [
+    "Independent left/right soft rollback"
+  ],
+  "groundMeasurements": {
+    "straightTarget40CompletedDurationsMs": [
+      1500,
+      2500
+    ],
+    "forwardMm": [
+      410,
+      730
+    ],
+    "reportedForwardErrorsMm": [
+      20,
+      10
+    ],
+    "lateralRightPositiveMm": [
+      -2,
+      -2
+    ],
+    "turnCurvatureMeasured": false,
+    "target30Duration2500SkippedByUser": true
+  },
+  "remaining": [
+    "Fix turn motion continuity before ground arc",
+    "Measure ground curvature and side slip",
+    "Consolidate candidate parameter ranges and validate specific missing conditions",
+    "Approve uncertainty/stop boundary and dynamic visual budget",
+    "Verify running configuration end-to-end latency"
+  ],
+  "references": {
+    "delivery": "DELIVERY_STATUS.md",
+    "remaining": "PHASE2_REMAINING.md",
+    "softControl": "TURN_SOFT_CONTROL.md",
+    "integration": "INTEGRATION_REVIEW.json"
+  },
+  "sourceLayers": [
+    "structured_parsed",
+    "computed",
+    "operator_report"
+  ],
+  "currentBoardPowerAndPhysicalReadinessAssumed": false,
+  "repositoryDocumentationReference": "../../DOCUMENTATION_STATUS.md"
+}

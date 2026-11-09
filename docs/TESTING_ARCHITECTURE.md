@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** `00bb7a4`、72定义、49 PASS/1 SKIPPED等数字属于2026-11-06被测版本，不能代表最新HEAD或未提交catalog。Phase2整合提交bd94f27另有41项Python与19350项模拟IO断言，本轮未核定该提交远程CI；它们不是统一Host/PreFlash套件计数，也不代替实车验收。 统一状态与历史适用范围见[文档维护总览](DOCUMENTATION_STATUS.md)。
+
 # SmartCar 测试体系
 
 维护：2026-11-07；原始C32架构交付：2026-11-02。统一入口位于 `tools/testing/`，套件定义位于
@@ -7,7 +9,7 @@
 完整使用、开发、维护和排障流程见 [测试框架与流程详细手册](TESTING_FRAMEWORK_GUIDE.md)。
 本页保留架构概要，精确运行事实仍以验收记录为准。
 
-当前清单72个定义，Host/PreFlash/Diagnostic依赖闭包分别50/64/48个；Recorder与规划扩展已合入main。合并提交`00bb7a4`的远端optimized/ASan各49 PASS / 1 SKIPPED，缺数据的performance-host保留接口。[当前验收](testing/VALIDATION.md) · [主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
+2026-11-06清单72个定义，Host/PreFlash/Diagnostic依赖闭包分别50/64/48个；Recorder与规划扩展已合入main。合并提交`00bb7a4`的远端optimized/ASan各49 PASS / 1 SKIPPED，缺数据的performance-host保留接口。[当前验收](testing/VALIDATION.md) · [主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)
 
 ## 使用
 
@@ -166,7 +168,7 @@ GCC 补充验证、单套件和 Diagnostic 均不会给出 `releaseEligible=true
 
 ## CI 与人工证据
 
-`host-tests.yml`在Windows runner上调用同一清单和入口，分别执行MSVC optimized与ASan。当前main合并基准`00bb7a4`的两模式各49 PASS / 1 SKIPPED；原C32的43 PASS / 1 SKIPPED按其历史SHA保留。运行链接、精确提交和范围见[验收入口](testing/VALIDATION.md)。
+`host-tests.yml`在Windows runner上调用同一清单和入口，分别执行MSVC optimized与ASan。原合并CI基准`00bb7a4`的两模式各49 PASS / 1 SKIPPED；原C32的43 PASS / 1 SKIPPED按其历史SHA保留。运行链接、精确提交和范围见[验收入口](testing/VALIDATION.md)。
 
 `preflash-tests.yml` 仅人工触发，使用有正确设备包/许可的 `smartcar-keil` 专用
 Windows runner。本次文档维护没有执行该远程任务，本地主机的ARM/Keil结果也不算远程CI。C32原始交付与当前MPC合并分别按各自SHA归档，见[主线同步记录](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)；代码归档不签发烧录放行。

@@ -1,3 +1,5 @@
+> **维护口径（2026-11-09）：** `00bb7a4`、72定义、49 PASS/1 SKIPPED等数字属于2026-11-06被测版本，不能代表最新HEAD或未提交catalog。Phase2整合提交bd94f27另有41项Python与19350项模拟IO断言，本轮未核定该提交远程CI；它们不是统一Host/PreFlash套件计数，也不代替实车验收。 统一状态与历史适用范围见[文档维护总览](../../docs/DOCUMENTATION_STATUS.md)。
+
 > 当前入口（2026-11-07）：main已合入MPC/Recorder与测试扩展；主工程MPC_20261106保留C26启停和C31固件身份。统一测试流程看[测试手册](../../docs/TESTING_FRAMEWORK_GUIDE.md)，当前main结果看[验收入口](../../docs/testing/VALIDATION.md)。下文较早工具/协议与诊断变体说明须按各自范围阅读，不能作为当前整车验收或独立auto-track启动条件。
 
 # 可复现的主机验证

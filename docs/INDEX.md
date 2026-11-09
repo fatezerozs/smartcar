@@ -4,7 +4,9 @@
 
 选择工程与查找对应说明，请先看[主要工程索引](PROJECT_INDEX.md)；其中列出MPC主工程、采集训练、B2/B3与联合静止候选、Host规划及诊断工程。
 
-当前维护日期为2026-11-07。MPC/Recorder/标定成果已合入main；主线合并身份、CI及文档口径见[主线合并与文档同步](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。此前核定和更正见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)；原始数据与历史失败保持原样。
+当前维护日期为2026-11-09（北京时间）。MPC/Recorder/标定成果已合入main；主线合并身份、CI及文档口径见[主线合并与文档同步](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md)。此前核定和更正见[MPC审核记录](changes/2026-11-06_MPC_AUDIT_AND_PUBLICATION.md)；原始数据与历史失败保持原样。
+
+**全库状态口径：** [文档维护总览](DOCUMENTATION_STATUS.md)区分已发布成果、工作区增量、历史证据与操作参考。最新Phase2实测从[成果交接](changes/phase2-calibration-20261108/DELIVERY_STATUS.md)进入，既有11月6日CI结果不自动代表最新提交。
 
 ## 持续维护入口与阶段交付
 

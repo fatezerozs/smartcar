@@ -67,6 +67,8 @@ flowchart TB
 
 ## 2. 进度总览
 
+**标定与实车当前状态：** [Phase2成果](changes/phase2-calibration-20261108/DELIVERY_STATUS.md)、[机器登记](changes/phase2-calibration-20261108/CURRENT_STATUS.json)及[全库维护口径](DOCUMENTATION_STATUS.md)。普通越界软回调已验证，右轮间歇转动未解决；左右独立回调尚未实现、地面曲率未测。main已发布的Phase2成果不等于其他工作区Phase3/Recorder功能已合入。
+
 状态只描述明确范围：**软件通过**＝Host/纯构建证据；**局部实测通过**＝指定构型与窗口通过；**部分完成**＝仍有缺项；**待验**＝不能写成PASS。不用完成百分比推断验收。
 
 ### C31连续速度规划任务的Phase进度
