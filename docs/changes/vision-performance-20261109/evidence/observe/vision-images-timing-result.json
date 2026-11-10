@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0",
+  "benchmarkId": "vision-images-timing",
+  "status": "PASS",
+  "gitSha": "2316cecb3855e4b022febdb6cdd7fcc4349137dc",
+  "dirty": true,
+  "inputTreeSha256": "59232d153eac261fa8981f32b9bfdc79f11652affe08da4e58638f9b1c87e33e",
+  "baselineSha": null,
+  "evidenceClass": "pq_host",
+  "dataset": {
+    "id": "vision-session04",
+    "version": "1",
+    "path": "tests/benchmarks/datasets/vision-session04-v1.json",
+    "sha256": "d96782508e89605ddf5258f118087e23530c51ba23178e56c94c76e592c46368",
+    "groundTruthPath": "tests/vision/fixtures/phase3-real-boundaries-20261109.json",
+    "groundTruthSha256": "72087638db09ec1e0800379e9f1213034b4880ee545b3cdcb848be328310072e"
+  },
+  "parameters": {
+    "imageSize": [
+      188,
+      120
+    ],
+    "stateReset": "before each full chronological pass",
+    "metricTimeModelMs": 20,
+    "observeDelayMs": 4,
+    "routeRecognitionEnabled": false,
+    "timing": "high-resolution monotonic host clock; images preloaded"
+  },
+  "conditions": {
+    "compilerId": "gcc:6cc18931c775eaabf438da3027d289db0b2a532f1af40f9fac366a816325ace5:gcc.EXE (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 14.2.0",
+    "environmentId": "MetamechBook|Windows-11-10.0.22631-SP0|AMD64",
+    "mode": "optimized",
+    "warmup": 2,
+    "repetitions": 5
+  },
+  "metrics": [
+    {
+      "id": "processing-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0,
+      "value": 0.279055,
+      "baseline": null,
+      "decision": "OBSERVATION",
+      "reason": "Recorded without a gate",
+      "validSamples": 3750
+    },
+    {
+      "id": "metric-adapter-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0,
+      "value": 0.0009,
+      "baseline": null,
+      "decision": "OBSERVATION",
+      "reason": "Recorded without a gate",
+      "validSamples": 3750
+    },
+    {
+      "id": "vision-plus-metric-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0,
+      "value": 0.27959999999999996,
+      "baseline": null,
+      "decision": "OBSERVATION",
+      "reason": "Recorded without a gate",
+      "validSamples": 3750
+    }
+  ]
+}

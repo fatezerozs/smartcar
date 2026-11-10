@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "smartcar.ground-merge-cases/1",
+  "sourceSession": "docs/changes/phase2-calibration-20261108/evidence/visual-continuous/session04",
+  "width": 188,
+  "height": 120,
+  "annotation": "Targeted visual review of original clear-road frames in the ground-merge diagnosis; diagnostic post-selection cases, not independent full-image ground truth.",
+  "expectation": "At row54, x40 and x140 are visible gray floor, x100 is white road. Test actual native binary pixels; record row validity separately.",
+  "cases": [
+    {
+      "index": 32,
+      "sha256": "bd09cc06fe5075ed91ec534bae62c5cccb95ad87fb362753528c27e8d4399715",
+      "row": 54,
+      "expectedPixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor"
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road"
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor"
+        }
+      ],
+      "boundaryBands": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135
+        }
+      ]
+    },
+    {
+      "index": 80,
+      "sha256": "d17aa5bbbb965f4c7847d87e5e50e445586d515487ece7b69eb5a5d2ba3c2a36",
+      "row": 54,
+      "expectedPixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor"
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road"
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor"
+        }
+      ],
+      "boundaryBands": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135
+        }
+      ]
+    },
+    {
+      "index": 99,
+      "sha256": "d314fec17ba1531870b15b0fdb9a85b1b9017c5f4a6b115cc3de917b005bed73",
+      "row": 54,
+      "expectedPixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor"
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road"
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor"
+        }
+      ],
+      "boundaryBands": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135
+        }
+      ]
+    }
+  ],
+  "boundaryTolerancePixels": 3,
+  "boundaryAnnotation": "2026-11-10 original gray-image review: visible straight-road transitions at rows49/54/61/70, approximate +/-3px; diagnostic post-selection labels, not full-image or independent holdout truth."
+}

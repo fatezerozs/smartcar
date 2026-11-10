@@ -1,0 +1,21 @@
+{
+  "runId": "20261109T155907-6f784ed16b",
+  "overallStatus": "FAIL",
+  "nativeSourceStillMatchesOriginalDiagnosis": {
+    "demo/code/vision_midterm.c": true,
+    "demo/code/vision_reference_route.h": true,
+    "tools/speed_planning/vision_adapter.c": true,
+    "demo/code/vision_metric_io.c": true
+  },
+  "singleFrameReplays": {
+    "first-red": "FAIL",
+    "second-red": "FAIL"
+  },
+  "assertionScope": "actual native binary pixels on 3 visually reviewed post-selection original clear-road images, both route modes; not independent full-image labels",
+  "filesSha256": {
+    "fault-check.json": "9f063dd9ee1c7e86e2d77a69c843fa1f718658e9df0b534f651d9b71116e064f",
+    "fault-check.log": "3e2f6c051151e70df5fc67bd291c007135bdee85e263d5dae2140159b78b4ea9",
+    "report-images/results.svg": "2a8d85ff687dd4dd781e35a562d596e71e1bd983261fd561b0344f183649796c",
+    "report-images/vision-examples.svg": "9526e3ea7631ee4f1f3d2eedf97c73de434f16a572a7cfafb54be35a60f6408e"
+  }
+}

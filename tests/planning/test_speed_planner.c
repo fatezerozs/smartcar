@@ -47,6 +47,33 @@ static void geometry_tests(void)
     CHECK(out.units==SP_METRES);
     r.row_flags[rows[4]]=1;CHECK(!sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,2,40,40,100,.1f,&out));
     CHECK(h.sequence==1); /* partial never renews geometry */
+    /* Confirmed route geometry may be modeled, but must never masquerade as
+     * paired edge evidence. Guide coordinates must reach the same planner. */
+    r.roundabout_state=1;r.roundabout_side=-1;r.entry_guide_rows=20;
+    for(unsigned j=0;j<SP_CAPACITY;++j){r.row_width[rows[j]]=69;r.entry_guide[rows[j]]=84;}
+    CHECK(sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,2,40,40,100,.2f,&out));
+    CHECK(fabsf(h.points[4].x+.1f)<1e-5f&&r.row_flags[rows[4]]==1);
+    r.row_width[rows[4]]=0;
+    CHECK(!sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,3,60,60,100,.2f,&out));
+    r.row_width[rows[4]]=69;r.entry_guide[rows[4]]=0;
+    CHECK(!sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,3,60,60,100,.2f,&out));
+    r.entry_guide[rows[4]]=104;
+    CHECK(!sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,3,60,60,100,.2f,&out)); /* wrong side */
+    r.entry_guide[rows[4]]=84;r.roundabout_state=0;
+    CHECK(!sp_vision_preview(&h,&r,rows,SP_CAPACITY,50,map,3,60,60,100,.2f,&out));
+
+    /* Row provenance and bounded route admission are explicit contracts. */
+    float pixel;
+    r.roundabout_candidate=-1;r.roundabout_votes=1;
+    CHECK(sp_vision_path_sample(&r,rows[4],&pixel)&&fabsf(pixel-94)<1e-6f);
+    r.roundabout_candidate=0;CHECK(!sp_vision_path_sample(&r,rows[4],&pixel));
+    r.roundabout_state=3;r.row_flags[rows[4]]=4;r.junction_rows=4;r.junction_anchors=8;
+    CHECK(sp_vision_path_sample(&r,rows[4],&pixel)&&pixel==94);
+    r.junction_anchors=7;CHECK(!sp_vision_path_sample(&r,rows[4],&pixel));
+    r.junction_anchors=8;r.junction_partial=1;CHECK(!sp_vision_path_sample(&r,rows[4],&pixel));
+    r.row_flags[rows[4]]=0;CHECK(!sp_vision_path_sample(&r,rows[4],&pixel));
+    CHECK(!sp_vision_path_sample(&r,VISION_HEIGHT,&pixel));
+    CHECK(!sp_vision_path_sample(NULL,0,&pixel));
     memset(&h,0,sizeof(h));
     CHECK(sp_geometry(&h,points,SP_CAPACITY,SP_METRES,UINT32_MAX,UINT32_MAX-10,UINT32_MAX-10,100,1,&out));
     CHECK(sp_geometry(&h,points,SP_CAPACITY,SP_METRES,0,9,9,100,1,&out));

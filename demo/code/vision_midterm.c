@@ -122,12 +122,59 @@ static uint8_t row_otsu_from(const uint32_t *prefix,unsigned start)
     return (uint8_t)((first+last)/2);
 }
 
+/* A long smooth gray region reaching the sensor border is independent floor
+ * evidence when a dark object occludes the opposite surround. A shadow half
+ * ending at a dark road boundary fails this test. No learned width is used. */
+static int border_floor(const uint8_t *row,int start,int direction,uint8_t floor,uint8_t threshold)
+{
+    int n=0,lo=255,hi=0,previous=row[start];
+    for(int x=start;x>=0&&x<VISION_WIDTH;x+=direction){
+        int v=row[x],d=v-previous;
+        if(v<=floor||v>threshold||d>2||d< -2)return 0;
+        if(v<lo)lo=v;if(v>hi)hi=v;previous=v;++n;
+    }
+    return n>=32&&hi-lo>=8&&hi-lo<=n;
+}
+
+/* AuTop's local gray-contrast idea, applied to a bounded row corridor rather
+ * than importing its camera-specific maze walk. Immediate surroundings must
+ * show comparable floor evidence, or one side must extend as a long smooth
+ * gray floor to the sensor border. A shadow ending at a dark road edge fails
+ * the border check.
+ * No history, inferred edge or image-sized temporary buffer is used. */
+static int bright_corridor_supported(const uint8_t *row,uint8_t floor,uint8_t threshold)
+{
+    int l=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),r=l,left=0,right=0;
+    int floor_left=0,floor_right=0,above_left=0,above_right=0;
+    if(threshold<=floor||row[l]<=threshold)return 0;
+    while(l>0&&row[l-1]>threshold)--l;
+    while(r+1<VISION_WIDTH&&row[r+1]>threshold)++r;
+    if(r-l+1<VISION_MIN_WIDTH||l<3||r+3>=VISION_WIDTH)return 0;
+    for(int k=0;k<3;++k){
+        int a=row[l-1-k],b=row[r+1+k];
+        if(a>threshold||b>threshold)return 0;
+        floor_left+=a;floor_right+=b;above_left+=a>floor;above_right+=b>floor;
+        left+=(int)row[l+k]-a;right+=(int)row[r-k]-b;
+    }
+    /* If Otsu already separates the dimmer floor, it need not lie above the
+     * old threshold. Require comparable local surroundings instead; reject
+     * the dark-background / shadowed-road pair of a split-shadow corridor. */
+    if(above_left<3||above_right<3){
+        if(above_left<3&&above_right<3)return 0;
+        if(4*floor_left<3*floor_right||4*floor_right<3*floor_left){
+            if(!border_floor(row,l-1,-1,floor,threshold)&&
+               !border_floor(row,r+1,1,floor,threshold))return 0;
+        }
+    }
+    return left>=3*VISION_MIN_CONTRAST&&right>=3*VISION_MIN_CONTRAST;
+}
+
 /* A dark object can make row Otsu separate dark/background from BOTH bright
  * floor and white road. Refine the bright class using the SAME histogram.
  * Two-class rows and weak/noisy subclusters retain the original threshold.
- * The current axis-connected run's midpoint must survive: splitting its
- * shadowed half into "floor" is not a supported refinement. This checks only
- * current gray pixels; it does not infer edges, change coverage or use history. */
+ * Adjacent bright classes retain the existing connected-midpoint guard; large
+ * brightness gaps additionally require local bilateral floor/road evidence.
+ * This checks only current gray pixels, with no inferred edges or history. */
 static uint8_t refine_road_otsu(const uint32_t *prefix,const uint8_t *row,uint8_t first)
 {
     uint8_t second;
@@ -142,9 +189,17 @@ static uint8_t refine_road_otsu(const uint32_t *prefix,const uint8_t *row,uint8_
     a=middle&255U;sa=middle>>8;b=white&255U;sb=white>>8;
     if(a<VISION_MIN_WIDTH||b<VISION_MIN_WIDTH)return first;
     /* All cross-products are < 4*255*188^2: 32-bit integer comparisons.
-     * Refine only distinct, adjacent bright classes (middle mean >=3/4 of
-     * the white mean), not a large illumination step across the road. */
-    if(sb*a-sa*b<VISION_MIN_CONTRAST*a*b||sa*4U*b<sb*3U*a)return first;
+     * A middle mean below 3/4 of the white mean requires spatial proof rather
+     * than either blindly discarding it or cutting a shadowed road in half. */
+    if(sb*a-sa*b<VISION_MIN_CONTRAST*a*b)return first;
+    if(sa*4U*b<sb*3U*a){
+        if(bright_corridor_supported(row,first,second))return second;
+        /* A smooth floor gradient can consume the first bright split. One
+         * bounded lookahead may find the road, but needs the same local proof. */
+        uint8_t third=row_otsu_from(prefix,(unsigned)second+1);
+        if(bright_corridor_supported(row,first,third))return third;
+        return first;
+    }
     int l=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),r=l;
     if(row[l]<=first)return first;
     while(l>0&&row[l-1]>first)--l;

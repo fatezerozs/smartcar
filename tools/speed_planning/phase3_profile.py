@@ -85,20 +85,29 @@ def build_profile(root=ROOT):
     left,right=scale['descriptiveMeanCountsPerMetreLeftRight']
     if not (0<left<1e6 and 0<right<1e6):raise ValueError('Invalid distance scales')
     newest=response[-1];target=newest['config']['maximumTargetTicks10ms']
-    requested=.5*(target*100/left+target*100/right)
+    near_requested=.5*(target*100/left+target*100/right)
+    # Cruise headroom for the 120-count mean objective. Use the larger scale
+    # so neither wheel exceeds its native count ceiling on a straight.
+    speed_objective={'minimumMeanTicks10ms':120,'cruiseTicks10ms':132,
+                     'measurement':'signed forward left/right count mean over complete run elapsed time; include slowdowns and stops',
+                     'status':'requested; not physically validated'}
+    if speed_objective['cruiseTicks10ms']>max_ticks:
+        raise ValueError('Cruise objective exceeds native wheel count ceiling')
+    # Keep 0.001 count below the boundary through generated float32 constants.
+    requested=(speed_objective['cruiseTicks10ms']-.001)*100/max(left,right)
     def ref(name):return reference[name]['value']
     # Maximum is a software input range converted from the original count
     # ceiling; it is NOT a measured/approved maximum physical driving speed.
-    planning={'maximum_speed':max_ticks*100/min(left,right),'near_cap':requested,
+    planning={'maximum_speed':max_ticks*100/min(left,right),'near_cap':near_requested,
               'lateral_accel':ref('lateralAccelerationMps2'),'accel':ref('accelerationMps2'),
               'brake':ref('brakingDecelerationMps2'),'jerk_accel':ref('jerkAccelerationMps3'),
               'jerk_brake':ref('jerkBrakingMps3'),'latency_s':ref('latencyS'),
               'distance_margin':ref('distanceMarginM'),'curvature_epsilon':.0001,'max_dt_s':sample_gap*.001}
-    seed=json.dumps(sources,sort_keys=True,separators=(',',':')).encode()
+    seed=json.dumps({'sources':sources,'speedObjective':speed_objective},sort_keys=True,separators=(',',':')).encode()
     revision=int(hashlib.sha256(seed).hexdigest()[:8],16) or 1
     profile={'schemaVersion':'smartcar.phase3-shadow-profile/1','profileId':'C26-SHADOW-'+format(revision,'08X'),
              'revision':revision,'mode':'shadow','productionApproved':False,'activeMetricControlAllowed':False,
-             'sourcesSha256':sources,
+             'sourcesSha256':sources,'speedObjective':speed_objective,
              'measured':{'geometryM':geometry,'encoderProfile':encoder,
                          'distanceCountsPerMetreLeftRight':{'value':[left,right],'status':'measured-candidate'},
                          'groundMapping':{'previewSize':[94,60],'runtimeSize':[188,120],
@@ -128,7 +137,7 @@ def build_profile(root=ROOT):
              'parameterClasses':{'limitsAndBudgets':'engineering references from c1-host-reference-v0.3; SP_SIMULATION',
                                  'sampleAndCandidateAges':'existing software timing contracts; not measured physical latency',
                                  'maximumSpeed':'converted native count ceiling; not measured v_max',
-                                 'requestedSpeed':'target40 counts/10ms converted using candidate scales',
+                                 'requestedSpeed':'132-count cruise ceiling converted with larger candidate counts/metre; 120-count whole-run mean objective, not a guarantee',
                                  'previewRows':'computed sampling inside the fitted ground-distance range',
                                  'continuityAndZeroSpeed':'shadow experiment settings; not adopted physical thresholds',
                                  'pwmAndFeedforward':'unused by shadow output; original legacy PI/gains/PWM limits unchanged'},

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "smartcar.phase3-shadow-profile/1",
-  "profileId": "C26-SHADOW-8CA1CE06",
-  "revision": 2359414278,
+  "profileId": "C26-SHADOW-489F9C9F",
+  "revision": 1218419871,
   "mode": "shadow",
   "productionApproved": false,
   "activeMetricControlAllowed": false,
@@ -19,11 +19,17 @@
     "docs/changes/phase2-calibration-20261108/evidence/ground-target40-cap250-2500-01/review.json": "6973a1bbbd234743cf4daa3da10870b0baf548b557d38236e90608cc51fd42cf",
     "profiles/encoder-production-20261106.json": "8db7cff1ca0d17f6b8c30d89e3f1541ebc11cb08c9fcdccd8f0b6b8c4375a41a",
     "profiles/c1-host-reference-v0.3.json": "246a068568605764c377751635fab01f298da1e4d35427db0e1a7fec27b9bb39",
-    "demo/code/vision_midterm.c": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+    "demo/code/vision_midterm.c": "f2374b5137491f9b1ed7f6fdf989e5f265a7ca0ad2343eaf10af7e79cbb5f8a4",
     "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
     "demo/code/vision_profile.h": "ff08cd0778ab0172bde37a0e32813e8002ff94c26045abec51c279e577d80b6e",
     "docs/changes/phase2-calibration-20261108/evidence/visual-supervisor-replay04/visual_policy.h": "aa4e7a5873734cb96140fcc25c208f84e6ac7d1363d8dfbc06a67a72e08095b8",
     "demo/code/midterm_route_profile.h": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a"
+  },
+  "speedObjective": {
+    "minimumMeanTicks10ms": 120,
+    "cruiseTicks10ms": 132,
+    "measurement": "signed forward left/right count mean over complete run elapsed time; include slowdowns and stops",
+    "status": "requested; not physically validated"
   },
   "measured": {
     "geometryM": {
@@ -525,7 +531,7 @@
     ],
     "min_confidence": 25,
     "max_step_m": 0.05,
-    "requested_speed_m_s": 0.35113902406654746,
+    "requested_speed_m_s": 1.15849569949096,
     "pwm_cap": 250,
     "feedforward_right": 0,
     "feedforward_left": 0,
@@ -546,7 +552,7 @@
     "limitsAndBudgets": "engineering references from c1-host-reference-v0.3; SP_SIMULATION",
     "sampleAndCandidateAges": "existing software timing contracts; not measured physical latency",
     "maximumSpeed": "converted native count ceiling; not measured v_max",
-    "requestedSpeed": "target40 counts/10ms converted using candidate scales",
+    "requestedSpeed": "132-count cruise ceiling converted with larger candidate counts/metre; 120-count whole-run mean objective, not a guarantee",
     "previewRows": "computed sampling inside the fitted ground-distance range",
     "continuityAndZeroSpeed": "shadow experiment settings; not adopted physical thresholds",
     "pwmAndFeedforward": "unused by shadow output; original legacy PI/gains/PWM limits unchanged"

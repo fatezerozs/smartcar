@@ -2,6 +2,45 @@
 
 # Performance and quality integration boundary
 
+## Runnable real-image supplement (2026-11-09)
+
+`performance-vision-images` now runs automatically in Host/PreFlash/Diagnostic.
+It measures the current native C detector and metric adapter on 750 hash/CRC
+verified original 188x120 images. Two full warmup passes are excluded; five
+chronological passes use a high-resolution monotonic host clock. Images are
+preloaded and file IO is outside timed calls. Both route recognition disabled
+(observation replay) and enabled (the DRIVE recognition path) are measured in
+separate runs, each retaining its own accuracy and rejection audit. Detector and adapter times are
+separate; per-pass and aggregate mean/P50/P95/P99/max are retained.
+
+Accuracy uses the existing 7-image x 4-row approximate visual references, with
+two independent chronological replays. Report MAE, maximum boundary error,
+missing pairs and reference-band hit rate. The existing +/-3px contract and
+zero missing reference pairs are hard gates; missing detections stay in the
+denominator. These post-selection local references do not establish all-frame
+accuracy or independent generalization. Availability on all 750 frames and
+near/full first-rejection reasons are reported separately. In particular, a
+local-reference PASS does not resolve the known unlabelled clear-scene failures.
+
+```powershell
+python tools/testing/run_tests.py --profile Host --suite performance-vision-images --compiler gcc --mode optimized --jobs 1
+```
+
+Results persist under the suite's `artifacts/work/vision-image-performance`:
+`report.md/json`, `timing.csv`, `rows.csv`, `audit.csv`, rejection episodes,
+source/compiler identity, generated configuration, and benchmark measurements.
+The enabled variant is in the sibling `vision-image-performance-route-active`;
+its copied manifests carry the explicit `routeRecognitionEnabled=true` setting.
+The ready `vision-images-timing.json` / `vision-images-quality.json` manifests
+also work with `Invoke-Benchmark.ps1 -Manifest ... -Measurements ...` using these
+saved measurements. No approved timing baseline is invented: timing metrics
+are observations, not speed-regression acceptance. Run with `--jobs 1` for
+less interference; other system load and timer overhead still affect results.
+
+The broader `vision-host.json` contract below remains pending. It is distinct
+from this explicitly limited local-image supplement. See
+[near/full audit](../../docs/changes/vision-performance-20261109/README.md).
+
 No labelled, approved performance dataset is shipped with this refactor.
 The existing 94×60 tangent-preview fixtures are unlabelled, subsampled static
 scenes. They continue to serve functional/contract regression, and do not become

@@ -17,6 +17,7 @@ from common import ROOT, aggregate_status, load_catalog, select_suites, sha256, 
 from process_runner import ProcessTimeout, resource_locks
 from providers import Context, Execution, SuiteProblem
 from reporter import write_report
+from acceptance import collect_acceptance, decision
 
 
 def utc():
@@ -120,6 +121,7 @@ def parser():
     p.add_argument('--profile',choices=['Host','PreFlash','Diagnostic'],default='Host')
     p.add_argument('--suite',action='append',default=[])
     p.add_argument('--variant')
+    p.add_argument('--require-acceptance',action='store_true',help='Return nonzero unless declared scenario acceptance is PASS')
     p.add_argument('--list',action='store_true')
     p.add_argument('--validate',action='store_true')
     p.add_argument('--compiler',choices=['msvc','gcc'],default='msvc')
@@ -187,10 +189,14 @@ def main(argv=None):
         for result in results:
             if result['status']!='PASS':
                 risks.append(result['id']+': '+result['status']+' — '+result['reason'])
-        run = {'schemaVersion':'1.0','runId':run_id,'profile':profile,'startedAt':started,'finishedAt':utc(),
+        acceptance=collect_acceptance(catalog,results,output,inputs_unchanged=final_inputs==environment['inputFiles'])
+        decisions=decision(passed,acceptance,args.compiler,profile,args.require_acceptance)
+        for check in acceptance['checks']:
+            if check['status']!='PASS':risks.append('Scenario '+check['id']+': '+check['status']+' — '+check['reason'])
+        run = {'schemaVersion':'1.1','runId':run_id,'profile':profile,'startedAt':started,'finishedAt':utc(),
                'durationSeconds':round(time.monotonic()-monotonic,6),'git':git,
                'manifestSha256':sha256(ROOT/'tests/suites/catalog.json'),'environment':environment,'status':status,
-               'softwarePassed':passed,'releaseEligible':passed and args.compiler=='msvc' and profile in ('Host','PreFlash'),
+               **decisions,'acceptance':acceptance,
                'scope':'Results apply only to the selected suites, macro variants, toolchain and recorded inputs. Quality/performance without a dataset is not measured.',
                'risks':risks,'suites':results}
         validate_schema(run,'result.schema.json')
@@ -198,7 +204,10 @@ def main(argv=None):
         write_json(output/'run.json',run)
         write_report(output/'run.json')
         print('Report: '+str(output/'summary.md'),flush=True)
-        return 0 if passed else 1
+        print('User report: '+str(output/'user-report.md'),flush=True)
+        print('Software: '+status+'; scenario acceptance: '+acceptance['status']+
+              '; command: '+('PASS' if decisions['commandPassed'] else 'FAIL'),flush=True)
+        return 0 if decisions['commandPassed'] else 1
     except (ValueError,RuntimeError,OSError,subprocess.SubprocessError) as error:
         print('FRAMEWORK ERROR: '+str(error),file=sys.stderr)
         return 2

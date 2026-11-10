@@ -65,8 +65,8 @@ typedef struct {
      * legacy near-domain admission bit, not an OR of both path domains. */
     uint8_t near_valid,far_valid,domain_valid;
 } vm_frame_t;
-/* Reuses the existing strict paired-row adapter. No second detector, no
- * inferred geometry approval. Config/rows/domain are supplied by the caller. */
+/* Reuses the checked vision path adapter, preserving measured/modelled source
+ * distinctions. No second detector. Config/rows/domain belong to the caller. */
 int vm_vision_frame(vm_vision_t *state,const vm_vision_config_t *config,
                      const vision_result_t *source,uint32_t sequence,uint32_t capture_ms,
                      uint32_t now_ms,vm_frame_t *out);

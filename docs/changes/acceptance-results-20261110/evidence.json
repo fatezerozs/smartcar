@@ -1,0 +1,157 @@
+{
+  "date": "2026-11-10",
+  "scope": "Reporting and acceptance aggregation; does not fix or approve ring driving.",
+  "beforeControlledFixture": {
+    "runId": "20261110T083944-5c944c82f3",
+    "softwarePassed": true,
+    "releaseEligible": true,
+    "childAcceptance": "NOT_READY",
+    "realMSVCBuild": false
+  },
+  "runs": [
+    {
+      "runId": "20261110T084348-e367f57c01",
+      "schemaVersion": "1.1",
+      "softwareStatus": "PASS",
+      "softwarePassed": true,
+      "acceptance": {
+        "status": "NOT_READY",
+        "scope": "Only the scenario checks declared in this catalog; not physical vehicle, flashing or hardware authorization.",
+        "checks": [
+          {
+            "id": "continuous-metric-ring",
+            "suiteId": "vision-scene-integration",
+            "name": "连续米制环岛场景（合成回放）",
+            "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance.",
+            "status": "NOT_READY",
+            "reason": "场景尚未就绪：ring-left、ring-left-gray-floor、ring-right、ring-right-gray-floor",
+            "blockingCases": [
+              "ring-left",
+              "ring-left-gray-floor",
+              "ring-right",
+              "ring-right-gray-floor"
+            ],
+            "reportPath": "suites/vision-scene-integration/artifacts/work/vision-scene-integration/report.json",
+            "reportSha256": "d93920505b6a1bdc394cdfa5726ff3d45359b17d2675d47a45297387afee8bb5"
+          }
+        ]
+      },
+      "acceptanceRequired": false,
+      "commandPassed": true,
+      "releaseEligible": false,
+      "suiteCounts": {
+        "PASS": 4
+      }
+    },
+    {
+      "runId": "20261110T084433-b793437d50",
+      "schemaVersion": "1.1",
+      "softwareStatus": "PASS",
+      "softwarePassed": true,
+      "acceptance": {
+        "status": "NOT_READY",
+        "scope": "Only the scenario checks declared in this catalog; not physical vehicle, flashing or hardware authorization.",
+        "checks": [
+          {
+            "id": "continuous-metric-ring",
+            "suiteId": "vision-scene-integration",
+            "name": "连续米制环岛场景（合成回放）",
+            "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance.",
+            "status": "NOT_READY",
+            "reason": "场景尚未就绪：ring-left、ring-left-gray-floor、ring-right、ring-right-gray-floor",
+            "blockingCases": [
+              "ring-left",
+              "ring-left-gray-floor",
+              "ring-right",
+              "ring-right-gray-floor"
+            ],
+            "reportPath": "suites/vision-scene-integration/artifacts/work/vision-scene-integration/report.json",
+            "reportSha256": "5de88cf54ef5b8e8b705a672fbfef8da4689b3a67d9c10d96debd4062da5f187"
+          }
+        ]
+      },
+      "acceptanceRequired": true,
+      "commandPassed": false,
+      "releaseEligible": false,
+      "suiteCounts": {
+        "PASS": 3
+      }
+    },
+    {
+      "runId": "20261110T084433-569bb5c82f",
+      "schemaVersion": "1.1",
+      "softwareStatus": "PASS",
+      "softwarePassed": true,
+      "acceptance": {
+        "status": "NOT_EVALUATED",
+        "scope": "Only the scenario checks declared in this catalog; not physical vehicle, flashing or hardware authorization.",
+        "checks": [
+          {
+            "id": "continuous-metric-ring",
+            "suiteId": "vision-scene-integration",
+            "name": "连续米制环岛场景（合成回放）",
+            "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance.",
+            "status": "NOT_EVALUATED",
+            "reason": "本轮未执行该场景检查。",
+            "blockingCases": [],
+            "reportPath": "suites/vision-scene-integration/artifacts/work/vision-scene-integration/report.json",
+            "reportSha256": null
+          }
+        ]
+      },
+      "acceptanceRequired": true,
+      "commandPassed": false,
+      "releaseEligible": false,
+      "suiteCounts": {
+        "PASS": 1
+      }
+    },
+    {
+      "runId": "20261110T084433-3575b5ac3d",
+      "schemaVersion": "1.1",
+      "softwareStatus": "PASS",
+      "softwarePassed": true,
+      "acceptance": {
+        "status": "NOT_READY",
+        "scope": "Only the scenario checks declared in this catalog; not physical vehicle, flashing or hardware authorization.",
+        "checks": [
+          {
+            "id": "continuous-metric-ring",
+            "suiteId": "vision-scene-integration",
+            "name": "连续米制环岛场景（合成回放）",
+            "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance.",
+            "status": "NOT_READY",
+            "reason": "场景尚未就绪：ring-left、ring-left-gray-floor、ring-right、ring-right-gray-floor",
+            "blockingCases": [
+              "ring-left",
+              "ring-left-gray-floor",
+              "ring-right",
+              "ring-right-gray-floor"
+            ],
+            "reportPath": "suites/vision-scene-integration/artifacts/work/vision-scene-integration/report.json",
+            "reportSha256": "b4cbe307dea5a711da249c5ef77e6771f7889b36008b27c162314b8bafd9d8ff"
+          }
+        ]
+      },
+      "acceptanceRequired": false,
+      "commandPassed": true,
+      "releaseEligible": false,
+      "suiteCounts": {
+        "PASS": 63,
+        "SKIPPED": 1
+      }
+    }
+  ],
+  "sourceSha256": {
+    "tools/testing/acceptance.py": "948430f44d13fb919c7f6ec9ca13f64bd0fead7ae526a2a8cdd322908f71caf7",
+    "tools/testing/run_tests.py": "4c40bdad9037172ef700e26583daa58b6c64234ceb634bc6efbb65d2db8a58dd",
+    "tools/testing/common.py": "22e7dba2e4a4e6200e3a31620fd37cf49a4837caaae44c346b41cd7b5d8e7e62",
+    "tools/testing/reporter.py": "978e8d92bf7476594daee4db178f7a7aa7bb3701532359d0d26df29da02d63a2",
+    "tools/testing/user_report.py": "b2c083b1d75a25123daca0bf7026e779d7dd75bfc04fff2dca33485e6fab890d",
+    "tools/testing/Invoke-TestPlan.ps1": "a225fe796665f736ebf067d9ad99ba6c712c15b3d488c43c6be31da81cf071ad",
+    "tests/schemas/result.schema.json": "77769d26c059c4c8553c1d378a5c8a16b103a1b38f584fd541bb2350ff2c429e",
+    "tests/schemas/suite.schema.json": "41ec90a7528c915a67adc1b50682a5be20435fed0afd821250b5e403d65c3618",
+    "tests/framework/test_framework.py": "65888d4ecd00c13992f1fea2e67ed9af616d59cce9cb5fcf709b3742c9a886f5",
+    "tests/suites/catalog.json": "43857b04e7fc76c2d3bf2f49719ce3d0141ef7790983de091266cb452cba3b82"
+  }
+}

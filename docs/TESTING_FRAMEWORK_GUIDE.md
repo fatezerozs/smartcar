@@ -13,6 +13,8 @@
 [架构概要](TESTING_ARCHITECTURE.md) · [C32 提交说明](changes/2026-11-02_C32_TESTING_FRAMEWORK.md) ·
 [精确验收记录](testing/VALIDATION.md)
 
+2026-11-09补充：每次统一入口回归自动生成面向用户的中文 `user-report.md`，包含结论、测试范围、状态图及未完成项；视觉性能回归另展示本轮原图/原生二值图、局部边界误差与近远预览可用率。技术明细保留在 `summary.md` / `run.json`。无可比基线时不宣称提高或退化；局部参考通过不代表异常已修复，主机耗时不代表板端耗时。用户交付要求见仓库 [AGENTS.md](../AGENTS.md)。
+
 ## 阅读导航
 
 - [1. 先选任务与执行范围](#choose)
@@ -395,16 +397,44 @@ suite 的标准码在 `result.json.exitCode`；原始进程码在 `processes[].e
 - `Invoke-TestPlan.ps1 -Suite performance-host` 将该目标设为必需，整轮 SKIPPED，
   计划返回 1；不能因为单独的 Benchmark 命令返回 0 就说性能门禁通过。
 
-### 8.3 softwarePassed 与 releaseEligible
+### 8.3 软件通过、场景验收与放行资格
 
-当前实现中 `softwarePassed` 等于整轮状态是否 PASS；`releaseEligible` 还要求
-MSVC 工具链以及报告 Profile 为 Host 或 PreFlash。它没有自动审签所有人工风险。
+软件测试通过表示本轮测试断言满足要求；场景验收表示被声明的运行场景达到
+对应检查目标。例如，near缺失后正确清零可以通过保护测试，但持续环岛场景
+仍可能因锁存而未就绪。这两种结果在版本`1.1`的`run.json`中分别保存。
+
+| 字段 | 含义 |
+| --- | --- |
+| `status` / `softwarePassed` | 软件套件汇总状态 / 是否通过；不再单独用于推断场景就绪 |
+| `acceptance.status` | 本轮已声明场景检查的汇总：`PASS`通过、`NOT_READY`未就绪、`NOT_EVALUATED`未执行、`ERROR`证据错误 |
+| `acceptance.checks` | 每项场景的范围、来源套件、未通过案例、报告路径及SHA-256文件哈希 |
+| `acceptanceRequired` | 本轮是否显式要求场景验收通过 |
+| `commandPassed` | 是否满足本次命令的要求，对应命令返回0或非零 |
+| `releaseEligible` | 本轮软件范围放行资格：软件通过、所有已声明场景均通过、MSVC，以及完整Host或PreFlash范围同时满足 |
+
+套件通过且子报告为`NOT_READY`时，普通回归保留软件PASS和退出码0，但场景
+状态为未就绪、`releaseEligible=false`。选择下列显式验收模式后，未就绪或未执行
+也返回1；证据错误在普通模式下同样返回1。场景未被本轮选择时不继承旧结果。
+
+```powershell
+python tools/testing/run_tests.py --suite vision-scene-integration --compiler gcc --require-acceptance
+# 同一个选项的PowerShell入口：
+./tools/testing/Invoke-TestPlan.ps1 -Suite vision-scene-integration -Compiler gcc -RequireAcceptance
+```
+
+场景检查在套件清单的可选`acceptanceChecks`中声明：名称/范围、相对套件目录的
+JSON报告路径、验收状态字段和未通过案例字段。只读取本轮新输出目录，文件缺失、
+格式错误或状态与案例清单矛盾时记为证据错误。汇总按证据错误、未就绪、未执行、
+通过的顺序取优先状态；未声明任何检查也为未执行。
+
+用户报告和技术报告从持久化`run.json`显示同一结论；重新生成报告不根据改过的
+子报告重算本轮验收。旧`1.0`结果仍可读取，保留其原字段语义，不补写为已验收。
 dirty 会记录但不单独禁止 PASS；不能只拿工作区 HEAD 当成完整的被测代码身份，
 还要结合 dirty、diff 和输入哈希核对。
 
 | 报告 | 可以说明 | 不可以延伸成 |
 | --- | --- | --- |
-| Host / MSVC / PASS | 该 Host 范围通过，字段可能为 true | L4 构建或真实硬件已经通过 |
+| Host / MSVC / 软件PASS | 该Host软件范围通过，场景另看`acceptance`；场景全通过时放行字段才可能为true | L4构建或真实硬件已经通过 |
 | PreFlash / GCC / PASS | 补充 Host + 已执行的 L4 通过，字段为 false | 业务用例失败，或已经形成 MSVC 完整放行 |
 | Suite / PASS | 选中闭包通过 | 完整 Host/PreFlash 通过 |
 | Diagnostic / PASS | 诊断集合通过 | 放行依据 |

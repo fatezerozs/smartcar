@@ -1,0 +1,43 @@
+{
+  "finalRun": "20261109T110931-d0057bad42",
+  "relatedRegressionRuns": [
+    "20261109T105931-9ca26ede6e",
+    "20261109T110313-cb37ce5842"
+  ],
+  "scope": "Compact evidence; full original images and per-row/per-pass measurements retained in source session and .test-results. No hardware access.",
+  "filesSha256": {
+    "clear-scene-masks.png": "e336cd030a20cc54c694f8a359668d4b69f3d07c57126556aac01109cfd1e063",
+    "observe/audit-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "observe/audit-summary.json": "1cf2e5dea13cae0dbd45623585027eaf2fc6d7417740ef80c79de2c00354d300",
+    "observe/audit.csv": "f30a3c8081ca720fed0b631462b66f7a318a864ed69827ffa92d62de3517729c",
+    "observe/phase3_shadow_profile.h": "664876f06a6b81cbd2460674e7e36f9cbcc423cc1e856076aaa2d0d63dd6b1e4",
+    "observe/probe-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "observe/report.json": "7d295291f28cff7da60ceb1f270a2b6ee23ca1a0bef04c5dc70665554bca4aff",
+    "observe/report.md": "b296c5019d35e0efee76dc2c348ec365799944b0a50a3a50b84dabb00314c594",
+    "observe/selected-rows.csv": "5dfafe5cd00c39e7c846e7e53707e06a3d92a1df15597d2e93d1a638007c9967",
+    "observe/timing-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "observe/timing.csv": "f61b24a50305d4dc03d7428382f1f1d4ab05dca3e57f6610e339fb99d2f60b0b",
+    "observe/vision-images-quality-manifest.json": "a68d489881f4cbd13ac4ef35e948ee37207c3f2a72fd2f36536b38635cb67df0",
+    "observe/vision-images-quality-result.json": "1ea0e6171c4d68a523f2c0aaf9fe90affda58376412df1e0bfcec1abcf650614",
+    "observe/vision-images-timing-manifest.json": "f3cc5dbf6728bf577e42ae7dad618dba850f977c19412a438a400842ba7e5674",
+    "observe/vision-images-timing-result.json": "69d7b62106ea55aa31bd679156a542b22b19508388e6b1ecc743debfb3f84381",
+    "rejection-examples.png": "7e6b7118c8ec9bc1e29177720d3837424b68c37086d8fc3c1742cf44c22793f9",
+    "route-active/audit-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "route-active/audit-summary.json": "1cf2e5dea13cae0dbd45623585027eaf2fc6d7417740ef80c79de2c00354d300",
+    "route-active/audit.csv": "f30a3c8081ca720fed0b631462b66f7a318a864ed69827ffa92d62de3517729c",
+    "route-active/phase3_shadow_profile.h": "664876f06a6b81cbd2460674e7e36f9cbcc423cc1e856076aaa2d0d63dd6b1e4",
+    "route-active/probe-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "route-active/report.json": "92a81efb0ae5ecfa81bf7d12428a1e0c70320100b0e17406fdcaedb7ff9e5f07",
+    "route-active/report.md": "efc5791750dddd0ada6073b491d98fe785320142f7a2d865e3ba8bdbd3059e10",
+    "route-active/selected-rows.csv": "5dfafe5cd00c39e7c846e7e53707e06a3d92a1df15597d2e93d1a638007c9967",
+    "route-active/timing-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "route-active/timing.csv": "2be75991b3d3fe668e88eed14d9feab7aef58f872474fb651da682b22b3a7678",
+    "route-active/vision-images-quality-route-active-manifest.json": "f814e9564927d6022f8b815d2b4ff41de564ce093589e1dc02591b367b798fe3",
+    "route-active/vision-images-quality-route-active-result.json": "86682527221f4172acf4a45c1b423d6bfcf042ba6e251ab07783d54530d3b383",
+    "route-active/vision-images-timing-route-active-manifest.json": "645da1df9f60af7116b5ff489634937eebf83c3c7f471cb3eeb1d45adc1ef1ac",
+    "route-active/vision-images-timing-route-active-result.json": "e15bf1eeacff1147dc1083e32130854a5dac56abd82b489edff38d7c91269286",
+    "threshold-reason-check.json": "a574a7a502b10143dc878e89b0be50504088fd5472d10e8b5506c09cc752ac0f",
+    "validation-summary.json": "d86147d30d0ac1e69845436e6f32228db3469585058610e311bbaff6726fd774"
+  },
+  "thresholdDiagnosticSourceSha256": "ada3591be26674e4e5c23529e03489ab8d7295e617539fab916094fe178fd1f3"
+}

@@ -46,6 +46,18 @@ class ShadowPreparation(unittest.TestCase):
             for x,y in zip(a,b):self.assertAlmostEqual(x*.001,y,places=12)
         self.assertEqual(self.profile['runtimeConfig']['compensate'],0)
 
+    def test_cruise_headroom_preserves_wheel_and_degraded_limits(self):
+        c=self.profile['runtimeConfig'];objective=self.profile['speedObjective']
+        self.assertEqual(objective['minimumMeanTicks10ms'],120)
+        for scale in (c['ticks_per_metre_left'],c['ticks_per_metre_right']):
+            counts=c['requested_speed_m_s']*scale/100
+            self.assertGreaterEqual(int(counts),120)
+            self.assertLessEqual(counts,c['max_ticks_10ms'])
+        self.assertLess(c['limits']['near_cap'],c['requested_speed_m_s'])
+        self.assertFalse(self.profile['activeMetricControlAllowed'])
+        bad=copy.deepcopy(self.profile);bad['speedObjective']['minimumMeanTicks10ms']=40
+        with self.assertRaises(ValueError):validate_profile(bad)
+
     def test_projects_share_one_image_and_only_download_opt_in_differs(self):
         a=ET.parse(self.manifest['project']);b=ET.parse(self.manifest['downloadProject'])
         self.assertEqual(a.findtext('.//UpdateFlashBeforeDebugging'),'0');self.assertEqual(b.findtext('.//UpdateFlashBeforeDebugging'),'1')
@@ -98,7 +110,9 @@ class ShadowPreparation(unittest.TestCase):
         with destination.open() as file:rows=list(csv.DictReader(file))
         self.assertEqual(len(rows),750)
         near=sum(int(r['near_accepted']) for r in rows);full=sum(int(r['full_accepted']) for r in rows)
-        self.assertEqual((near,full),(470,376)) # Frozen scene/profile; not recognition ground truth.
+        # Pre-fix availability floors; exact counts are not recognition ground
+        # truth. Corrected segmentation may recover additional real geometry.
+        self.assertGreaterEqual(near,470);self.assertGreaterEqual(full,376)
         self.assertEqual([int(r['index']) for r in rows if r['arm_event']=='1'],[0])
         # Uniform 20ms timestamps and explicit stationary synthetic encoder:
         # accepted real geometry must survive the legal maximum sample period.

@@ -1,0 +1,742 @@
+{
+  "finalRun": "20261109T161249-4b30605552",
+  "status": "PASS",
+  "suiteCounts": {
+    "PASS": 62,
+    "SKIPPED": 1
+  },
+  "beforeRun": "20261109T160726-2930bc00df",
+  "availability": {
+    "near": {
+      "before": 470,
+      "after": 530,
+      "gained": [
+        32,
+        42,
+        43,
+        44,
+        52,
+        54,
+        56,
+        60,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        112,
+        200,
+        578
+      ],
+      "lost": []
+    },
+    "full": {
+      "before": 376,
+      "after": 459,
+      "gained": [
+        22,
+        28,
+        30,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        112,
+        200,
+        578
+      ],
+      "lost": []
+    }
+  },
+  "sourceSha256": "ba2b970190c05d2175728e3160d148eb45197454f9c6ba914bf826990756d024",
+  "sourceBeforeSha256": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+  "quality28": {
+    "boundary-mae": 0.42857142857142855,
+    "boundary-max-error": 1,
+    "missing-pair": 0,
+    "within-reference-band": 1
+  },
+  "quality12": {
+    "mae": 0.4583333333333333,
+    "max": 1
+  },
+  "target": {
+    "buildPassed": true,
+    "flashed": false,
+    "profileId": "C26-SHADOW-AC4B01AB"
+  },
+  "originalInputSha256": "93e4876d392ebdcc02c55ee5bc5a72abc40a821a0b1ad72a973614ba25df9c11",
+  "imageAcceptance": [
+    {
+      "index": 32,
+      "mode": "observe",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 237,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 80,
+      "mode": "observe",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 236,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 99,
+      "mode": "observe",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 72,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 232,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 32,
+      "mode": "route-active",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 237,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 80,
+      "mode": "route-active",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 236,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 99,
+      "mode": "route-active",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 72,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 232,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    }
+  ],
+  "coldAcceptance": [
+    {
+      "index": 32,
+      "mode": "observe",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 237,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    },
+    {
+      "index": 32,
+      "mode": "route-active",
+      "passed": true,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 0
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 0
+        }
+      ],
+      "boundaryChecks": [
+        {
+          "row": 49,
+          "left": 80,
+          "right": 124,
+          "actualLeft": 80,
+          "actualRight": 123,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 54,
+          "left": 77,
+          "right": 126,
+          "actualLeft": 77,
+          "actualRight": 125,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 61,
+          "left": 72,
+          "right": 130,
+          "actualLeft": 73,
+          "actualRight": 129,
+          "flags": 3,
+          "passed": true
+        },
+        {
+          "row": 70,
+          "left": 66,
+          "right": 135,
+          "actualLeft": 66,
+          "actualRight": 135,
+          "flags": 3,
+          "passed": true
+        }
+      ],
+      "geometryAccepted": true,
+      "threshold": 237,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "nearValid": 1,
+      "fullValid": 1
+    }
+  ]
+}

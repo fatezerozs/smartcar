@@ -1,5 +1,7 @@
 # Phase3当前进度与交接
 
+**阅读提示：** Phase 3指本项目的规划链路接入阶段；影子模式只计算候选，不直接赋予电机控制权限。near/full分别指规划器的近场预瞄和完整预瞄，不能直接等同旧视觉控制器near/far。术语见[索引](../../MPC_TERMINOLOGY.md)和[对应关系](../../MPC_GUIDE.md#near-full)；2026-11-10工作区环岛测试结果见[专项报告](../vision-scene-integration-20261110/README.md)，本页历史板载身份仍按记录日期理解。
+
 2026-11-09（北京时间）。本页是此次GitHub main进度归档的持续入口，统一源码、板载与历史阶段报告的适用范围。[项目主页](../../../README.md) · [工程索引](../../PROJECT_INDEX.md) · [旧C31任务入口](../c31-speed-planning-20261105/README.md)。
 
 ## 当前阶段

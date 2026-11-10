@@ -3978,6 +3978,134 @@
         "artifacts/**"
       ],
       "scope": "750 CRC/SHA verified native-resolution original frames; 28 local visually reviewed boundary bands selected after experiments and metric coverage. Not a full labelled accuracy benchmark, independent holdout or vehicle approval."
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "performance-vision-images",
+      "name": "Real-image vision timing, local boundary accuracy and near/full rejection audit",
+      "layer": "performance",
+      "category": "performance-quality",
+      "evidenceClass": "pq_host",
+      "entrypoint": {
+        "type": "python",
+        "path": "tools/testing/vision_image_benchmark.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment",
+        "vision-benchmark-contract"
+      ],
+      "resources": [
+        "vision-host-timing"
+      ],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "750 original images, host timing observations, 28 existing post-selection boundary reference pairs and native metric rejection audit. No all-frame accuracy, independent holdout, MCU WCET or physical approval claim."
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "vision-benchmark-contract",
+      "name": "Vision measurement completeness and missing-boundary accounting",
+      "layer": "unit",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/planning/test_vision_benchmark_contract.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 30,
+      "required": true,
+      "dependsOn": [
+        "environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ]
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "vision-ground-merge-regression",
+      "name": "Original clear-road gray-floor merge regression",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/vision/test_ground_merge_regression.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 120,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Actual native pixels, twelve approximate reviewed boundary pairs and near/full geometry on three original clear-road cases; chronological replay, both route modes. Targeted post-selection image acceptance, not full-image ground truth or hardware acceptance."
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "vision-scene-integration",
+      "name": "Gray-scene to near/full odometry and planner contracts with operational compatibility audit",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tools/testing/vision_scene_integration.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Native gray to metric/odometry/shadow planner plus legacy control. Synthetic scenes and 94x60 static historical previews; protection contract gate, continuous ring compatibility reported separately; no vehicle acceptance.",
+      "acceptanceChecks": [
+        {
+          "id": "continuous-metric-ring",
+          "name": "连续米制环岛场景（合成回放）",
+          "reportPath": "artifacts/work/vision-scene-integration/report.json",
+          "statusField": "operationalAcceptance",
+          "blockingCasesField": "continuousMetricRingFailures",
+          "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance."
+        }
+      ]
     }
   ]
 }

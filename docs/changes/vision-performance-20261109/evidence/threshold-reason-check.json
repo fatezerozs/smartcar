@@ -1,0 +1,113 @@
+[
+  {
+    "frame": 0,
+    "row": 54,
+    "predictedFinalThreshold": 239,
+    "stages": [
+      {
+        "first": 131,
+        "second": 216,
+        "middleMean": 186.93055555555554,
+        "whiteMean": 245.71951219512195,
+        "checks": {
+          "brightSupport": true,
+          "brightRange": true,
+          "bothClassesSupported": true,
+          "classSeparation": true,
+          "middleAtLeastThreeQuartersWhite": true,
+          "axisAboveFirst": true,
+          "connectedMidpointAboveSecond": true
+        }
+      },
+      {
+        "first": 216,
+        "second": 239,
+        "middleMean": 226.0952380952381,
+        "whiteMean": 252.47540983606558,
+        "checks": {
+          "brightSupport": true,
+          "brightRange": true,
+          "bothClassesSupported": true,
+          "classSeparation": true,
+          "middleAtLeastThreeQuartersWhite": true,
+          "axisAboveFirst": true,
+          "connectedMidpointAboveSecond": true
+        }
+      }
+    ],
+    "nativeThreshold": 239,
+    "matchesNativeThreshold": true
+  },
+  {
+    "frame": 32,
+    "row": 54,
+    "predictedFinalThreshold": 127,
+    "stages": [
+      {
+        "first": 127,
+        "second": 213,
+        "middleMean": 182.2394366197183,
+        "whiteMean": 244.67469879518072,
+        "checks": {
+          "brightSupport": true,
+          "brightRange": true,
+          "bothClassesSupported": true,
+          "classSeparation": true,
+          "middleAtLeastThreeQuartersWhite": false,
+          "axisAboveFirst": true,
+          "connectedMidpointAboveSecond": true
+        }
+      }
+    ],
+    "nativeThreshold": 127,
+    "matchesNativeThreshold": true
+  },
+  {
+    "frame": 80,
+    "row": 54,
+    "predictedFinalThreshold": 139,
+    "stages": [
+      {
+        "first": 139,
+        "second": 210,
+        "middleMean": 179.95384615384614,
+        "whiteMean": 242.57954545454547,
+        "checks": {
+          "brightSupport": true,
+          "brightRange": true,
+          "bothClassesSupported": true,
+          "classSeparation": true,
+          "middleAtLeastThreeQuartersWhite": false,
+          "axisAboveFirst": true,
+          "connectedMidpointAboveSecond": true
+        }
+      }
+    ],
+    "nativeThreshold": 139,
+    "matchesNativeThreshold": true
+  },
+  {
+    "frame": 99,
+    "row": 54,
+    "predictedFinalThreshold": 130,
+    "stages": [
+      {
+        "first": 130,
+        "second": 203,
+        "middleMean": 167.88679245283018,
+        "whiteMean": 237.28,
+        "checks": {
+          "brightSupport": true,
+          "brightRange": true,
+          "bothClassesSupported": true,
+          "classSeparation": true,
+          "middleAtLeastThreeQuartersWhite": false,
+          "axisAboveFirst": true,
+          "connectedMidpointAboveSecond": true
+        }
+      }
+    ],
+    "nativeThreshold": 130,
+    "matchesNativeThreshold": true
+  }
+]

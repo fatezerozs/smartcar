@@ -1,0 +1,229 @@
+{
+  "scope": "Four selected original frames, row 54; native replay verified against archived source hashes",
+  "counterfactual": "Force first bright-class candidate threshold on this row only; diagnostic pixel/3-vote comparison, no full-frame tracker or driving result",
+  "timing": "Archived chronological replay uses uniform synthetic 20ms frame spacing; no board timing inference",
+  "sourceSha256": {
+    "demo/code/vision_midterm.c": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+    "demo/code/vision_reference_route.h": "212f87202328b9192800a0d07263e0ac503a3d482d0db85d68ca39df8b746b8d",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "demo/code/vision_metric_io.c": "e3df217db1086ee1b6cd610dd7680b13742e7220377e86cc5ce8ec83dfa642b7"
+  },
+  "cases": [
+    {
+      "index": 0,
+      "vqfSha256": "86f81609591f73258a68e505666f698da348101b88f3b2455641e3bdc7d99fd3",
+      "row": 54,
+      "firstThreshold": 131,
+      "candidateThreshold": 216,
+      "nativeFinalThreshold": 239,
+      "middleCount": 72,
+      "middleSum": 13459,
+      "whiteCount": 82,
+      "whiteSum": 20149,
+      "middleMean": 186.93055555555554,
+      "whiteMean": 245.71951219512195,
+      "ratio": 0.7607477073579609,
+      "ratioPass": true,
+      "allFirstPassGuards": {
+        "brightSupport": true,
+        "brightRange": true,
+        "bothClassesSupported": true,
+        "classSeparation": true,
+        "middleAtLeastThreeQuartersWhite": true,
+        "axisAboveFirst": true,
+        "connectedMidpointAboveSecond": true
+      },
+      "nativeWhitePixels": 61,
+      "forcedCandidateWhitePixels": 82,
+      "rowFlags": 3,
+      "rawValid": 1,
+      "confidence": 88,
+      "junctionRows": 0,
+      "junctionAnchors": 0,
+      "nearValid": 1,
+      "fullValid": 1,
+      "probes": [
+        {
+          "x": 40,
+          "gray": 195,
+          "nativeWhite": 0,
+          "forcedCandidateWhite": 0
+        },
+        {
+          "x": 100,
+          "gray": 255,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 1
+        },
+        {
+          "x": 140,
+          "gray": 181,
+          "nativeWhite": 0,
+          "forcedCandidateWhite": 0
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "vqfSha256": "bd09cc06fe5075ed91ec534bae62c5cccb95ad87fb362753528c27e8d4399715",
+      "row": 54,
+      "firstThreshold": 127,
+      "candidateThreshold": 213,
+      "nativeFinalThreshold": 127,
+      "middleCount": 71,
+      "middleSum": 12939,
+      "whiteCount": 83,
+      "whiteSum": 20308,
+      "middleMean": 182.2394366197183,
+      "whiteMean": 244.67469879518072,
+      "ratio": 0.744823381890714,
+      "ratioPass": false,
+      "allFirstPassGuards": {
+        "brightSupport": true,
+        "brightRange": true,
+        "bothClassesSupported": true,
+        "classSeparation": true,
+        "middleAtLeastThreeQuartersWhite": false,
+        "axisAboveFirst": true,
+        "connectedMidpointAboveSecond": true
+      },
+      "nativeWhitePixels": 154,
+      "forcedCandidateWhitePixels": 83,
+      "rowFlags": 4,
+      "rawValid": 1,
+      "confidence": 98,
+      "junctionRows": 22,
+      "junctionAnchors": 19,
+      "nearValid": 0,
+      "fullValid": 0,
+      "probes": [
+        {
+          "x": 40,
+          "gray": 192,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        },
+        {
+          "x": 100,
+          "gray": 255,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 1
+        },
+        {
+          "x": 140,
+          "gray": 175,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        }
+      ]
+    },
+    {
+      "index": 80,
+      "vqfSha256": "d17aa5bbbb965f4c7847d87e5e50e445586d515487ece7b69eb5a5d2ba3c2a36",
+      "row": 54,
+      "firstThreshold": 139,
+      "candidateThreshold": 210,
+      "nativeFinalThreshold": 139,
+      "middleCount": 65,
+      "middleSum": 11697,
+      "whiteCount": 88,
+      "whiteSum": 21347,
+      "middleMean": 179.95384615384614,
+      "whiteMean": 242.57954545454547,
+      "ratio": 0.7418343777363781,
+      "ratioPass": false,
+      "allFirstPassGuards": {
+        "brightSupport": true,
+        "brightRange": true,
+        "bothClassesSupported": true,
+        "classSeparation": true,
+        "middleAtLeastThreeQuartersWhite": false,
+        "axisAboveFirst": true,
+        "connectedMidpointAboveSecond": true
+      },
+      "nativeWhitePixels": 152,
+      "forcedCandidateWhitePixels": 88,
+      "rowFlags": 0,
+      "rawValid": 1,
+      "confidence": 93,
+      "junctionRows": 0,
+      "junctionAnchors": 0,
+      "nearValid": 0,
+      "fullValid": 0,
+      "probes": [
+        {
+          "x": 40,
+          "gray": 195,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        },
+        {
+          "x": 100,
+          "gray": 255,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 1
+        },
+        {
+          "x": 140,
+          "gray": 175,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        }
+      ]
+    },
+    {
+      "index": 99,
+      "vqfSha256": "d314fec17ba1531870b15b0fdb9a85b1b9017c5f4a6b115cc3de917b005bed73",
+      "row": 54,
+      "firstThreshold": 130,
+      "candidateThreshold": 203,
+      "nativeFinalThreshold": 130,
+      "middleCount": 53,
+      "middleSum": 8898,
+      "whiteCount": 100,
+      "whiteSum": 23728,
+      "middleMean": 167.88679245283018,
+      "whiteMean": 237.28,
+      "ratio": 0.7075471698113207,
+      "ratioPass": false,
+      "allFirstPassGuards": {
+        "brightSupport": true,
+        "brightRange": true,
+        "bothClassesSupported": true,
+        "classSeparation": true,
+        "middleAtLeastThreeQuartersWhite": false,
+        "axisAboveFirst": true,
+        "connectedMidpointAboveSecond": true
+      },
+      "nativeWhitePixels": 152,
+      "forcedCandidateWhitePixels": 100,
+      "rowFlags": 4,
+      "rawValid": 0,
+      "confidence": 87,
+      "junctionRows": 33,
+      "junctionAnchors": 4,
+      "nearValid": 0,
+      "fullValid": 0,
+      "probes": [
+        {
+          "x": 40,
+          "gray": 186,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        },
+        {
+          "x": 100,
+          "gray": 255,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 1
+        },
+        {
+          "x": 140,
+          "gray": 169,
+          "nativeWhite": 1,
+          "forcedCandidateWhite": 0
+        }
+      ]
+    }
+  ]
+}

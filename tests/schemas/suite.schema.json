@@ -276,6 +276,49 @@
           "executionMethod": {
             "type": "string",
             "minLength": 1
+          },
+          "acceptanceChecks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "reportPath": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^(?![A-Za-z]:)(?![/\\\\])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$"
+                },
+                "statusField": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockingCasesField": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "reportPath",
+                "statusField",
+                "blockingCasesField",
+                "scope"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [

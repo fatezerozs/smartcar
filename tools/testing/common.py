@@ -72,6 +72,7 @@ def load_catalog(path=None, root=ROOT):
     catalog = read_json(path or root / 'tests/suites/catalog.json')
     validate_schema(catalog, 'suite.schema.json', root)
     suites = {}
+    acceptance_ids=set()
     for suite in catalog['suites']:
         sid = suite['id']
         if sid in suites:
@@ -101,6 +102,10 @@ def load_catalog(path=None, root=ROOT):
             inside(root, path)
         for pattern in suite['artifacts']:
             inside(root, pattern, must_exist=False)
+        for check in suite.get('acceptanceChecks',[]):
+            if check['id'] in acceptance_ids:raise ValueError('Duplicate acceptance check: '+check['id'])
+            acceptance_ids.add(check['id'])
+            inside(root,check['reportPath'],must_exist=False)
         if suite['layer'] == 'hardware' or suite['evidenceClass'] == 'hardware':
             if suite['profiles'] or entry['type'] != 'manual':
                 raise ValueError('Hardware suites may only record manual evidence outside automatic profiles')

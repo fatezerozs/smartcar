@@ -1,0 +1,702 @@
+{
+  "status": "PASS",
+  "routeRecognitionEnabled": true,
+  "accuracyScope": "Local visual review against original-layout raw images; approximate +/-3px bands around the visible white/gray transitions, not pixel-exact full-image ground truth. Selected after algorithm experiments; not an independent holdout.",
+  "qualityRowsPerReplay": 28,
+  "timingScope": "Host monotonic clock; preloaded 188x120 originals; no IO/allocation/diagnostic output in timed calls; not MCU timing",
+  "timing": {
+    "vision_ms": {
+      "mean": 0.22136208,
+      "median": 0.2023,
+      "p95": 0.31072999999999984,
+      "p99": 0.38997299999999946,
+      "max": 0.5127
+    },
+    "metric_ms": {
+      "mean": 0.0002989066666666667,
+      "median": 0.0003,
+      "p95": 0.0007,
+      "p99": 0.0012,
+      "max": 0.0288
+    }
+  },
+  "visionTimingPerPass": [
+    {
+      "repetition": 0,
+      "mean": 0.22060613333333334,
+      "p95": 0.307365,
+      "p99": 0.35761699999999985,
+      "max": 0.4543
+    },
+    {
+      "repetition": 1,
+      "mean": 0.2225524,
+      "p95": 0.31906499999999993,
+      "p99": 0.40351699999999985,
+      "max": 0.4654
+    },
+    {
+      "repetition": 2,
+      "mean": 0.22069973333333334,
+      "p95": 0.300065,
+      "p99": 0.35214199999999984,
+      "max": 0.5127
+    },
+    {
+      "repetition": 3,
+      "mean": 0.2198324,
+      "p95": 0.32266999999999985,
+      "p99": 0.404512,
+      "max": 0.4344
+    },
+    {
+      "repetition": 4,
+      "mean": 0.22311973333333332,
+      "p95": 0.31305499999999997,
+      "p99": 0.38459299999999996,
+      "max": 0.4862
+    }
+  ],
+  "audit": {
+    "frames": 750,
+    "timeModel": "uniform 20ms capture + 4ms observe; stationary synthetic encoder, no physical motion inference",
+    "nearAndFullAreIndependent": true,
+    "reasonMatchesActualNativeAcceptance": true,
+    "near": {
+      "accepted": 470,
+      "reasonCounts": {
+        "accepted": 470,
+        "source_invalid_or_quality": 6,
+        "requested_row_not_two_measured_edges": 256,
+        "adapter_geometry_or_history": 11,
+        "outside_configured_ground_domain": 7
+      },
+      "subreasonCounts": {
+        "accepted": 470,
+        "source_invalid_or_quality": 6,
+        "requested_row_not_two_measured_edges": 256,
+        "temporal_history_rejection_confirmed_by_native_cold_retry": 8,
+        "non_forward_ground_projection": 3,
+        "outside_configured_ground_domain": 7
+      },
+      "missingPairFirstFailureRowCounts": {
+        "54": 59,
+        "58": 8,
+        "61": 167,
+        "65": 22
+      },
+      "missingPairFlagCounts": {
+        "4": 1,
+        "0": 233,
+        "1": 22
+      },
+      "episodes": [
+        {
+          "firstIndex": 32,
+          "lastIndex": 32,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 42,
+          "lastIndex": 44,
+          "frames": 3,
+          "modelDurationMs": 60
+        },
+        {
+          "firstIndex": 52,
+          "lastIndex": 52,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 54,
+          "lastIndex": 54,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 56,
+          "lastIndex": 56,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 60,
+          "lastIndex": 60,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 62,
+          "lastIndex": 110,
+          "frames": 49,
+          "modelDurationMs": 980
+        },
+        {
+          "firstIndex": 112,
+          "lastIndex": 112,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 200,
+          "lastIndex": 200,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 273,
+          "lastIndex": 273,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 275,
+          "lastIndex": 433,
+          "frames": 159,
+          "modelDurationMs": 3180
+        },
+        {
+          "firstIndex": 439,
+          "lastIndex": 439,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 453,
+          "lastIndex": 453,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 455,
+          "lastIndex": 456,
+          "frames": 2,
+          "modelDurationMs": 40
+        },
+        {
+          "firstIndex": 458,
+          "lastIndex": 459,
+          "frames": 2,
+          "modelDurationMs": 40
+        },
+        {
+          "firstIndex": 463,
+          "lastIndex": 463,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 465,
+          "lastIndex": 465,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 477,
+          "lastIndex": 477,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 482,
+          "lastIndex": 484,
+          "frames": 3,
+          "modelDurationMs": 60
+        },
+        {
+          "firstIndex": 491,
+          "lastIndex": 494,
+          "frames": 4,
+          "modelDurationMs": 80
+        },
+        {
+          "firstIndex": 497,
+          "lastIndex": 497,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 499,
+          "lastIndex": 499,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 502,
+          "lastIndex": 503,
+          "frames": 2,
+          "modelDurationMs": 40
+        },
+        {
+          "firstIndex": 505,
+          "lastIndex": 514,
+          "frames": 10,
+          "modelDurationMs": 200
+        },
+        {
+          "firstIndex": 524,
+          "lastIndex": 539,
+          "frames": 16,
+          "modelDurationMs": 320
+        },
+        {
+          "firstIndex": 541,
+          "lastIndex": 544,
+          "frames": 4,
+          "modelDurationMs": 80
+        },
+        {
+          "firstIndex": 546,
+          "lastIndex": 549,
+          "frames": 4,
+          "modelDurationMs": 80
+        },
+        {
+          "firstIndex": 552,
+          "lastIndex": 557,
+          "frames": 6,
+          "modelDurationMs": 120
+        },
+        {
+          "firstIndex": 578,
+          "lastIndex": 578,
+          "frames": 1,
+          "modelDurationMs": 20
+        }
+      ],
+      "exampleIndices": {
+        "requested_row_not_two_measured_edges": [
+          32,
+          42,
+          43,
+          44,
+          52
+        ],
+        "source_invalid_or_quality": [
+          99,
+          100,
+          101,
+          102,
+          104
+        ],
+        "temporal_history_rejection_confirmed_by_native_cold_retry": [
+          200,
+          273,
+          547,
+          549,
+          552
+        ],
+        "outside_configured_ground_domain": [
+          298,
+          300,
+          301,
+          302,
+          303
+        ],
+        "non_forward_ground_projection": [
+          543,
+          544,
+          548
+        ]
+      }
+    },
+    "full": {
+      "accepted": 376,
+      "reasonCounts": {
+        "accepted": 376,
+        "source_invalid_or_quality": 6,
+        "requested_row_not_two_measured_edges": 310,
+        "adapter_geometry_or_history": 55,
+        "outside_configured_ground_domain": 3
+      },
+      "subreasonCounts": {
+        "accepted": 376,
+        "source_invalid_or_quality": 6,
+        "requested_row_not_two_measured_edges": 310,
+        "temporal_history_rejection_confirmed_by_native_cold_retry": 8,
+        "non_forward_ground_projection": 47,
+        "outside_configured_ground_domain": 3
+      },
+      "missingPairFirstFailureRowCounts": {
+        "52": 29,
+        "54": 59,
+        "58": 8,
+        "61": 167,
+        "65": 22,
+        "49": 25
+      },
+      "missingPairFlagCounts": {
+        "0": 286,
+        "4": 1,
+        "1": 23
+      },
+      "episodes": [
+        {
+          "firstIndex": 22,
+          "lastIndex": 22,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 28,
+          "lastIndex": 28,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 30,
+          "lastIndex": 30,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 32,
+          "lastIndex": 40,
+          "frames": 9,
+          "modelDurationMs": 180
+        },
+        {
+          "firstIndex": 42,
+          "lastIndex": 50,
+          "frames": 9,
+          "modelDurationMs": 180
+        },
+        {
+          "firstIndex": 52,
+          "lastIndex": 110,
+          "frames": 59,
+          "modelDurationMs": 1180
+        },
+        {
+          "firstIndex": 112,
+          "lastIndex": 112,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 200,
+          "lastIndex": 200,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 260,
+          "lastIndex": 260,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 273,
+          "lastIndex": 544,
+          "frames": 272,
+          "modelDurationMs": 5440
+        },
+        {
+          "firstIndex": 546,
+          "lastIndex": 549,
+          "frames": 4,
+          "modelDurationMs": 80
+        },
+        {
+          "firstIndex": 552,
+          "lastIndex": 557,
+          "frames": 6,
+          "modelDurationMs": 120
+        },
+        {
+          "firstIndex": 578,
+          "lastIndex": 578,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 641,
+          "lastIndex": 641,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 658,
+          "lastIndex": 659,
+          "frames": 2,
+          "modelDurationMs": 40
+        },
+        {
+          "firstIndex": 662,
+          "lastIndex": 662,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 665,
+          "lastIndex": 666,
+          "frames": 2,
+          "modelDurationMs": 40
+        },
+        {
+          "firstIndex": 669,
+          "lastIndex": 669,
+          "frames": 1,
+          "modelDurationMs": 20
+        },
+        {
+          "firstIndex": 674,
+          "lastIndex": 674,
+          "frames": 1,
+          "modelDurationMs": 20
+        }
+      ],
+      "exampleIndices": {
+        "requested_row_not_two_measured_edges": [
+          22,
+          28,
+          30,
+          32,
+          33
+        ],
+        "source_invalid_or_quality": [
+          99,
+          100,
+          101,
+          102,
+          104
+        ],
+        "temporal_history_rejection_confirmed_by_native_cold_retry": [
+          200,
+          273,
+          547,
+          549,
+          552
+        ],
+        "outside_configured_ground_domain": [
+          260,
+          540,
+          557
+        ],
+        "non_forward_ground_projection": [
+          434,
+          435,
+          436,
+          437,
+          440
+        ]
+      }
+    },
+    "acceptanceCombinations": {
+      "near=1,full=1": 376,
+      "near=1,full=0": 94,
+      "near=0,full=0": 280
+    },
+    "firstPlannerFaultIndex": 67,
+    "visuallyReviewedClearSceneCases": [
+      {
+        "index": 32,
+        "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+        "rawValid": 1,
+        "row54Flags": 4,
+        "row54Threshold": 127,
+        "junctionRows": 22,
+        "junctionAnchors": 19,
+        "metricNearAccepted": 0,
+        "metricFullAccepted": 0
+      },
+      {
+        "index": 80,
+        "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+        "rawValid": 1,
+        "row54Flags": 0,
+        "row54Threshold": 139,
+        "junctionRows": 0,
+        "junctionAnchors": 0,
+        "metricNearAccepted": 0,
+        "metricFullAccepted": 0
+      },
+      {
+        "index": 99,
+        "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+        "rawValid": 0,
+        "row54Flags": 4,
+        "row54Threshold": 130,
+        "junctionRows": 33,
+        "junctionAnchors": 4,
+        "metricNearAccepted": 0,
+        "metricFullAccepted": 0
+      }
+    ]
+  },
+  "compilerCommands": [
+    [
+      "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+      "-DVISION_MIDTERM_TRAINING=1",
+      "-DVISION_PLANNER_RUNTIME=1",
+      "-DVISION_ROUTE_SWITCH=1",
+      "-DVISION_ENCODER_ENABLE=1",
+      "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+      "-DVISION_MIDTERM_AUTONOMOUS=0",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-O2",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\testing\\vision_image_timing.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+      "-lm",
+      "-o",
+      "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active\\timing.exe"
+    ],
+    [
+      "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+      "-DVISION_MIDTERM_TRAINING=1",
+      "-DVISION_PLANNER_RUNTIME=1",
+      "-DVISION_ROUTE_SWITCH=1",
+      "-DVISION_ENCODER_ENABLE=1",
+      "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+      "-DVISION_MIDTERM_AUTONOMOUS=0",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-O2",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_image_probe.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+      "-lm",
+      "-o",
+      "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active\\probe.exe"
+    ],
+    [
+      "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+      "-DVISION_MIDTERM_TRAINING=1",
+      "-DVISION_PLANNER_RUNTIME=1",
+      "-DVISION_ROUTE_SWITCH=1",
+      "-DVISION_ENCODER_ENABLE=1",
+      "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+      "-DVISION_MIDTERM_AUTONOMOUS=0",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-O2",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+      "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\metric_input_audit.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+      "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+      "-lm",
+      "-o",
+      "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T110931-d0057bad42\\suites\\performance-vision-images\\artifacts\\work\\vision-image-performance-route-active\\audit.exe"
+    ]
+  ],
+  "sourceSha256": {
+    "demo/code/app_link.h": "0ecd9b4062a16f6aee0775e6e1069c687e1b7c96cd17099c632d3077638c4702",
+    "demo/code/app_mode.h": "c81bf262f9f6f35c176912c8b638f919d02b404fa66e72d8f06ced6f769e5b61",
+    "demo/code/app_runtime.h": "1181cfac6a6ad3eace4dfbc6ffa228e00d5d34b1b92afd15e84065165a238606",
+    "demo/code/app_transport.h": "e1303673ad851dcba2b257dbe0c254c7cf7765c6c9cd756b8d688e1274c878e4",
+    "demo/code/board_camera.h": "c1697fa194df958c6e6d322c4210379174c8aa4185e2226722c3acc1cbae6eb7",
+    "demo/code/board_diagnostics.h": "5354d66a5b0a18809909e91a6035a46754f6e142a2868c0d3ed9f5e50d170ae6",
+    "demo/code/board_encoder.h": "30af38e9133e24df59160dda71a2555700086e9a53c45f45cb5106111a76bc5a",
+    "demo/code/board_io.h": "100e293c8cec674b53e025f419ade208856360261b883f6d07fb2e1275e81313",
+    "demo/code/Camera.h": "0ce41f55f04706b41c925c0df0d70b6d047acef24dc67c6d97fa51621027c853",
+    "demo/code/Island.h": "7a9a1f2b37d92d2dc81142a6cb1f18fb8befd0b4005b45e2cdca38035e1dee29",
+    "demo/code/midterm_boot.h": "7d490969c3830cf26ac690f17164bff0a5caba0b8e89a236408355aa3e4d0213",
+    "demo/code/midterm_open_loop.h": "d91b0d045afef6f676e8d64a7d6532f768fe00a408222aa39d522bb72b719eca",
+    "demo/code/midterm_profile.h": "187d0a3ff3f1a3f719bc38d55de6095added5391f82e4bf737f29f471e4a18a9",
+    "demo/code/midterm_route_profile.h": "6b4541cf5449d359bbf8343f24058d51a83329fb5ba6dbbb72e61f4b634b662a",
+    "demo/code/track_bayes.h": "6a244dcba1314949557012e858863a6006fc52abcf3fb7507a39362013e59d3d",
+    "demo/code/vision_control.h": "2b27e638e5b23bebc935291e3ba41de393fffa4e7913cc9043959fbf8f91c9ac",
+    "demo/code/vision_debug.h": "00a72bdefe1e6ebdeb052c27c492d3c4a22aca306ae417c4d99590f6f92ddb17",
+    "demo/code/vision_drive.h": "3d77f855e5732e665fac3902b05e64508cf2ba91bb4aa8e37ca1fb6b75a8b9b7",
+    "demo/code/vision_drive_internal.h": "2d5f46b6699f31f61536dd333d4477fe7e0ed211a4ca69fcd58b7aae267c2492",
+    "demo/code/vision_field.h": "3c565e7b28c5e3a667588e996024fd1abe999bce623045884f70b33d03960ca5",
+    "demo/code/vision_frame.h": "8d82bc063311494fc8784b635e478b11e660b72f06d8f798a931c84a5ea59893",
+    "demo/code/vision_junction_policy.h": "d6c977a6996148418ea70bcfbeffcd407a5b75ddff9e8255a42430198a358a2e",
+    "demo/code/vision_metric_io.c": "e3df217db1086ee1b6cd610dd7680b13742e7220377e86cc5ce8ec83dfa642b7",
+    "demo/code/vision_metric_io.h": "f338ba357aa973b28408de433990bc64f0aa10a239a0e2b796f60cb06574e2cd",
+    "demo/code/vision_metric_pi.h": "19d1ea7e34c21da51e35743268b436ddafcb45b82598c83b878821cd8038cfe2",
+    "demo/code/vision_midterm.c": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+    "demo/code/vision_midterm.h": "fea3247690fc9a68b8664bc263fbb3baa1224c7d96865731d06c253a0fc896ce",
+    "demo/code/vision_planner.c": "ac3e74aba4f360314ce702b70004c7e60c54d650552f5c09f20f18d15a132e98",
+    "demo/code/vision_planner.h": "ff5ed44035221422c141735f727979e4cae8f72b09c8612d37a9836b078a2d8c",
+    "demo/code/vision_planner_build.h": "3f7bd5edbe182b3daad47d407d00bc83910a0042529d2bb3425f3cfab1326105",
+    "demo/code/vision_planner_runtime.h": "52577b6a6a8fba30358f87d4892829b1e0c195c2b890ded306576117f166d2c3",
+    "demo/code/vision_planner_shadow.c": "eb5ee434367aa9d913e8fa8eb538352bf8afbcffb9fbd38cc53040c4c8953fb6",
+    "demo/code/vision_planner_shadow.h": "3f014bc7c899d6e0b82368b7c2d3e4088ac459e3a6e0ab5b72bea96a21363ee0",
+    "demo/code/vision_power.h": "4f5f89a4d05a83a5d7b83af2cbc2b9f938fafbaf15a4aac3f3ab85156f53f35b",
+    "demo/code/vision_profile.h": "ff08cd0778ab0172bde37a0e32813e8002ff94c26045abec51c279e577d80b6e",
+    "demo/code/vision_reference_route.h": "212f87202328b9192800a0d07263e0ac503a3d482d0db85d68ca39df8b746b8d",
+    "demo/code/vision_ring_entry.h": "c423db61a34879aa72fa68d70444468afccbfdf45fd9d9d52a8d844629122303",
+    "demo/code/vision_route_junction.h": "3a1f54bead1d3f6dddb7fab0d307bc8b52813cc495ad69de44c849c9ac32bbc6",
+    "demo/code/vision_route_path.h": "c638c96f3a082d5f360e29053665bc07cbfaa948931c530aad3efe1bc4d33589",
+    "demo/code/vision_speed.h": "a4e2a55b4fec13fa14063458efbc961519892d95c92d343f73ae3323cc8a58e3",
+    "demo/code/vision_steering.h": "d919029f6f1900f64449779d2f71e76c20bcc32b887fa5bd1004f0b414c1656f",
+    "demo/code/vision_storage.h": "b109f4d4a6f35d1fa695f82b33cf37773b481551b74ca24c22ba70e673d5f385",
+    "demo/code/vision_telemetry.h": "9804172285efd9f86fba331b2ddd0f4e5d5835653795d6d4f4b40683a1e7d067",
+    "demo/code/vision_wheel_targets.h": "bb19989917ec554d5a67d0b4715fc1e8c25c73d798fc2e9945d0b0706eadd889",
+    "demo/code/wheel_speed.h": "ce5cfb4915830ea8992dedc92e787b4ea422fb6e8a9711dc5e5b969e05528797",
+    "profiles/phase3-c26-shadow-20261109.json": "0dbedb9f3516a45045063a681a816fcfd19bbce780a806a583183afca712bfc5",
+    "tests/benchmarks/datasets/vision-session04-v1.json": "d96782508e89605ddf5258f118087e23530c51ba23178e56c94c76e592c46368",
+    "tests/benchmarks/manifests/vision-images-quality.json": "a68d489881f4cbd13ac4ef35e948ee37207c3f2a72fd2f36536b38635cb67df0",
+    "tests/benchmarks/manifests/vision-images-timing.json": "f3cc5dbf6728bf577e42ae7dad618dba850f977c19412a438a400842ba7e5674",
+    "tests/vision/fixtures/phase3-real-boundaries-20261109.json": "72087638db09ec1e0800379e9f1213034b4880ee545b3cdcb848be328310072e",
+    "tools/speed_planning/metric_input_audit.c": "11d074ae2394403eadc7232fb3d8d04b3b4026fd7043654185ac506b129d5f51",
+    "tools/speed_planning/phase3_profile.py": "008ae3109a83ebae82051dc54f172c2dad64be5acada966e03ed237615bc22e1",
+    "tools/speed_planning/pipeline.h": "685acabd1ff9fac2826875f21a23a55baf58e9e0a5f4e52f4d760d159a4386e9",
+    "tools/speed_planning/replay.py": "498710dd4a320c04e60ecbd494efcac159fc4a3e2aa6c274b9dcf63a8e09ac04",
+    "tools/speed_planning/speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448",
+    "tools/speed_planning/speed_planner.h": "ba75a27b3a81497aec424461b8f2012a99573b1261d885a0fb7988d5aeb9efaf",
+    "tools/speed_planning/speed_response_trace.h": "71aa60f0e85cb697f58e7210f11d7d3aa5773c1731b4ae8cc91f2732a9c2a2b6",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "tools/speed_planning/vision_adapter.h": "8ac7e324940ba0bd0476eb6c089c57926b768ef62dcb7590b99910210bd92f0e",
+    "tools/speed_planning/vision_image_probe.c": "c858fa9f038c24f362503280c7ce915b29da0a7b8687cd6d0bd4889794156cbd",
+    "tools/testing/benchmark.py": "acb57fad04e2a676e9afbbc04c90839e009dd07cdfdc379443b22f5958936620",
+    "tools/testing/vision_image_benchmark.py": "bf5b2a537402b2ab43303de8131f150976fe353a27f110c25bcf0dbbfa2ab110",
+    "tools/testing/vision_image_timing.c": "ff49a3082a302e9b297343a9455d155755edba9e63dd9eca050ffee9adf0f83c",
+    "generated/phase3_shadow_profile.h": "664876f06a6b81cbd2460674e7e36f9cbcc423cc1e856076aaa2d0d63dd6b1e4"
+  },
+  "metadata": {
+    "gitSha": "2316cecb3855e4b022febdb6cdd7fcc4349137dc",
+    "dirty": true,
+    "inputTreeSha256": "59232d153eac261fa8981f32b9bfdc79f11652affe08da4e58638f9b1c87e33e",
+    "compilerId": "gcc:6cc18931c775eaabf438da3027d289db0b2a532f1af40f9fac366a816325ace5:gcc.EXE (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 14.2.0",
+    "environmentId": "MetamechBook|Windows-11-10.0.22631-SP0|AMD64",
+    "mode": "optimized",
+    "dataset": {
+      "id": "vision-session04",
+      "version": "1",
+      "path": "tests/benchmarks/datasets/vision-session04-v1.json",
+      "sha256": "d96782508e89605ddf5258f118087e23530c51ba23178e56c94c76e592c46368",
+      "groundTruthPath": "tests/vision/fixtures/phase3-real-boundaries-20261109.json",
+      "groundTruthSha256": "72087638db09ec1e0800379e9f1213034b4880ee545b3cdcb848be328310072e"
+    }
+  },
+  "framesVerified": 750,
+  "hardwareAccessed": false,
+  "baselineApproved": false,
+  "limitations": [
+    "28 local post-selection boundary bands, no independent holdout or all-frame accuracy claim",
+    "Timing observation only: no approved host regression baseline or target WCET claim",
+    "Uniform diagnostic time and stationary encoder; recorded historical board timings are not current implementation timings"
+  ]
+}

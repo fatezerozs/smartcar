@@ -23,7 +23,9 @@ from benchmark import compare, statistic, summarize, validate_benchmark
 from process_runner import ProcessTimeout, resource_locks, run_process
 from providers import Context, Execution, SuiteProblem
 from reporter import write_report
+from user_report import write_user_report
 from run_tests import execute_suite, make_result, schedule, input_snapshot, main as plan_main
+from acceptance import collect_acceptance, decision
 
 
 class Scratch(unittest.TestCase):
@@ -35,7 +37,110 @@ class Scratch(unittest.TestCase):
         self.folder=Path(self.temp.name)
 
 
+class UserReportTests(Scratch):
+    def test_scene_contract_pass_does_not_hide_operational_failure(self):
+        run=self.report_fixture();run['suites'][0]['id']='vision-scene-integration'
+        folder=self.folder/'suites/vision-scene-integration/artifacts/work/vision-scene-integration';folder.mkdir(parents=True)
+        write_json(folder/'report.json',dict(cases=[{}],operationalAcceptance='NOT_READY',continuousMetricRingFailures=['ring-left']))
+        path=self.folder/'run.json';write_json(path,run)
+        report=write_user_report(path).read_text('utf-8')
+        self.assertIn('连续米制过环岛尚未通过验收',report)
+        self.assertIn('1 个完整状态合成序列',report)
+
+    def report_fixture(self,status='PASS'):
+        suites=[{'id':'vision','status':status,'layer':'unit','reason':'fixture failure'}]
+        return {'runId':'fixture','status':status,'startedAt':'2026-11-09T11:00:00+00:00','durationSeconds':1.25,
+            'git':{'sha':'a'*40,'dirty':True},'environment':{'tools':{'compilerFamily':'gcc','mode':'optimized'}},'suites':suites}
+
+    def test_failed_run_remains_failed_and_no_metrics_are_invented(self):
+        run=self.report_fixture('FAIL');path=self.folder/'run.json';write_json(path,run)
+        report=write_user_report(path).read_text('utf-8')
+        self.assertIn('结果：失败',report);self.assertIn('fixture failure',report)
+        self.assertIn('2026-11-09 19:00:00',report)
+        self.assertNotIn('图像均值',report);self.assertNotIn('已修复',report)
+        import xml.etree.ElementTree as ET
+        ET.parse(self.folder/'report-images/results.svg')
+
+    def test_skip_is_visible_and_all_pass_does_not_claim_vehicle_acceptance(self):
+        run=self.report_fixture();run['suites'].append({'id':'unmeasured','status':'SKIPPED','layer':'performance','reason':'no labels'})
+        path=self.folder/'run.json';write_json(path,run);report=write_user_report(path).read_text('utf-8')
+        self.assertIn('跳过',report);self.assertIn('no labels',report)
+        self.assertIn('未执行的测试、板端时序和实车行驶不能视为通过',report)
+
+    def test_native_images_only_come_from_current_run_and_missing_reference_is_not_zero(self):
+        run=self.report_fixture();run['suites'][0]['id']='performance-vision-images'
+        folder=self.folder/'suites/performance-vision-images/artifacts/work/vision-image-performance';folder.mkdir(parents=True)
+        data={'framesVerified':1,'qualityRowsPerReplay':28,'routeRecognitionEnabled':False,
+              'timing':{'vision_ms':{'mean':.2,'p95':.3}},'audit':{'near':{'accepted':1},'full':{'accepted':0},
+              'visuallyReviewedClearSceneCases':[{'index':0,'row54Flags':4,'rawValid':1}]}}
+        write_json(folder/'report.json',data)
+        (folder/'original.gray').write_bytes(bytes([127])*22560);(folder/'masks.gray').write_bytes(bytes([255])*22560)
+        path=self.folder/'run.json';write_json(path,run);report=write_user_report(path).read_text('utf-8')
+        self.assertIn('未测得',report);self.assertIn('仍有需处理的案例',report)
+        self.assertIn('vision-examples.svg',report);self.assertIn('不判断性能提高或退化',report)
+        import xml.etree.ElementTree as ET
+        tree=ET.parse(self.folder/'report-images/vision-examples.svg')
+        self.assertEqual(len(tree.findall('.//{http://www.w3.org/2000/svg}image')),2)
+        run['environment']['inputsAtFinish']={};write_json(path,run)
+        changed=write_user_report(path).read_text('utf-8')
+        self.assertIn('不能用于验收',changed);self.assertNotIn('图像均值',changed)
+
+
 class ContractTests(Scratch):
+    def test_scene_not_ready_blocks_release_even_when_host_tests_pass(self):
+        suite={'id':'vision-scene-integration','layer':'integration','category':'functional',
+               'evidenceClass':'host_simulated','required':True,'dependsOn':[],'entrypoint':{'type':'python'},
+               'acceptanceChecks':[{'id':'continuous-metric-ring','name':'连续米制环岛场景',
+                   'reportPath':'artifacts/work/vision-scene-integration/report.json',
+                   'statusField':'operationalAcceptance','blockingCasesField':'continuousMetricRingFailures',
+                   'scope':'Synthetic scene replay only; not physical acceptance.'}]}
+        def scheduled(catalog,order,output,context,jobs):
+            folder=output/'suites'/suite['id'];folder.mkdir(parents=True)
+            write_json(folder/suite['acceptanceChecks'][0]['reportPath'],
+                       {'status':'PASS','cases':[{}],'operationalAcceptance':'NOT_READY','continuousMetricRingFailures':['ring-left']})
+            result=make_result(suite,folder);result.update(status='PASS',exitCode=0,reason='contracts passed')
+            return [result]
+        context=SimpleNamespace(tools={'compilerFamily':'msvc','mode':'optimized'})
+        output=io.StringIO()
+        with patch('run_tests.load_catalog',return_value={suite['id']:suite}), \
+             patch('run_tests.select_suites',return_value=[suite['id']]), \
+             patch('run_tests.Context',return_value=context), \
+             patch('run_tests.schedule',side_effect=scheduled), \
+             patch('run_tests.input_snapshot',return_value={}), \
+             patch('run_tests.git_state',return_value={}), contextlib.redirect_stdout(output):
+            code=plan_main(['--profile','Host'])
+        path=next(line.removeprefix('Report: ') for line in output.getvalue().splitlines() if line.startswith('Report: '))
+        run=read_json(Path(path).with_name('run.json'))
+        self.assertEqual(code,0) # Software regression remains independently useful.
+        self.assertTrue(run['softwarePassed'])
+        self.assertFalse(run['releaseEligible'])
+        self.assertEqual(run['acceptance']['status'],'NOT_READY')
+        self.assertIn('场景验收：未就绪',Path(path).with_name('user-report.md').read_text('utf-8'))
+        output=io.StringIO()
+        with patch('run_tests.load_catalog',return_value={suite['id']:suite}), \
+             patch('run_tests.select_suites',return_value=[suite['id']]), \
+             patch('run_tests.Context',return_value=context), \
+             patch('run_tests.schedule',side_effect=scheduled), \
+             patch('run_tests.input_snapshot',return_value={}), \
+             patch('run_tests.git_state',return_value={}), contextlib.redirect_stdout(output):
+            code=plan_main(['--profile','Host','--require-acceptance'])
+        path=next(line.removeprefix('Report: ') for line in output.getvalue().splitlines() if line.startswith('Report: '))
+        strict=read_json(Path(path).with_name('run.json'))
+        self.assertEqual(code,1)
+        self.assertTrue(strict['softwarePassed'])
+        self.assertFalse(strict['commandPassed'])
+        self.assertTrue(strict['acceptanceRequired'])
+        self.assertFalse(strict['releaseEligible'])
+        self.assertEqual(strict['acceptance']['status'],'NOT_READY')
+        contradictory=copy.deepcopy(strict);contradictory['releaseEligible']=True
+        with self.assertRaises(ValueError):validate_schema(contradictory,'result.schema.json')
+        # Reporting reuses the persisted decision; a later edit to the child
+        # artifact cannot silently rewrite this run's acceptance to PASS.
+        child=Path(path).parent/'suites'/suite['id']/suite['acceptanceChecks'][0]['reportPath']
+        write_json(child,{'status':'PASS','operationalAcceptance':'PASS','continuousMetricRingFailures':[]})
+        write_report(Path(path).with_name('run.json'))
+        self.assertIn('场景验收：未就绪',Path(path).with_name('user-report.md').read_text('utf-8'))
+
     def test_catalog_and_profiles_have_explicit_closures(self):
         catalog=load_catalog()
         selected=select_suites(catalog,'Host',['AUTO-TRACK'])
@@ -90,6 +195,15 @@ class ContractTests(Scratch):
             variants.append(variants[0])
         self.bad_catalog(mutate)
 
+    def test_acceptance_paths_and_duplicate_ids_rejected(self):
+        def traversal(c):
+            next(s for s in c['suites'] if s['id']=='vision-scene-integration')['acceptanceChecks'][0]['reportPath']='../old/report.json'
+        self.bad_catalog(traversal)
+        def duplicate(c):
+            source=next(s for s in c['suites'] if s['id']=='vision-scene-integration')
+            c['suites'][0]['acceptanceChecks']=copy.deepcopy(source['acceptanceChecks'])
+        self.bad_catalog(duplicate)
+
     def test_json_duplicate_keys_and_nonfinite_values_rejected(self):
         path=self.folder/'bad.json'
         for text in ('{"x":1,"x":2}','{"x":NaN}'):
@@ -117,6 +231,62 @@ class ContractTests(Scratch):
         self.assertEqual(run['status'],'MANUAL_PENDING')
         self.assertFalse(run['softwarePassed'])
         self.assertFalse(run['releaseEligible'])
+
+
+class AcceptanceTests(Scratch):
+    def setUp(self):
+        super().setUp()
+        self.spec={'id':'ring','name':'环岛','scope':'synthetic only','reportPath':'artifacts/report.json',
+                   'statusField':'operationalAcceptance','blockingCasesField':'continuousMetricRingFailures'}
+        self.catalog={'scene':{'id':'scene','acceptanceChecks':[self.spec]}}
+        self.result={'id':'scene','status':'PASS'}
+        self.source=self.folder/'suites/scene/artifacts/report.json'
+
+    def collect(self):return collect_acceptance(self.catalog,[self.result],self.folder)
+
+    def test_declared_pass_is_scope_limited_and_allows_only_eligible_profile(self):
+        write_json(self.source,{'status':'PASS','operationalAcceptance':'PASS','continuousMetricRingFailures':[]})
+        a=self.collect();self.assertEqual(a['status'],'PASS')
+        self.assertEqual(len(a['checks'][0]['reportSha256']),64)
+        for compiler,profile,expected in [('msvc','Host',True),('msvc','PreFlash',True),('gcc','Host',False),('msvc','Suite',False),('msvc','Diagnostic',False)]:
+            with self.subTest(compiler=compiler,profile=profile):
+                d=decision(True,a,compiler,profile,True)
+                self.assertTrue(d['commandPassed']);self.assertEqual(d['releaseEligible'],expected)
+        self.assertFalse(decision(False,a,'msvc','Host')['releaseEligible'])
+
+    def test_not_selected_skipped_or_missing_declarations_cannot_inherit_pass(self):
+        write_json(self.source,{'status':'PASS','operationalAcceptance':'PASS','continuousMetricRingFailures':[]})
+        for results,catalog in [([],self.catalog),([{'id':'scene','status':'SKIPPED'}],self.catalog),([self.result],{})]:
+            with self.subTest(results=results,catalog=catalog):
+                a=collect_acceptance(catalog,results,self.folder)
+                self.assertEqual(a['status'],'NOT_EVALUATED')
+                self.assertFalse(decision(True,a,'msvc','Host',True)['commandPassed'])
+                self.assertFalse(decision(True,a,'msvc','Host')['releaseEligible'])
+
+    def test_missing_invalid_unknown_and_contradictory_evidence_is_error(self):
+        bad=[None,'{broken',{'status':'PASS','operationalAcceptance':'UNKNOWN','continuousMetricRingFailures':[]},
+             {'status':'FAIL','operationalAcceptance':'PASS','continuousMetricRingFailures':[]},
+             {'status':'PASS','operationalAcceptance':'PASS','continuousMetricRingFailures':['ring-left']},
+             {'status':'PASS','operationalAcceptance':'NOT_READY','continuousMetricRingFailures':[]},
+             {'status':'PASS','operationalAcceptance':'NOT_READY','continuousMetricRingFailures':'ring-left'}]
+        for data in bad:
+            with self.subTest(data=data):
+                if isinstance(data,dict):write_json(self.source,data)
+                elif isinstance(data,str):
+                    self.source.parent.mkdir(parents=True,exist_ok=True)
+                    self.source.write_text(data,encoding='utf-8')
+                a=self.collect();self.assertEqual(a['status'],'ERROR')
+                self.assertFalse(decision(True,a,'msvc','Host')['commandPassed'])
+                self.assertFalse(decision(True,a,'msvc','Host')['releaseEligible'])
+
+    def test_input_changes_and_unexecuted_sibling_prevent_acceptance_pass(self):
+        write_json(self.source,{'status':'PASS','operationalAcceptance':'PASS','continuousMetricRingFailures':[]})
+        a=collect_acceptance(self.catalog,[self.result],self.folder,inputs_unchanged=False)
+        self.assertEqual(a['status'],'ERROR')
+        sibling={'id':'other','acceptanceChecks':[dict(self.spec,id='other-check')]}
+        a=collect_acceptance(dict(self.catalog,other=sibling),[self.result],self.folder)
+        self.assertEqual(a['status'],'NOT_EVALUATED')
+        self.assertEqual(a['checks'][0]['status'],'PASS')
 
 
 class ProcessTests(Scratch):

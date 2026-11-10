@@ -1,0 +1,145 @@
+[
+  {
+    "run": "20261109T105931-9ca26ede6e",
+    "status": "PASS",
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "performance-vision-images",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-image-regression",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "phase3-shadow-preparation",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "planner-shadow",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ]
+  },
+  {
+    "run": "20261109T110313-cb37ce5842",
+    "status": "PASS",
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-benchmark-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "performance-vision-images",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "framework",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "control",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "turn-route",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "roundabout-projection",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "tangent-preview",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "static-safety",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ]
+  },
+  {
+    "run": "20261109T110931-d0057bad42",
+    "status": "PASS",
+    "suites": [
+      {
+        "id": "environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "compiler-environment",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-benchmark-contract",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "performance-vision-images",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "vision-image-regression",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      },
+      {
+        "id": "phase3-shadow-preparation",
+        "status": "PASS",
+        "reason": "Completed within declared software evidence scope"
+      }
+    ]
+  }
+]

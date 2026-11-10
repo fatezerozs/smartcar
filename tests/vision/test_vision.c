@@ -154,6 +154,37 @@ int main(void)
               absf((float)result.right[y]-(94+width/2))<=2,
               "bright floor refinement preserves physical fixture edges");
     }
+    /* A low middle/white mean ratio is not itself a shadow: true floor can
+     * surround BOTH measured boundaries. Vary exposure, width and displacement;
+     * assert the actual mask against analytic geometry, not just validity. */
+    for(int floor=100;floor<=170;floor+=10)for(int shift=-6;shift<=6;shift+=6){
+        vision_midterm_reset();
+        for(y=0;y<VISION_HEIGHT;++y)for(x=0;x<VISION_WIDTH;++x){
+            int width=40+y*3/4,left=94+shift-width/2,right=94+shift+width/2;
+            gray[y*VISION_WIDTH+x]=(uint8_t)(x>=left&&x<=right?250:(x<20?20:floor+x/4));
+        }
+        run();check(result.valid,"bilateral low-ratio floor retains road");
+        for(y=50;y<=100;y+=10){
+            int width=40+y*3/4,left=94+shift-width/2,right=94+shift+width/2;
+            int exact=1;
+            for(x=0;x<VISION_WIDTH;++x)
+                if(guarded.binary[y*VISION_WIDTH+x]!=(x>=left&&x<=right?255:0))exact=0;
+            if(!exact)printf("Floor fixture: gray=%d shift=%d row=%d threshold=%u expected=[%d,%d]\n",
+                             floor,shift,y,result.row_threshold[y],left,right);
+            check(exact,"bilateral floor mask matches analytic road, including both edges");
+        }
+    }
+    /* A dark object touches the outer side of a gray-floor island approach.
+     * The remaining floor continues smoothly to the image border. */
+    for(int edge=8;edge<=12;++edge){
+        vision_midterm_reset();
+        for(y=0;y<VISION_HEIGHT;++y)for(x=0;x<VISION_WIDTH;++x)
+            gray[y*VISION_WIDTH+x]=(uint8_t)(x>=edge&&x<=134?250:(x<10?20:140+x/4));
+        run();
+        for(y=24;y<=110;++y)for(x=0;x<VISION_WIDTH;++x)
+            check(guarded.binary[y*VISION_WIDTH+x]==(x>=edge&&x<=134?255:0),
+                  "island approach floor must not leak into white road");
+    }
     /* A split shadow must retain BOTH halves, including mild illumination
      * differences that also form three histogram populations. */
     /* 40--55% already fail in the original algorithm; this guardrail covers

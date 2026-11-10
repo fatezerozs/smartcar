@@ -120,7 +120,10 @@
       "type": "object",
       "properties": {
         "schemaVersion": {
-          "const": "1.0"
+          "enum": [
+            "1.0",
+            "1.1"
+          ]
         },
         "runId": {
           "type": "string",
@@ -302,6 +305,102 @@
             ],
             "additionalProperties": false
           }
+        },
+        "acceptance": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "PASS",
+                "NOT_READY",
+                "NOT_EVALUATED",
+                "ERROR"
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "suiteId": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "scope": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "status": {
+                    "enum": [
+                      "PASS",
+                      "NOT_READY",
+                      "NOT_EVALUATED",
+                      "ERROR"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "blockingCases": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "reportPath": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reportSha256": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "suiteId",
+                  "name",
+                  "scope",
+                  "status",
+                  "reason",
+                  "blockingCases",
+                  "reportPath",
+                  "reportSha256"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "status",
+            "scope",
+            "checks"
+          ],
+          "additionalProperties": false
+        },
+        "acceptanceRequired": {
+          "type": "boolean"
+        },
+        "commandPassed": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -321,7 +420,100 @@
         "risks",
         "suites"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "schemaVersion": {
+                "const": "1.1"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "acceptance",
+              "acceptanceRequired",
+              "commandPassed"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "releaseEligible": {
+                      "const": true
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "softwarePassed": {
+                      "const": true
+                    },
+                    "acceptance": {
+                      "properties": {
+                        "status": {
+                          "const": "PASS"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "commandPassed": {
+                      "const": true
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "softwarePassed": {
+                      "const": true
+                    },
+                    "acceptance": {
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            "PASS",
+                            "NOT_READY",
+                            "NOT_EVALUATED"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "acceptanceRequired": {
+                      "const": true
+                    },
+                    "commandPassed": {
+                      "const": true
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "acceptance": {
+                      "properties": {
+                        "status": {
+                          "const": "PASS"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

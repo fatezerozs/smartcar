@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0",
+  "benchmarkId": "vision-images-quality-route-active",
+  "status": "PASS",
+  "gitSha": "2316cecb3855e4b022febdb6cdd7fcc4349137dc",
+  "dirty": true,
+  "inputTreeSha256": "59232d153eac261fa8981f32b9bfdc79f11652affe08da4e58638f9b1c87e33e",
+  "baselineSha": null,
+  "evidenceClass": "pq_host",
+  "dataset": {
+    "id": "vision-session04",
+    "version": "1",
+    "path": "tests/benchmarks/datasets/vision-session04-v1.json",
+    "sha256": "d96782508e89605ddf5258f118087e23530c51ba23178e56c94c76e592c46368",
+    "groundTruthPath": "tests/vision/fixtures/phase3-real-boundaries-20261109.json",
+    "groundTruthSha256": "72087638db09ec1e0800379e9f1213034b4880ee545b3cdcb848be328310072e"
+  },
+  "parameters": {
+    "reference": "7 images x 4 row pairs; post-selection approximate bands",
+    "missingPairs": "retain in denominator; full image width error plus independent missing-pair failure",
+    "routeRecognitionEnabled": true
+  },
+  "conditions": {
+    "compilerId": "gcc:6cc18931c775eaabf438da3027d289db0b2a532f1af40f9fac366a816325ace5:gcc.EXE (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 14.2.0",
+    "environmentId": "MetamechBook|Windows-11-10.0.22631-SP0|AMD64",
+    "mode": "optimized",
+    "warmup": 0,
+    "repetitions": 2
+  },
+  "metrics": [
+    {
+      "id": "boundary-mae",
+      "dimension": "quality",
+      "unit": "px",
+      "direction": "lower",
+      "statistic": "mean",
+      "validSampleRule": "All 28 pinned reviewed pairs, including missing detections; approximate reference bands only",
+      "thresholdSource": "Existing visual reference +/-3px contract; selected after experiments, no holdout claim",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0,
+      "value": 0.42857142857142855,
+      "baseline": null,
+      "decision": "OBSERVATION",
+      "reason": "Recorded without a gate",
+      "validSamples": 56
+    },
+    {
+      "id": "boundary-max-error",
+      "dimension": "quality",
+      "unit": "px",
+      "direction": "lower",
+      "statistic": "max",
+      "validSampleRule": "All 28 pinned reviewed pairs, including missing detections; approximate reference bands only",
+      "thresholdSource": "Existing visual reference +/-3px contract; selected after experiments, no holdout claim",
+      "safetyCritical": false,
+      "gate": "absolute",
+      "noiseFraction": 0,
+      "absoluteLimit": 3,
+      "value": 1,
+      "baseline": null,
+      "decision": "PASS",
+      "reason": "Independent absolute limit",
+      "validSamples": 56
+    },
+    {
+      "id": "missing-pair",
+      "dimension": "quality",
+      "unit": "fraction",
+      "direction": "lower",
+      "statistic": "max",
+      "validSampleRule": "All 28 pinned reviewed pairs, including missing detections; approximate reference bands only",
+      "thresholdSource": "Existing visual reference +/-3px contract; selected after experiments, no holdout claim",
+      "safetyCritical": false,
+      "gate": "absolute",
+      "noiseFraction": 0,
+      "absoluteLimit": 0,
+      "value": 0,
+      "baseline": null,
+      "decision": "PASS",
+      "reason": "Independent absolute limit",
+      "validSamples": 56
+    },
+    {
+      "id": "within-reference-band",
+      "dimension": "quality",
+      "unit": "fraction",
+      "direction": "higher",
+      "statistic": "mean",
+      "validSampleRule": "All 28 pinned reviewed pairs, including missing detections; approximate reference bands only",
+      "thresholdSource": "Existing visual reference +/-3px contract; selected after experiments, no holdout claim",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0,
+      "value": 1,
+      "baseline": null,
+      "decision": "OBSERVATION",
+      "reason": "Recorded without a gate",
+      "validSamples": 56
+    }
+  ]
+}

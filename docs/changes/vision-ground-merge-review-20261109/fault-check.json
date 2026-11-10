@@ -1,0 +1,328 @@
+{
+  "status": "FAIL",
+  "coldSingleFrame": false,
+  "replayedOriginalFrames": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99
+  ],
+  "cases": [
+    {
+      "index": 32,
+      "mode": "observe",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 127,
+      "rowFlags": 4,
+      "rawValid": 1,
+      "nearValid": 0,
+      "fullValid": 0
+    },
+    {
+      "index": 80,
+      "mode": "observe",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 139,
+      "rowFlags": 0,
+      "rawValid": 1,
+      "nearValid": 0,
+      "fullValid": 0
+    },
+    {
+      "index": 99,
+      "mode": "observe",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 130,
+      "rowFlags": 4,
+      "rawValid": 0,
+      "nearValid": 0,
+      "fullValid": 0
+    },
+    {
+      "index": 32,
+      "mode": "route-active",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 127,
+      "rowFlags": 4,
+      "rawValid": 1,
+      "nearValid": 0,
+      "fullValid": 0
+    },
+    {
+      "index": 80,
+      "mode": "route-active",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 139,
+      "rowFlags": 0,
+      "rawValid": 1,
+      "nearValid": 0,
+      "fullValid": 0
+    },
+    {
+      "index": 99,
+      "mode": "route-active",
+      "passed": false,
+      "pixels": [
+        {
+          "x": 40,
+          "value": 0,
+          "meaning": "left visible floor",
+          "actual": 255
+        },
+        {
+          "x": 100,
+          "value": 255,
+          "meaning": "visible white road",
+          "actual": 255
+        },
+        {
+          "x": 140,
+          "value": 0,
+          "meaning": "right visible floor",
+          "actual": 255
+        }
+      ],
+      "threshold": 130,
+      "rowFlags": 4,
+      "rawValid": 0,
+      "nearValid": 0,
+      "fullValid": 0
+    }
+  ],
+  "compileCommand": [
+    "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+    "-DVISION_MIDTERM_TRAINING=1",
+    "-DVISION_PLANNER_RUNTIME=1",
+    "-DVISION_ROUTE_SWITCH=1",
+    "-DVISION_ENCODER_ENABLE=1",
+    "-DVISION_MIDTERM_ROUTE_TRIAL=1",
+    "-DVISION_MIDTERM_AUTONOMOUS=0",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-O2",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\demo\\code",
+    "-IC:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T155907-6f784ed16b\\suites\\vision-ground-merge-regression\\artifacts\\work\\ground-merge-check",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_image_probe.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_midterm.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_metric_io.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\demo\\code\\vision_planner_shadow.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\vision_adapter.c",
+    "C:\\shengchanli\\smartCar\\smartcar\\tools\\speed_planning\\speed_planner.c",
+    "-lm",
+    "-o",
+    "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261109T155907-6f784ed16b\\suites\\vision-ground-merge-regression\\artifacts\\work\\ground-merge-check\\ground-merge-probe.exe"
+  ],
+  "sourceSha256": {
+    "tools/speed_planning/vision_image_probe.c": "c858fa9f038c24f362503280c7ce915b29da0a7b8687cd6d0bd4889794156cbd",
+    "demo/code/vision_midterm.c": "40aad2a244866780b5c20a300a419c89283adcaf3065d6038f617fbf3c5d14c7",
+    "demo/code/vision_metric_io.c": "e3df217db1086ee1b6cd610dd7680b13742e7220377e86cc5ce8ec83dfa642b7",
+    "demo/code/vision_planner.c": "ac3e74aba4f360314ce702b70004c7e60c54d650552f5c09f20f18d15a132e98",
+    "demo/code/vision_planner_shadow.c": "eb5ee434367aa9d913e8fa8eb538352bf8afbcffb9fbd38cc53040c4c8953fb6",
+    "tools/speed_planning/vision_adapter.c": "13aa6a590d80681cc498f12a441423a7963da2371568e1120bbed7754ded2942",
+    "tools/speed_planning/speed_planner.c": "3c7333b570643c88465de21b49344d4cc90b467124666cd45bf5a3876e86c448"
+  },
+  "labelsSha256": "d4ba4da6d5010e7dff4a69a4652bdfe51a40906101252399afcacbc1b41531ca",
+  "scope": "Targeted visual review of original clear-road frames in the ground-merge diagnosis; diagnostic post-selection cases, not independent full-image ground truth.",
+  "hardwareAccessed": false,
+  "productionCodeModified": false
+}

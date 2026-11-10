@@ -58,9 +58,11 @@ class OriginalImageRegression(unittest.TestCase):
     def test_all_original_frames_and_current_metric_coverage(self):
         self.assertEqual(len(self.rows),750*120)
         frames=self.rows[::120]
-        self.assertEqual(sum(int(r['near_valid']) for r in frames),470)
-        self.assertEqual(sum(int(r['full_valid']) for r in frames),376)
-        print('Original 750 frames: near=470/full=376; coverage, not accuracy.',flush=True)
+        near=sum(int(r['near_valid']) for r in frames);full=sum(int(r['full_valid']) for r in frames)
+        # Pre-fix floors, not output goldens: better segmentation may recover
+        # more geometry. Independent boundary/pixel gates still check correctness.
+        self.assertGreaterEqual(near,470);self.assertGreaterEqual(full,376)
+        print(f'Original 750 frames: near={near}/full={full}; coverage, not accuracy.',flush=True)
 
     def test_visually_reviewed_boundary_bands(self):
         pairs=0

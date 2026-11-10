@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0",
+  "status": "ready",
+  "reason": "Explicit real-image adapter with local reviewed accuracy references; broad performance-host remains pending independent labels and baseline",
+  "evidenceClass": "pq_host",
+  "dataset": {
+    "id": "vision-session04",
+    "version": "1",
+    "path": "tests/benchmarks/datasets/vision-session04-v1.json",
+    "sha256": "d96782508e89605ddf5258f118087e23530c51ba23178e56c94c76e592c46368",
+    "groundTruthPath": "tests/vision/fixtures/phase3-real-boundaries-20261109.json",
+    "groundTruthSha256": "72087638db09ec1e0800379e9f1213034b4880ee545b3cdcb848be328310072e"
+  },
+  "adapter": "tools/testing/vision_image_benchmark.py",
+  "approvedBaseline": null,
+  "id": "vision-images-timing-route-active",
+  "parameters": {
+    "imageSize": [
+      188,
+      120
+    ],
+    "stateReset": "before each full chronological pass",
+    "metricTimeModelMs": 20,
+    "observeDelayMs": 4,
+    "routeRecognitionEnabled": true,
+    "timing": "high-resolution monotonic host clock; images preloaded"
+  },
+  "warmup": 2,
+  "repetitions": 5,
+  "metrics": [
+    {
+      "id": "processing-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0
+    },
+    {
+      "id": "metric-adapter-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0
+    },
+    {
+      "id": "vision-plus-metric-time",
+      "dimension": "computation",
+      "unit": "ms/frame",
+      "direction": "lower",
+      "statistic": "p95",
+      "validSampleRule": "Every completed chronological frame; excluded full-pass warmups",
+      "thresholdSource": "Host observation; no approved timing baseline",
+      "safetyCritical": false,
+      "gate": "observation",
+      "noiseFraction": 0
+    }
+  ]
+}

@@ -151,9 +151,16 @@ SKIPPED=0、FAIL=1、ERROR=2、BLOCKED=3、MANUAL_PENDING=4、TIMEOUT=124；
 原始子进程退出码另行保存。负向编译通过时套件退出码为 0，编译器拒绝的
 原始非零码仍可查证。计划退出码为通过 0、非通过 1、执行前框架错误 2。
 
-GCC 补充验证、单套件和 Diagnostic 均不会给出 `releaseEligible=true`。该字段
-即使在 MSVC 完整 Profile 通过时，也只限所记录的软件范围，不等同于烧录或
-硬件运行授权。MSVC ASan 构建额外串行保护 PDB 服务，避免并行进程互相清理。
+新整轮结果使用`schemaVersion=1.1`：`status`/`softwarePassed`记录软件检查，
+`acceptance`记录声明场景的实际验收状态，`commandPassed`记录本次命令是否通过。
+软件PASS可以与场景NOT_READY（未就绪）并存；`releaseEligible`要求场景全PASS，
+以及原有完整MSVC Host/PreFlash条件。缺失、矛盾的验收证据为ERROR；未选中的
+场景为NOT_EVALUATED（未执行），都不能取得放行资格。详见[字段说明](TESTING_FRAMEWORK_GUIDE.md#83-软件通过场景验收与放行资格)。
+
+`-RequireAcceptance`（Python参数`--require-acceptance`）让场景未通过或未执行时
+命令返回非零；普通回归仍可独立检查软件。GCC补充验证、单套件和Diagnostic
+不取得放行资格，任何字段都不等同烧录或硬件运行授权。旧1.0记录保留原含义。
+MSVC ASan构建额外串行保护PDB服务，避免并行进程互相清理。
 
 ## 性能与质量
 

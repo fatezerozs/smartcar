@@ -1,0 +1,96 @@
+{
+  "fullRun": ".test-results/20261110T091724-79ef7668ca",
+  "counts": {
+    "PASS": 63,
+    "SKIPPED": 1
+  },
+  "software": true,
+  "acceptance": {
+    "status": "PASS",
+    "scope": "Only the scenario checks declared in this catalog; not physical vehicle, flashing or hardware authorization.",
+    "checks": [
+      {
+        "id": "continuous-metric-ring",
+        "suiteId": "vision-scene-integration",
+        "name": "连续米制环岛场景（合成回放）",
+        "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance.",
+        "status": "PASS",
+        "reason": "声明范围内的场景检查通过。",
+        "blockingCases": [],
+        "reportPath": "suites/vision-scene-integration/artifacts/work/vision-scene-integration/report.json",
+        "reportSha256": "b93dda06dbc00357c0008916ebf2416b46091c0731d06bfee52ad59f19e96e0f"
+      }
+    ]
+  },
+  "commandPassed": true,
+  "releaseEligible": false,
+  "scene": {
+    "cases": 57,
+    "frames": 2030,
+    "failures": [],
+    "ringFailures": [],
+    "filteredMaskErrors": 0,
+    "timing": "PASS"
+  },
+  "timing": [
+    {
+      "route": false,
+      "timing": {
+        "vision_ms": {
+          "mean": 0.17295386666666668,
+          "median": 0.1695,
+          "p95": 0.20830999999999994,
+          "p99": 0.2591629999999997,
+          "max": 0.3413
+        },
+        "metric_ms": {
+          "mean": 0.00029885333333333334,
+          "median": 0.0003,
+          "p95": 0.0007,
+          "p99": 0.0012,
+          "max": 0.0037
+        }
+      }
+    },
+    {
+      "route": true,
+      "timing": {
+        "vision_ms": {
+          "mean": 0.20425304,
+          "median": 0.20135,
+          "p95": 0.2281,
+          "p99": 0.3023709999999995,
+          "max": 0.4276
+        },
+        "metric_ms": {
+          "mean": 0.00028589333333333333,
+          "median": 0.0003,
+          "p95": 0.0007,
+          "p99": 0.0011,
+          "max": 0.0026
+        }
+      }
+    }
+  ],
+  "sourceSha256": {
+    "demo/code/vision_midterm.c": "f2374b5137491f9b1ed7f6fdf989e5f265a7ca0ad2343eaf10af7e79cbb5f8a4",
+    "demo/code/vision_metric_io.h": "e724d094ddc95a14ee55758e19595de680bb3e55d9c10580078be847538b9b1b",
+    "tools/speed_planning/vision_adapter.c": "bf72a21e5348e1df0544f9da8e0e8aaa3afba7adbd79e6aade0706e57e372bce",
+    "tools/speed_planning/vision_adapter.h": "89ebe910be831e30c399ae3bb9df3c588e215aa4f2fd031144b13e47e24c274c",
+    "tools/speed_planning/metric_input_audit.c": "3dd5c9c254fe655c6a9167e38c96d44ec2cecd6fd45a1654e7e372123c8b112a",
+    "tools/testing/vision_scene_pipeline.c": "f30065ff4542ba4a8d979fe8883ddbe7184d7c2da0bc3e5b3caaddfebc07e1de",
+    "tools/testing/vision_scene_integration.py": "d895343c861eeca26b15c78b2227ca52be53c513b639549db52e73a8631c64ea",
+    "tools/testing/vision_image_benchmark.py": "3b08adfcbd074090766c1ddeb2c55df1f939163cec6b8b36b3e513b52881a31f",
+    "tests/vision/test_vision.c": "7555d9f4bd4cb5ca52dbfafb839b5d19ff35f901110291a0cf92c48e6410e0ed",
+    "tests/vision/test_equivalence.c": "f5bc140b4e838858c27b989b42af1346a47341e8b11256c20e781477a9e4a954",
+    "tests/planning/test_speed_planner.c": "ed4c06721f624e686b76bcc110864c701d974bb494dc2204c1fac8cf3bddfc88",
+    "profiles/phase3-c26-shadow-20261109.json": "21aba8c285ffd78d617cb99d11fed575ebb126af15e2f461603a13d53b6fea34"
+  },
+  "figureSource": {
+    "before": ".test-results/20261110T085552-328b61e6aa",
+    "after": ".test-results/20261110T091708-0a911df680",
+    "case": "ring-left-gray-floor",
+    "frame": 31
+  },
+  "hardwareAccessed": false
+}

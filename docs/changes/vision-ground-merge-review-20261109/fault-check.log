@@ -1,0 +1,8 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\vision\test_ground_merge_regression.py
+FAIL observe frame=32 row=54 threshold=127 flags=4 pixels=x40:255/0,x100:255/255,x140:255/0
+FAIL observe frame=80 row=54 threshold=139 flags=0 pixels=x40:255/0,x100:255/255,x140:255/0
+FAIL observe frame=99 row=54 threshold=130 flags=4 pixels=x40:255/0,x100:255/255,x140:255/0
+FAIL route-active frame=32 row=54 threshold=127 flags=4 pixels=x40:255/0,x100:255/255,x140:255/0
+FAIL route-active frame=80 row=54 threshold=139 flags=0 pixels=x40:255/0,x100:255/255,x140:255/0
+FAIL route-active frame=99 row=54 threshold=130 flags=4 pixels=x40:255/0,x100:255/255,x140:255/0
+[FAIL] test exited with code 1

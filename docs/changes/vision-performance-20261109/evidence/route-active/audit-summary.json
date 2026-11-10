@@ -1,0 +1,469 @@
+{
+  "frames": 750,
+  "timeModel": "uniform 20ms capture + 4ms observe; stationary synthetic encoder, no physical motion inference",
+  "nearAndFullAreIndependent": true,
+  "reasonMatchesActualNativeAcceptance": true,
+  "near": {
+    "accepted": 470,
+    "reasonCounts": {
+      "accepted": 470,
+      "source_invalid_or_quality": 6,
+      "requested_row_not_two_measured_edges": 256,
+      "adapter_geometry_or_history": 11,
+      "outside_configured_ground_domain": 7
+    },
+    "subreasonCounts": {
+      "accepted": 470,
+      "source_invalid_or_quality": 6,
+      "requested_row_not_two_measured_edges": 256,
+      "temporal_history_rejection_confirmed_by_native_cold_retry": 8,
+      "non_forward_ground_projection": 3,
+      "outside_configured_ground_domain": 7
+    },
+    "missingPairFirstFailureRowCounts": {
+      "54": 59,
+      "58": 8,
+      "61": 167,
+      "65": 22
+    },
+    "missingPairFlagCounts": {
+      "4": 1,
+      "0": 233,
+      "1": 22
+    },
+    "episodes": [
+      {
+        "firstIndex": 32,
+        "lastIndex": 32,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 42,
+        "lastIndex": 44,
+        "frames": 3,
+        "modelDurationMs": 60
+      },
+      {
+        "firstIndex": 52,
+        "lastIndex": 52,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 54,
+        "lastIndex": 54,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 56,
+        "lastIndex": 56,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 60,
+        "lastIndex": 60,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 62,
+        "lastIndex": 110,
+        "frames": 49,
+        "modelDurationMs": 980
+      },
+      {
+        "firstIndex": 112,
+        "lastIndex": 112,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 200,
+        "lastIndex": 200,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 273,
+        "lastIndex": 273,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 275,
+        "lastIndex": 433,
+        "frames": 159,
+        "modelDurationMs": 3180
+      },
+      {
+        "firstIndex": 439,
+        "lastIndex": 439,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 453,
+        "lastIndex": 453,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 455,
+        "lastIndex": 456,
+        "frames": 2,
+        "modelDurationMs": 40
+      },
+      {
+        "firstIndex": 458,
+        "lastIndex": 459,
+        "frames": 2,
+        "modelDurationMs": 40
+      },
+      {
+        "firstIndex": 463,
+        "lastIndex": 463,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 465,
+        "lastIndex": 465,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 477,
+        "lastIndex": 477,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 482,
+        "lastIndex": 484,
+        "frames": 3,
+        "modelDurationMs": 60
+      },
+      {
+        "firstIndex": 491,
+        "lastIndex": 494,
+        "frames": 4,
+        "modelDurationMs": 80
+      },
+      {
+        "firstIndex": 497,
+        "lastIndex": 497,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 499,
+        "lastIndex": 499,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 502,
+        "lastIndex": 503,
+        "frames": 2,
+        "modelDurationMs": 40
+      },
+      {
+        "firstIndex": 505,
+        "lastIndex": 514,
+        "frames": 10,
+        "modelDurationMs": 200
+      },
+      {
+        "firstIndex": 524,
+        "lastIndex": 539,
+        "frames": 16,
+        "modelDurationMs": 320
+      },
+      {
+        "firstIndex": 541,
+        "lastIndex": 544,
+        "frames": 4,
+        "modelDurationMs": 80
+      },
+      {
+        "firstIndex": 546,
+        "lastIndex": 549,
+        "frames": 4,
+        "modelDurationMs": 80
+      },
+      {
+        "firstIndex": 552,
+        "lastIndex": 557,
+        "frames": 6,
+        "modelDurationMs": 120
+      },
+      {
+        "firstIndex": 578,
+        "lastIndex": 578,
+        "frames": 1,
+        "modelDurationMs": 20
+      }
+    ],
+    "exampleIndices": {
+      "requested_row_not_two_measured_edges": [
+        32,
+        42,
+        43,
+        44,
+        52
+      ],
+      "source_invalid_or_quality": [
+        99,
+        100,
+        101,
+        102,
+        104
+      ],
+      "temporal_history_rejection_confirmed_by_native_cold_retry": [
+        200,
+        273,
+        547,
+        549,
+        552
+      ],
+      "outside_configured_ground_domain": [
+        298,
+        300,
+        301,
+        302,
+        303
+      ],
+      "non_forward_ground_projection": [
+        543,
+        544,
+        548
+      ]
+    }
+  },
+  "full": {
+    "accepted": 376,
+    "reasonCounts": {
+      "accepted": 376,
+      "source_invalid_or_quality": 6,
+      "requested_row_not_two_measured_edges": 310,
+      "adapter_geometry_or_history": 55,
+      "outside_configured_ground_domain": 3
+    },
+    "subreasonCounts": {
+      "accepted": 376,
+      "source_invalid_or_quality": 6,
+      "requested_row_not_two_measured_edges": 310,
+      "temporal_history_rejection_confirmed_by_native_cold_retry": 8,
+      "non_forward_ground_projection": 47,
+      "outside_configured_ground_domain": 3
+    },
+    "missingPairFirstFailureRowCounts": {
+      "52": 29,
+      "54": 59,
+      "58": 8,
+      "61": 167,
+      "65": 22,
+      "49": 25
+    },
+    "missingPairFlagCounts": {
+      "0": 286,
+      "4": 1,
+      "1": 23
+    },
+    "episodes": [
+      {
+        "firstIndex": 22,
+        "lastIndex": 22,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 28,
+        "lastIndex": 28,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 30,
+        "lastIndex": 30,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 32,
+        "lastIndex": 40,
+        "frames": 9,
+        "modelDurationMs": 180
+      },
+      {
+        "firstIndex": 42,
+        "lastIndex": 50,
+        "frames": 9,
+        "modelDurationMs": 180
+      },
+      {
+        "firstIndex": 52,
+        "lastIndex": 110,
+        "frames": 59,
+        "modelDurationMs": 1180
+      },
+      {
+        "firstIndex": 112,
+        "lastIndex": 112,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 200,
+        "lastIndex": 200,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 260,
+        "lastIndex": 260,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 273,
+        "lastIndex": 544,
+        "frames": 272,
+        "modelDurationMs": 5440
+      },
+      {
+        "firstIndex": 546,
+        "lastIndex": 549,
+        "frames": 4,
+        "modelDurationMs": 80
+      },
+      {
+        "firstIndex": 552,
+        "lastIndex": 557,
+        "frames": 6,
+        "modelDurationMs": 120
+      },
+      {
+        "firstIndex": 578,
+        "lastIndex": 578,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 641,
+        "lastIndex": 641,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 658,
+        "lastIndex": 659,
+        "frames": 2,
+        "modelDurationMs": 40
+      },
+      {
+        "firstIndex": 662,
+        "lastIndex": 662,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 665,
+        "lastIndex": 666,
+        "frames": 2,
+        "modelDurationMs": 40
+      },
+      {
+        "firstIndex": 669,
+        "lastIndex": 669,
+        "frames": 1,
+        "modelDurationMs": 20
+      },
+      {
+        "firstIndex": 674,
+        "lastIndex": 674,
+        "frames": 1,
+        "modelDurationMs": 20
+      }
+    ],
+    "exampleIndices": {
+      "requested_row_not_two_measured_edges": [
+        22,
+        28,
+        30,
+        32,
+        33
+      ],
+      "source_invalid_or_quality": [
+        99,
+        100,
+        101,
+        102,
+        104
+      ],
+      "temporal_history_rejection_confirmed_by_native_cold_retry": [
+        200,
+        273,
+        547,
+        549,
+        552
+      ],
+      "outside_configured_ground_domain": [
+        260,
+        540,
+        557
+      ],
+      "non_forward_ground_projection": [
+        434,
+        435,
+        436,
+        437,
+        440
+      ]
+    }
+  },
+  "acceptanceCombinations": {
+    "near=1,full=1": 376,
+    "near=1,full=0": 94,
+    "near=0,full=0": 280
+  },
+  "firstPlannerFaultIndex": 67,
+  "visuallyReviewedClearSceneCases": [
+    {
+      "index": 32,
+      "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+      "rawValid": 1,
+      "row54Flags": 4,
+      "row54Threshold": 127,
+      "junctionRows": 22,
+      "junctionAnchors": 19,
+      "metricNearAccepted": 0,
+      "metricFullAccepted": 0
+    },
+    {
+      "index": 80,
+      "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+      "rawValid": 1,
+      "row54Flags": 0,
+      "row54Threshold": 139,
+      "junctionRows": 0,
+      "junctionAnchors": 0,
+      "metricNearAccepted": 0,
+      "metricFullAccepted": 0
+    },
+    {
+      "index": 99,
+      "review": "Visible white road and side transitions at row54; targeted diagnostic review, not independent labels",
+      "rawValid": 0,
+      "row54Flags": 4,
+      "row54Threshold": 130,
+      "junctionRows": 33,
+      "junctionAnchors": 4,
+      "metricNearAccepted": 0,
+      "metricFullAccepted": 0
+    }
+  ]
+}

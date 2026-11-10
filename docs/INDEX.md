@@ -1,6 +1,8 @@
 # 文档目录与维护规则
 
-**2026-11-09进度更新：** [Phase3当前进度与交接](changes/phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。
+**读MPC相关文档前：** [工程与速度规划阅读指南](MPC_GUIDE.md)说明当前算法及证据边界；[术语、缩写和单位索引](MPC_TERMINOLOGY.md)解释near/full、tick、影子模式等名称；[项目领域术语表](../GLOSSARY.md)提供一致的中文称呼。2026-11-10工作区环岛集成结果见[专项报告](changes/vision-scene-integration-20261110/README.md)。
+
+**截至2026-11-09的阶段进度：** [Phase3进度与交接](changes/phase3-progress-20261109/README.md)。当时处于Phase 3影子上板诊断与降级改造；V4已静态核对，规划器近场/完整预瞄（near/full）事件解耦已通过当时的软件回归但未烧录。既往测试和板载身份按各自时点保留；后续工作区验证见上方专项报告。
 
 当前现状以 [项目设计与演进档案](PROJECT_EVOLUTION.md) 为准。README 只作工程入口。
 

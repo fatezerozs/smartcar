@@ -71,6 +71,48 @@ static int sorted_split(const uint8_t *sorted,int begin,int count)
     return (first + last) / 2;
 }
 
+/* Enumerate all maximal intervals (not the native outward seed scan), then
+ * compare independent three-sample means at both measured boundaries. */
+static int border_oracle(const uint8_t *row,int a,int b,int floor,int threshold)
+{
+    if(b-a+1<32)return 0;
+    int low=255,high=0;
+    for(int i=a;i<=b;++i){
+        if(row[i]<=floor||row[i]>threshold)return 0;
+        if(i>a&&abs((int)row[i]-row[i-1])>2)return 0;
+        if(row[i]<low)low=row[i];if(row[i]>high)high=row[i];
+    }
+    return high-low>=8&&high-low<=b-a+1;
+}
+
+static int corridor_oracle(const uint8_t *row,int floor,int threshold)
+{
+    int seed=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X);
+    if(threshold<=floor)return 0;
+    for(int x=0;x<VISION_WIDTH;){
+        if(row[x]<=threshold){++x;continue;}
+        int begin=x;while(x<VISION_WIDTH&&row[x]>threshold)++x;
+        if(begin>seed||x<=seed)continue;
+        if(x-begin<VISION_MIN_WIDTH||begin<3||x+2>=VISION_WIDTH)return 0;
+        int inside_l=0,outside_l=0,inside_r=0,outside_r=0,above_l=0,above_r=0;
+        for(int k=0;k<3;++k){
+            int a=row[begin-3+k],b=row[x+k];
+            if(a>threshold||b>threshold)return 0;
+            above_l+=a>floor;above_r+=b>floor;
+            outside_l+=a;outside_r+=b;
+            inside_l+=row[begin+k];inside_r+=row[x-3+k];
+        }
+        if(above_l<3||above_r<3){
+            if(above_l<3&&above_r<3)return 0;
+            if((4*outside_l<3*outside_r||4*outside_r<3*outside_l)&&
+               !border_oracle(row,0,begin-1,floor,threshold)&&
+               !border_oracle(row,x,VISION_WIDTH-1,floor,threshold))return 0;
+        }
+        return inside_l-outside_l>=3*VISION_MIN_CONTRAST&&inside_r-outside_r>=3*VISION_MIN_CONTRAST;
+    }
+    return 0;
+}
+
 static int row_oracle(const uint8_t *row, int global, int global_contrast)
 {
     uint8_t sorted[VISION_WIDTH];int at=0,split=0;
@@ -89,8 +131,15 @@ static int row_oracle(const uint8_t *row, int global, int global_contrast)
         for(int k=split;k<VISION_WIDTH;++k)white_sum+=sorted[k];
         middle_count=split-at;white_count=VISION_WIDTH-split;
         if(middle_count<VISION_MIN_WIDTH||white_count<VISION_MIN_WIDTH||
-           white_sum*middle_count-middle_sum*white_count<(uint64_t)VISION_MIN_CONTRAST*middle_count*white_count||
-           4*middle_sum*white_count<3*white_sum*middle_count)return first;
+           white_sum*middle_count-middle_sum*white_count<(uint64_t)VISION_MIN_CONTRAST*middle_count*white_count)return first;
+        if(4*middle_sum*white_count<3*white_sum*middle_count){
+            if(!corridor_oracle(row,first,second)){
+                int third=sorted_split(sorted,split,VISION_WIDTH-split);
+                if(!corridor_oracle(row,first,third))return first;
+                second=third;
+            }
+            first=second;continue;
+        }
         /* Independently enumerate connected runs; the native implementation scans
          * outward from its seed instead. Only that run's midpoint may qualify. */
         int seed=(int)((VISION_WIDTH-1)*VISION_AXIS_NEAR_X),supported=0;
