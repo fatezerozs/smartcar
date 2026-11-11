@@ -1,0 +1,26 @@
+{
+  "applicationFiles": 73,
+  "sharedPinnedInputs": 550,
+  "sourceArchiveMembers": 746,
+  "changedApplicationFiles": [
+    "vision_field.c",
+    "vision_midterm.c",
+    "vision_midterm.h",
+    "vision_profile.h",
+    "vision_reference_route.h",
+    "vision_telemetry.c"
+  ],
+  "plannerRuntime": false,
+  "plannerActive": false,
+  "MPCSolverImplemented": false,
+  "newImageRecording": false,
+  "physicalTrackValidated": false,
+  "flashed": false,
+  "CodeBytes": 94360,
+  "RODataBytes": 13580,
+  "RWDataBytes": 212,
+  "ZIDataBytes": 220148,
+  "ROMBytes": 108152,
+  "RWTotalBytes": 220360,
+  "sourceZipSha256": "d3a0a816c090f17f7523de26756285d3c673608cc0b12838a28bbfa214ffa45e"
+}

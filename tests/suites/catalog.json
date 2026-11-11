@@ -4106,6 +4106,35 @@
           "scope": "Synthetic complete ring-state replay only; not physical orbit or vehicle acceptance."
         }
       ]
+    },
+    {
+      "schemaVersion": "1.0",
+      "id": "minimal-track",
+      "name": "Minimal R13 track candidate: generation, chain parity, ring events and startup guards",
+      "layer": "integration",
+      "category": "functional",
+      "evidenceClass": "host_simulated",
+      "entrypoint": {
+        "type": "python",
+        "path": "tests/vision/test_minimal_track.py"
+      },
+      "workingDirectory": ".",
+      "timeoutSeconds": 180,
+      "required": true,
+      "dependsOn": [
+        "compiler-environment"
+      ],
+      "resources": [],
+      "profiles": [
+        "Host",
+        "PreFlash",
+        "Diagnostic"
+      ],
+      "environment": {},
+      "artifacts": [
+        "artifacts/**"
+      ],
+      "scope": "Isolated candidate source only: 10480 constructed R13-chain steps, synthetic grayscale ring episodes and startup disturbances. Not physical lap, ring traversal, tuning or startup acceptance."
     }
   ]
 }

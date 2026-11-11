@@ -1,0 +1,11 @@
+test_frozen_r13_sources (__main__.MinimalPreparation.test_frozen_r13_sources) ... ok
+test_grayscale_ring_order_and_reacquisition (__main__.MinimalPreparation.test_grayscale_ring_order_and_reacquisition) ... ok
+test_isolated_r13_build_has_one_controller_and_no_experiment_lease (__main__.MinimalPreparation.test_isolated_r13_build_has_one_controller_and_no_experiment_lease) ... ok
+test_r13_complete_control_chain_parity (__main__.MinimalPreparation.test_r13_complete_control_chain_parity) ... ok
+test_route_regression_rejects_missing_completion_event (__main__.MinimalPreparation.test_route_regression_rejects_missing_completion_event) ... ok
+test_startup_disturbances_and_physical_stop_contract (__main__.MinimalPreparation.test_startup_disturbances_and_physical_stop_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.855s
+
+OK

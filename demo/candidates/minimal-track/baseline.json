@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "smartcar.minimal-track-baseline/1",
+  "version": "MPC_R13_MINIMAL_20261111_1",
+  "sourceRelease": "R13_V2_START_GUARD_20261111_1",
+  "archive": "releases/R13_V2_START_GUARD_20261111_1/source-code.zip",
+  "archiveSha256": "ceba7a7db532a4ba21f19a998d0867fe18f50b3054b261f8c22ad3cd33ffc7d1",
+  "manifest": "releases/R13_V2_START_GUARD_20261111_1/source-manifest.json",
+  "project": "demo/mdk/competition/MPC_Phase3_Shadow.uvprojx",
+  "controlStrategy": "R13",
+  "startup": "C26",
+  "track": "A -> B -> center ring once -> right-side road -> upper-right ring once -> S bends -> A",
+  "physicalTrackValidated": false,
+  "startupGuardPhysicalValidation": "pending"
+}

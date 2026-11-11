@@ -1,0 +1,11 @@
+
+Traceback (most recent call last):
+  File "C:\shengchanli\smartCar\smartcar\.build\mpc-r13-minimal-zip-verify\tests\vision\test_minimal_track.py", line 15, in <module>
+    from tools.speed_planning.replay import compile_command
+  File "C:\shengchanli\smartCar\smartcar\.build\mpc-r13-minimal-zip-verify\tools\speed_planning\replay.py", line 16, in <module>
+    from speed_planning.reference import DEFAULT_REFERENCE,load_reference,write_c_header,derived,values
+  File "C:\shengchanli\smartCar\smartcar\.build\mpc-r13-minimal-zip-verify\tools\speed_planning\reference.py", line 6, in <module>
+    from .data_inputs import child,load_encoder,sha256,read_json
+  File "C:\shengchanli\smartCar\smartcar\.build\mpc-r13-minimal-zip-verify\tools\speed_planning\data_inputs.py", line 15, in <module>
+    from verify_b3_static import decode, fields
+ModuleNotFoundError: No module named 'verify_b3_static'

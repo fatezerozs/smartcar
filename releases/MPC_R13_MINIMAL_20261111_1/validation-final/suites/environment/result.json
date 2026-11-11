@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0",
+  "id": "environment",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "environment",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.256394,
+  "exitCode": 0,
+  "startedAt": "2026-11-11T15:44:34.889+00:00",
+  "finishedAt": "2026-11-11T15:44:35.146+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.EXE",
+        "-NoProfile",
+        "-Command",
+        "$PSVersionTable.PSVersion.ToString()"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261111T154434-38617b63c9\\suites\\environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.24877,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261111T154434-38617b63c9\\suites\\environment",
+  "dependsOn": [],
+  "artifacts": [],
+  "details": {
+    "scope": "",
+    "executionMethod": "environment",
+    "effectiveResources": [],
+    "lastRawExitCode": 0
+  }
+}

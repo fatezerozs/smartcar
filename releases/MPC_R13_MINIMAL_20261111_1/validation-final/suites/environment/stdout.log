@@ -1,0 +1,3 @@
+[test] C:\Users\zfn19\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.EXE -NoProfile -Command $PSVersionTable.PSVersion.ToString()
+7.6.9
+[PASS] Completed within declared software evidence scope

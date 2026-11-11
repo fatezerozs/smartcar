@@ -16,3 +16,9 @@ docs/changes/vehicle-parameters-20261106/** -text
 docs/reference/c1-model-sources/** -text
 demo/mdk/competition/MPC_20261106.uvprojx -text
 demo/sd_diagnostic/artifacts/** -text
+
+# Byte-pinned dependencies for MPC_R13_MINIMAL_20261111_1.
+demo/mdk/base/rt1064.uvoptx -text
+demo/user/inc/RT106X_config.h -text
+libraries/third_party/FreeRTOS-Kernel/LICENSE.md -text
+libraries/third_party/FreeRTOS-Kernel/PROVENANCE.md -text

@@ -1,5 +1,7 @@
 # MPC_20261106：RT1064 视觉循迹小车
 
+**2026-11-11 最小赛道候选：** 本分支封存 `MPC_R13_MINIMAL_20261111_1`，采用 R13 实际控制与 C26 启停，尚未实车验收。[GitHub 下载与复现说明](docs/changes/minimal-track-20261111/GITHUB.md) · [源码和接口](demo/candidates/minimal-track/README.md)。
+
 **术语与当前软件验证入口：** [MPC工程与速度规划阅读指南](docs/MPC_GUIDE.md) · [专业术语、缩写与单位索引](docs/MPC_TERMINOLOGY.md) · [项目领域术语表](GLOSSARY.md)。MPC通常指模型预测控制；`MPC_20261106`同时是本工程名称，当前速度规划内核的具体实现范围见阅读指南。
 
 **2026-11-10工作区软件验证：** [环岛及视觉—速度规划器配合报告](docs/changes/vision-scene-integration-20261110/README.md)记录了连续米制环岛规划尚未通过的场景。它是主机测试结果，不代表下方历史板载固件已更新或完成实车验收。

@@ -1,0 +1,25 @@
+PASS minimal route: 56 checks; two grayscale ring episodes, current exit evidence, road reacquisition, no third ring, OFF reset; not physical lap proof
+R13 parity: 10480 steps / 28 constructed scenarios; 10472 identical rows, 8 documented absent-road cache clears; final PWM/servo equal at every step
+Mutation check: dropping a completed ring event is detected by the public grayscale regression
+PASS launch: four weak reverse samples recover without a latch
+PASS isolated strong spike and alternating quantized signs
+PASS persistent reverse bounded; both wheel fault identities retained
+PASS established motion retains fast weak-reverse protection
+PASS duplicate work, OFF re-entry and explicit STOP
+PASS impossible counter delta and missing-sample interval still stop
+PASS weak (-4/-5) and strong (-11/-12) threshold boundaries
+PASS 10/20ms jitter does not double the startup allowance
+PASS duplicate/old frames and uint32 clock rollover
+ADVERSE INPUT PASS scenarios=81 checks=22474; constructed Host data, not a physical noise or vehicle acceptance model
+
+test_frozen_r13_sources (__main__.MinimalPreparation.test_frozen_r13_sources) ... ok
+test_grayscale_ring_order_and_reacquisition (__main__.MinimalPreparation.test_grayscale_ring_order_and_reacquisition) ... ok
+test_isolated_r13_build_has_one_controller_and_no_experiment_lease (__main__.MinimalPreparation.test_isolated_r13_build_has_one_controller_and_no_experiment_lease) ... ok
+test_r13_complete_control_chain_parity (__main__.MinimalPreparation.test_r13_complete_control_chain_parity) ... ok
+test_route_regression_rejects_missing_completion_event (__main__.MinimalPreparation.test_route_regression_rejects_missing_completion_event) ... ok
+test_startup_disturbances_and_physical_stop_contract (__main__.MinimalPreparation.test_startup_disturbances_and_physical_stop_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.148s
+
+OK

@@ -1,0 +1,16 @@
+test_grayscale_ring_order_and_reacquisition (__main__.MinimalPreparation.test_grayscale_ring_order_and_reacquisition) ... FAIL
+
+======================================================================
+FAIL: test_grayscale_ring_order_and_reacquisition (__main__.MinimalPreparation.test_grayscale_ring_order_and_reacquisition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\shengchanli\smartCar\smartcar\tests\vision\test_minimal_track.py", line 93, in test_grayscale_ring_order_and_reacquisition
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : minimal-route:82 !lane.valid && completed() == ring state=4 side=-1 valid=0
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.934s
+
+FAILED (failures=1)

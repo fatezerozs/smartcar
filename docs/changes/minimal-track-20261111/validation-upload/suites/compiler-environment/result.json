@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "id": "compiler-environment",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "environment",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 0.277744,
+  "exitCode": 0,
+  "startedAt": "2026-11-11T15:55:41.460+00:00",
+  "finishedAt": "2026-11-11T15:55:41.737+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "--version"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.040751,
+      "stage": "toolchain"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\mingw64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-Wall",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-Wno-unused-function",
+        "-O2",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work\\environment_probe.c",
+        "-o",
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work\\environment_probe.exe",
+        "-lm"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.139984,
+      "stage": "compile"
+    },
+    {
+      "command": [
+        "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work\\environment_probe.exe"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 0.08495,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.build\\github-mpc-r13-minimal-upload\\.test-results\\20261111T155538-63efcf3e5e\\suites\\compiler-environment",
+  "dependsOn": [
+    "environment"
+  ],
+  "artifacts": [
+    "artifacts/work/environment_probe.c",
+    "artifacts/work/environment_probe.exe"
+  ],
+  "details": {
+    "scope": "",
+    "executionMethod": "compiler-environment",
+    "effectiveResources": [
+      "compiler-environment"
+    ],
+    "lastRawExitCode": 0
+  }
+}

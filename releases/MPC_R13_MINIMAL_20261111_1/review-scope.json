@@ -1,0 +1,14 @@
+{
+  "baseHead": "1cae353a1b1381912e821e9da5ca66b2c0a3cba5",
+  "applicationBaseline": "R13_V2_START_GUARD_20261111_1",
+  "changedApplicationFiles": [
+    "vision_field.c",
+    "vision_midterm.c",
+    "vision_midterm.h",
+    "vision_profile.h",
+    "vision_reference_route.h",
+    "vision_telemetry.c"
+  ],
+  "scope": "candidate, preparation, minimal tests and catalog minimal-track entry only",
+  "unrelatedDirtyWorkExcluded": true
+}

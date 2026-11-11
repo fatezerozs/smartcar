@@ -1,0 +1,42 @@
+{
+  "sourceMembersVerified": 745,
+  "sourceArchiveIndependent": true,
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tests/vision/test_minimal_track.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "tools/prepare_minimal_track.py",
+        "--output",
+        ".build/reproduced",
+        "--build"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "originalBinSha256": "0bf8e6dbd6cae0cf46f89326f87cd2e6505c8fc55fbdf5c4ed66a998ead5f9c9",
+  "reproducedBinSha256": "38380a6421f1378b1c82adfd3ec7ab5242a048eeee1c65b0728a402a5b0ae5f5",
+  "binByteIdentical": false,
+  "flashed": false,
+  "binDifferences": [
+    44251,
+    44252,
+    44254,
+    44255
+  ],
+  "differenceExplanation": "Only compiler __TIME__ boot-string bytes differ; all bytes outside this observed 8-byte field are identical.",
+  "timestampRange": [
+    44248,
+    44256
+  ],
+  "originalCompileTime": "23:38:51",
+  "reproducedCompileTime": "23:42:27",
+  "identicalOutsideCompileTime": true,
+  "bytePreservationMetadataAddedAfterExecution": "demo/candidates/minimal-track/.gitattributes; all executable/test source members unchanged and rehashed"
+}

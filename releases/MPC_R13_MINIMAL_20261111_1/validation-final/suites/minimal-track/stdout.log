@@ -1,0 +1,15 @@
+[test] C:\Users\zfn19\AppData\Local\Programs\Python\Python314\python.exe -B C:\shengchanli\smartCar\smartcar\tests\vision\test_minimal_track.py
+PASS minimal route: 56 checks; two grayscale ring episodes, current exit evidence, road reacquisition, no third ring, OFF reset; not physical lap proof
+R13 parity: 10480 steps / 28 constructed scenarios; 10472 identical rows, 8 documented absent-road cache clears; final PWM/servo equal at every step
+Mutation check: dropping a completed ring event is detected by the public grayscale regression
+PASS launch: four weak reverse samples recover without a latch
+PASS isolated strong spike and alternating quantized signs
+PASS persistent reverse bounded; both wheel fault identities retained
+PASS established motion retains fast weak-reverse protection
+PASS duplicate work, OFF re-entry and explicit STOP
+PASS impossible counter delta and missing-sample interval still stop
+PASS weak (-4/-5) and strong (-11/-12) threshold boundaries
+PASS 10/20ms jitter does not double the startup allowance
+PASS duplicate/old frames and uint32 clock rollover
+ADVERSE INPUT PASS scenarios=81 checks=22474; constructed Host data, not a physical noise or vehicle acceptance model
+[PASS] Completed within declared software evidence scope

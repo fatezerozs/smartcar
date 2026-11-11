@@ -1,0 +1,3 @@
+# Preserve imported source/template bytes for provenance comparisons.
+code/** -text
+source-project.uvprojx -text

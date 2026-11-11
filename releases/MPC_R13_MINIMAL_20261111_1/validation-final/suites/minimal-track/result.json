@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "minimal-track",
+  "status": "PASS",
+  "evidenceClass": "host_simulated",
+  "layer": "integration",
+  "category": "functional",
+  "required": true,
+  "reason": "Completed within declared software evidence scope",
+  "durationSeconds": 10.03408,
+  "exitCode": 0,
+  "startedAt": "2026-11-11T15:44:35.346+00:00",
+  "finishedAt": "2026-11-11T15:44:45.380+00:00",
+  "processes": [
+    {
+      "command": [
+        "C:\\Users\\zfn19\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "-B",
+        "C:\\shengchanli\\smartCar\\smartcar\\tests\\vision\\test_minimal_track.py"
+      ],
+      "exitCode": 0,
+      "workingDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261111T154434-38617b63c9\\suites\\minimal-track\\artifacts\\work",
+      "timedOut": false,
+      "cleanupVerified": true,
+      "durationSeconds": 10.032156,
+      "stage": "test"
+    }
+  ],
+  "variants": [],
+  "logDirectory": "C:\\shengchanli\\smartCar\\smartcar\\.test-results\\20261111T154434-38617b63c9\\suites\\minimal-track",
+  "dependsOn": [
+    "compiler-environment"
+  ],
+  "artifacts": [],
+  "details": {
+    "scope": "Isolated candidate source only: 10480 constructed R13-chain steps, synthetic grayscale ring episodes and startup disturbances. Not physical lap, ring traversal, tuning or startup acceptance.",
+    "executionMethod": "python",
+    "effectiveResources": [],
+    "compilerFamily": "gcc",
+    "compilerMode": "optimized",
+    "lastRawExitCode": 0
+  }
+}

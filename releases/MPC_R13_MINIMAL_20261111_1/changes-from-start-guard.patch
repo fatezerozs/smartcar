@@ -1,0 +1,276 @@
+--- baseline/demo/code/vision_field.c
++++ candidate/code/vision_field.c
+@@ -1,4 +1,3 @@
+-#include "vision_planner_shadow_diag.h"
+ #include "vision_field.h"
+ #include "vision_storage.h"
+ #include "vision_speed.h"
+@@ -34,7 +33,6 @@
+ {
+     vd_profile_t cfg; float v[4]; int ok = 0;
+     vision_drive_get_profile(&cfg);
+-    if(vd_shadow_diag_field(p->line,response,VF_RESPONSE_CAPACITY))return 2;
+ #if VISION_ENCODER_ENABLE
+     if(!strcmp(p->line,"encoder_hw")) {
+         board_encoder_diag_t d;board_encoder_capture(&d);
+@@ -141,8 +139,8 @@
+         vd_probe_info_t bench;vision_drive_get_probe(&bench);
+         vd_auto_info_t startup;vs_info_t saved;
+         vision_drive_get_auto(&startup);vs_get_info(&saved);
+-        snprintf(response,VF_RESPONSE_CAPACITY,"[FIELD] build=R13_V2_START_GUARD_20261111_1 version=%s ready=%d cam=%u hw=%u servo=%u/%u/%u sign=%d kp=%.4f kd=%.4f kh=%.4f cruise=%.4f cap=%.4f rise=%.4f axis=%.4f/%.4f limit_ms=%lu\r\n[BANDS] near=%.4f far=%.4f half=%.4f\r\n[MOTOR] confirmed=%u dir=%u/%u scale=%.4f/%.4f\r\n[BENCH] seq=%lu kind=%u channel=%u value=%u level=%u hold_ms=%u active=%u\r\n[STARTUP] enabled=%u delay_ms=%lu state=%u restored=%u switch_seen=%u closed=%u local=%d\r\n[STORE] valid=%u slot=%u generation=%lu error=%u\r\n",
+-            VISION_FIELD_BUILD,vision_drive_ready(),cfg.control.calibration_confirmed,cfg.hardware_confirmed,
++        snprintf(response,VF_RESPONSE_CAPACITY,"[FIELD] build=%s version=%s ready=%d cam=%u hw=%u servo=%u/%u/%u sign=%d kp=%.4f kd=%.4f kh=%.4f cruise=%.4f cap=%.4f rise=%.4f axis=%.4f/%.4f limit_ms=%lu\r\n[BANDS] near=%.4f far=%.4f half=%.4f\r\n[MOTOR] confirmed=%u dir=%u/%u scale=%.4f/%.4f\r\n[BENCH] seq=%lu kind=%u channel=%u value=%u level=%u hold_ms=%u active=%u\r\n[STARTUP] enabled=%u delay_ms=%lu state=%u restored=%u switch_seen=%u closed=%u local=%d\r\n[STORE] valid=%u slot=%u generation=%lu error=%u\r\n",
++            VISION_FIELD_BUILD,VISION_FIELD_BUILD,vision_drive_ready(),cfg.control.calibration_confirmed,cfg.hardware_confirmed,
+             cfg.servo_center_us,cfg.servo_min_us,cfg.servo_max_us,cfg.right_sign,
+             (double)cfg.control.kp,(double)cfg.control.kd,(double)cfg.control.heading_gain,
+             (double)cfg.control.cruise_duty,(double)cfg.control.duty_cap,(double)cfg.control.duty_rise_per_s,
+--- baseline/demo/code/vision_midterm.c
++++ candidate/code/vision_midterm.c
+@@ -22,6 +22,7 @@
+ #if VISION_ROUTE_SWITCH
+     reference_roundabout_reset();
+     reference_course_reset();
++    reference_rings_completed=0;
+ #endif
+ }
+ 
+@@ -37,13 +38,23 @@
+ void vision_midterm_route_enable(uint8_t enabled)
+ {
+ #if VISION_ROUTE_SWITCH
+-    if(!enabled){reference_roundabout_reset();reference_course_reset();}
++    if(!enabled){reference_roundabout_reset();reference_course_reset();reference_rings_completed=0;}
+     reference_ring.enabled=enabled!=0;
+ #else
+     (void)enabled;
+ #endif
+ }
+ 
++void vision_midterm_route_progress(vision_route_progress_t *out)
++{
++    if(!out)return;
++    memset(out,0,sizeof(*out));out->rings_expected=2;
++#if VISION_ROUTE_SWITCH
++    out->enabled=reference_ring.enabled;out->ring_state=reference_ring.state;
++    out->rings_completed=reference_rings_completed;
++#endif
++}
++
+ void vision_midterm_reset(void)
+ {
+     memset(learned_width, 0, sizeof(learned_width));
+@@ -52,6 +63,8 @@
+     memset(width_samples,0,sizeof(width_samples));
+     reference_roundabout_reset();
+     reference_course_reset();
++    /* Camera-history expiry is not a new C26 task. OFF/route_reset alone
++     * clears completed elements; a lost frame must not reopen the budget. */
+ #endif
+     previous_valid = 0;
+     previous_error = 0;
+--- baseline/demo/code/vision_midterm.h
++++ candidate/code/vision_midterm.h
+@@ -65,7 +65,7 @@
+     uint8_t path_fallback; /* Rejected invalid island path in favor of current viable road. */
+     uint8_t roundabout_state; /* 0 idle, 1 enter, 2 follow, 3 exit, 4 cooldown. */
+     int8_t roundabout_side; /* Island relative to travel: -1 left, +1 right. */
+-    uint8_t roundabout_committed; /* R13 exit-armed proof; unavailable in the November 10 model (zero). */
++    uint8_t roundabout_committed; /* Current outer-arc evidence has armed exit detection; not lap proof. */
+     uint8_t roundabout_entry_active; /* Current ENTER only; no inferred FOLLOW mouth state. */
+     uint8_t entry_path_valid; /* Current-pixel connected entry path, built by the R13 guide. */
+     uint16_t camera_width90; /* Mature measured width, same units/row as R13. */
+@@ -83,11 +83,17 @@
+     uint8_t bend_valid;
+ } vision_result_t;
+ 
++/* Reset image/width history, preserving this C26 run's completed elements. */
+ void vision_midterm_reset(void);
+ /* C26 route state is separate from the learned camera widths. OFF disables
+  * and resets recognition; enabling never starts an actuator in this module. */
+ void vision_midterm_route_reset(void);
+ void vision_midterm_route_enable(uint8_t enabled);
++/* Route order is visual progress only; two ring exits do not prove return to A. */
++typedef struct {
++    uint8_t enabled, ring_state, rings_completed, rings_expected;
++} vision_route_progress_t;
++void vision_midterm_route_progress(vision_route_progress_t *out);
+ /* Optional trained, fresh Bayesian entry-side hint (-1/0/+1). Consumed on
+  * the next frame; it only reinforces matching CURRENT island geometry. */
+ void vision_midterm_route_hint(int side);
+--- baseline/demo/code/vision_profile.h
++++ candidate/code/vision_profile.h
+@@ -183,25 +183,8 @@
+ #if VISION_MOTION_DIAG && !VISION_MOTOR_THRESHOLD_DIAG
+ #error "Motion diagnostic requires the isolated threshold diagnostic safety profile."
+ #endif
+-#if VISION_MIDTERM_C31_AUTONOMOUS
+-#define VISION_FIELD_BUILD "MIDTERM_C31_AUTO_TRACK_1"
+-#elif VISION_ROUTE_SWITCH
+-#define VISION_FIELD_BUILD "MIDTERM_C26_31"
+-#elif VISION_MIDTERM_ROUTE_TRIAL
+-#define VISION_FIELD_BUILD "MIDTERM_ROUTE_TRAIN_1"
+-#elif VISION_MIDTERM_AUTONOMOUS
+-#define VISION_FIELD_BUILD "MIDTERM_AUTO_1"
+-#elif defined(VISION_MIDTERM_TRAINING) && VISION_MIDTERM_TRAINING
+-#define VISION_FIELD_BUILD "MIDTERM_TRAIN_1"
+-#elif VISION_ENCODER_ENABLE
+-#define VISION_FIELD_BUILD "ENCODER_SPEED_DIAG_5"
+-#elif VISION_MOTION_DIAG
+-#define VISION_FIELD_BUILD "MOTION_DIAG_2"
+-#elif VISION_MOTOR_THRESHOLD_DIAG
+-#define VISION_FIELD_BUILD "MOTOR_THRESHOLD_DIAG_1"
+-#else
+-#define VISION_FIELD_BUILD "MIDTERM_FIELD_4"
+-#endif
++/* Dedicated candidate identity shared by status, help and startup output. */
++#define VISION_FIELD_BUILD "MPC_R13_MINIMAL_20261111_1"
+ /* Explicit user-selected boot behavior. A complete CRC-checked saved vehicle
+  * profile is still required; blank flash/default zero duty cannot start.
+  * Delay is relative to MCU timer startup, NOT sensed motor-board power. */
+--- baseline/demo/code/vision_reference_route.h
++++ candidate/code/vision_reference_route.h
+@@ -17,8 +17,12 @@
+     uint8_t enabled,state,votes,clear_votes,exit_votes,cancel_votes;
+     int8_t side,candidate_side;
+     uint8_t island_top,island_bottom,rows,path_rejects,island_visible;
++    uint8_t exit_armed,arc_votes;
+ } reference_ring_t;
+ static reference_ring_t reference_ring;
++/* The known layout has two ring episodes. Only a visually qualified exit
++ * followed by ordinary road consumes one; timers/odometry never create one. */
++static uint8_t reference_rings_completed;
+ static int8_t reference_ring_hint;
+ static void reference_roundabout_reset(void)
+ {
+@@ -304,7 +308,9 @@
+ {
+     int y,side,clipped=0,top=VISION_ROI_TOP,bottom=VISION_ROI_BOTTOM,normal=0,inner=0,opening=0,joined_n=0;
+     float near=0,far=0;int near_n=0,far_n=0;
++    float arc_near=0,arc_far=0;int arc_near_n=0,arc_far_n=0;
+     if(!reference_ring.enabled){reference_roundabout_reset();return;}
++    if(reference_ring.state==0&&reference_rings_completed>=2){reference_roundabout_reset();return;}
+     reference_ring.island_visible=0;
+     side=(reference_ring.state==0||reference_ring.state==1||reference_ring.state==4)?
+         reference_roundabout_island(binary,&top,&bottom,&clipped,left,right):0;
+@@ -320,9 +326,24 @@
+         int l=left->col[y],r=right->col[y],width=r-l+1;
+         int edge=reference_ring.side<0?l:r;
+         if(joined[y])++joined_n;
+-        if(width_samples[y]<5||edge>=VISION_WIDTH)continue;
++        if(width_samples[y]<5||learned_width[y]<VISION_MIN_WIDTH)continue;
+         if(l<VISION_WIDTH&&r<VISION_WIDTH&&width*10>=learned_width[y]*7&&
+            width*10<=learned_width[y]*13)++normal;
++        /* R13 outside-arc qualification: an inner tangent alone is not proof
++         * of circulation. Current plausible outside geometry must bend too. */
++        {int outer_edge=reference_ring.side<0?r:l,opened;
++         float outer_center=outer_edge+reference_ring.side*(learned_width[y]-1)*.5f;
++         int paired=l<VISION_WIDTH&&r<VISION_WIDTH;
++         int plausible=paired?width*10>=learned_width[y]*7&&width*10<=learned_width[y]*13:
++             outer_edge<VISION_WIDTH&&reference_white_span(binary,y,outer_center,&opened);
++         if(outer_edge<VISION_WIDTH&&plausible){
++             float expected=(VISION_WIDTH-1)*VISION_AXIS_NEAR_X-
++                 reference_ring.side*(learned_width[y]-1)*.5f;
++             float bend=reference_ring.side*(outer_edge-expected)/(learned_width[y]*.5f);
++             if(y>=90){arc_near+=bend;++arc_near_n;}
++             if(y>=60&&y<=82){arc_far+=bend;++arc_far_n;}
++         }}
++        if(edge>=VISION_WIDTH)continue;
+         if(y>=48&&y<=105) {
+             int step=reference_ring.side<0?1:-1;
+             int a=edge+step*(learned_width[y]+2),x,n=0,white=0;
+@@ -337,15 +358,18 @@
+         }
+     }
+     reference_ring.rows=(uint8_t)inner;
++    int inner_arc=near_n>=5&&far_n>=5&&reference_ring.side*(far/far_n-near/near_n)>6;
++    int outer_arc=arc_near_n>=8&&arc_far_n>=8&&arc_far/arc_far_n-arc_near/arc_near_n>.12f&&
++        ((arc_far/arc_far_n>.18f&&arc_near/arc_near_n>-.15f)||inner_arc);
+     if(reference_ring.state==1) {
+         /* The entry mouth must disappear and a sustained real curved corridor
+          * replace it before an exit can be considered. This prevents the same
+          * tangent opening from being mistaken for an immediate exit. */
+-        int curved=near_n>=5&&far_n>=5&&
+-            reference_ring.side*(far/far_n-near/near_n)>6;
++        int curved=outer_arc;
+         if(normal>=20&&inner>=12&&opening<4&&curved)++reference_ring.clear_votes;
+         else reference_ring.clear_votes=0;
+-        if(reference_ring.clear_votes>=4){reference_ring.state=2;reference_ring.exit_votes=0;}
++        if(reference_ring.clear_votes>=4){reference_ring.state=2;reference_ring.exit_votes=0;
++            reference_ring.exit_armed=reference_ring.arc_votes=0;}
+         /* A false closed mark must not leave permanent inner-edge bias after
+          * it passes. A real island entry continues to show same-side curvature;
+          * only a sustained ordinary non-curving road cancels an unentered island. */
+@@ -354,25 +378,27 @@
+         else reference_ring.cancel_votes=0;
+         if(reference_ring.cancel_votes>=12)reference_roundabout_reset();
+     } else if(reference_ring.state==2) {
++        if(!reference_ring.exit_armed){
++            if(outer_arc&&opening<4&&normal>=20&&inner>=12)++reference_ring.arc_votes;
++            else reference_ring.arc_votes=0;
++            if(reference_ring.arc_votes>=2)reference_ring.exit_armed=1;
++        }
+         /* A new outer opening AND a currently visible forward exit across
+          * white are required. newnew Roundabout_Deal likewise uses separate
+          * edge-loss/reappearance phases; its fixed columns are not copied. */
+         int aligned=near_n>=5&&far_n>=5&&vabs(far/far_n-near/near_n)<4;
+-        if(aligned&&opening>=6&&inner>=8&&((joined_n>=4&&anchors>=8)||
++        if(reference_ring.exit_armed&&aligned&&opening>=6&&inner>=8&&((joined_n>=4&&anchors>=8)||
+            reference_roundabout_exit_path(binary,0,0,0,0,0)))++reference_ring.exit_votes;
+         else reference_ring.exit_votes=0;
+         if(reference_ring.exit_votes>=5){reference_ring.state=3;reference_ring.clear_votes=0;}
+-        /* Straight tangent views do not cancel a committed ring: doing so
+-         * skips it at the tangent. Only sustained opposite curvature can
+-         * reject the island hypothesis without a verified exit event. */
+-        if(normal>=28&&opening<4&&near_n>=5&&far_n>=5&&
+-           reference_ring.side*(far/far_n-near/near_n)<-6)++reference_ring.cancel_votes;
+-        else reference_ring.cancel_votes=0;
+-        if(reference_ring.cancel_votes>=12)reference_roundabout_reset();
++        /* A contrary-looking branch is not a completed ring. Current-path
++         * viability below still rejects an unusable proposal independently. */
+     } else if(reference_ring.state==3) {
+-        if(normal>=28&&joined_n==0&&opening<4)++reference_ring.clear_votes;
++        if(normal>=28&&joined_n==0&&opening<4) {
++            if(reference_ring.clear_votes<4)++reference_ring.clear_votes;
++        }
+         else reference_ring.clear_votes=0;
+-        if(reference_ring.clear_votes>=4){reference_ring.state=4;reference_ring.clear_votes=0;}
++        /* Commit completion only after the final current path is accepted. */
+     } else {
+         if(!side&&normal>=28&&joined_n==0)++reference_ring.clear_votes;
+         else reference_ring.clear_votes=0;
+@@ -436,6 +462,7 @@
+     if(reference_ring.state==3)
+         reference_roundabout_exit_path(binary,&left,&right,joined,&out->junction_anchors,1);
+     out->roundabout_state=reference_ring.state;out->roundabout_side=reference_ring.side;
++    out->roundabout_committed=reference_ring.exit_armed;
+     out->roundabout_entry_active=(uint8_t)(reference_ring.state==1);
+     out->roundabout_rows=reference_ring.rows;
+     out->roundabout_evidence=reference_ring.island_visible;
+@@ -493,6 +520,14 @@
+     out->confidence=(uint8_t)(total*100/(VISION_ROI_BOTTOM-VISION_ROI_TOP+1));
+     out->valid=total>=12&&first>=56&&first-last>=16&&weight_sum>0&&
+         out->confidence>=VISION_TRACK_MIN_COVERAGE&&(!out->junction_rows||out->junction_anchors>=8);
++    if(reference_ring.state==3) {
++        if(!out->valid)reference_ring.clear_votes=0;
++        else if(reference_ring.clear_votes>=4) {
++            reference_ring.state=4;reference_ring.clear_votes=0;
++            if(reference_rings_completed<2)++reference_rings_completed;
++        }
++        out->roundabout_state=reference_ring.state;
++    }
+     out->status=out->valid?VISION_TRACK:VISION_NO_LANE;
+     if(width_samples[90]>=5)out->camera_width90=learned_width[90];
+     if(out->valid) {
+--- baseline/demo/code/vision_telemetry.c
++++ candidate/code/vision_telemetry.c
+@@ -122,8 +122,10 @@
+     app_console_printf("[DRIVE] a=REMOTE arm h=REMOTE heartbeat s=STOP c=clear; s/!/image/pause/reset disarms\r\n");
+ #endif
+     app_console_printf("[FIELD] build=%s; @status, @gain kp kd kh, @motor cruise cap rise, @camera near far, @bands near_y far_y half, @servo center min max sign, @motor_dir level1 level2, @duration ms; newline; !=STOP\r\n",VISION_FIELD_BUILD);
++#if !VISION_ROUTE_SWITCH
+     app_console_printf("[OPENLOOP] @balance motor1_scale motor2_scale; 0..1 attenuation; no encoders; PWM is NOT measured speed\r\n");
+     app_console_printf("[STARTUP] @startup enabled delay_ms; @save, @load; physical keys removed; boot does not auto-arm; remote a requires h heartbeat\r\n");
++#endif
+     app_console_printf("[PROBE] @probe pulse_us hold_ms; bench only; motors zero; first %uus then <=%uus step; STOP/timeout off\r\n",
+         (unsigned)VISION_SERVO_PROBE_INITIAL_US,(unsigned)VISION_SERVO_PROBE_STEP_US);
+     app_console_printf("[WHEEL] @wheel channel permille level hold_ms; lifted bench only; one motor; <=%u permille / %ums; NOT forward confirmation\r\n",
