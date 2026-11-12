@@ -1,0 +1,6 @@
+test_s_turn.c
+25px side=-1 target=1442.2 after100ms=1442.7
+reverse side=-1 after100ms=1669.6
+25px side=1 target=1657.8 after100ms=1657.3
+reverse side=1 after100ms=1430.4
+S_TURN_RESULT failures=0; software authority/timing regression, not physical track simulation

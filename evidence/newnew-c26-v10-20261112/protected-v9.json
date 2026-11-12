@@ -1,0 +1,50 @@
+{
+  "identical": [
+    {
+      "file": "demo/mdk/IMG_DEAL.c",
+      "sha256": "bfada9728e995adfbbd446e6b62d6540cfa73c79f7b0709a8ab2e61fbebfb25b",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/mdk/IMG_DEAL.h",
+      "sha256": "b8502eabe6ec03650fd30d875121e0e6d096f49135e23e46a76866bbe96c06d5",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/mdk/Threshold.c",
+      "sha256": "c279bf12b8a05831369dade819fd9ccfa0206a93675fa03415b3af18cdc2779e",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/mdk/Threshold.h",
+      "sha256": "434817cbdaca7c72f4ca2898ce24607094f3357b5983162d05319fd0750f34ec",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/user/inc/brick_mask.h",
+      "sha256": "d31cf6684dc1e9f0ea65789147f68dbbbf64a758df6e9e54ea167ddd06bc2d03",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/user/inc/lane_centering.h",
+      "sha256": "0e51ba5381ad5fd7a3e4f80ceb77d35b9e77d54dbc79cc365ac39abfde94938b",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/user/src/pid.c",
+      "sha256": "0ef147ea4df063e9a8ce0819568b3186c8425cad6d38ac8ce72f2baf0aab285c",
+      "identical_to": "V9"
+    },
+    {
+      "file": "demo/user/src/isr.c",
+      "sha256": "145fc7df7091c2484ffd3dae6990e6589c6e525f154ef8e8b7891df3d76824d0",
+      "identical_to": "V9"
+    }
+  ],
+  "exceptions": {
+    "drive_tuning.h": "speed constant only 1.0 -> 1.4; steering code unchanged",
+    "obstacle_path.h": "component height maximum only 30 -> 42",
+    "lane_geometry.h": "speed envelope upper bound follows requested speed"
+  },
+  "original_error_function": "unchanged content"
+}

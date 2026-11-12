@@ -1,0 +1,19 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V10",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V9",
+  "repository": "fatezerozs/smartcar",
+  "date": "2026-11-12",
+  "target": "nor_sdram_zf_dtcm",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V10/demo/mdk/newnew_c26.uvprojx",
+  "axf_sha256": "a7151e034743ee363035e6283cfe0c28924e565fb901178e627722a8d57d6e78",
+  "source_archive_sha256": "71887d706359b057e9c755bdda8ea1297b8cde4f6ef319e6c3b8c6621c114a48",
+  "cruise_mps": 1.4,
+  "committed_ring_max_mps": 1.0,
+  "avoidance_mps": 0.55,
+  "control": "C26 ON/OFF",
+  "build": "Keil 0 errors 0 warnings",
+  "host_tests": "documented suites pass",
+  "physical_validation": "not yet verified for V10",
+  "raw_recordings": "local only",
+  "source_bundle_files": 579
+}

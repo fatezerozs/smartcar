@@ -1,0 +1,6 @@
+test_tuning.c
+TUNING PASS: 4000 bound/rate/jitter checks plus speed conversion, full travel and OFF reset; synthetic only
+test_pid.c
+pid.c
+正在生成代码...
+PID PASS: 20000 saturation/integrator checks plus Phase2 output units, release and reset; synthetic only
