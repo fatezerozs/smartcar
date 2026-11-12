@@ -1,5 +1,7 @@
 # MPC_20261106：RT1064 视觉循迹小车
 
+[NEWNEW C26 V11 提速与实车交接](docs/changes/2026-11-12_NEWNEW_C26_V11_HANDOFF.md)。
+
 **2026-11-12 独立NEWNEW C26 V10归档：** [完整代码、固件与交接](docs/changes/2026-11-12_NEWNEW_C26_V10_HANDOFF.md)。保留C26；直道目标1.4m/s、实际环岛最高1.0、避砖0.55。Keil/所列Host通过，V10实车待验；独立NEWNEW不替换MPC主工程及其既往结论。
 
 **2026-11-09进度更新：** [2026-11-09 当前进度与交接](docs/changes/phase3-progress-20261109/README.md)。当前处于Phase3影子上板诊断与软降级改造；V4已静态核对，near/full事件解耦已通过软件回归但未烧录。下方既往测试、板载身份和“未提交”叙述按各自时点保留；最新状态以该入口为准。

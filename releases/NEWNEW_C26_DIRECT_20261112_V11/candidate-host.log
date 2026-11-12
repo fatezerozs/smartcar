@@ -1,0 +1,10 @@
+TUNING PASS: 4000 bound/rate/jitter checks plus speed conversion, full travel and OFF reset; synthetic only
+PRE_ENTRY_CENTERED error=0.00 us=1550
+CURRENT_EXIT_OUTER error=0.00 us=1550
+EXIT_HANDOFF_NEAR_CENTERED error=0.00 us=1550
+BRICK kind=0 detected=1 allowed=1
+BRICK kind=1 detected=1 allowed=1
+BRICK kind=2 detected=1 allowed=1
+ACTUAL_BRICK_PIPELINE gray=100 before=8 after=8 active=1 variant=1
+ACTUAL_BRICK_PIPELINE gray=210 before=8 after=8 active=1 variant=2
+SWING_BRICK_AFTER failures=0
