@@ -1,0 +1,16 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V7",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V6",
+  "normal_target_mps": 1.0,
+  "obstacle_target_mps": 0.55,
+  "physical_centering_verified": false,
+  "baseline_center_failures": 4,
+  "candidate_center_failures": 0,
+  "keil_errors": 0,
+  "keil_warnings": 0,
+  "axf_sha256": "734E3AFEEC1AB4BFD7CD8BDD82BC3FE947AB6273F7167FB171869F00C885214E",
+  "delta_vs_v6": [
+    "demo/user/inc/lane_centering.h",
+    "demo/user/src/main.c"
+  ]
+}

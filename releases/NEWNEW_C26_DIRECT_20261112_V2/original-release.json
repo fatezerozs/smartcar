@@ -1,0 +1,19 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V2",
+  "target_mps": 1.7,
+  "counts_per_meter_left": 11394,
+  "counts_per_meter_right": 11389,
+  "counts_per_10ms_left": 193.698,
+  "counts_per_10ms_right": 193.613,
+  "scale_candidate": true,
+  "real_speed_verified": false,
+  "real_steering_verified": false,
+  "axf_sha256": "00BD61792B5AEB518DA602517B1B8CF0E00A58C7782D5D69F0B48541F733A20A",
+  "changed_files": [
+    "demo/user/inc/drive_tuning.h",
+    "demo/user/inc/main.h",
+    "demo/user/src/isr.c",
+    "demo/user/src/main.c",
+    "demo/user/src/pid.c"
+  ]
+}

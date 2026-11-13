@@ -1,0 +1,33 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V4",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V4",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V4/releases/NEWNEW_C26_DIRECT_20261112_V4/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "S弯舵量和快速换向保护基线",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V4/rt1064.axf",
+  "axf_sha256": "df7923fbbe4d9a105bc2d42d95a3ac1cb2b1e1d229796f8baea405cb4b7cf846",
+  "axf_git_sha": "5278d2521a7a1424f3d09a0a362b340360e41759",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V4/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "fb116d373c84ade2b58cb98f037b2b19328634e94e7e0e0b42fa27de7256fb48",
+  "original_source_zip_sha256": "53ab9d47cdad5c111cfa89dc9de696bcff9e77667019364601f0dd9a6b147300",
+  "source_files": 550,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {},
+  "classification_note": "后续兼容保护基线；不等于全赛道验收",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V4/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.0,
+  "original_manifest": "original-release.json"
+}

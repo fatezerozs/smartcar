@@ -1,0 +1,71 @@
+{
+  "scope": "NEWNEW V1-V11 only",
+  "versions": [
+    {
+      "version": "NEWNEW_C26_DIRECT_20261111_V1",
+      "source_files_verified": 542,
+      "project": "NEWNEW_C26_DIRECT_20261111_V1/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V2",
+      "source_files_verified": 546,
+      "project": "NEWNEW_C26_DIRECT_20261112_V2/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V3",
+      "source_files_verified": 546,
+      "project": "NEWNEW_C26_DIRECT_20261112_V3/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V4",
+      "source_files_verified": 550,
+      "project": "NEWNEW_C26_DIRECT_20261112_V4/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V5",
+      "source_files_verified": 556,
+      "project": "NEWNEW_C26_DIRECT_20261112_V5/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V6",
+      "source_files_verified": 564,
+      "project": "NEWNEW_C26_DIRECT_20261112_V6/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V7",
+      "source_files_verified": 567,
+      "project": "NEWNEW_C26_DIRECT_20261112_V7/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V8",
+      "source_files_verified": 572,
+      "project": "NEWNEW_C26_DIRECT_20261112_V8/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V9",
+      "source_files_verified": 576,
+      "project": "NEWNEW_C26_DIRECT_20261112_V9/demo/mdk/newnew_c26.uvprojx",
+      "sdk_reference_check": "pass"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V10",
+      "artifact_check": "existing cloud Git identities preserved"
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V11",
+      "artifact_check": "existing cloud Git identities preserved"
+    }
+  ],
+  "links": "pass",
+  "hashes": "pass",
+  "missing_compiled_references": [],
+  "new_build_or_hardware_test": false
+}

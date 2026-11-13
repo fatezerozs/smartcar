@@ -1,0 +1,37 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V9",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V9",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V9/releases/NEWNEW_C26_DIRECT_20261112_V9/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "环岛准备/出口目标和数组索引修正",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V9/rt1064.axf",
+  "axf_sha256": "3ea4709a9d3f6d5d742eae98efe54354f0b75a3d65ab0ecdda943cd9055797ec",
+  "axf_git_sha": "238e0f2e282ac81055d9f58eb2fb1cec2571ed24",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V9/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "a9a9801412cfc222c3aa752be4cb3a6c3fc84bbbc9c37ee14ad22a15840add0d",
+  "original_source_zip_sha256": "3df1297dad2c71f5904e2088b417168dcbe495229ab5b532ecdcaa0f53621d2e",
+  "source_files": 576,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {
+    "physical_validation": "not performed; no automatic flash/reset/run",
+    "build": "Keil 0 errors 0 warnings",
+    "host_tests": "new 38464 checks plus all V8 suites pass"
+  },
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V9/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.0,
+  "original_manifest": "original-release.json"
+}

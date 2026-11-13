@@ -1,0 +1,36 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V8",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V8",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V8/releases/NEWNEW_C26_DIRECT_20261112_V8/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "单边居中与边距限速",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V8/rt1064.axf",
+  "axf_sha256": "8b156b79e6a3beec8dad45f08de5d032ed2bb48fe961fbad5f2a8e0a2cc2a2ae",
+  "axf_git_sha": "7959ec406e16782d72f8acbeaf4a20306d83eb13",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V8/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "183ac3c445cdc8e5d9f2d53bdaeddc8d6f28aedda9e342a884b2c33f49a3f426",
+  "original_source_zip_sha256": "8945c461ae6de24a8e78039f12528ebe2a64b6948a7ec37463ed2f127e16c9d2",
+  "source_files": 572,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {
+    "physical_validation": "not performed; no automatic flash/reset/run",
+    "build": "Keil 0 errors 0 warnings",
+    "host_tests": "all pass; new edge suite 6129 checks"
+  },
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V8/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.0
+}

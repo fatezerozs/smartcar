@@ -1,0 +1,30 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V10",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V10",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V10/releases/NEWNEW_C26_DIRECT_20261112_V10/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "进出环连续性、浅砖候选与1.4m/s直道目标",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V10/rt1064.axf",
+  "axf_sha256": "a7151e034743ee363035e6283cfe0c28924e565fb901178e627722a8d57d6e78",
+  "axf_git_sha": "f798b9a48f4afb64f9d74768e7a860955f1cbcb8",
+  "firmware_publish": "reused-identical",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V10/source-code.zip",
+  "source_scope": "existing-published-snapshot",
+  "source_git_sha": "1e44458732d798b7bb1aba7e9f29e8a9baed7bed",
+  "historical_claims": {
+    "physical_validation": "not performed; no automatic flash/reset/run",
+    "build": "Keil 0 errors 0 warnings",
+    "host_tests": "all documented suites pass"
+  },
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V10/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.4
+}

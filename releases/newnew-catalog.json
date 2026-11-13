@@ -1,0 +1,372 @@
+{
+  "scope": "NEWNEW V1 onward only",
+  "archive_date": "2026-11-13",
+  "count": 11,
+  "latest_published": "NEWNEW_C26_DIRECT_20261112_V11",
+  "new_hardware_test": false,
+  "versions": [
+    {
+      "version": "NEWNEW_C26_DIRECT_20261111_V1",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261111_V1",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261111_V1/releases/NEWNEW_C26_DIRECT_20261111_V1/release.json"
+      ],
+      "historical_metadata_present": false,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "参考工程直接适配与C26发车",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261111_V1/rt1064.axf",
+      "axf_sha256": "1a38798c2c95bba8631dfcbb9907746c200993de12c9c1811d7e346ed1882096",
+      "axf_git_sha": "d24129b7e8722e94eb8e12c7f5beb6f4210b6992",
+      "firmware_publish": "new",
+      "historical_hash_matches": null,
+      "source": "releases/NEWNEW_C26_DIRECT_20261111_V1/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "cb73385d4e19409ffbdadd3e996c52e5f61d588199d1c6b37df2696132f1e5fa",
+      "original_source_zip_sha256": "b4bb5a1dc21f1dd8ff3aeef3515f508f990131c1c28100e0416b9b65ef418920",
+      "source_files": 542,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261111_V1/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": null
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V2",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V2",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V2/releases/NEWNEW_C26_DIRECT_20261112_V2/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "1.7m/s速度候选",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V2/rt1064.axf",
+      "axf_sha256": "00bd61792b5aeb518da602517b1b8cf0e00a58c7782d5d69f0b48541f733a20a",
+      "axf_git_sha": "d0ea529202cec913efc22a753695839446936708",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V2/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "2c0c8300e70da2071ad6fc8d732c13a24a3084636aa22b4749ffbfa17678b175",
+      "original_source_zip_sha256": "af4c8e5f41ae7a630da4a4a66ce212065db6ddcf88218581ead5a8453b061ec6",
+      "source_files": 546,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V2/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.7
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V3",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V3",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V3/releases/NEWNEW_C26_DIRECT_20261112_V3/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "1.0m/s速度候选",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V3/rt1064.axf",
+      "axf_sha256": "3036ff4a57bad8d16625bffe8e2d014fe3d7a894539fdd39545467ea55445602",
+      "axf_git_sha": "2c410619fe3d370195b2890f8a80df97efaace54",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V3/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "7fa8403a84cc4413e02441b7009262b4ba93507e8582f723872c23edb041de6c",
+      "original_source_zip_sha256": "9dc8b243c01742830c8ac5218e47ca6df34089c7c525da0a9ccc9e10e64c0b34",
+      "source_files": 546,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V3/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V4",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V4",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V4/releases/NEWNEW_C26_DIRECT_20261112_V4/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "S弯舵量和快速换向保护基线",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V4/rt1064.axf",
+      "axf_sha256": "df7923fbbe4d9a105bc2d42d95a3ac1cb2b1e1d229796f8baea405cb4b7cf846",
+      "axf_git_sha": "5278d2521a7a1424f3d09a0a362b340360e41759",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V4/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "fb116d373c84ade2b58cb98f037b2b19328634e94e7e0e0b42fa27de7256fb48",
+      "original_source_zip_sha256": "53ab9d47cdad5c111cfa89dc9de696bcff9e77667019364601f0dd9a6b147300",
+      "source_files": 550,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "后续兼容保护基线；不等于全赛道验收",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V4/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V5",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V5",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V5/releases/NEWNEW_C26_DIRECT_20261112_V5/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "阈值/避砖尝试；曾发生入环回归",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V5/rt1064.axf",
+      "axf_sha256": "b43c36a5fc9f66176549d7017d8bf4825294e99d20f86572f3d04531abd24fed",
+      "axf_git_sha": "355eb62cf54798f56302c0e13f8c3a302319abd4",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V5/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "b33ad1cde89cc56bc87ae30338520c4e8569a7f502175035ad7363a7e06398d2",
+      "original_source_zip_sha256": "6f5b537903b85462dbe7d6f999728f96fc07aa680f061b4225b289906532418c",
+      "source_files": 556,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "有入环回归反馈，保留用于比较，不作为回退推荐",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V5/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V6",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V6",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V6/releases/NEWNEW_C26_DIRECT_20261112_V6/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "恢复V4环岛核心并隔离避砖mask",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V6/rt1064.axf",
+      "axf_sha256": "d7defa727cf940caa21cee36bafb5d8143ef1df9264e606178379e943c71b5cb",
+      "axf_git_sha": "c9ef022f88741ea514044a9dca00d19243cb1486",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V6/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "4499a9309cd2d3ead54289bd559b9355c3a7eac007cf4f588d76e0edc75e7c64",
+      "original_source_zip_sha256": "0f2c513ddf8e16ea98af4889ce8f91cd5e84727d8a64ca050c4e5c02477a887f",
+      "source_files": 564,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V6/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V7",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V7",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V7/releases/NEWNEW_C26_DIRECT_20261112_V7/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "普通道路双边居中",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V7/rt1064.axf",
+      "axf_sha256": "734e3afeec1ab4bfd7cd8bdd82bc3fe947ab6273f7167fb171869f00c885214e",
+      "axf_git_sha": "8b2d5d7aa6d4e0d868ff1b83733e0fa28fea4dd0",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V7/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "ca95fc916c0d99185a10707370bd74e55e24568a43bae02e87482f6d31926670",
+      "original_source_zip_sha256": "7188dcfec30f3334d0c1d3c1519de38628a2335c46f51f558f38b2d9af030919",
+      "source_files": 567,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {},
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V7/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V8",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V8",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V8/releases/NEWNEW_C26_DIRECT_20261112_V8/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "单边居中与边距限速",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V8/rt1064.axf",
+      "axf_sha256": "8b156b79e6a3beec8dad45f08de5d032ed2bb48fe961fbad5f2a8e0a2cc2a2ae",
+      "axf_git_sha": "7959ec406e16782d72f8acbeaf4a20306d83eb13",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V8/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "183ac3c445cdc8e5d9f2d53bdaeddc8d6f28aedda9e342a884b2c33f49a3f426",
+      "original_source_zip_sha256": "8945c461ae6de24a8e78039f12528ebe2a64b6948a7ec37463ed2f127e16c9d2",
+      "source_files": 572,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {
+        "physical_validation": "not performed; no automatic flash/reset/run",
+        "build": "Keil 0 errors 0 warnings",
+        "host_tests": "all pass; new edge suite 6129 checks"
+      },
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V8/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V9",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V9",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V9/releases/NEWNEW_C26_DIRECT_20261112_V9/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "环岛准备/出口目标和数组索引修正",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V9/rt1064.axf",
+      "axf_sha256": "3ea4709a9d3f6d5d742eae98efe54354f0b75a3d65ab0ecdda943cd9055797ec",
+      "axf_git_sha": "238e0f2e282ac81055d9f58eb2fb1cec2571ed24",
+      "firmware_publish": "new",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V9/source-code.zip",
+      "source_scope": "full-project-with-sdk",
+      "source_zip_sha256": "a9a9801412cfc222c3aa752be4cb3a6c3fc84bbbc9c37ee14ad22a15840add0d",
+      "original_source_zip_sha256": "3df1297dad2c71f5904e2088b417168dcbe495229ab5b532ecdcaa0f53621d2e",
+      "source_files": 576,
+      "keil_projects": [
+        "demo/mdk/newnew_c26.uvprojx",
+        "demo/mdk/rt1064.uvprojx"
+      ],
+      "historical_claims": {
+        "physical_validation": "not performed; no automatic flash/reset/run",
+        "build": "Keil 0 errors 0 warnings",
+        "host_tests": "new 38464 checks plus all V8 suites pass"
+      },
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V9/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.0
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V10",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V10",
+      "local_copies": [
+        "NEWNEW_C26_DIRECT_20261112_V10/releases/NEWNEW_C26_DIRECT_20261112_V10/release.json"
+      ],
+      "historical_metadata_present": true,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "进出环连续性、浅砖候选与1.4m/s直道目标",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V10/rt1064.axf",
+      "axf_sha256": "a7151e034743ee363035e6283cfe0c28924e565fb901178e627722a8d57d6e78",
+      "axf_git_sha": "f798b9a48f4afb64f9d74768e7a860955f1cbcb8",
+      "firmware_publish": "reused-identical",
+      "historical_hash_matches": true,
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V10/source-code.zip",
+      "source_scope": "existing-published-snapshot",
+      "source_git_sha": "1e44458732d798b7bb1aba7e9f29e8a9baed7bed",
+      "historical_claims": {
+        "physical_validation": "not performed; no automatic flash/reset/run",
+        "build": "Keil 0 errors 0 warnings",
+        "host_tests": "all documented suites pass"
+      },
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V10/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.4
+    },
+    {
+      "version": "NEWNEW_C26_DIRECT_20261112_V11",
+      "category": "newnew",
+      "directory": "releases/NEWNEW_C26_DIRECT_20261112_V11",
+      "local_copies": [],
+      "historical_metadata_present": false,
+      "archive_date": "2026-11-13",
+      "new_hardware_test": false,
+      "purpose": "队友1.5m/s速度候选；以原交接为准",
+      "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V11/rt1064.axf",
+      "axf_git_sha": "ef821a6ee2a4eb6ecd55a41825bde70053eda4f7",
+      "firmware_publish": "already-remote",
+      "source": "releases/NEWNEW_C26_DIRECT_20261112_V11/source-code.zip",
+      "source_scope": "existing-published-snapshot",
+      "source_git_sha": "0fdc89038e110fa23fa6bb708e63c9a4d7e2230d",
+      "historical_claims": {
+        "original_readme": "直道目标1.5m/s；写入校验通过；最近重烧后赛道表现待验证"
+      },
+      "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+      "archive_scope": "NEWNEW V1 onward only",
+      "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V11/demo/mdk/newnew_c26.uvprojx",
+      "target": "nor_sdram_zf_dtcm",
+      "program_speed_request_mps": 1.5,
+      "published_checksums": {
+        "baseline-host.log": "a130d43cc6e8ae25bcc3a110829ac5e3b37482cb31b031047fb0a35acbb8c8f1",
+        "build-v10-local.log": "618ebdb949836f703e0e2650206ad5d7e6413e386efe765fcc066e0c1bcb66d3",
+        "build-v11.log": "fe27be0ad2d0a7a1a48a9da4042cc549e6b321eb699a8446e836c3a54448f580",
+        "candidate-host.log": "a130d43cc6e8ae25bcc3a110829ac5e3b37482cb31b031047fb0a35acbb8c8f1",
+        "flash-v11-powercycle-20261112-220656.log": "77bbf75e16da606d4bd59826a91f3363a9edf5ab375d3d0d6c418a99767fccd9",
+        "README.md": "50c82deb4a82b99101343a06cd81f4019592bf66a749c55f9cb5bec9a91738d5",
+        "rt1064.axf": "adc0b5071200f99f04f23aaa5454ae1f24639ed94f3a454b48979e752bd5518e",
+        "rt1064.map": "200cfb5d07850bf0cb247a62238dd9bb3bc913fb2afae614e6b3eee252f63c41",
+        "source-code.zip": "55c8f97601c1065bf405d9bbd0a62f1a4b1e50d818fd272107057f9eda6d2ff9"
+      },
+      "axf_sha256": "adc0b5071200f99f04f23aaa5454ae1f24639ed94f3a454b48979e752bd5518e",
+      "hash_validation": "V11 SHA256 copied from existing cloud checksums; Git blob identity verified against current main; no reflash"
+    }
+  ]
+}

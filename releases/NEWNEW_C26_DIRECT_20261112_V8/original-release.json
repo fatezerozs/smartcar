@@ -1,0 +1,19 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V8",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V7",
+  "target": "nor_sdram_zf_dtcm",
+  "project": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V8\\demo\\mdk\\newnew_c26.uvprojx",
+  "firmware": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V8\\releases\\NEWNEW_C26_DIRECT_20261112_V8\\rt1064.axf",
+  "axf_sha256": "8b156b79e6a3beec8dad45f08de5d032ed2bb48fe961fbad5f2a8e0a2cc2a2ae",
+  "build": "Keil 0 errors 0 warnings",
+  "host_tests": "all pass; new edge suite 6129 checks",
+  "physical_validation": "not performed; no automatic flash/reset/run",
+  "serial_snapshot": {
+    "snapshot_utc": "2026-11-11T18:18:42.845636+00:00",
+    "source": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V3\\recordings\\serial-COM15-20261112-003621-692366",
+    "receive_only": true,
+    "bytes_copied": 6528662,
+    "active_capture_unchanged": true,
+    "note": "Live snapshot; final UART line may be partial. Bytes preceding capture were not recovered."
+  }
+}

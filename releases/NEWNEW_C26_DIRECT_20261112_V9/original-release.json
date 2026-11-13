@@ -1,0 +1,19 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V9",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V8",
+  "target": "nor_sdram_zf_dtcm",
+  "project": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V9\\demo\\mdk\\newnew_c26.uvprojx",
+  "firmware": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V9\\releases\\NEWNEW_C26_DIRECT_20261112_V9\\rt1064.axf",
+  "axf_sha256": "3ea4709a9d3f6d5d742eae98efe54354f0b75a3d65ab0ecdda943cd9055797ec",
+  "build": "Keil 0 errors 0 warnings",
+  "host_tests": "new 38464 checks plus all V8 suites pass",
+  "physical_validation": "not performed; no automatic flash/reset/run",
+  "serial_snapshot": {
+    "snapshot_utc": "2026-11-11T18:43:15.069121+00:00",
+    "source": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V3\\recordings\\serial-COM15-20261112-003621-692366",
+    "receive_only": true,
+    "bytes_copied": 7082963,
+    "active_capture_unchanged": true,
+    "note": "Live snapshot, last UART line may be partial; untransmitted board history is unavailable"
+  }
+}

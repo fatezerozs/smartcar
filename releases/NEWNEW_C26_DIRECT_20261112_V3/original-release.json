@@ -1,0 +1,11 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V3",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V2",
+  "target_mps": 1.0,
+  "counts_per_10ms_left": 113.94,
+  "counts_per_10ms_right": 113.89,
+  "steering_unchanged": true,
+  "scale_candidate": true,
+  "real_speed_verified": false,
+  "axf_sha256": "3036FF4A57BAD8D16625BFFE8E2D014FE3D7A894539FDD39545467EA55445602"
+}

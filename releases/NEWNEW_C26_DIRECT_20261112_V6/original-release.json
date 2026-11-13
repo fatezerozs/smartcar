@@ -1,0 +1,18 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V6",
+  "protected_baseline": "NEWNEW_C26_DIRECT_20261112_V4",
+  "normal_and_ring_target_mps": 1.0,
+  "obstacle_target_mps": 0.55,
+  "physical_pass": false,
+  "keil_errors": 0,
+  "keil_warnings": 0,
+  "entry_compat_failures": 0,
+  "brick_checks": 384,
+  "brick_failures": 0,
+  "axf_sha256": "D7DEFA727CF940CAA21CEE36BAFB5D8143EF1DF9264E606178379E943C71B5CB",
+  "application_delta_vs_v4": [
+    "demo/user/inc/brick_mask.h",
+    "demo/user/inc/obstacle_path.h",
+    "demo/user/src/main.c"
+  ]
+}

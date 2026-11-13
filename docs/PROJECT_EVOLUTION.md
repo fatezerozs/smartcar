@@ -81,6 +81,11 @@ rev5的主机单元/真实Control-Link视觉联动及兼容测试、单次Keil�
 
 ## 2. 当前状态：实现与验收分开
 
+### NEWNEW系列归档范围（2026-11-13）
+
+本次仅补齐独立NEWNEW V1～V11的分类、逐版源码/固件与校验，不改任何控制实现，也不纳入此前C26/WC/RINGLOG。V11原云端记录为1.5m/s速度候选、写入校验通过、最近重烧后赛道待验；保持其最新身份。V1～V10作为历史对照，其中V5有入环回归反馈、V4为后续兼容保护基线；均不因此获得完整赛道通过结论。[NEWNEW目录](../releases/NEWNEW_INDEX.md) · [归档说明](changes/2026-11-13_NEWNEW_VERSION_ARCHIVE.md)。
+
+
 ### 独立NEWNEW当前交接（2026-11-12）
 
 本仓库新增独立NEWNEW_C26_DIRECT_20261112_V10，来源为用户提供newnew.zip和本轮适配，不替换MPC主工程，也不把此前MPC影子板载身份写成本版已烧录。当前修改：0/1准备居中、当前出口边界与白路过渡、独立浅砖候选及直道1.4目标；保留C26、原PI与2阶段实际入环引导。环岛与红砖/新速度尚未实车验收。
@@ -279,6 +284,7 @@ SHA256 `76520E229057A63FE539A7D045DF1F9CD87D523B45A8FA62A3808AFCDE7F3CA7`。
 
 | 日期 | 版本/范围 | 简略变化 | 当前结论 | 详细说明 |
 | --- | --- | --- | --- | --- |
+| 2026-11-13 | NEWNEW V1～V11分类归档 | 补齐逐版源码/AXF/MAP、原始声明与归档校验；保留V10/V11既有发布 | 仅归档，未新增软件/硬件验收；不含旧C26/WC/RINGLOG | [分类交接](changes/2026-11-13_NEWNEW_VERSION_ARCHIVE.md) |
 | 2026-11-12 | NEWNEW C26 V11 独立归档 | 直道请求 1.5 m/s | GCC 专项通过，Keil 写入校验通过，重烧后实车待验 | [V11 交接](changes/2026-11-12_NEWNEW_C26_V11_HANDOFF.md) |
 | 2026-11-12 | NEWNEW C26 V10独立归档 | 入环/出环目标修正、浅砖与准备状态避障、直道1.4目标；完整源码/AXF/MAP/校验与交接 | Keil/所列Host通过；V10实车待验，MPC不变 | [V10交接](changes/2026-11-12_NEWNEW_C26_V10_HANDOFF.md) |
 | 2026-11-07 | main合并状态与主要文档维护 | 同步已合入的MPC/Recorder/标定成果、main CI与模块验收边界，保留冻结证据 | main `00bb7a4`远端两模式各49 PASS/1 SKIPPED；本次仅改文档 | [同步说明](changes/2026-11-07_MAIN_DOCUMENTATION_SYNC.md) |

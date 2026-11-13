@@ -1,5 +1,7 @@
 # 文档目录与维护规则
 
+**2026-11-13 NEWNEW系列分类归档：** [V1～V11逐版源码、固件与状态](../releases/NEWNEW_INDEX.md)。本次只整理NEWNEW及之后；V10/V11原发布保持，V11仍为当前NEWNEW最新候选。此前C26/WC/RINGLOG不在本次上传范围。
+
 [NEWNEW C26 V11 提速与实车交接](changes/2026-11-12_NEWNEW_C26_V11_HANDOFF.md)。
 
 **2026-11-12 独立NEWNEW C26 V10归档：** [完整代码、固件与交接](changes/2026-11-12_NEWNEW_C26_V10_HANDOFF.md)。保留C26；直道目标1.4m/s、实际环岛最高1.0、避砖0.55。Keil/所列Host通过，V10实车待验；独立NEWNEW不替换MPC主工程及其既往结论。

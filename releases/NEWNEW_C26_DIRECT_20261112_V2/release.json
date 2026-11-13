@@ -1,0 +1,33 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V2",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V2",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V2/releases/NEWNEW_C26_DIRECT_20261112_V2/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "1.7m/s速度候选",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V2/rt1064.axf",
+  "axf_sha256": "00bd61792b5aeb518da602517b1b8cf0e00a58c7782d5d69f0b48541f733a20a",
+  "axf_git_sha": "d0ea529202cec913efc22a753695839446936708",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V2/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "2c0c8300e70da2071ad6fc8d732c13a24a3084636aa22b4749ffbfa17678b175",
+  "original_source_zip_sha256": "af4c8e5f41ae7a630da4a4a66ce212065db6ddcf88218581ead5a8453b061ec6",
+  "source_files": 546,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {},
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V2/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.7,
+  "original_manifest": "original-release.json"
+}

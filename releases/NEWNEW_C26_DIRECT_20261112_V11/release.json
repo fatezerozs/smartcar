@@ -1,0 +1,38 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V11",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V11",
+  "local_copies": [],
+  "historical_metadata_present": false,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "队友1.5m/s速度候选；以原交接为准",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V11/rt1064.axf",
+  "axf_git_sha": "ef821a6ee2a4eb6ecd55a41825bde70053eda4f7",
+  "firmware_publish": "already-remote",
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V11/source-code.zip",
+  "source_scope": "existing-published-snapshot",
+  "source_git_sha": "0fdc89038e110fa23fa6bb708e63c9a4d7e2230d",
+  "historical_claims": {
+    "original_readme": "直道目标1.5m/s；写入校验通过；最近重烧后赛道表现待验证"
+  },
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V11/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.5,
+  "published_checksums": {
+    "baseline-host.log": "a130d43cc6e8ae25bcc3a110829ac5e3b37482cb31b031047fb0a35acbb8c8f1",
+    "build-v10-local.log": "618ebdb949836f703e0e2650206ad5d7e6413e386efe765fcc066e0c1bcb66d3",
+    "build-v11.log": "fe27be0ad2d0a7a1a48a9da4042cc549e6b321eb699a8446e836c3a54448f580",
+    "candidate-host.log": "a130d43cc6e8ae25bcc3a110829ac5e3b37482cb31b031047fb0a35acbb8c8f1",
+    "flash-v11-powercycle-20261112-220656.log": "77bbf75e16da606d4bd59826a91f3363a9edf5ab375d3d0d6c418a99767fccd9",
+    "README.md": "50c82deb4a82b99101343a06cd81f4019592bf66a749c55f9cb5bec9a91738d5",
+    "rt1064.axf": "adc0b5071200f99f04f23aaa5454ae1f24639ed94f3a454b48979e752bd5518e",
+    "rt1064.map": "200cfb5d07850bf0cb247a62238dd9bb3bc913fb2afae614e6b3eee252f63c41",
+    "source-code.zip": "55c8f97601c1065bf405d9bbd0a62f1a4b1e50d818fd272107057f9eda6d2ff9"
+  },
+  "axf_sha256": "adc0b5071200f99f04f23aaa5454ae1f24639ed94f3a454b48979e752bd5518e",
+  "hash_validation": "V11 SHA256 copied from existing cloud checksums; Git blob identity verified against current main; no reflash",
+  "original_manifest": null
+}

@@ -1,0 +1,32 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V7",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V7",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V7/releases/NEWNEW_C26_DIRECT_20261112_V7/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "普通道路双边居中",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V7/rt1064.axf",
+  "axf_sha256": "734e3afeec1ab4bfd7cd8bdd82bc3fe947ab6273f7167fb171869f00c885214e",
+  "axf_git_sha": "8b2d5d7aa6d4e0d868ff1b83733e0fa28fea4dd0",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V7/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "ca95fc916c0d99185a10707370bd74e55e24568a43bae02e87482f6d31926670",
+  "original_source_zip_sha256": "7188dcfec30f3334d0c1d3c1519de38628a2335c46f51f558f38b2d9af030919",
+  "source_files": 567,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {},
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V7/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.0
+}

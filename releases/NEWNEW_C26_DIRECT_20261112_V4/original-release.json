@@ -1,0 +1,23 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V4",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V3",
+  "target_mps": 1.0,
+  "physical_pass": false,
+  "software_repro_failures_v3": 6,
+  "gain_only_failures": 2,
+  "final_failures": 0,
+  "steer_endpoints_us": [
+    1430,
+    1550,
+    1670
+  ],
+  "keil_errors": 0,
+  "keil_warnings": 0,
+  "axf_sha256": "DF7923FBBE4D9A105BC2D42D95A3AC1CB2B1E1D229796F8BAEA405CB4B7CF846",
+  "changed_files": [
+    "demo/user/inc/drive_tuning.h",
+    "demo/user/inc/main.h",
+    "demo/user/src/isr.c",
+    "demo/user/src/main.c"
+  ]
+}

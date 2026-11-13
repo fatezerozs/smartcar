@@ -1,0 +1,158 @@
+--- newnew/demo/user/inc/main.h
++++ NEWNEW_C26_DIRECT_20261111_V1/demo/user/inc/main.h
+@@ -4,13 +4,13 @@
+ // 编码器引脚信息
+ // 请确保两轮编码器前进时回传值都为正数，若回传为负请isr.c中encoder_get_count前修改正负号
+ // 左轮编码器
+-#define ENCODER_1 (QTIMER1_ENCODER1)
+-#define ENCODER_1_A (QTIMER1_ENCODER1_CH1_C0)
+-#define ENCODER_1_B (QTIMER1_ENCODER1_CH2_C1)
++#define ENCODER_1 (QTIMER2_ENCODER1)
++#define ENCODER_1_A (QTIMER2_ENCODER1_CH1_C3)
++#define ENCODER_1_B (QTIMER2_ENCODER1_CH2_C4)
+ // 右轮编码器
+-#define ENCODER_2 (QTIMER1_ENCODER2)
+-#define ENCODER_2_A (QTIMER1_ENCODER2_CH1_C2)
+-#define ENCODER_2_B (QTIMER1_ENCODER2_CH2_C24)
++#define ENCODER_2 (QTIMER2_ENCODER2)
++#define ENCODER_2_A (QTIMER2_ENCODER2_CH1_C5)
++#define ENCODER_2_B (QTIMER2_ENCODER2_CH2_C25)
+ 
+ // 电机参数设置
+ // !!! 请确保dir和pwm脚不要弄反了，否则电机会疯转 !!!
+@@ -27,11 +27,11 @@
+ 
+ 
+ // 舵机参数设置
+-#define SERVO_MOTOR_PWM (PWM1_MODULE3_CHA_D0) // 定义主板上舵机对应引脚
++#define SERVO_MOTOR_PWM (PWM4_MODULE2_CHA_C30) // 定义主板上舵机对应引脚
+ #define SERVO_MOTOR_FREQ (50)                  // 定义主板上舵机频率  请务必 注意范围 50-300
+-#define SERVO_MOTOR_L_MAX (70)  // 定义主板上舵机活动范围(左打方向的极限值) 角度 自行标定
+-#define SERVO_MOTOR_R_MAX (30) // 定义主板上舵机活动范围(右打方向的极限值) 角度 自行标定
++#define SERVO_MOTOR_L_MAX (105.3f)  // 定义主板上舵机活动范围(左打方向的极限值) 角度 自行标定
++#define SERVO_MOTOR_R_MAX (83.7f) // 定义主板上舵机活动范围(右打方向的极限值) 角度 自行标定
+ #define SERVO_DIR (SERVO_MOTOR_L_MAX>SERVO_MOTOR_R_MAX?-1.f:1.f) // 根据左右duty的大小自动决定舵机方向
+ 
+ // 以下宏在初步测试例程时不可更改，后面若需更改舵机算法可以自行更改
+@@ -51,3 +51,5 @@
+ #if (SERVO_MOTOR_FREQ < 50 || SERVO_MOTOR_FREQ > 300)
+ #error "SERVO_MOTOR_FREQ ERROE!"
+ #endif
++
++extern volatile unsigned char c26_drive_enabled;
+--- newnew/demo/user/inc/pid.h
++++ NEWNEW_C26_DIRECT_20261111_V1/demo/user/inc/pid.h
+@@ -27,7 +27,7 @@
+ extern pid_param_t speed_pid_l;  // 电机PID
+ extern pid_param_t speed_pid_r;  // 电机PID
+ extern float speed_KP, speed_KI,speed_KD, speed_IMAX, speed_OUTMAX;
+-extern float speed_target;                      // 目标速度
++extern volatile float speed_target;                      // 目标速度
+ extern float speed_real;                        // 实际 速度
+ extern float speed_pwm;                         // 施加在电机上的PWM占空比
+--- newnew/demo/user/src/isr.c
++++ NEWNEW_C26_DIRECT_20261111_V1/demo/user/src/isr.c
+@@ -77,20 +77,25 @@
+         encoder_data_2 = +encoder_get_count(ENCODER_2);
+         encoder_clear_count(ENCODER_2);
+ 
++        c26_drive_enabled=(unsigned char)(gpio_get_level(C26)==0);
++        if(!c26_drive_enabled){
++            pwm_set_duty(MOTOR1_PWM,0);pwm_set_duty(MOTOR2_PWM,0);
++            My_Pid_Init();pit_flag_clear(PIT_CH0);__DSB();return;
++        }
+         // 编码器值即为速度值
+         speed_real = encoder_data_1;
+         // PID更新 
+         speed_pwm = PidLocCtrl(&speed_pid_l, speed_target - speed_real, 1.f);
+         // 只考虑一个方向转动
+-        pwm_set_duty(MOTOR1_PWM, MAX(speed_pwm, 0));
+-        gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
++        pwm_set_duty(MOTOR2_PWM, MAX(speed_pwm, 0));
++        gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
+         // 编码器值即为速度值
+         speed_real = encoder_data_2;
+         // PID更新 
+         speed_pwm = PidLocCtrl(&speed_pid_r, speed_target - speed_real, 1.f);
+         // 只考虑一个方向转动
+-        pwm_set_duty(MOTOR2_PWM, MAX(speed_pwm, 0));
+-        gpio_set_level(MOTOR2_DIR, MOTOR2_FORWARD_DIR_LEVEL);
++        pwm_set_duty(MOTOR1_PWM, MAX(speed_pwm, 0));
++        gpio_set_level(MOTOR1_DIR, MOTOR1_FORWARD_DIR_LEVEL);
+ 
+         pit_flag_clear(PIT_CH0);
+     }
+--- newnew/demo/user/src/main.c
++++ NEWNEW_C26_DIRECT_20261111_V1/demo/user/src/main.c
+@@ -2,6 +2,8 @@
+ #include "Threshold.h"
+ #include "main.h"
+ 
++volatile unsigned char c26_drive_enabled = 0;
++extern int16 encoder_data_1,encoder_data_2;
+ uint8_t image[MT9V03X_H][MT9V03X_W];
+ 
+ // 舵机动作角度中值
+@@ -33,6 +35,10 @@
+     tft180_show_string(0, 16, "init success.");
+ 
+     // 编码器初始化
++    IOMUXC_GPR->GPR6 &= ~(IOMUXC_GPR_GPR6_QTIMER2_TRM0_INPUT_SEL_MASK|
++        IOMUXC_GPR_GPR6_QTIMER2_TRM1_INPUT_SEL_MASK|IOMUXC_GPR_GPR6_QTIMER2_TRM2_INPUT_SEL_MASK|
++        IOMUXC_GPR_GPR6_QTIMER2_TRM3_INPUT_SEL_MASK);
++    __DSB();
+     encoder_quad_init(ENCODER_1, ENCODER_1_A, ENCODER_1_B);
+     encoder_quad_init(ENCODER_2, ENCODER_2_A, ENCODER_2_B);
+ 
+@@ -43,7 +49,7 @@
+     gpio_init(MOTOR2_DIR, GPO, GPIO_HIGH, GPO_PUSH_PULL);
+ 
+     // 舵机
+-    pwm_init(SERVO_MOTOR_PWM, SERVO_MOTOR_FREQ, 0);
++    pwm_init(SERVO_MOTOR_PWM, SERVO_MOTOR_FREQ, SERVO_MOTOR_DUTY(servo_motor_duty_middle));
+ 
+     // PID初始化
+     My_Pid_Init();
+@@ -120,6 +126,8 @@
+ 主板� �他外设上电完成
+ 
++    gpio_init(C26, GPI, GPIO_HIGH, GPI_PULL_UP);
++    uart_init(UART_8,115200,UART8_TX_D16,UART8_RX_D17);
+     Init();
+     interrupt_global_enable(0);
+     
+@@ -171,7 +179,7 @@
+             if (tmp_duty > SERVO_MOTOR_L_MAX)  tmp_duty = SERVO_MOTOR_L_MAX;
+             if (tmp_duty < SERVO_MOTOR_R_MAX)  tmp_duty = SERVO_MOTOR_R_MAX;
+ 
+-            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(tmp_duty));
++            pwm_set_duty(SERVO_MOTOR_PWM, SERVO_MOTOR_DUTY(gpio_get_level(C26)?servo_motor_duty_middle:tmp_duty));
+ 
+             /******** 5. 斑马线停车控制逻辑 ********/
+               switch (zebra_state) {
+@@ -211,7 +219,13 @@
+             }
+ 
+             // 把最终的速度档位喂给 PID
+-            speed_target = speed_flag;
++            speed_target = gpio_get_level(C26)?0:speed_flag;
++            if(frame_counter%5==0){char telemetry[180];
++                snprintf(telemetry,sizeof(telemetry),"[NEWNEW_C26_V1] frame=%d c26=%u ring=%d zebra=%d err=%.2f target=%.0f L=%d R=%d\r\n",
++                    frame_counter,(unsigned)gpio_get_level(C26),(int)Roundabout_flag,(int)zebra_state,
++                    (double)mid_err,(double)speed_target,(int)encoder_data_1,(int)encoder_data_2);
++                uart_write_string(UART_8,telemetry);
++            }
+             /******** 6. 降低TFT显示频率（每N帧显示一次） ********/
+             display_counter++;
+             if (display_counter >= DISPLAY_INTERVAL)
+--- newnew/demo/user/src/pid.c
++++ NEWNEW_C26_DIRECT_20261111_V1/demo/user/src/pid.c
+@@ -2,7 +2,7 @@
+ 
+ // 电机PID初始化参数
+ float speed_KP = 50, speed_KI = 0,speed_KD = 10.9, speed_IMAX = 5000.0, speed_OUTMAX = 5000.0;
+-float speed_target = 45;
++volatile float speed_target = 0;
+ float speed_real = 0.0;
+ float speed_pwm = 0.0;
+ 

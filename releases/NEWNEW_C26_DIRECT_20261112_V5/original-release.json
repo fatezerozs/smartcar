@@ -1,0 +1,21 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V5",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V4",
+  "straight_target_mps": 1.0,
+  "strong_turn_target_mps": 0.65,
+  "obstacle_target_mps": 0.55,
+  "physical_pass": false,
+  "keil_errors": 0,
+  "keil_warnings": 0,
+  "vision_obstacle_asan": true,
+  "axf_sha256": "B43C36A5FC9F66176549D7017D8BF4825294E99D20F86572F3D04531ABD24FED",
+  "changed_files": [
+    "demo/mdk/IMG_DEAL.c",
+    "demo/mdk/IMG_DEAL.h",
+    "demo/mdk/Threshold.c",
+    "demo/mdk/Threshold.h",
+    "demo/user/inc/drive_tuning.h",
+    "demo/user/inc/obstacle_path.h",
+    "demo/user/src/main.c"
+  ]
+}

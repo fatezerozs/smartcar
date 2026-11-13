@@ -1,0 +1,22 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V10",
+  "baseline": "NEWNEW_C26_DIRECT_20261112_V9",
+  "target": "nor_sdram_zf_dtcm",
+  "project": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V10\\demo\\mdk\\newnew_c26.uvprojx",
+  "firmware": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V10\\releases\\NEWNEW_C26_DIRECT_20261112_V10\\rt1064.axf",
+  "axf_sha256": "a7151e034743ee363035e6283cfe0c28924e565fb901178e627722a8d57d6e78",
+  "cruise_mps": 1.4,
+  "committed_ring_max_mps": 1.0,
+  "avoidance_mps": 0.55,
+  "build": "Keil 0 errors 0 warnings",
+  "host_tests": "all documented suites pass",
+  "physical_validation": "not performed; no automatic flash/reset/run",
+  "serial_snapshot": {
+    "snapshot_utc": "2026-11-11T19:08:23.042139+00:00",
+    "source": "C:\\Users\\dick\\Desktop\\\u667a\u80fd\u8f66\\NEWNEW_C26_DIRECT_20261112_V3\\recordings\\serial-COM15-20261112-003621-692366",
+    "receive_only": true,
+    "bytes_copied": 7718656,
+    "active_capture_unchanged": true,
+    "note": "Live snapshot; final UART line may be partial; untransmitted RAM history is not recovered"
+  }
+}

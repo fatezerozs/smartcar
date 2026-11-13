@@ -1,0 +1,32 @@
+{
+  "version": "NEWNEW_C26_DIRECT_20261112_V6",
+  "category": "newnew",
+  "directory": "releases/NEWNEW_C26_DIRECT_20261112_V6",
+  "local_copies": [
+    "NEWNEW_C26_DIRECT_20261112_V6/releases/NEWNEW_C26_DIRECT_20261112_V6/release.json"
+  ],
+  "historical_metadata_present": true,
+  "archive_date": "2026-11-13",
+  "new_hardware_test": false,
+  "purpose": "恢复V4环岛核心并隔离避砖mask",
+  "firmware": "releases/NEWNEW_C26_DIRECT_20261112_V6/rt1064.axf",
+  "axf_sha256": "d7defa727cf940caa21cee36bafb5d8143ef1df9264e606178379e943c71b5cb",
+  "axf_git_sha": "c9ef022f88741ea514044a9dca00d19243cb1486",
+  "firmware_publish": "new",
+  "historical_hash_matches": true,
+  "source": "releases/NEWNEW_C26_DIRECT_20261112_V6/source-code.zip",
+  "source_scope": "full-project-with-sdk",
+  "source_zip_sha256": "4499a9309cd2d3ead54289bd559b9355c3a7eac007cf4f588d76e0edc75e7c64",
+  "original_source_zip_sha256": "0f2c513ddf8e16ea98af4889ce8f91cd5e84727d8a64ca050c4e5c02477a887f",
+  "source_files": 564,
+  "keil_projects": [
+    "demo/mdk/newnew_c26.uvprojx",
+    "demo/mdk/rt1064.uvprojx"
+  ],
+  "historical_claims": {},
+  "classification_note": "冻结历史；本次只归档，不增加实车通过结论",
+  "archive_scope": "NEWNEW V1 onward only",
+  "project_in_zip": "NEWNEW_C26_DIRECT_20261112_V6/demo/mdk/newnew_c26.uvprojx",
+  "target": "nor_sdram_zf_dtcm",
+  "program_speed_request_mps": 1.0
+}
